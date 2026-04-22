@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Work/LKW/Code/DataSystem/Editor/SelectBtn.uss?fileID=7433441132597879392&amp;guid=1b1cedabccb95664e91e0f01c676829c&amp;type=3#SelectBtn" />
+    <ui:VisualElement name="Container" style="flex-grow: 1;">
+        <ui:Button text="Button" name="SelectBtn" class="SelectBtn" />
+    </ui:VisualElement>
+</ui:UXML>

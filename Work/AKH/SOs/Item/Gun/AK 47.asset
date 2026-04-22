@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7004dd3430498a6438d5db89f3c6d29f, type: 3}
+  m_Name: AK 47
+  m_EditorClassIdentifier: 
+  itemId: 1235432
+  itemName: AK 47
+  itemType: 3
+  spawnArea: 0
+  itemImage: {fileID: 21300000, guid: 747832d43ccfcf3478832b78d8e16680, type: 3}
+  description: 
+  rarity: 0
+  rarityWeight: 5
+  value: 0
+  maxStack: 0
+  addStats: []
+  modelOffset: {x: 0.012, y: 0.141, z: 0.368}
+  equipmentPrefab: {fileID: 5912053865660236352, guid: f83af4bd2c594b74fb6265902dca2d20, type: 3}
+  maxDurability: 0
+  defaultDamage: 10
+  attackSpeed: 5
+  controller: {fileID: 22100000, guid: f137525389913154e9e8e83852dd9ac0, type: 2}
+  maxBullet: 24
+  gunType: 2
+  fireRate: 0
+  bulletPerShot: 1
+  reloadTime: 1
+  bulletSpeed: 18
+  maxAmmoCapacity: 0
+  maxRange: 10
+  aimSpeedMultiplier: 0
+  defaultSpread: 0.324
+  maxSpread: 0.945
+  spreadGrow: 0.27
+  spreadRecover: 0.4
+  spreadFactor: 10.79
+  verticalRecoil: 49.5
+  horizontalRecoil: 54
+  minVerticalMultiplier: 0.95
+  maxVerticalMultiplier: 1.05
+  minHorizontalMultiplier: -0.35
+  maxHorizontalMultiplier: 0.65
+  recoilDuration: 0.075
+  recoilRecoveryStartTime: 0.1
+  recoilRecoveryTime: 0.12
+  recoilRecovery: 550
+  pixelsPerRecoilUnit: 1

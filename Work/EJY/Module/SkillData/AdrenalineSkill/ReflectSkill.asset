@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d81627f3950548adb6e84e5dad988e78, type: 3}
+  m_Name: ReflectSkill
+  m_EditorClassIdentifier: 
+  skillName: Reflect
+  skillIcon: {fileID: 21300000, guid: 5d70be49556694d88b3aef41990f7020, type: 3}
+  skillDescription: 
+  upgradeList:
+  - {fileID: 11400000, guid: ae3c3d0e3882efe40a5cecabe52b9433, type: 2}
+  - {fileID: 11400000, guid: 2561e3b6d44ee3e4b972dc13890fbd53, type: 2}
+  - {fileID: 11400000, guid: f005c576a8bab534997f1a492966e75f, type: 2}
+  - {fileID: 11400000, guid: f2edd873c7fd0674ca92fcdb4f408445, type: 2}
+  - {fileID: 11400000, guid: 5c3db9a076a30f048b90d7b55fb7ee2e, type: 2}
+  - {fileID: 11400000, guid: 8cf9a795d16de7c4584b72e801a2c50c, type: 2}
+  skillPrefab: {fileID: 0}

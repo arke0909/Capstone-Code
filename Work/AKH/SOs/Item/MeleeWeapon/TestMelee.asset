@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6531b2d29f3162478bb0884c2bf350d, type: 3}
+  m_Name: TestMelee
+  m_EditorClassIdentifier: 
+  itemId: 27ed125d8fea89444ad7713d7b1d38d3
+  itemName: TestMelee
+  itemType: 7
+  spawnArea: 0
+  itemImage: {fileID: 21300000, guid: fd228208198992449b8808986503725e, type: 3}
+  description: 
+  rarity: 0
+  rarityWeight: 0
+  value: 0
+  maxStack: 0
+  addStats: []
+  modelOffset: {x: 0, y: 0, z: 0}
+  equipmentPrefab: {fileID: 7197752949421457413, guid: a528aa994340c954bac89a86b3a2a7af, type: 3}
+  skillDB: {fileID: 0}
+  maxDurability: 0
+  attackRange: 1.5
+  defaultDamage: 15
+  attackSpeed: 1
+  controller: {fileID: 22100000, guid: 30f47553ba5e1b842b5eefb1f3f25f70, type: 2}
+  fireRate: 0
+  attackData: {fileID: 11400000, guid: 22ff42dec0d11b14c8365f98f5e2cf7d, type: 2}
+  defPierceLevel: 0

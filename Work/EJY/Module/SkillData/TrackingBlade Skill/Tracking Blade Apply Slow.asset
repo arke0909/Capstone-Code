@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fa70512758e4ee78a81d354197ade59, type: 3}
+  m_Name: Tracking Blade Apply Slow
+  m_EditorClassIdentifier: 
+  upgradeIcon: {fileID: 0}
+  UpgradeTitle: "\uBC1C\uBAA9 \uAE0B\uAE30"
+  upgradeDescription: "\uC801\uC744 \uB454\uD654\uC2DC\uD0B5\uB2C8\uB2E4.\n"
+  maxUpgradeCnt: 1
+  bindingFlags: 52
+  targetSkillName: Code.SkillSystem.Skills.TrackingBlade.TrackingBladeSkill, Assembly-CSharp,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  UpgradeType: 1
+  fieldName: 
+  fieldType: 0
+  floatValue: 0
+  intValue: 0
+  upgradeMethodName: UpgradeApplySlow
+  upgradeParams: 
+  rollbackMethodName: RollbackApplySlow
+  rollbackParams: 

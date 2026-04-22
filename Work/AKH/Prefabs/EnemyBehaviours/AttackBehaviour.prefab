@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2706184674285396771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 35499528750160054}
+  - component: {fileID: 114189840105380667}
+  m_Layer: 12
+  m_Name: AttackBehaviour
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &35499528750160054
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2706184674285396771}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114189840105380667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2706184674285396771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cf1dfd0b11e61645bad7ab6f82a9296, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Priority>k__BackingField: 50
+  <TargetStates>k__BackingField: 020000000400000003000000
+  cooldown: 0
+  conditionType: 1
+  conditions:
+  - rid: 2466404181872738748
+  - rid: 1504945668886364282
+  - rid: 1504945841587355853
+  references:
+    version: 2
+    RefIds:
+    - rid: 1504945668886364282
+      type: {class: CanFireSafelyCondition, ns: Scripts.Enemies.EnemyBehaviourConditions, asm: Assembly-CSharp}
+      data:
+        dontShootLayer:
+          serializedVersion: 2
+          m_Bits: 4096
+        halfBox: {x: 0.09, y: 0.89, z: 1}
+    - rid: 1504945841587355853
+      type: {class: IsTargetExistCondition, ns: Scripts.Enemies.EnemyBehaviourConditions, asm: Assembly-CSharp}
+      data: 
+    - rid: 2466404181872738748
+      type: {class: TargetInAttackRangeCondition, ns: Scripts.Enemies.EnemyBehaviourConditions, asm: Assembly-CSharp}
+      data: 

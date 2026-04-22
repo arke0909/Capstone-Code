@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d81627f3950548adb6e84e5dad988e78, type: 3}
+  m_Name: Missile Passive Skill
+  m_EditorClassIdentifier: 
+  skillName: "\uBBF8\uC0AC\uC77C"
+  skillIcon: {fileID: 21300000, guid: 7e7b4396249c1524abac9816058733b1, type: 3}
+  skillDescription: "\uC801\uC5D0\uAC8C 5\uD68C \uC801\uC911 \uC2DC \uBBF8\uC0AC\uC77C\uC774
+    \uCD94\uAC00\uB85C \uBC1C\uC0AC\n"
+  upgradeList:
+  - {fileID: 0}
+  - {fileID: 11400000, guid: bc59c8cfc0f96434d85185f030ba478d, type: 2}
+  - {fileID: 11400000, guid: fd622fce1d267444cb7f407ee5bc54a6, type: 2}
+  skillPrefab: {fileID: 7457949365209790805, guid: 530a1f61a55ddda4e80f303c69d58699, type: 3}
+  defaultSkill: 0

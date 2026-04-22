@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca62f7e28d5948408c5c73e6790860c8, type: 3}
+  m_Name: "\uC870\uD569\uBC95_AWM"
+  m_EditorClassIdentifier: 
+  treeName: "\uC870\uD569\uBC95_AWM"
+  nodeList:
+  - <Item>k__BackingField: {fileID: 11400000, guid: d509c414184915241a285cc706027ea5, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+  - <Item>k__BackingField: {fileID: 11400000, guid: 119551b76a672da4aa84dd17e8e6b4c1, type: 2}
+    <Tree>k__BackingField: {fileID: 11400000, guid: 3f985a0291b12404c94da1e5da2cd611, type: 2}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+  - <Item>k__BackingField: {fileID: 11400000, guid: 56ced856b0c87e94b95f386ca39135b9, type: 2}
+    <Tree>k__BackingField: {fileID: 11400000, guid: dc047bf8df26f464db8b75b09893aad5, type: 2}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+  - <Item>k__BackingField: {fileID: 11400000, guid: c86e5ebdf6b03eb45b29b6039ba82573, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 1
+  - <Item>k__BackingField: {fileID: 11400000, guid: 49da9b71da0ee524c8d4526af6c8cc05, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 1
+  - <Item>k__BackingField: {fileID: 11400000, guid: 73fefcefcdbee3b499455138fefad5d3, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 1
+  - <Item>k__BackingField: {fileID: 11400000, guid: c53f6b3550fe6494e9cf9d95bc460b2a, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 1
+  isBinary: 1

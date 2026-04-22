@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fa70512758e4ee78a81d354197ade59, type: 3}
+  m_Name: Dash Upgrade
+  m_EditorClassIdentifier: 
+  upgradeIcon: {fileID: 21300000, guid: 27589956acc8f4ce9ab66abcc5ffcdb7, type: 3}
+  UpgradeTitle: "\uB300\uC26C \uAC00\uB2A5"
+  upgradeDescription: "\uB300\uC26C\uB85C \uBCC0\uACBD\uB429\uB2C8\uB2E4.\n"
+  maxUpgradeCnt: 1
+  needUpgradeList:
+  - {fileID: 11400000, guid: 68a1df1e7da57fa4784b9947b017b531, type: 2}
+  donNeedUpgradeList: []
+  bindingFlags: 52
+  targetSkillName: Scripts.SkillSystem.Skills.RefractionSkill, Assembly-CSharp, Version=0.0.0.0,
+    Culture=neutral, PublicKeyToken=null
+  UpgradeType: 0
+  fieldName: dashEnable
+  fieldType: 2
+  floatValue: 0
+  intValue: 0
+  upgradeMethodName: UseSkill
+  upgradeParams: 
+  rollbackMethodName: UseSkill
+  rollbackParams: 

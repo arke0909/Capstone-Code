@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d81627f3950548adb6e84e5dad988e78, type: 3}
+  m_Name: Adrenaline
+  m_EditorClassIdentifier: 
+  skillName: Adrenaline
+  skillIcon: {fileID: 21300000, guid: af6ae02fd9c7e21469520e6ef3584512, type: 3}
+  skillDescription: 
+  upgradeList: []
+  skillPrefab: {fileID: 0}

@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7004dd3430498a6438d5db89f3c6d29f, type: 3}
+  m_Name: M1911
+  m_EditorClassIdentifier: 
+  itemId: bdbwef
+  itemName: M1911
+  itemType: 3
+  spawnArea: 0
+  itemImage: {fileID: 21300000, guid: 2c10218da12604937a99193283fbab33, type: 3}
+  description: 
+  rarity: 0
+  rarityWeight: 1
+  value: 0
+  maxStack: 0
+  addStats: []
+  modelOffset: {x: 0.012, y: 0.141, z: 0.368}
+  equipmentPrefab: {fileID: 1917922319423184702, guid: dff2ea46ccc37f54b88c3604f856a15c, type: 3}
+  maxDurability: 0
+  defaultDamage: 0
+  attackSpeed: 5
+  controller: {fileID: 22100000, guid: 85ed5e8ca8afdea4c8a5fd11b05ec2bc, type: 2}
+  maxBullet: 24
+  gunType: 1
+  fireRate: 0
+  bulletPerShot: 1
+  reloadTime: 1
+  bulletSpeed: 80
+  maxAmmoCapacity: 0
+  maxRange: 0
+  aimSpeedMultiplier: 0
+  defaultSpread: 0.32
+  maxSpread: 1.15
+  spreadGrow: 0.47
+  spreadRecover: 0.65
+  spreadFactor: 9.8
+  verticalRecoil: 50
+  horizontalRecoil: 50
+  minVerticalMultiplier: 0.95
+  maxVerticalMultiplier: 1.05
+  minHorizontalMultiplier: -0.35
+  maxHorizontalMultiplier: 0.65
+  recoilDuration: 0.075
+  recoilRecoveryStartTime: 0.1
+  recoilRecoveryTime: 0.12
+  recoilRecovery: 550
+  pixelsPerRecoilUnit: 0.45

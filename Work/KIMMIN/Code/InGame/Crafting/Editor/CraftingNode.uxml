@@ -1,0 +1,8 @@
+﻿<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement name="Node1" style="width: 100px; height: 60px; align-items: center; min-width: 100px; max-width: 100px; min-height: 60px; max-height: 60px;">
+        <ui:Button text="&#10;" name="NodeButton" style="min-width: 40px; width: 40px; height: 40px; min-height: 40px; max-height: 40px; max-width: 40px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; border-bottom-left-radius: 1px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); align-items: center; justify-content: center;">
+            <ui:VisualElement name="Icon" enabled="true" style="flex-grow: 1; width: 30px; height: 30px; min-width: 30px; max-width: 30px; max-height: 30px; min-height: 30px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 0); visibility: visible; background-image: none;" />
+        </ui:Button>
+        <ui:Label text="[NONE]" name="ItemName" enable-rich-text="true" style="font-size: 10px; height: 12px;" />
+    </ui:VisualElement>
+</ui:UXML>
