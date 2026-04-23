@@ -36,47 +36,48 @@ namespace Code.Players
 
         private void HandleInvenSlotCount(StatSO stat, float currentValue, float prevValue)
         {
+            int previousSize = (int)prevValue;
             CurrentInventorySize = (int)currentValue;
-            
-            int gap = CurrentInventorySize - (int)prevValue;
 
-            if (gap < 0)
+            if (CurrentInventorySize >= previousSize)
             {
-                gap = -gap;
-
-                for (int i = CurrentInventorySize; i < CurrentInventorySize + gap; i++)
-                {
-                    ItemSlot slot = itemSlots[i];
-                    ItemBase targetItem = slot.Item;
-                    int stack = slot.Stack;
-                    
-                    if(targetItem == null) continue;
-
-                    if (InventoryHasBlankSlot())
-                    {
-                        var blankSlot = GetItemSlot(null);
-                        blankSlot.SetData(targetItem, stack);
-                        slot.SetData(null);
-                    }
-                    else
-                    {
-                        var poolPreviewItem = _poolManagerMono.Pop<PreviewItem>(previewItem);
-                        Vector3 discardPos = transform.position;
-
-                        float x = Random.Range(-1f, 1f);
-                        float z = Random.Range(-1f, 1f);
-                        discardPos.x += x;
-                        discardPos.z += z;
-                        discardPos.y += 0.2f;
-                    
-                        poolPreviewItem.Discard(discardPos, targetItem, stack);
-                        slot.RemoveItem(slot.Stack);
-                    }
-                }
+                UpdateInventory();
+                return;
             }
-            
+
+            for (int i = CurrentInventorySize; i < previousSize; i++)
+            {
+                ItemSlot overflowSlot = itemSlots[i];
+                ItemBase overflowItem = overflowSlot.Item;
+                int stack = overflowSlot.Stack;
+
+                if (overflowItem == null)
+                    continue;
+
+                if (TryAddItem(overflowItem, stack))
+                {
+                    if (!ContainsItem(overflowItem))
+                        overflowItem.SetOwner(null);
+
+                    overflowSlot.Clear();
+                    continue;
+                }
+
+                var poolPreviewItem = _poolManagerMono.Pop<PreviewItem>(previewItem);
+                Vector3 discardPos = transform.position;
+
+                discardPos.x += Random.Range(-1f, 1f);
+                discardPos.z += Random.Range(-1f, 1f);
+                discardPos.y += 0.2f;
+
+                poolPreviewItem.Discard(discardPos, overflowItem, stack);
+                overflowItem.SetOwner(null);
+                overflowSlot.Clear();
+            }
+
             UpdateInventory();
         }
+
 
         protected override void OnDestroy()
         {

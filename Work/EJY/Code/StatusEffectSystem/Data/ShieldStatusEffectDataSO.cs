@@ -10,6 +10,7 @@ namespace Work.EJY.Code.StatusEffectSystem.Data
     {
         public override AbstractStatusEffect CreateStatusEffect(Entity target, StatusEffectInfo info)
         {
+            info = ApplyFlags(info);
             return new ShieldStatusEffect(target, info);
         }
     }

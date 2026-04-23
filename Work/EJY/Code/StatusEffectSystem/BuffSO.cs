@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Code.StatusEffectSystem;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Code.StatusEffectSystem
 {
@@ -10,7 +11,7 @@ namespace Code.StatusEffectSystem
     {
         public StatusEffectEnum statusEffect;
         public bool isPercent;
-        public int level;
+        [FormerlySerializedAs("level")] public int priority;
         public float[] effectValue;
         public bool isOverrideApplyTime;
         public float overrideTime;
@@ -33,7 +34,7 @@ namespace Code.StatusEffectSystem
                 float finalApplyTime = createData.isOverrideApplyTime ? createData.overrideTime : applyTime ;
                 
                 list.Add(new StatusEffectInfo {KeySO = this, StatusEffect = createData.statusEffect
-                    ,Level = createData.level, ApplyTime = finalApplyTime + additionalTime,
+                    ,Priority = createData.priority, ApplyTime = finalApplyTime + additionalTime,
                     Value = createData.effectValue[Mathf.Min(level, createData.effectValue.Length - 1)],IsPercent = createData.isPercent });
             }
 

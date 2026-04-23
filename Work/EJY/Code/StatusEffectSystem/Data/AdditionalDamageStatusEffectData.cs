@@ -9,7 +9,7 @@ namespace Code.StatusEffectSystem
     {
         public override AbstractStatusEffect CreateStatusEffect(Entity target, StatusEffectInfo info)
         {
-            info.CanOverlap = canOverlap;
+            info = ApplyFlags(info);
             return new AdditionalDamageStatusEffect(target, info);
         }
     }

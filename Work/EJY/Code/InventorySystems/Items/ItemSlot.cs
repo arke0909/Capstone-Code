@@ -51,19 +51,18 @@ namespace Code.InventorySystems.Items
 
         public int RemoveItem(int amount = 1)
         {
-            if (Item == null) return amount;
+            if (Item == null || amount <= 0)
+                return amount;
 
-            int remain = amount - Stack;
-
-            Stack -= amount;
+            int removed = Mathf.Min(amount, Stack);
+            Stack -= removed;
 
             if (Stack <= 0)
-            {
-                Item = null;
-            }
-            
-            return Mathf.Max(remain, 0);
+                Clear();
+
+            return amount - removed;
         }
+
 
         public void Clear()
         {

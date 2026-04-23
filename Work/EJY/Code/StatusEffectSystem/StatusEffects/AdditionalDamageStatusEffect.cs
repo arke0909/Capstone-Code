@@ -1,14 +1,12 @@
-﻿using Assets.Work.AKH.Scripts.Entities.Vitals;
+using Scripts.Combat;
 using Scripts.Combat.Datas;
 using Scripts.Entities;
-using UnityEngine;
 
 namespace Code.StatusEffectSystem.StatusEffects
 {
     public class AdditionalDamageStatusEffect : AbstractStatusEffect
     {
-        private HealthCompo _health;
-        private DamageData _damageData;
+        private readonly DamageData _damageData;
         
         public AdditionalDamageStatusEffect(Entity target, StatusEffectInfo statusEffectInfo) : base(target, statusEffectInfo)
         {
@@ -18,22 +16,17 @@ namespace Code.StatusEffectSystem.StatusEffects
         public override void ApplyStatusEffect(Entity entity)
         {
             base.ApplyStatusEffect(entity);
-
-            _health = entity.ComponentContainer.Get<HealthCompo>();
-            
-            Debug.Assert(_health != null, "Entity has not Health compo");
-            
-            entity.OnHitEvent.AddListener(HandleOnHit);
+            entity.OnHit += HandleOnHit;
         }
 
         public override void ReleaseStatusEffect(Entity entity)
         {
-            entity.OnHitEvent.RemoveListener(HandleOnHit);
+            entity.OnHit -= HandleOnHit;
         }
 
-        private void HandleOnHit()
+        private void HandleOnHit(Entity dealer, IDamageable target)
         {
-            _health.ApplyDamage(_damageData);
+            target?.ApplyDamage(_damageData, dealer);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Work.Code.StatusEffects.Datas
     {
         public override AbstractStatusEffect CreateStatusEffect(Entity target, StatusEffectInfo info)
         {
+            info = ApplyFlags(info);
             return new DotDealStatusEffect(target, info);
         }
     }

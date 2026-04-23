@@ -90,43 +90,47 @@ namespace Code.Players
 
         private void HandleSwapEquip(SwapEquipEvent evt)
         {
-            var startEquipSlot = evt.StartEquip;
-            var targetEquipSlot = evt.TargetEquip;
-            var startSlotItem = evt.StartEquip.Item as EquipableItem;
-            var targetSlotItem = evt.TargetEquip.Item as EquipableItem;
+            EquipSlot startEquipSlot = evt.StartEquip;
+            EquipSlot targetEquipSlot = evt.TargetEquip;
+            EquipableItem startSlotItem = startEquipSlot.Item as EquipableItem;
+            EquipableItem targetSlotItem = targetEquipSlot.Item as EquipableItem;
 
             if (startSlotItem == null)
             {
                 targetEquipSlot.SetData(null);
-                
-                if(targetEquipSlot.CanHandle)
-                    UpdateHotbarSlot(evt.TargetEquip.Index);
+
+                if (targetEquipSlot.CanHandle)
+                    UpdateHotbarSlot(targetEquipSlot.Index);
             }
             else
             {
                 targetEquipSlot.SetData(startSlotItem, 1);
-                
-                if(targetEquipSlot.CanHandle)
+
+                if (targetEquipSlot.CanHandle)
                     UpdateHotbarSlot(targetEquipSlot.Index, startSlotItem);
             }
 
             if (targetSlotItem == null)
             {
                 startEquipSlot.SetData(null);
-                
-                if(startEquipSlot.CanHandle)
+
+                if (startEquipSlot.CanHandle)
                     UpdateHotbarSlot(startEquipSlot.Index);
             }
             else
             {
                 startEquipSlot.SetData(targetSlotItem, 1);
-                if(startEquipSlot.CanHandle)
+
+                if (startEquipSlot.CanHandle)
                     UpdateHotbarSlot(startEquipSlot.Index, targetSlotItem);
             }
 
-            bool isHandleSlot = startEquipSlot.Index == _handlingIndex || targetEquipSlot.Index == _handlingIndex;
-            
-            if (startEquipSlot.CanHandle && targetEquipSlot.CanHandle && isHandleSlot)
+            bool touchesCurrentHandle =
+                startEquipSlot.CanHandle &&
+                targetEquipSlot.CanHandle &&
+                (startEquipSlot.Index == _handlingIndex || targetEquipSlot.Index == _handlingIndex);
+
+            if (touchesCurrentHandle)
             {
                 if (startSlotItem != null && targetSlotItem != null)
                 {
@@ -134,17 +138,30 @@ namespace Code.Players
                     {
                         RefreshHandItem(targetSlotItem);
                     }
-                    else if (targetEquipSlot.Index == _handlingIndex)
+                    else
                     {
                         RefreshHandItem(startSlotItem);
                     }
                 }
                 else
                 {
-                    var notEmptySlot = startSlotItem != null ? startEquipSlot : targetEquipSlot;
+                    EquipSlot activeSlot = startEquipSlot.Index == _handlingIndex ? startEquipSlot : targetEquipSlot;
+                    EquipSlot swappedSlot = activeSlot == startEquipSlot ? targetEquipSlot : startEquipSlot;
 
-                    UpdateHandleIndex(notEmptySlot.Index);
-                    RefreshHandItem(notEmptySlot.Equipable);
+                    if (!activeSlot.IsBlank)
+                    {
+                        RefreshHandItem(activeSlot.Equipable);
+                    }
+                    else if (!swappedSlot.IsBlank)
+                    {
+                        UpdateHandleIndex(swappedSlot.Index);
+                        RefreshHandItem(swappedSlot.Equipable);
+                    }
+                    else
+                    {
+                        UpdateHandleIndex(-1);
+                        RefreshHandItem(null);
+                    }
                 }
             }
 
@@ -331,10 +348,9 @@ namespace Code.Players
             {
                 if (!byDrag)
                     _playerInventory.TryAddItem(equipped);
-
-                EventBus.Raise(new UpdateEquipUIEvent(_equipSlots.ToList()));
             }
 
+            EventBus.Raise(new UpdateEquipUIEvent(_equipSlots.ToList()));
             return true;
         }
 

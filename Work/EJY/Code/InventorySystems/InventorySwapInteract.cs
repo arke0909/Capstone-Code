@@ -3,6 +3,7 @@ using Chipmunk.GameEvents;
 using Code.GameEvents;
 using Code.Hotbar;
 using Code.InventorySystems.Items;
+using Code.Players;
 using InGame.InventorySystem;
 using Scripts.Combat.Datas;
 using UnityEngine;
@@ -27,6 +28,24 @@ namespace Code.InventorySystems
             EventBus.Unsubscribe<SwapItemSlotEvent>(HandleSwapItemSlot);
         }
 
+        private bool IsResponsibleForSwap(ItemSlot startSlot, ItemSlot targetSlot)
+        {
+            Inventory eventOwner = startSlot.OwnerInventory != null ? startSlot.OwnerInventory : targetSlot.OwnerInventory;
+
+            if (eventOwner != null)
+                return eventOwner == _inventory;
+
+            return _inventory is PlayerInventory;
+        }
+
+        private static void UpdateRelatedInventories(ItemSlot startSlot, ItemSlot targetSlot)
+        {
+            startSlot.OwnerInventory?.UpdateInventory();
+
+            if (targetSlot.OwnerInventory != null && targetSlot.OwnerInventory != startSlot.OwnerInventory)
+                targetSlot.OwnerInventory.UpdateInventory();
+        }
+
         private void HandleSwapItemSlot(SwapItemSlotEvent evt)
         {
             ItemSlot startSlot = evt.StartSlot;
@@ -39,9 +58,10 @@ namespace Code.InventorySystems
             }
 
             if (startSlot == targetSlot)
-            {
                 return;
-            }
+
+            if (!IsResponsibleForSwap(startSlot, targetSlot))
+                return;
 
             ItemBase startSlotItem = startSlot.Item;
             ItemBase targetSlotItem = targetSlot.Item;
@@ -49,31 +69,25 @@ namespace Code.InventorySystems
             if (startSlot is EquipSlot startEquip && targetSlot is EquipSlot targetEquip)
             {
                 if (targetEquip.CanEquip(startSlotItem) && startEquip.CanEquip(targetSlotItem))
-                {
                     EventBus.Raise(new SwapEquipEvent(startEquip, targetEquip));
-                }
             }
             else if (startSlot is EquipSlot startEquipSlot)
             {
                 if (targetSlotItem == null)
                     EventBus.Raise(new UnEquipByDragEvent(startSlotItem, startEquipSlot, targetSlot));
             }
-            // 드래그 끝점이 장착UI일 때
-            else if (targetSlot is EquipSlot equipSlot)
+            else if (targetSlot is EquipSlot targetEquipSlot)
             {
-                if (equipSlot.CanEquip(startSlotItem))
+                if (targetEquipSlot.CanEquip(startSlotItem))
                 {
                     void OnEquipByDragSuccess()
                     {
-                        // 다른 상자에서 무기를 바로 장착할 때
                         if (startSlot.OwnerInventory != targetSlot.OwnerInventory)
-                        {
                             startSlot.OwnerInventory.RemoveItem(startSlotItem, 1, false);
-                        }
                     }
 
                     EventBus.Raise(
-                        new EquipByDragEvent(startSlotItem, equipSlot.Index, startSlot, OnEquipByDragSuccess));
+                        new EquipByDragEvent(startSlotItem, targetEquipSlot.Index, startSlot, OnEquipByDragSuccess));
                 }
             }
             else if (startSlot is HotbarSlot unquipSlot)
@@ -83,9 +97,12 @@ namespace Code.InventorySystems
             }
             else if (targetSlot is HotbarSlot hotbarSlot)
             {
-                if (targetSlotItem == null && startSlot.OwnerInventory == targetSlot.OwnerInventory &&
+                if (targetSlotItem == null &&
+                    startSlot.OwnerInventory == targetSlot.OwnerInventory &&
                     startSlotItem is ThrowableItem or UsableItem)
+                {
                     EventBus.Raise(new EquipHotbarEvent(hotbarSlot.Index, startSlotItem));
+                }
             }
             else
             {
@@ -96,7 +113,7 @@ namespace Code.InventorySystems
                 targetSlot.SetData(startSlotItem, startSlotStack);
             }
 
-            _inventory.UpdateInventory();
+            UpdateRelatedInventories(startSlot, targetSlot);
         }
     }
 }

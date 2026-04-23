@@ -1,6 +1,5 @@
 ﻿using Chipmunk.ComponentContainers;
 using Code.InventorySystems.Items;
-using InGame.InventorySystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +15,11 @@ namespace Code.InventorySystems
         public Entity Owner { get; private set; }
         public ComponentContainer ComponentContainer { get; set; }
         [SerializeField] private int _currentInventorySize = 4;
-        protected int CurrentInventorySize { get => _currentInventorySize;set 
+
+        protected int CurrentInventorySize
+        {
+            get => _currentInventorySize;
+            set
             {
                 if (value > itemSlots.Count)
                 {
@@ -26,8 +29,10 @@ namespace Code.InventorySystems
                         CreateSlot();
                     }
                 }
+
                 _currentInventorySize = value;
-            } }
+            }
+        }
 
         [SerializeField] protected List<ItemSlot> itemSlots;
 
@@ -91,6 +96,7 @@ namespace Code.InventorySystems
                 }
             }
         }
+
         public List<T> GetItems<T>() where T : ItemBase
         {
             List<T> items = new List<T>();
@@ -106,56 +112,6 @@ namespace Code.InventorySystems
 
             return items;
         }
-        
-        private int AddItemInternal(ItemBase item, int count)
-        {
-            int remain = count;
-
-            var slots = GetItemSlots(item.ItemData);
-
-            foreach (var slot in slots)
-            {
-                if (slot.IsFull)
-                    continue;
-
-                remain = slot.AddItem(remain);
-                
-                if(remain <= 0)
-                    return count;
-            }
-            
-            slots = GetItemSlots(null);
-
-            foreach (var slot in slots)
-            {
-                int addAmount = Mathf.Min(remain, item.ItemData.maxStack);
-                item.SetOwner(Owner);
-                slot.SetData(item, addAmount);
-                remain -= addAmount;
-
-                if (remain <= 0)
-                    return count;
-            }
-            
-            return count - remain;
-        }
-
-        public bool TryAddItem(ItemBase item, int count = 1)
-        {
-            if (item == null || count <= 0)
-                return false;
-
-            if (GetAddableItemCount(item, count) < count)
-                return false;
-
-            int added = AddItemInternal(item, count);
-
-            if (added != count)
-                return false;
-
-            UpdateInventory();
-            return true;
-        }
 
         // 실질적으로 넣을 수 있는 아이템의 개수 구하기
         public int GetAddableItemCount(ItemBase item, int requestCount)
@@ -164,7 +120,7 @@ namespace Code.InventorySystems
             List<ItemSlot> targetSlots = GetItemSlots(item.ItemData).ToList();
             // 타겟 인벤토리의 빈 슬롯 수
             targetSlots.AddRange(GetItemSlots(null));
-         
+
             int addableCnt = 0;
 
             foreach (var slot in targetSlots)
@@ -177,7 +133,7 @@ namespace Code.InventorySystems
                 {
                     addableCnt += item.ItemData.maxStack - slot.Stack;
                 }
-                
+
 
                 if (addableCnt >= requestCount)
                 {
@@ -189,51 +145,21 @@ namespace Code.InventorySystems
             return addableCnt;
         }
 
-        public bool RemoveItem(ItemBase item, int count = 1, bool isFirst = true)
-        {
-            if (item == null || count <= 0)
-                return false;
-
-            int remaining = count;
-
-            var slots = GetItemSlots(item.ItemData);
-
-            foreach (var slot in slots)
-            {
-                if (!isFirst && slot.Item != item)
-                    continue;
-                
-                remaining = slot.RemoveItem(remaining);
-
-                if (remaining <= 0)
-                {
-                    item.SetOwner(null);
-                    UpdateInventory();
-                    return true;
-                }
-
-                if (!isFirst)
-                    break;
-            }
-            
-            return false;
-        }
-
         public bool InventoryHasBlankSlot()
         {
             for (int i = 0; i < CurrentInventorySize; ++i)
             {
                 var slot = itemSlots[i];
-                if(slot.Item == null) return true;
+                if (slot.Item == null) return true;
             }
-            
+
             return false;
         }
-        
+
         public bool TryConsume(Dictionary<ItemDataSO, int> cosumeItems)
         {
             if (!CanConsume(cosumeItems)) return false;
-            
+
             foreach (var pair in cosumeItems)
             {
                 RemoveItemByData(pair.Key, pair.Value);
@@ -250,31 +176,6 @@ namespace Code.InventorySystems
                     return false;
             }
 
-            return true;
-        }
-
-        public bool RemoveItemByData(ItemDataSO data, int count)
-        {
-            if (count <= 0) return false;
-
-            int totalCount = GetItemCount(data);
-            if (totalCount < count) return false;
-
-            int remaining = count;
-
-            foreach (var slot in GetItemSlots(data))
-            {
-                if (slot.Item == null) continue;
-
-                int removeAmount = Mathf.Min(slot.Stack, remaining);
-                slot.RemoveItem(removeAmount);
-                remaining -= removeAmount;
-
-                if (remaining <= 0)
-                    break;
-            }
-
-            UpdateInventory();
             return true;
         }
 
@@ -302,31 +203,6 @@ namespace Code.InventorySystems
             return cnt;
         }
 
-        public bool ContainsItem(ItemBase item) => itemSlots.FirstOrDefault(slot => slot.Item == item) != default;
-
-        public int MoveItem(Inventory target, ItemSlot sourceSlot, int amount)
-        {
-            if (sourceSlot.Item == null)
-                return 0;
-
-            amount = Mathf.Clamp(amount, 1, sourceSlot.Stack);
-
-            int addable = target.GetAddableItemCount(sourceSlot.Item, amount);
-            if (addable <= 0)
-                return 0;
-
-            int moved = target.AddItemInternal(sourceSlot.Item, addable);
-
-            if (moved > 0)
-            {
-                sourceSlot.RemoveItem(moved);
-                target.UpdateInventory();
-                UpdateInventory();
-            }
-
-            return moved;
-        }
-        
         public void UpdateInventory()
         {
             InventoryChanged?.Invoke();
@@ -336,6 +212,212 @@ namespace Code.InventorySystems
         {
             Owner = componentContainer.GetSubclassComponent<Entity>();
         }
+
+        private bool ContainsExactItem(ItemBase item)
+        {
+            if (item == null)
+                return false;
+
+            for (int i = 0; i < CurrentInventorySize; i++)
+            {
+                if (itemSlots[i].Item == item)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private ItemBase CreateItemInstance(ItemBase source)
+        {
+            ItemCreateData createData = source.ItemData.CreateItem();
+            createData.Item.SetOwner(Owner);
+            return createData.Item;
+        }
+
+        private int AddItemInternal(ItemBase item, int count, bool allowReuseSourceReference = false)
+        {
+            int remain = count;
+
+            foreach (var slot in GetItemSlots(item.ItemData))
+            {
+                if (slot.IsBlank || slot.IsFull)
+                    continue;
+
+                int addAmount = Mathf.Min(remain, item.ItemData.maxStack - slot.Stack);
+                slot.AddItem(addAmount);
+                remain -= addAmount;
+
+                if (remain <= 0)
+                    return count;
+            }
+
+            bool canReuseSourceReference = allowReuseSourceReference;
+
+            foreach (var slot in GetItemSlots(null))
+            {
+                if (remain <= 0)
+                    break;
+
+                int addAmount = Mathf.Min(remain, item.ItemData.maxStack);
+                ItemBase slotItem;
+
+                if (canReuseSourceReference)
+                {
+                    slotItem = item;
+                    slotItem.SetOwner(Owner);
+                    canReuseSourceReference = false;
+                }
+                else
+                {
+                    slotItem = CreateItemInstance(item);
+                }
+
+                slot.SetData(slotItem, addAmount);
+                remain -= addAmount;
+            }
+
+            return count - remain;
+        }
+
+        public bool TryAddItem(ItemBase item, int count = 1)
+        {
+            if (item == null || count <= 0)
+                return false;
+
+            if (GetAddableItemCount(item, count) < count)
+                return false;
+
+            bool allowReuseSourceReference = item.ItemData.maxStack == 1 && count == 1;
+            int added = AddItemInternal(item, count, allowReuseSourceReference);
+
+            if (added != count)
+                return false;
+
+            UpdateInventory();
+            return true;
+        }
+
+        public bool RemoveItem(ItemBase item, int count = 1, bool isFirst = true)
+        {
+            if (item == null || count <= 0)
+                return false;
+
+            if (!isFirst)
+            {
+                ItemSlot targetSlot = itemSlots
+                    .Take(CurrentInventorySize)
+                    .FirstOrDefault(slot => slot.Item == item);
+
+                if (targetSlot == null || targetSlot.Stack < count)
+                    return false;
+
+                bool emptied = targetSlot.Stack == count;
+                ItemBase removedItem = targetSlot.Item;
+
+                targetSlot.RemoveItem(count);
+
+                if (emptied && !ContainsExactItem(removedItem) && (removedItem is EquipableItem equipableItem && equipableItem.IsEquipped) == false)
+                    removedItem.SetOwner(null);
+
+                UpdateInventory();
+                return true;
+            }
+
+            List<ItemSlot> targetSlots = GetItemSlots(item.ItemData)
+                .Where(slot => slot.Item != null)
+                .ToList();
+
+            if (targetSlots.Sum(slot => slot.Stack) < count)
+                return false;
+
+            int remaining = count;
+
+            foreach (var slot in targetSlots)
+            {
+                int removeAmount = Mathf.Min(slot.Stack, remaining);
+                bool emptied = slot.Stack == removeAmount;
+                ItemBase removedItem = slot.Item;
+
+                slot.RemoveItem(removeAmount);
+
+                if (emptied && !ContainsExactItem(removedItem) && (removedItem is EquipableItem equipableItem && equipableItem.IsEquipped) == false)
+                    removedItem.SetOwner(null);
+
+                remaining -= removeAmount;
+
+                if (remaining <= 0)
+                    break;
+            }
+
+            UpdateInventory();
+            return true;
+        }
+
+        public bool RemoveItemByData(ItemDataSO data, int count)
+        {
+            if (count <= 0)
+                return false;
+
+            List<ItemSlot> targetSlots = GetItemSlots(data)
+                .Where(slot => slot.Item != null)
+                .ToList();
+
+            if (targetSlots.Sum(slot => slot.Stack) < count)
+                return false;
+
+            int remaining = count;
+
+            foreach (var slot in targetSlots)
+            {
+                int removeAmount = Mathf.Min(slot.Stack, remaining);
+                bool emptied = slot.Stack == removeAmount;
+                ItemBase removedItem = slot.Item;
+
+                slot.RemoveItem(removeAmount);
+
+                if (emptied && !ContainsExactItem(removedItem))
+                    removedItem.SetOwner(null);
+
+                remaining -= removeAmount;
+
+                if (remaining <= 0)
+                    break;
+            }
+
+            UpdateInventory();
+            return true;
+        }
+
+        public bool ContainsItem(ItemBase item) => ContainsExactItem(item);
+
+        public int MoveItem(Inventory target, ItemSlot sourceSlot, int amount)
+        {
+            if (target == null || sourceSlot == null || sourceSlot.Item == null)
+                return 0;
+
+            amount = Mathf.Clamp(amount, 1, sourceSlot.Stack);
+
+            ItemBase sourceItem = sourceSlot.Item;
+            int addable = target.GetAddableItemCount(sourceItem, amount);
+            if (addable <= 0)
+                return 0;
+
+            bool reuseSourceReference = sourceItem.ItemData.maxStack == 1 && addable == 1;
+            int moved = target.AddItemInternal(sourceItem, addable, reuseSourceReference);
+            if (moved <= 0)
+                return 0;
+
+            bool emptied = sourceSlot.Stack == moved;
+            sourceSlot.RemoveItem(moved);
+
+            if (emptied && !reuseSourceReference && !ContainsExactItem(sourceItem))
+                sourceItem.SetOwner(null);
+
+            target.UpdateInventory();
+            UpdateInventory();
+            return moved;
+        }
+
 
         public void SortInventory()
         {

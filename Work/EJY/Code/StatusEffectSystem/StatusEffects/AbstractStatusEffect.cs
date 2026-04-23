@@ -7,8 +7,9 @@ namespace Code.StatusEffectSystem.StatusEffects
     {
         public BuffSO KeySO { get; protected set; }
         public StatusEffectEnum StatusEffectEnum { get; protected set; }
-        public int Level { get; protected set; }
+        public int Priority { get; protected set; }
         public float CurrentTime { get; protected set; }
+        public float RemainingTime => Mathf.Max(_applyTime - CurrentTime, 0f);
 
         protected Entity _target;
         protected float _value;
@@ -20,7 +21,7 @@ namespace Code.StatusEffectSystem.StatusEffects
             _target = target;
             KeySO = statusEffectInfo.KeySO;
             StatusEffectEnum = statusEffectInfo.StatusEffect;
-            Level = statusEffectInfo.Level;
+            Priority = statusEffectInfo.Priority;
             _applyTime = statusEffectInfo.ApplyTime;
             _value = statusEffectInfo.Value;
             CurrentTime = 0;
@@ -30,29 +31,28 @@ namespace Code.StatusEffectSystem.StatusEffects
 
         protected virtual void ResetStatusEffect()
         {
-            
         }
 
         public virtual bool UpdateStatusEffect(Entity entity)
         {
             CurrentTime += Time.deltaTime;
-    
-            if(!_isApplying || CurrentTime >= _applyTime)
-                return false; // 더 이상 유지되지 않음 (제거 대상)
-            return true; // 계속 유지됨
+
+            if (!_isApplying || CurrentTime >= _applyTime)
+                return false;
+            return true;
         }
 
         public virtual void ApplyStatusEffect(Entity entity)
         {
             CurrentTime = 0;
-            _isApplying = true;  
+            _isApplying = true;
         }
         
         public abstract void ReleaseStatusEffect(Entity entity);
 
         public void SetRemainingTime(float applyTime)
         {
-            _applyTime = applyTime;
+            _applyTime = Mathf.Max(0f, applyTime);
             CurrentTime = 0;
             ResetStatusEffect();
         }

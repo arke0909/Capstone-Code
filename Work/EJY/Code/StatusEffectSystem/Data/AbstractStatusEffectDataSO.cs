@@ -9,7 +9,15 @@ namespace Code.StatusEffectSystem
         public int idx;
         public string StatusEffectName;
         public bool canOverlap;
-        
+        public bool isOverWrite;
+
+        protected StatusEffectInfo ApplyFlags(StatusEffectInfo info)
+        {
+            info.CanOverlap = canOverlap;
+            info.IsOverWrite = isOverWrite;
+            return info;
+        }
+
         public abstract AbstractStatusEffect CreateStatusEffect(Entity target, StatusEffectInfo info);
     }
 }

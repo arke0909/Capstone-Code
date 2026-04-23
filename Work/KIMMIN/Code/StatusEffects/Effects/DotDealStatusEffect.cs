@@ -1,5 +1,5 @@
-﻿using Assets.Work.AKH.Scripts.Entities.Vitals;
-using Chipmunk.ComponentContainers;
+﻿using Chipmunk.ComponentContainers;
+using Assets.Work.AKH.Scripts.Entities.Vitals;
 using Code.StatusEffectSystem;
 using Code.StatusEffectSystem.StatusEffects;
 using Scripts.Combat.Datas;
@@ -25,7 +25,8 @@ namespace Work.Code.StatusEffects.Effects
 
         private void CalcTick()
         {
-            _remainingTicks = Mathf.FloorToInt(_applyTime / _tick);
+            _tickTimer = 0f;
+            _remainingTicks = Mathf.Max(1, Mathf.CeilToInt(_applyTime / _tick));
             _damagePerTick = _value / _remainingTicks;
         }
 

@@ -14,7 +14,7 @@ namespace Code.StatusEffectSystem
     {
         public BuffSO KeySO;
         public StatusEffectEnum StatusEffect;
-        public int Level;
+        public int Priority;
         public float ApplyTime;
         public float Value;
         public bool IsPercent;
@@ -25,7 +25,7 @@ namespace Code.StatusEffectSystem
         {
             KeySO = keySO;
             StatusEffect = data.statusEffect;
-            Level = data.level;
+            Priority = data.priority;
             ApplyTime = keySO.applyTime;
             if (valueLevel >= data.effectValue.Length) valueLevel = data.effectValue.Length - 1;
             Value = data.effectValue[valueLevel];
@@ -81,6 +81,17 @@ namespace Code.StatusEffectSystem
             return newStatusEffect;
         }
 
+        private StatusEffectInfo ApplyStatusEffectFlags(StatusEffectInfo info)
+        {
+            var data = GetStatusEffect(info.StatusEffect);
+            if (data == null)
+                return info;
+
+            info.CanOverlap = data.canOverlap;
+            info.IsOverWrite = data.isOverWrite;
+            return info;
+        }
+
         #region About StatusEffect Apply and Release
 
         private List<AbstractStatusEffect> GetOrCreateStatusEffectsList(StatusEffectInfo info)
@@ -95,34 +106,39 @@ namespace Code.StatusEffectSystem
             return list;
         }
 
-        private bool ResetIfAlreadyApplied(IEnumerable<AbstractStatusEffect> list, StatusEffectInfo info, out AbstractStatusEffect newStatusEffect)
+        private bool ResetIfAlreadyApplied(IEnumerable<AbstractStatusEffect> list, StatusEffectInfo info, out AbstractStatusEffect activeStatusEffect)
         {
-            newStatusEffect = list.FirstOrDefault(statusEffect =>
+            activeStatusEffect = list.FirstOrDefault(statusEffect =>
                 info.StatusEffect == statusEffect.StatusEffectEnum);
-            if (newStatusEffect != null)
-            {
-                newStatusEffect.SetRemainingTime(Mathf.Max(info.ApplyTime, newStatusEffect.CurrentTime));
-                return true;
-            }
+            if (activeStatusEffect == null)
+                return false;
 
-            return false;
+            float nextDuration = Mathf.Max(info.ApplyTime, activeStatusEffect.RemainingTime);
+            activeStatusEffect.SetRemainingTime(nextDuration);
+            return true;
         }
 
-
-        private void ApplyNoneOverlapStatusEffect(StatusEffectInfo info, AbstractStatusEffect newStatusEffect)
+        private bool TryRegisterNoneOverlapStatusEffect(StatusEffectInfo info, AbstractStatusEffect newStatusEffect, out AbstractStatusEffect keptEffect)
         {
-            if (info.CanOverlap) return;
+            keptEffect = null;
+
+            if (info.CanOverlap)
+                return true;
 
             if (_noneOverlapStatusEffects.TryGetValue(info.StatusEffect, out var oldEffect))
             {
-                // 레벨에 상관없이 덮어써야함 or 레벨이 더 높음
-                if (info.IsOverWrite || oldEffect.Level <= newStatusEffect.Level)
+                bool shouldReplace = info.IsOverWrite || oldEffect.Priority <= newStatusEffect.Priority;
+                if (!shouldReplace)
                 {
-                    RemoveFromDictionaryAndFlag(oldEffect);
+                    keptEffect = oldEffect;
+                    return false;
                 }
+
+                RemoveFromDictionaryAndFlag(oldEffect);
             }
 
             _noneOverlapStatusEffects[info.StatusEffect] = newStatusEffect;
+            return true;
         }
 
         private void ApplyStatusEffect(AbstractStatusEffect newStatusEffect)
@@ -134,23 +150,26 @@ namespace Code.StatusEffectSystem
 
         public AbstractStatusEffect AddStatusEffect(StatusEffectInfo info)
         {
+            info = ApplyStatusEffectFlags(info);
             var list = GetOrCreateStatusEffectsList(info);
 
-            // 이미 걸린 상태이상이라면 리셋, 리셋 성공하면 다음 버프
-            if (ResetIfAlreadyApplied(list, info, out AbstractStatusEffect appliedStatusEffect))
+            if (!info.CanOverlap && ResetIfAlreadyApplied(list, info, out AbstractStatusEffect appliedStatusEffect))
                 return appliedStatusEffect;
 
-            // 새로 상태이상 객체 생성
             var newStatusEffect = CreateStatusEffect(info);
 
-            // 기절같이 중첩이 안된다면 덮어쓰기
-            ApplyNoneOverlapStatusEffect(info, newStatusEffect);
+            if (!TryRegisterNoneOverlapStatusEffect(info, newStatusEffect, out AbstractStatusEffect keptEffect))
+            {
+                if (list.Count == 0)
+                    _statusEffects.Remove(info.KeySO);
+
+                return keptEffect;
+            }
 
             list.Add(newStatusEffect);
             ApplyStatusEffect(newStatusEffect);
             return newStatusEffect;
         }
-
 
         private void RemoveFromDictionaryAndFlag(AbstractStatusEffect effect)
         {
