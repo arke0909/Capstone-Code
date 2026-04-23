@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06cc92f22c62480786797b220ca75aed, type: 3}
+  m_Name: MarkerIconList
+  m_EditorClassIdentifier: 
+  markerList:
+  - markerName: Star
+    markerIcon: {fileID: 21300000, guid: e552e819160c244cd8b8aff67d523c01, type: 3}
+  - markerName: Cat
+    markerIcon: {fileID: 21300000, guid: 59ea39eba15be461bbba4a1de03ef050, type: 3}
+  - markerName: Treasure
+    markerIcon: {fileID: 21300000, guid: c9dc0af46fec54cc69f44637c0593ae6, type: 3}
+  - markerName: Flag
+    markerIcon: {fileID: 21300000, guid: 430aae9c0a1a046fd9027f198aba9d5d, type: 3}
+  - markerName: "\uADFC\uC721"
+    markerIcon: {fileID: 21300000, guid: 04277ffae934241bd892c006b8273ec5, type: 3}

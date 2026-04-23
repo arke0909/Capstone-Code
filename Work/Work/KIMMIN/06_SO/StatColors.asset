@@ -1,0 +1,159 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c29a1342b0e240adb27bd51909a04d28, type: 3}
+  m_Name: StatColors
+  m_EditorClassIdentifier: 
+  settings:
+  - statType: 0
+    label: "\uACF5\uACA9\uB825"
+    prefix: 
+    suffix: 
+    invert: 0
+    badMin: 16
+    badMax: 25
+    goodMin: 32
+    goodMax: 75
+  - statType: 1
+    label: "\uC5F0\uC0AC\uB825"
+    prefix: 
+    suffix: "\uCD08"
+    invert: 1
+    badMin: 1.2
+    badMax: 2.25
+    goodMin: 0.07
+    goodMax: 0.4
+  - statType: 2
+    label: "\uC7A5\uC804\uC18D\uB3C4"
+    prefix: 
+    suffix: "\uCD08"
+    invert: 1
+    badMin: 2.5
+    badMax: 4
+    goodMin: 1.6
+    goodMax: 2.2
+  - statType: 3
+    label: "\uCD1D\uC54C \uC18D\uB3C4"
+    prefix: 
+    suffix: m/s
+    invert: 0
+    badMin: 45
+    badMax: 45
+    goodMin: 50
+    goodMax: 75
+  - statType: 4
+    label: "\uBC1C\uC0AC \uC218"
+    prefix: 
+    suffix: "\uAC1C"
+    invert: 0
+    badMin: 1
+    badMax: 1
+    goodMin: 2
+    goodMax: 8
+  - statType: 5
+    label: "\uCD1D\uC54C \uC218"
+    prefix: 
+    suffix: "\uBC1C"
+    invert: 0
+    badMin: 10
+    badMax: 20
+    goodMin: 30
+    goodMax: 60
+  - statType: 6
+    label: "\uBC94\uC704"
+    prefix: 
+    suffix: M
+    invert: 0
+    badMin: 10
+    badMax: 20
+    goodMin: 25
+    goodMax: 50
+  - statType: 7
+    label: "\uC870\uC900 \uC774\uB3D9\uC18D\uB3C4"
+    prefix: 
+    suffix: "\uBC30"
+    invert: 0
+    badMin: 0.52
+    badMax: 0.65
+    goodMin: 0.75
+    goodMax: 0.9
+  - statType: 8
+    label: "\uC218\uC9C1\uBC18\uB3D9"
+    prefix: 
+    suffix: 
+    invert: 1
+    badMin: 126
+    badMax: 50
+    goodMin: 10
+    goodMax: 50
+  - statType: 9
+    label: "\uC88C\uC6B0\uBC18\uB3D9"
+    prefix: 
+    suffix: 
+    invert: 1
+    badMin: 36
+    badMax: 57
+    goodMin: 18
+    goodMax: 35
+  - statType: 10
+    label: "\uD0C4\uD37C\uC9D0"
+    prefix: 
+    suffix: 
+    invert: 1
+    badMin: 12
+    badMax: 20
+    goodMin: 5
+    goodMax: 10
+  - statType: 11
+    label: "\uAC00\uBC29\uC6A9\uB7C9"
+    prefix: +
+    suffix: 
+    invert: 0
+    badMin: -5
+    badMax: 0
+    goodMin: 0
+    goodMax: 10
+  - statType: 12
+    label: "\uCCB4\uB825"
+    prefix: +
+    suffix: 
+    invert: 0
+    badMin: -10
+    badMax: 0
+    goodMin: 0
+    goodMax: 100
+  - statType: 13
+    label: "\uBC29\uC5B4\uB825"
+    prefix: +
+    suffix: 
+    invert: 0
+    badMin: -10
+    badMax: 0
+    goodMin: 0
+    goodMax: 15
+  - statType: 14
+    label: "\uBC30\uACE0\uD514"
+    prefix: +
+    suffix: 
+    invert: 0
+    badMin: 0
+    badMax: 0
+    goodMin: 0
+    goodMax: 50
+  - statType: 15
+    label: "\uAC08\uC99D"
+    prefix: +
+    suffix: 
+    invert: 0
+    badMin: 0
+    badMax: 0
+    goodMin: 0
+    goodMax: 50

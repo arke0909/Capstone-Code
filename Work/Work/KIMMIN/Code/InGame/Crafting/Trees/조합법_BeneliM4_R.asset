@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca62f7e28d5948408c5c73e6790860c8, type: 3}
+  m_Name: "\uC870\uD569\uBC95_BeneliM4_R"
+  m_EditorClassIdentifier: 
+  treeName: "\uC870\uD569\uBC95_BeneliM4_R"
+  nodeList:
+  - <Item>k__BackingField: {fileID: 11400000, guid: 7e55412e81e0934419bf0a3f47456073, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+  - <Item>k__BackingField: {fileID: 11400000, guid: 2d4d91408f7f812459193266aa1633e4, type: 2}
+    <Tree>k__BackingField: {fileID: 11400000, guid: 10a388825c1869f48b158242a02ccf14, type: 2}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+  - <Item>k__BackingField: {fileID: 11400000, guid: 85f076e77a6b1c4459b75303afe7e925, type: 2}
+    <Tree>k__BackingField: {fileID: 11400000, guid: 77bc3def170621a4b82472a414daa335, type: 2}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+  - <Item>k__BackingField: {fileID: 11400000, guid: 119551b76a672da4aa84dd17e8e6b4c1, type: 2}
+    <Tree>k__BackingField: {fileID: 11400000, guid: 3f985a0291b12404c94da1e5da2cd611, type: 2}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 1
+  - <Item>k__BackingField: {fileID: 11400000, guid: 058aa736c88bcab4b8c6b38e4d3ff47d, type: 2}
+    <Tree>k__BackingField: {fileID: 11400000, guid: 1ee3602a1ee12aa48b7b5ca7d63d826f, type: 2}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 1
+  - <Item>k__BackingField: {fileID: 11400000, guid: f1183a7f042918d43bbf7676d6003f3b, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 1
+  - <Item>k__BackingField: {fileID: 11400000, guid: d456b4e9576a2dc48a537edc9dca0b27, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 1
+  isBinary: 1

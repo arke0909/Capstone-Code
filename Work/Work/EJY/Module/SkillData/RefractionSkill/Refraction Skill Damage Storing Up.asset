@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fa70512758e4ee78a81d354197ade59, type: 3}
+  m_Name: Refraction Skill Damage Storing Up
+  m_EditorClassIdentifier: 
+  upgradeIcon: {fileID: 21300000, guid: 4c21bf718b1044c48b96f1da26cf53d4, type: 3}
+  UpgradeTitle: "\uB300\uBBF8\uC9C0 \uD761\uC218\uC728 \uC99D\uAC00"
+  upgradeDescription: "\uB300\uBBF8\uC9C0 \uD761\uC218\uC728\uC774 \uC99D\uAC00\uD569\uB2C8\uB2E4."
+  maxUpgradeCnt: 1
+  needUpgradeList:
+  - {fileID: 11400000, guid: 3f3f11632a5fcfd4b913d9495f465a03, type: 2}
+  donNeedUpgradeList: []
+  bindingFlags: 52
+  targetSkillName: Scripts.SkillSystem.Skills.RefractionSkill, Assembly-CSharp, Version=0.0.0.0,
+    Culture=neutral, PublicKeyToken=null
+  UpgradeType: 0
+  fieldName: _damageStoringLevel
+  fieldType: 1
+  floatValue: 0
+  intValue: 1
+  upgradeMethodName: UseSkill
+  upgradeParams: 
+  rollbackMethodName: UseSkill
+  rollbackParams: 

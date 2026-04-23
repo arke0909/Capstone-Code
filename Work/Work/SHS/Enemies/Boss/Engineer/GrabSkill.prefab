@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6041617847086094922
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4705723521594229229}
+  - component: {fileID: 8143226900558782872}
+  m_Layer: 12
+  m_Name: GrabSkill
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4705723521594229229
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6041617847086094922}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -120.55, y: 3.007141, z: -44.67}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8143226900558782872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6041617847086094922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1394bb3e44960b84dbcf19e7e78cba4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <SkillData>k__BackingField: {fileID: 11400000, guid: 112976183d32d1d42b19860a3500758a, type: 2}
+  cooldown: 12
+  hookProjectilePrefab: {fileID: 7476008836844655840, guid: f679a210d0fc4564e928c97624f63ef3, type: 3}
+  firePoint: {fileID: 0}
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 64
+  projectileSpeed: 35
+  projectileRange: 20
+  projectileLifeTime: 2
+  spawnForwardOffset: 0.6
+  pullMovementData: {fileID: 11400000, guid: cdd2ae17cdabdce488d243585c588689, type: 2}
+  pullAnchor: {fileID: 0}
+  pullStopDistance: 1.2
+  controlLockDuration: 1
+  defaultDamage: 8
+  damageMultiplier: 1
+  defPierceLevel: 0
+  damageType: 2
+  <TargetState>k__BackingField: {fileID: 11400000, guid: 92665a5a1cf0aec4e87819ed62d2d2e1, type: 2}

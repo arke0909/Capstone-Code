@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fa70512758e4ee78a81d354197ade59, type: 3}
+  m_Name: BackDash Cooldown Decrease
+  m_EditorClassIdentifier: 
+  upgradeIcon: {fileID: 21300000, guid: 705578036c81e4d9183c53c72a19a105, type: 3}
+  UpgradeTitle: "\uCFE8\uD0C0\uC784 \uAC10\uC18C"
+  upgradeDescription: "\uCFE8\uD0C0\uC784\uC744 \uAC10\uC18C\uC2DC\uD0B5\uB2C8\uB2E4."
+  maxUpgradeCnt: 1
+  needUpgradeList:
+  - {fileID: 11400000, guid: 0165c8451b559b642823c8ff61a1281a, type: 2}
+  - {fileID: 11400000, guid: babaf44f8b77e844a8accaa4f4b9985a, type: 2}
+  donNeedUpgradeList: []
+  bindingFlags: 52
+  targetSkillName: Code.SkillSystem.Skills.BackDash.BackDashSkill, Assembly-CSharp,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  UpgradeType: 0
+  fieldName: cooldown
+  fieldType: 0
+  floatValue: -3
+  intValue: 0
+  upgradeMethodName: 
+  upgradeParams: 
+  rollbackMethodName: 
+  rollbackParams: 

@@ -1,0 +1,165 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4720399886342194687
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 614530210462608082}
+  - component: {fileID: 2511233381994188717}
+  m_Layer: 7
+  m_Name: DamageCaster
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &614530210462608082
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4720399886342194687}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4723039524529176096}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2511233381994188717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4720399886342194687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78eb3a2a24db91f4bad0e9ed8db951ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  whatIsTarget:
+    serializedVersion: 2
+    m_Bits: 4160
+  castRadius: 2.5
+  castAngle: 360
+  maxCollideCount: 10
+--- !u!1001 &5733478672591995
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 525455826914121111, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 39.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.17
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -138.93
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5391958093160237281, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      propertyPath: m_Name
+      value: Explosive
+      objectReference: {fileID: 0}
+    - target: {fileID: 5391958093160237281, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 614530210462608082}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5391958093160237281, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8495267328049500061}
+  m_SourcePrefab: {fileID: 100100000, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+--- !u!4 &4723039524529176096 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+  m_PrefabInstance: {fileID: 5733478672591995}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5386388446182941850 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5391958093160237281, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+  m_PrefabInstance: {fileID: 5733478672591995}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8495267328049500061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5386388446182941850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b15783e4d974c01b94b865b1f8accde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitBodyTrm: {fileID: 4723039524529176096}
+  OnHitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeadEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  whatIsBullet:
+    serializedVersion: 2
+    m_Bits: 1024
+  explosiveItem: {fileID: 11400000, guid: ce0ad6993ca7463479b56da411c22a66, type: 2}
+  poolManager: {fileID: 11400000, guid: c413011c9deace64aa106d229c06e489, type: 2}
+  damageCaster: {fileID: 2511233381994188717}
+  movementData: {fileID: 11400000, guid: 5f485a687fe7c184abe27363b82e6f96, type: 2}
+  explosiveSoundID:
+    _entity: {fileID: 11400000, guid: ea4825251a3351c4f9d6eff9b587178d, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 5386388446182941850}
+  damage: 60
+  nearbyExplosives: []

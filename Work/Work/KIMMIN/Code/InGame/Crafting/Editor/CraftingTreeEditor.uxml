@@ -1,0 +1,35 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Work/KIMMIN/Code/InGame/Crafting/Editor/CraftingTreeEditor.uss?fileID=7433441132597879392&amp;guid=00d8f65381dd1234298d09a6c0cabdfa&amp;type=3#CraftingTreeEditor" />
+    <ui:VisualElement name="Container" style="flex-grow: 1; flex-direction: row;">
+        <ui:VisualElement name="TreeListContainer" style="flex-grow: 1; width: 150px; border-right-color: rgb(255, 255, 255); border-right-width: 1px;">
+            <ui:ScrollView name="ItemView" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Contents" style="flex-grow: 1;">
+            <ui:VisualElement name="TreeArea" style="flex-grow: 1; height: auto; padding-bottom: 0; background-color: rgba(0, 0, 0, 0); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 1px;">
+                <ui:VisualElement name="Tree" style="flex-grow: 1; align-items: center;">
+                    <ui:VisualElement name="TopBar" style="flex-grow: 0; width: 100%; height: 25px; align-items: center; justify-content: space-around; flex-direction: row;">
+                        <ui:Button text="이진트리" name="BinaryTreeButton" style="flex-grow: 1;" />
+                        <ui:Button text="3노드 트리" name="TripleTreeButton" style="flex-grow: 1;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="Header" style="flex-grow: 1; width: 100%; height: 25px; align-items: center; justify-content: space-between;">
+                        <ui:Label name="Title" style="font-size: 24px;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="Level1" style="flex-grow: 1; flex-direction: row;" />
+                    <ui:VisualElement name="Level2" style="flex-grow: 1; flex-direction: row; align-items: flex-start; justify-content: space-around; align-content: flex-start; align-self: center;" />
+                    <ui:VisualElement name="Level3" style="flex-grow: 1; flex-direction: row;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="Information" style="flex-grow: 1; flex-direction: row;">
+                <ui:VisualElement name="Options" style="flex-grow: 1.5; border-right-width: 1px; border-right-color: rgb(255, 255, 255);">
+                    <ui:TextField label="Tree Name" placeholder-text="enter tree name.." name="NameField" />
+                    <ui:Button text="Generate" name="GenerateButton" />
+                </ui:VisualElement>
+                <ui:VisualElement name="NodeInfo" style="flex-grow: 0; flex-shrink: 0;">
+                    <uie:ObjectField label="ItemType" type="Work.LKW.Code.Items.ItemInfo.ItemDataSO, Assembly-CSharp" name="ItemField" />
+                    <uie:ObjectField label="Tree" type="Work.Code.Crafting.CraftTreeSO, Assembly-CSharp" name="TreeField" />
+                    <ui:IntegerField label="Count" value="0" name="CountField" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
