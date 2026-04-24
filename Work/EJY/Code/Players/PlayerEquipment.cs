@@ -203,6 +203,8 @@ namespace Code.Players
 
         public void RestoreHandledEquip()
         {
+            _equips[EquipPartType.Hand]?.Unequip(_player);
+            
             if (_handledIndex < 0)
                 return;
 

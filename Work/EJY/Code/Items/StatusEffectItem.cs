@@ -21,10 +21,7 @@ namespace Work.LKW.Code.Items
 
         public override void Use(Entity user)
         {
-            foreach (var info in  StatusEffectData.buffs.GetStatusEffectInfo())
-            {
-                user.Get<EntityStatusEffect>().AddStatusEffect(info);
-            }
+            user.Get<EntityStatusEffect>().AddStatusEffect(StatusEffectData.buffs.GetStatusEffectInfo());
             base.Use(user);
         }
     }

@@ -39,19 +39,13 @@ namespace Scripts.SkillSystem.Skills
                 _skillTimer = skillDuration;
                 _isUsing = true;
 
-                foreach (var info in speedIncreaseData.GetStatusEffectInfo(_speedIncreaseLevel))
-                {
-                    _statusEffect.AddStatusEffect(info);
-                }
+                _statusEffect.AddStatusEffect(speedIncreaseData.GetStatusEffectInfo(_speedIncreaseLevel));
                 
                 //if (dashEnable)
                     //_skillComponent.ChangeSkill(typeof(DashSkill),(int)ActiveSlotType.Space);
                 if (_canDamageStoring)
                 {
-                    foreach (var info in damageStoringData.GetStatusEffectInfo(_damageStoringLevel))
-                    {
-                        _statusEffect.AddStatusEffect(info);
-                    }
+                    _statusEffect.AddStatusEffect(damageStoringData.GetStatusEffectInfo(_damageStoringLevel));
                 }
             }
             else

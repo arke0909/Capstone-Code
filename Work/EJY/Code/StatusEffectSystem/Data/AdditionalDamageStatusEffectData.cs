@@ -9,7 +9,6 @@ namespace Code.StatusEffectSystem
     {
         public override AbstractStatusEffect CreateStatusEffect(Entity target, StatusEffectInfo info)
         {
-            info = ApplyFlags(info);
             return new AdditionalDamageStatusEffect(target, info);
         }
     }

@@ -14,7 +14,6 @@ namespace Code.StatusEffectSystem
 
         public override AbstractStatusEffect CreateStatusEffect(Entity target, StatusEffectInfo info)
         {
-            info = ApplyFlags(info);
             StatStatusEffect statusEffect = new StatStatusEffect(target, info, targetStat);
 
             float value = info.Value;

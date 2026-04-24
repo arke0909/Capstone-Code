@@ -45,8 +45,7 @@ namespace Scripts.SkillSystem.Skills
             _isBuffActive = true;
             _remainingBuffTime = adrenalineData.applyTime;
 
-            foreach (var info in adrenalineData.GetStatusEffectInfo(_buffLevel))
-                _buffCompo.AddStatusEffect(info);
+            _buffCompo.AddStatusEffect(adrenalineData.GetStatusEffectInfo(_buffLevel));
             
             _vfxCompo.PlayVFX("AdrenalineEffect", transform.position, Quaternion.identity);
 
@@ -63,10 +62,7 @@ namespace Scripts.SkillSystem.Skills
 
         private void AddReloadSpeed()
         {
-            foreach (var info in reloadSpeedData.GetStatusEffectInfo(_reloadLevel))
-            {
-                _buffCompo.AddStatusEffect(info);
-            }
+            _buffCompo.AddStatusEffect(reloadSpeedData.GetStatusEffectInfo(_reloadLevel));
         }
         
          private async UniTaskVoid OnHitGetAdditionalTime()

@@ -28003,7 +28003,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ac5684f024f41d6b8ff764381dcb09d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <HotbarTypes>k__BackingField: 0000000000000000010000000200000002000000020000000200000002000000
+  <HotbarTypes>k__BackingField: 00000000000000000100000002000000020000000200000002000000
   hotbarCount:
     _serializedList:
     - Key: 0
@@ -28011,7 +28011,7 @@ MonoBehaviour:
     - Key: 1
       Value: 1
     - Key: 2
-      Value: 5
+      Value: 4
 --- !u!1 &5770743735723730078
 GameObject:
   m_ObjectHideFlags: 0

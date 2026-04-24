@@ -78,10 +78,7 @@ namespace Code.SkillSystem.Skills.Bombing
                 var compoContainer = targets[i].gameObject.GetComponent<ComponentContainer>();
                 var entityStatusEffect = compoContainer.Get<EntityStatusEffect>();
 
-                foreach (var info in slowAndAdditionalDamageData.GetStatusEffectInfo())
-                {
-                    entityStatusEffect.AddStatusEffect(info);
-                }
+                entityStatusEffect.AddStatusEffect(slowAndAdditionalDamageData.GetStatusEffectInfo());
             }
         }
 

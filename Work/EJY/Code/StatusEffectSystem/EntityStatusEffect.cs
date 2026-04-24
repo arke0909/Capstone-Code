@@ -38,7 +38,6 @@ namespace Code.StatusEffectSystem
     public class EntityStatusEffect : MonoBehaviour, IContainerComponent
     {
         [SerializeField] private StatusEffectListSO statusEffectList;
-        public event Action<AbstractStatusEffect> OnStatusEffectApplied;
         public event Action<AbstractStatusEffect> OnStatusEffectReleased;
         public ComponentContainer ComponentContainer { get; set; }
 
@@ -81,17 +80,6 @@ namespace Code.StatusEffectSystem
             return newStatusEffect;
         }
 
-        private StatusEffectInfo ApplyStatusEffectFlags(StatusEffectInfo info)
-        {
-            var data = GetStatusEffect(info.StatusEffect);
-            if (data == null)
-                return info;
-
-            info.CanOverlap = data.canOverlap;
-            info.IsOverWrite = data.isOverWrite;
-            return info;
-        }
-
         #region About StatusEffect Apply and Release
 
         private List<AbstractStatusEffect> GetOrCreateStatusEffectsList(StatusEffectInfo info)
@@ -104,6 +92,15 @@ namespace Code.StatusEffectSystem
             }
 
             return list;
+        }
+        
+        private StatusEffectInfo ApplyStatusEffectFlags(StatusEffectInfo info)
+        {
+            var data = GetStatusEffect(info.StatusEffect);
+            if (data == null)
+                return info;
+            
+            return data.ApplyFlag(info);
         }
 
         private bool ResetIfAlreadyApplied(IEnumerable<AbstractStatusEffect> list, StatusEffectInfo info, out AbstractStatusEffect activeStatusEffect)
@@ -145,30 +142,40 @@ namespace Code.StatusEffectSystem
         {
             newStatusEffect.ApplyStatusEffect(_target);
             _appliedStatusEffects.Add(newStatusEffect);
-            OnStatusEffectApplied?.Invoke(newStatusEffect);
         }
 
-        public AbstractStatusEffect AddStatusEffect(StatusEffectInfo info)
+        public IEnumerable<AbstractStatusEffect> AddStatusEffect(IEnumerable<StatusEffectInfo> infos)
         {
-            info = ApplyStatusEffectFlags(info);
-            var list = GetOrCreateStatusEffectsList(info);
-
-            if (!info.CanOverlap && ResetIfAlreadyApplied(list, info, out AbstractStatusEffect appliedStatusEffect))
-                return appliedStatusEffect;
-
-            var newStatusEffect = CreateStatusEffect(info);
-
-            if (!TryRegisterNoneOverlapStatusEffect(info, newStatusEffect, out AbstractStatusEffect keptEffect))
+            List<AbstractStatusEffect> statusEffects = new List<AbstractStatusEffect>();
+            
+            foreach (var info in infos)
             {
-                if (list.Count == 0)
-                    _statusEffects.Remove(info.KeySO);
+                var applyflagInfo = ApplyStatusEffectFlags(info);
+                var list = GetOrCreateStatusEffectsList(applyflagInfo);
 
-                return keptEffect;
+                if (!applyflagInfo.CanOverlap && ResetIfAlreadyApplied(list, applyflagInfo, out AbstractStatusEffect appliedStatusEffect))
+                {
+                    statusEffects.Add(appliedStatusEffect);
+                    continue;
+                }
+
+                var newStatusEffect = CreateStatusEffect(applyflagInfo);
+
+                if (!TryRegisterNoneOverlapStatusEffect(applyflagInfo, newStatusEffect, out AbstractStatusEffect keptEffect))
+                {
+                    if (list.Count == 0)
+                        _statusEffects.Remove(applyflagInfo.KeySO);
+
+                    statusEffects.Add(keptEffect);
+                    continue;
+                }
+
+                statusEffects.Add(newStatusEffect);
+                list.Add(newStatusEffect);
+                ApplyStatusEffect(newStatusEffect);
             }
-
-            list.Add(newStatusEffect);
-            ApplyStatusEffect(newStatusEffect);
-            return newStatusEffect;
+            
+            return statusEffects;
         }
 
         private void RemoveFromDictionaryAndFlag(AbstractStatusEffect effect)
@@ -220,8 +227,5 @@ namespace Code.StatusEffectSystem
         }
 
         #endregion
-
-        public bool IsStatusEffectExist(StatusEffectEnum statusEffect)
-            => _noneOverlapStatusEffects.ContainsKey(statusEffect);
     }
 }

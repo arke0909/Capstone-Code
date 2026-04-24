@@ -1,4 +1,5 @@
-﻿﻿using Chipmunk.ComponentContainers;
+﻿using System.Linq;
+ using Chipmunk.ComponentContainers;
 using Code.StatusEffectSystem;
 using Code.StatusEffectSystem.StatusEffects;
 using Entities;
@@ -41,29 +42,18 @@ namespace Code.SkillSystem.Skills.BulletProof
             // temp
             if (isDmgIncreaseAtHaveShield)
             {
-                foreach (var info in damageMultiIncreaseData.GetStatusEffectInfo())
-                {
-                    _entityStatusEffect.AddStatusEffect(info);
-                }
+                _entityStatusEffect.AddStatusEffect(damageMultiIncreaseData.GetStatusEffectInfo());
             }
             // temp
             if (isDmgIncreaseByShield)
             {
-                foreach (var info in dmgIncreaseByShieldBuff.GetStatusEffectInfo())
-                {
-                    _entityStatusEffect.AddStatusEffect(info);
-                }
+                _entityStatusEffect.AddStatusEffect(dmgIncreaseByShieldBuff.GetStatusEffectInfo());
             }
             
-            foreach (var info in shieldBuff.GetStatusEffectInfo())
-            {
-                var appliedEffect = _entityStatusEffect.AddStatusEffect(info);
-                if (info.StatusEffect == StatusEffectEnum.SHIELD && appliedEffect != null)
-                {
-                    _bulletProofShieldEffect = appliedEffect;
-                }
-            }
+            var appliedEffect = _entityStatusEffect.AddStatusEffect(shieldBuff.GetStatusEffectInfo());
+            _bulletProofShieldEffect = appliedEffect.FirstOrDefault(statusEffect => statusEffect.StatusEffectEnum == StatusEffectEnum.SHIELD);
         }
+        
         private void HandleStatusEffectReleased(AbstractStatusEffect effect)
         {
             if (effect != _bulletProofShieldEffect)
@@ -74,6 +64,7 @@ namespace Code.SkillSystem.Skills.BulletProof
             _bulletProofShieldEffect = null;
             _isBulletProofVfxPlaying = false;
         }
+        
         private void OnDestroy()
         {
             if (_entityStatusEffect == null)

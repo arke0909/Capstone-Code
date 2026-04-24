@@ -56,10 +56,7 @@ namespace Code.SkillSystem.Skills.Drones
 
                 if (dot >= lookThreshold)
                 {
-                    foreach (var info in speedBuffData.GetStatusEffectInfo())
-                    {
-                        receiver.StatusEffect.AddStatusEffect(info);
-                    }
+                    receiver.StatusEffect.AddStatusEffect(speedBuffData.GetStatusEffectInfo());
                 }
             }
         }

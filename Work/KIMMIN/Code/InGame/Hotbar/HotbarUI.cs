@@ -70,7 +70,7 @@ namespace Code.InGame.Hotbar
         {
             if (keyText != null)
             {
-                keyText.text = Index.ToString();
+                keyText.text = (Index + 1).ToString();
             }
         }
 

@@ -33,7 +33,7 @@ namespace Code.InGame.Hotbar
         {
             name = $"{HotbarType}_HotbarSlot_{transform.GetSiblingIndex()}";
             if (indexText != null)
-                indexText.text = (transform.GetSiblingIndex() + 3).ToString();
+                indexText.text = (Index + 1).ToString();
         }
     }
 }

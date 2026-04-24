@@ -44,16 +44,10 @@ namespace Code.SkillSystem.Skills.FireRate
         {
             PlayVFX();
             
-            foreach (var info in fireRateBuffSO.GetStatusEffectInfo())
-            {
-                _entityStatusEffect.AddStatusEffect(info);
-            }
+            _entityStatusEffect.AddStatusEffect(fireRateBuffSO.GetStatusEffectInfo());
 
             if(isBulletReduceRateDecrease)
-                foreach (var info in bulletReduceRateBuffSO.GetStatusEffectInfo())
-                {
-                    _entityStatusEffect.AddStatusEffect(info);
-                }
+                    _entityStatusEffect.AddStatusEffect(bulletReduceRateBuffSO.GetStatusEffectInfo());
             
             if (isOnHitAddFireRate)
             {

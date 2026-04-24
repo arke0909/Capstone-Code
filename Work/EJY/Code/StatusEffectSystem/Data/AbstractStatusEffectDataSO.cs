@@ -11,13 +11,12 @@ namespace Code.StatusEffectSystem
         public bool canOverlap;
         public bool isOverWrite;
 
-        protected StatusEffectInfo ApplyFlags(StatusEffectInfo info)
+        public StatusEffectInfo ApplyFlag(StatusEffectInfo info)
         {
             info.CanOverlap = canOverlap;
             info.IsOverWrite = isOverWrite;
             return info;
         }
-
         public abstract AbstractStatusEffect CreateStatusEffect(Entity target, StatusEffectInfo info);
     }
 }

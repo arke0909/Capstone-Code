@@ -37,7 +37,7 @@ namespace Code.StatusEffectSystem.StatusEffects
         {
             _tickTimer += Time.deltaTime;
 
-            if (_tickTimer >= _tick && _remainingTicks > 0)
+            while (_tickTimer >= _tick && _remainingTicks > 0)
             {
                 _tickTimer -= _tick;
                 _remainingTicks--;

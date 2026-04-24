@@ -8,7 +8,6 @@ namespace Code.StatusEffectSystem.StatusEffects
     {
         public override AbstractStatusEffect CreateStatusEffect(Entity target, StatusEffectInfo info)
         {
-            info = ApplyFlags(info);
             return new DamageStoringStatusEffect(target, info);
         }
     }

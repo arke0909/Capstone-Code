@@ -14,10 +14,7 @@ namespace Scripts.Combat
                 && container.TryGetComponent(out EntityStatusEffect buffCompo))
             {
                 Debug.Log($"{target.name} has been applied to buff {buffCompo.GetType()}");
-                foreach (var info in infos)
-                {
-                    buffCompo.AddStatusEffect(info);
-                }
+                buffCompo.AddStatusEffect(infos);
             }
         }
         public abstract bool CastBuff(Vector3 position, IEnumerable<StatusEffectInfo> infos);

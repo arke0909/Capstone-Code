@@ -5,12 +5,12 @@ using Scripts.Entities;
 
 namespace Code.StatusEffectSystem.StatusEffects
 {
-    public class TempDmgIncrByShieldStatusEffect : StatStatusEffect
+    public class DmgIncrByShieldAmountStatusEffect : StatStatusEffect
     {
         private ShieldCompo _shieldCompo;
         private float _shieldScale;
         
-        public TempDmgIncrByShieldStatusEffect(Entity target, StatusEffectInfo statusEffectInfo, StatSO statSO) : base(target, statusEffectInfo, statSO)
+        public DmgIncrByShieldAmountStatusEffect(Entity target, StatusEffectInfo statusEffectInfo, StatSO statSO) : base(target, statusEffectInfo, statSO)
         {
             _shieldCompo = target.Get<ShieldCompo>();
             _shieldScale = statusEffectInfo.Value;

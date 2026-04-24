@@ -105,11 +105,7 @@ namespace Code.SkillSystem.Skills.TrackingBlade
 
                 if (entity.TryGet(out EntityStatusEffect statusEffect))
                 {
-                    if(statusEffect != null)
-                        foreach (var info in bleedingBuffInfos)
-                        {
-                            statusEffect.AddStatusEffect(info);
-                        }
+                    statusEffect.AddStatusEffect(bleedingBuffInfos);
                 }
                     
                 
