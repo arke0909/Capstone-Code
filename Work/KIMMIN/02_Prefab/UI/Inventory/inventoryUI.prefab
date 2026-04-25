@@ -852,7 +852,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   root: {fileID: 8598716720284360606}
-  equipSlotDefine: {fileID: 0}
+  equipSlotDefine: {fileID: 11400000, guid: 04555ad65b1110041b623be845f1e2da, type: 2}
 --- !u!1 &4095054686273150304
 GameObject:
   m_ObjectHideFlags: 0
@@ -1755,7 +1755,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotUI: {fileID: 5946015654686966114}
   itemText: {fileID: 1462256123374106608}
-  <SlotType>k__BackingField: 0
+  <EquipSlotType>k__BackingField: 0
 --- !u!224 &5530090503062272721 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5540179308035336960, guid: 643fe17178368414b99eadb6ae2bd6fc, type: 3}
@@ -3316,6 +3316,10 @@ PrefabInstance:
       propertyPath: <ItemType>k__BackingField
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 8988756039931205500, guid: a2a480344854d704fabad3ba799ea23b, type: 3}
+      propertyPath: <SlotType>k__BackingField
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3777,6 +3781,10 @@ PrefabInstance:
       objectReference: {fileID: 1495317122100147766}
     - target: {fileID: 8988756039931205500, guid: a2a480344854d704fabad3ba799ea23b, type: 3}
       propertyPath: <ItemType>k__BackingField
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8988756039931205500, guid: a2a480344854d704fabad3ba799ea23b, type: 3}
+      propertyPath: <SlotType>k__BackingField
       value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -5190,7 +5198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotUI: {fileID: 2029224193175690056}
   itemText: {fileID: 8384834198463711236}
-  <SlotType>k__BackingField: 0
+  <EquipSlotType>k__BackingField: 0
 --- !u!1001 &5756375999788163261
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5463,7 +5471,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotUI: {fileID: 476814227329408278}
   itemText: {fileID: 6479840986071032072}
-  <SlotType>k__BackingField: 0
+  <EquipSlotType>k__BackingField: 0
 --- !u!1001 &6136558510855895398
 PrefabInstance:
   m_ObjectHideFlags: 0

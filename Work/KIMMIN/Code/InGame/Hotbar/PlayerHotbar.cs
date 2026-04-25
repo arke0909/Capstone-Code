@@ -1,4 +1,4 @@
-﻿﻿using AYellowpaper.SerializedCollections;
+﻿using AYellowpaper.SerializedCollections;
 using Chipmunk.ComponentContainers;
 using Chipmunk.GameEvents;
 using Code.GameEvents;
@@ -10,9 +10,8 @@ using Scripts.Players;
 using Scripts.Players.States;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Work.LKW.Code.Items;
-using Work.LKW.Code.Items.ItemInfo;
+using static Code.InventorySystems.InventoryUtility;
 
 namespace Code.InventorySystem
 {
@@ -45,7 +44,7 @@ namespace Code.InventorySystem
                     var hotbar = new HotbarSlot(null);
                     hotbar.SetOwner(_inventory);
                     hotbar.HotbarType = kvp.Key;
-                    hotbar.Index = i;
+                    hotbar.SetIndex(i + (int)SlotType.Hotbar);
                     _slots.Add(hotbar);
                 }
 
@@ -86,22 +85,26 @@ namespace Code.InventorySystem
 
         private void HandleEquipHotbar(EquipHotbarEvent evt)
         {
-            if (!IsValidIndex(evt.Index))
+            int idx = evt.Index;
+            
+            if (!IsValidIndex(idx))
                 return;
 
-            if (evt.Item is not EquipableItem || !CheckValidItem(evt.Index, evt.Item))
+            if (evt.Item is not EquipableItem || !CheckValidItem(idx, evt.Item))
                 return;
 
-            _slots[evt.Index].SetData(evt.Item, GetHotbarStack(evt.Item));
+            _slots[idx].SetData(evt.Item, GetHotbarStack(evt.Item));
             UpdateUI();
         }
 
         private void HandleUnEquipHotbar(UnEquipHotbarEvent evt)
         {
-            if (!IsValidIndex(evt.Index))
+            int idx = evt.Index;
+            
+            if (!IsValidIndex(idx))
                 return;
 
-            _slots[evt.Index].SetData(null);
+            _slots[idx].SetData(null);
             UpdateUI();
         }
         
@@ -141,7 +144,7 @@ namespace Code.InventorySystem
             if (slot.Item == null)
                 return false;
 
-            if (!CheckValidItem(slot.Index, slot.Item))
+            if (!CheckValidItem(GetLocalIndex(slot.Index), slot.Item))
             {
                 slot.SetData(null);
                 return true;

@@ -8,6 +8,7 @@ using InGame.InventorySystem;
 using Scripts.Combat.Datas;
 using UnityEngine;
 using Work.LKW.Code.Items;
+using static Code.InventorySystems.InventoryUtility;
 
 namespace Code.InventorySystems
 {
@@ -66,17 +67,17 @@ namespace Code.InventorySystems
             ItemBase startSlotItem = startSlot.Item;
             ItemBase targetSlotItem = targetSlot.Item;
 
-            if (startSlot is EquipSlot startEquip && targetSlot is EquipSlot targetEquip)
+            if (TryGetSlot(startSlot, SlotType.Equip, out EquipSlot startEquip) && TryGetSlot(targetSlot, SlotType.Equip,out EquipSlot targetEquip))
             {
                 if (targetEquip.CanEquip(startSlotItem) && startEquip.CanEquip(targetSlotItem))
                     EventBus.Raise(new SwapEquipEvent(startEquip, targetEquip));
             }
-            else if (startSlot is EquipSlot startEquipSlot)
+            else if (TryGetSlot(startSlot, SlotType.Equip, out EquipSlot startEquipSlot))
             {
                 if (targetSlotItem == null)
                     EventBus.Raise(new UnEquipByDragEvent(startSlotItem, startEquipSlot, targetSlot));
             }
-            else if (targetSlot is EquipSlot targetEquipSlot)
+            else if (TryGetSlot(targetSlot,SlotType.Equip ,out EquipSlot targetEquipSlot))
             {
                 if (targetEquipSlot.CanEquip(startSlotItem))
                 {
@@ -87,21 +88,21 @@ namespace Code.InventorySystems
                     }
 
                     EventBus.Raise(
-                        new EquipByDragEvent(startSlotItem, targetEquipSlot.Index, startSlot, OnEquipByDragSuccess));
+                        new EquipByDragEvent(startSlotItem, GetLocalIndex(targetEquipSlot.Index), startSlot, OnEquipByDragSuccess));
                 }
             }
-            else if (startSlot is HotbarSlot unquipSlot)
+            else if (CheckSlotType(startSlot.Index, SlotType.Hotbar))
             {
                 if (targetSlotItem == null && startSlot.OwnerInventory == targetSlot.OwnerInventory)
-                    EventBus.Raise(new UnEquipHotbarEvent(unquipSlot.Index));
+                    EventBus.Raise(new UnEquipHotbarEvent(GetLocalIndex(startSlot.Index)));
             }
-            else if (targetSlot is HotbarSlot hotbarSlot)
+            else if (CheckSlotType(targetSlot.Index, SlotType.Hotbar))
             {
                 if (targetSlotItem == null &&
                     startSlot.OwnerInventory == targetSlot.OwnerInventory &&
                     startSlotItem is ThrowableItem or UsableItem)
                 {
-                    EventBus.Raise(new EquipHotbarEvent(hotbarSlot.Index, startSlotItem));
+                    EventBus.Raise(new EquipHotbarEvent(GetLocalIndex(targetSlot.Index), startSlotItem));
                 }
             }
             else

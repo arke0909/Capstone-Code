@@ -1,11 +1,11 @@
-using System;
 using Code.Hotbar;
 using Code.InventorySystem;
+using Code.InventorySystems.Items;
 using Code.UI.Core;
 using InGame.InventorySystem;
 using TMPro;
 using UnityEngine;
-using Work.LKW.Code.Items;
+using static Code.InventorySystems.InventoryUtility;
 
 namespace Code.InGame.Hotbar
 {
@@ -17,7 +17,7 @@ namespace Code.InGame.Hotbar
         
         [field: SerializeField] public HotbarType HotbarType { get; private set; }
         
-        public int Index => transform.GetSiblingIndex() + indexOffset;
+        public int Index => transform.GetSiblingIndex() + indexOffset + (int)SlotType.Hotbar;
         
         public void EnableFor(HotbarSlot slot)
         {
@@ -33,7 +33,7 @@ namespace Code.InGame.Hotbar
         {
             name = $"{HotbarType}_HotbarSlot_{transform.GetSiblingIndex()}";
             if (indexText != null)
-                indexText.text = (Index + 1).ToString();
+                indexText.text = GetLocalIndex(Index + 1).ToString();
         }
     }
 }

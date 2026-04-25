@@ -10,6 +10,7 @@ using Code.InventorySystems.Equipments;
 using Scripts.Players;
 using UnityEngine;
 using Work.LKW.Code.Items;
+using static Code.InventorySystems.InventoryUtility;
 
 namespace Code.Players
 {
@@ -95,46 +96,50 @@ namespace Code.Players
             EquipableItem startSlotItem = startEquipSlot.Item as EquipableItem;
             EquipableItem targetSlotItem = targetEquipSlot.Item as EquipableItem;
 
+            int startEquipLocalIndex = GetLocalIndex(startEquipSlot.Index);
+            int targetEquipLocalIndex = GetLocalIndex(targetEquipSlot.Index);
+            
             if (startSlotItem == null)
             {
                 targetEquipSlot.SetData(null);
 
                 if (targetEquipSlot.CanHandle)
-                    UpdateHotbarSlot(targetEquipSlot.Index);
+                    UpdateHotbarSlot(targetEquipLocalIndex);
             }
             else
             {
                 targetEquipSlot.SetData(startSlotItem, 1);
 
                 if (targetEquipSlot.CanHandle)
-                    UpdateHotbarSlot(targetEquipSlot.Index, startSlotItem);
+                    UpdateHotbarSlot(targetEquipLocalIndex, startSlotItem);
             }
 
+            
             if (targetSlotItem == null)
             {
                 startEquipSlot.SetData(null);
 
                 if (startEquipSlot.CanHandle)
-                    UpdateHotbarSlot(startEquipSlot.Index);
+                    UpdateHotbarSlot(startEquipLocalIndex);
             }
             else
             {
                 startEquipSlot.SetData(targetSlotItem, 1);
 
                 if (startEquipSlot.CanHandle)
-                    UpdateHotbarSlot(startEquipSlot.Index, targetSlotItem);
+                    UpdateHotbarSlot(startEquipLocalIndex, targetSlotItem);
             }
 
             bool touchesCurrentHandle =
                 startEquipSlot.CanHandle &&
                 targetEquipSlot.CanHandle &&
-                (startEquipSlot.Index == _handlingIndex || targetEquipSlot.Index == _handlingIndex);
+                (startEquipLocalIndex == _handlingIndex || targetEquipLocalIndex == _handlingIndex);
 
             if (touchesCurrentHandle)
             {
                 if (startSlotItem != null && targetSlotItem != null)
                 {
-                    if (startEquipSlot.Index == _handlingIndex)
+                    if (startEquipLocalIndex == _handlingIndex)
                     {
                         RefreshHandItem(targetSlotItem);
                     }
@@ -145,7 +150,7 @@ namespace Code.Players
                 }
                 else
                 {
-                    EquipSlot activeSlot = startEquipSlot.Index == _handlingIndex ? startEquipSlot : targetEquipSlot;
+                    EquipSlot activeSlot = startEquipLocalIndex == _handlingIndex ? startEquipSlot : targetEquipSlot;
                     EquipSlot swappedSlot = activeSlot == startEquipSlot ? targetEquipSlot : startEquipSlot;
 
                     if (!activeSlot.IsBlank)
@@ -154,7 +159,7 @@ namespace Code.Players
                     }
                     else if (!swappedSlot.IsBlank)
                     {
-                        UpdateHandleIndex(swappedSlot.Index);
+                        UpdateHandleIndex(GetLocalIndex(swappedSlot.Index));
                         RefreshHandItem(swappedSlot.Equipable);
                     }
                     else
@@ -190,7 +195,7 @@ namespace Code.Players
 
             if (equipSlot != null)
             {
-                UpdateHandleIndex(equipSlot.Index);
+                UpdateHandleIndex(GetLocalIndex(equipSlot.Index));
             }
             else
             {
@@ -208,7 +213,7 @@ namespace Code.Players
             if (_handledIndex < 0)
                 return;
 
-            EquipSlot handledSlot = _equipSlots.FirstOrDefault(slot => slot.Index == _handledIndex);
+            EquipSlot handledSlot = _equipSlots.FirstOrDefault(slot => GetLocalIndex(slot.Index) == _handledIndex);
 
             if (handledSlot == null || handledSlot.Equipable == null)
             {
@@ -216,7 +221,7 @@ namespace Code.Players
                 return;
             }
 
-            _handlingIndex = handledSlot.Index;
+            _handlingIndex = GetLocalIndex(handledSlot.Index);
             SetHandItem(handledSlot.Equipable);
         }
 
@@ -286,12 +291,14 @@ namespace Code.Players
 
             EquipPartType equipPartType = equipSlot.EquipPartType;
 
+            int equipSlotLocalIndex = GetLocalIndex(equipSlot.Index);
+            
             if (_equips.TryGetValue(equipPartType, out EquipableItem equippingItem) && equippingItem == null)
             {
                 _equips[equipPartType] = equipable;
                 if (equipPartType == EquipPartType.Hand)
                 {
-                    UpdateHandleIndex(equipSlot.Index);
+                    UpdateHandleIndex(equipSlotLocalIndex);
                     EventBus.Raise(new ChangeHandlingEvent(equipable));
                 }
 
@@ -299,7 +306,7 @@ namespace Code.Players
             }
 
             if (equipPartType == EquipPartType.Hand)
-                EventBus.Raise(new EquipHotbarEvent(equipSlot.Index, equipable));
+                EventBus.Raise(new EquipHotbarEvent(equipSlotLocalIndex, equipable));
 
             EventBus.Raise(new UpdateEquipUIEvent(_equipSlots.ToList()));
 
@@ -324,7 +331,7 @@ namespace Code.Players
 
             if (equipPartType == EquipPartType.Hand)
             {
-                EventBus.Raise(new UnEquipHotbarEvent(equipSlot.Index));
+                EventBus.Raise(new UnEquipHotbarEvent(GetLocalIndex(equipSlot.Index)));
             }
 
             // 장비 슬롯 비우기
@@ -370,7 +377,7 @@ namespace Code.Players
             var spareWeapon = equipSlot.Equipable;
             _equips[EquipPartType.Hand] = spareWeapon;
             _equips[EquipPartType.Hand].Equip(_player, equipTrms[EquipPartType.Hand]);
-            UpdateHandleIndex(equipSlot.Index);
+            UpdateHandleIndex(GetLocalIndex(equipSlot.Index));
             EventBus.Raise(new ChangeHandlingEvent(spareWeapon));
         }
 

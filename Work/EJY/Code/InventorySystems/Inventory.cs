@@ -23,10 +23,9 @@ namespace Code.InventorySystems
             {
                 if (value > itemSlots.Count)
                 {
-                    int loop = value - itemSlots.Count;
-                    for (int i = 0; i < loop; i++)
+                    for (int i = itemSlots.Count; i < value; i++)
                     {
-                        CreateSlot();
+                        CreateSlot(i);
                     }
                 }
 
@@ -42,14 +41,15 @@ namespace Code.InventorySystems
         {
             for (int i = 0; i < CurrentInventorySize; ++i)
             {
-                CreateSlot();
+                CreateSlot(i);
             }
         }
 
-        private void CreateSlot()
+        protected virtual void CreateSlot(int idx)
         {
             ItemSlot slot = new ItemSlot(null);
             slot.SetOwner(this);
+            slot.SetIndex(idx);
             itemSlots.Add(slot);
         }
 

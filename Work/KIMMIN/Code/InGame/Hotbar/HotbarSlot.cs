@@ -16,6 +16,5 @@ namespace Code.Hotbar
         }
         
         public HotbarType HotbarType { get; set; }
-        public int Index { get; set; }
     }
 }

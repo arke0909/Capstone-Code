@@ -16,7 +16,7 @@ namespace InGame.InventorySystem
             EquipSlotType = define.allowedEquipSlot;
             EquipPartType = define.equipPart;
             CanHandle = define.canHandle;
-            Index = define.index;
+            Index = define.index + (int)SlotType.Equip;
         }
         
         public EquipableItem Equipable => Item as EquipableItem;
@@ -24,7 +24,6 @@ namespace InGame.InventorySystem
         public EquipPartType EquipPartType { get; private set; }
         public ItemObject ItemObject => Equipable?.ItemObject;
         public bool CanHandle { get; private set; }
-        public int Index { get; private set; }
 
         public bool CanEquip(ItemBase item)
         {

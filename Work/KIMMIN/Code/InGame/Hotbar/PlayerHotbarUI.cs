@@ -7,7 +7,7 @@ using Work.LKW.Code.Items;
 namespace Code.Hotbar
 {
     public class PlayerHotbarUI : MonoBehaviour
-    { 
+    {
         private HotbarUI[] _hotbars;
 
         private void Awake()
@@ -18,7 +18,7 @@ namespace Code.Hotbar
             {
                 _hotbars[i].SetIndex(i);
             }
-            
+
             EventBus.Subscribe<UpdateHotbarUIEvent>(HandleUpdateHotbar);
         }
 
@@ -29,14 +29,10 @@ namespace Code.Hotbar
 
         private void HandleUpdateHotbar(UpdateHotbarUIEvent evt)
         {
-            for(int i = 0; i < _hotbars.Length; i++)
+            for (int i = 0; i < _hotbars.Length; i++)
             {
-                if (evt.EquipSlots[i].Item != null)
-                {
-                    _hotbars[i].EnableFor(evt.EquipSlots[i]);
-                }
-                else
-                    _hotbars[i].Clear();
+                _hotbars[i].Clear();
+                _hotbars[i].EnableFor(evt.EquipSlots[i]);
             }
         }
     }

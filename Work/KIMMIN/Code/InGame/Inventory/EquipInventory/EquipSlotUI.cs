@@ -17,7 +17,7 @@ namespace InGame.InventorySystem
     {
         [SerializeField] private ItemSlotUI slotUI;
         [SerializeField] private TextMeshProUGUI itemText;
-        [field: SerializeField] public EquipSlotType SlotType { get; private set; }
+        [field: SerializeField] public EquipSlotType EquipSlotType { get; private set; }
         private readonly Color _outlineColor = new Color32(100, 100, 255, 255);
 
         public int Index { get; private set; }
@@ -35,7 +35,7 @@ namespace InGame.InventorySystem
         private void HandleStartDrag(StartDragEvent evt)
         {
             var item = evt.ItemSlotUI.ItemSlot.Item.ItemData;
-            if (item != null && item.itemType.GetEquipSlotType() == SlotType)
+            if (item != null && item.itemType.GetEquipSlotType() == EquipSlotType)
             {
                 slotUI.SetOutlineColor(_outlineColor);
                 EventBus.Subscribe<EndDragEvent>(HandleEndDrag);
@@ -57,7 +57,7 @@ namespace InGame.InventorySystem
         public void InitUI(EquipSlotDefine equipSlotDefine)
         {
             itemText.text = equipSlotDefine.slotName;
-            Index = equipSlotDefine.index;
+            Index = equipSlotDefine.index + (int)SlotType.Equip;
         }
     }
 }

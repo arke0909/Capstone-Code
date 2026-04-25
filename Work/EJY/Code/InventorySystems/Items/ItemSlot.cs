@@ -6,6 +6,15 @@ using Work.LKW.Code.Items.ItemInfo;
 
 namespace Code.InventorySystems.Items
 {
+    public enum SlotType
+    {
+        None = -1,
+        Inventory = 0,
+        Equip = 5000,
+        Hotbar = 10000,
+        ItemContainer = 15000,
+    }
+    
     [Serializable]
     public class ItemSlot
     {
@@ -14,12 +23,15 @@ namespace Code.InventorySystems.Items
         [field: SerializeField] public int Stack { get; protected set; }
         public bool IsFull => !IsBlank && Stack == Item.ItemData.maxStack;
         public bool IsBlank => Item == null;
+        public int Index { get; protected set; }
 
         public ItemSlot(ItemBase item, int stack = 0)
         {
             SetData(item, stack);
         }
 
+        public void SetIndex(int idx) => Index = idx;
+        
         public void SetOwner(Inventory ownerInventory) => OwnerInventory = ownerInventory;
         
         public void SetData(ItemBase item, int stack = 0)

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Chipmunk.GameEvents;
@@ -7,6 +6,7 @@ using Code.InGame.Hotbar;
 using Code.InventorySystem;
 using Code.UI.Inventory;
 using UnityEngine;
+using static Code.InventorySystems.InventoryUtility;
 
 namespace Code.Hotbar
 {

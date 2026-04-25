@@ -4,6 +4,7 @@ using Chipmunk.GameEvents;
 using Work.LKW.Code.Events;
 using Code.GameEvents;
 using Code.InventorySystems;
+using Code.InventorySystems.Items;
 using Work.LKW.Code.Items.ItemInfo;
 using EPOOutline;
 using Scripts.Entities;
@@ -47,6 +48,12 @@ namespace Work.LKW.Code.ItemContainers
             base.Awake();
             EventBus.Subscribe<PlayerUIEvent>(HandlePlayerUIEvent);
             _cam = Camera.main;
+        }
+
+        protected override void CreateSlot(int idx)
+        {
+            idx += (int)SlotType.ItemContainer;
+            base.CreateSlot(idx);
         }
 
         private void Start()
