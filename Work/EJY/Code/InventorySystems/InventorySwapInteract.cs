@@ -1,14 +1,14 @@
+using System.Collections.Generic;
 using Chipmunk.ComponentContainers;
 using Chipmunk.GameEvents;
 using Code.GameEvents;
-using Code.Hotbar;
 using Code.InventorySystems.Items;
 using Code.Players;
 using InGame.InventorySystem;
 using Scripts.Combat.Datas;
 using UnityEngine;
+using Code.InventorySystems.SwapRules;
 using Work.LKW.Code.Items;
-using static Code.InventorySystems.InventoryUtility;
 
 namespace Code.InventorySystems
 {
@@ -16,11 +16,13 @@ namespace Code.InventorySystems
     {
         public ComponentContainer ComponentContainer { get; set; }
         private Inventory _inventory;
+        private List<ISlotSwapInteractRule> _rules;
 
         public void OnInitialize(ComponentContainer componentContainer)
         {
             _inventory = componentContainer.GetSubclassComponent<Inventory>();
-
+            _rules = SlotSwapInteractRuleRegistry.Create();
+            
             EventBus.Subscribe<SwapItemSlotEvent>(HandleSwapItemSlot);
         }
 
@@ -64,57 +66,19 @@ namespace Code.InventorySystems
             if (!IsResponsibleForSwap(startSlot, targetSlot))
                 return;
 
-            ItemBase startSlotItem = startSlot.Item;
-            ItemBase targetSlotItem = targetSlot.Item;
+            SwapContext context = new SwapContext(startSlot, targetSlot);
 
-            if (TryGetSlot(startSlot, SlotType.Equip, out EquipSlot startEquip) && TryGetSlot(targetSlot, SlotType.Equip,out EquipSlot targetEquip))
+            foreach (ISlotSwapInteractRule rule in _rules)
             {
-                if (targetEquip.CanEquip(startSlotItem) && startEquip.CanEquip(targetSlotItem))
-                    EventBus.Raise(new SwapEquipEvent(startEquip, targetEquip));
-            }
-            else if (TryGetSlot(startSlot, SlotType.Equip, out EquipSlot startEquipSlot))
-            {
-                if (targetSlotItem == null)
-                    EventBus.Raise(new UnEquipByDragEvent(startSlotItem, startEquipSlot, targetSlot));
-            }
-            else if (TryGetSlot(targetSlot,SlotType.Equip ,out EquipSlot targetEquipSlot))
-            {
-                if (targetEquipSlot.CanEquip(startSlotItem))
-                {
-                    void OnEquipByDragSuccess()
-                    {
-                        if (startSlot.OwnerInventory != targetSlot.OwnerInventory)
-                            startSlot.OwnerInventory.RemoveItem(startSlotItem, 1, false);
-                    }
+                if (!rule.CanInteract(context))
+                    continue;
 
-                    EventBus.Raise(
-                        new EquipByDragEvent(startSlotItem, GetLocalIndex(targetEquipSlot.Index), startSlot, OnEquipByDragSuccess));
-                }
-            }
-            else if (CheckSlotType(startSlot.Index, SlotType.Hotbar))
-            {
-                if (targetSlotItem == null && startSlot.OwnerInventory == targetSlot.OwnerInventory)
-                    EventBus.Raise(new UnEquipHotbarEvent(GetLocalIndex(startSlot.Index)));
-            }
-            else if (CheckSlotType(targetSlot.Index, SlotType.Hotbar))
-            {
-                if (targetSlotItem == null &&
-                    startSlot.OwnerInventory == targetSlot.OwnerInventory &&
-                    startSlotItem is ThrowableItem or UsableItem)
-                {
-                    EventBus.Raise(new EquipHotbarEvent(GetLocalIndex(targetSlot.Index), startSlotItem));
-                }
-            }
-            else
-            {
-                int targetSlotStack = targetSlot.Stack;
-                int startSlotStack = startSlot.Stack;
-
-                startSlot.SetData(targetSlotItem, targetSlotStack);
-                targetSlot.SetData(startSlotItem, startSlotStack);
+                rule.Interact(context);
+                break;
             }
 
             UpdateRelatedInventories(startSlot, targetSlot);
         }
+
     }
 }

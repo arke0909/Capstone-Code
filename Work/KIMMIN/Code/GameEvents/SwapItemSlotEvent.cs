@@ -1,6 +1,5 @@
 ﻿using Chipmunk.GameEvents;
 using Code.InventorySystems.Items;
-using InGame.InventorySystem;
 
 namespace Code.GameEvents
 {
