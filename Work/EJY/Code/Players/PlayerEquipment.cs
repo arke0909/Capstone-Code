@@ -6,6 +6,7 @@ using Code.InventorySystems.Items;
 using InGame.InventorySystem;
 using System.Collections.Generic;
 using System.Linq;
+using Code.InventorySystems;
 using Code.InventorySystems.Equipments;
 using Scripts.Players;
 using UnityEngine;
@@ -84,7 +85,7 @@ namespace Code.Players
         {
             if (evt.Item is EquipableItem equipalbeItem)
             {
-                if (UnEquip(equipalbeItem, evt.EquipSlot, byDrag: true))
+                if (UnEquip(evt.TargetSlot.OwnerInventory, equipalbeItem, evt.EquipSlot, byDrag: true))
                     evt.TargetSlot.SetData(equipalbeItem, 1);
             }
         }
@@ -208,11 +209,6 @@ namespace Code.Players
 
         public void RestoreHandledEquip()
         {
-            _equips[EquipPartType.Hand]?.Unequip(_player);
-            
-            if (_handledIndex < 0)
-                return;
-
             EquipSlot handledSlot = _equipSlots.FirstOrDefault(slot => GetLocalIndex(slot.Index) == _handledIndex);
 
             if (handledSlot == null || handledSlot.Equipable == null)
@@ -221,7 +217,7 @@ namespace Code.Players
                 return;
             }
 
-            _handlingIndex = GetLocalIndex(handledSlot.Index);
+            UpdateHandleIndex(GetLocalIndex(handledSlot.Index));
             SetHandItem(handledSlot.Equipable);
         }
 
@@ -284,7 +280,7 @@ namespace Code.Players
             {
                 EquipableItem equipped = equipSlot.Item as EquipableItem;
 
-                if (!UnEquip(equipped, equipSlot, sourceSlot, byDrag)) return false;
+                if (!UnEquip(sourceSlot.OwnerInventory, equipped, equipSlot, sourceSlot, byDrag)) return false;
             }
 
             equipSlot.SetData(equipable, 1);
@@ -313,7 +309,7 @@ namespace Code.Players
             return true;
         }
         
-        public bool UnEquip(EquipableItem equipped, EquipSlot equipSlot, ItemSlot sourceSlot = null , bool byDrag = false)
+        public bool UnEquip(Inventory targetInventory, EquipableItem equipped, EquipSlot equipSlot, ItemSlot sourceSlot = null , bool byDrag = false)
         {
             bool isExchange = sourceSlot != null;
 
@@ -326,7 +322,7 @@ namespace Code.Players
                 return false;
 
             // 일반 해제일 때만 인벤토리 빈칸 체크
-            if (!isExchange && !_playerInventory.InventoryHasBlankSlot())
+            if (!isExchange && !targetInventory.InventoryHasBlankSlot())
                 return false;
 
             if (equipPartType == EquipPartType.Hand)
@@ -369,16 +365,14 @@ namespace Code.Players
 
             if (equipSlot == null)
             {
+                SetHandItem(null);
                 UpdateHandleIndex(-1);
-                EventBus.Raise(new ChangeHandlingEvent(null));
                 return;
             }
             
             var spareWeapon = equipSlot.Equipable;
-            _equips[EquipPartType.Hand] = spareWeapon;
-            _equips[EquipPartType.Hand].Equip(_player, equipTrms[EquipPartType.Hand]);
+            SetHandItem(spareWeapon);
             UpdateHandleIndex(GetLocalIndex(equipSlot.Index));
-            EventBus.Raise(new ChangeHandlingEvent(spareWeapon));
         }
 
         private void UpdateHandleIndex(int idx)

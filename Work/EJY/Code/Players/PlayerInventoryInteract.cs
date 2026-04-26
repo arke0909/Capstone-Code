@@ -69,7 +69,7 @@ namespace Code.Players
             {
                 if (_playerInventory.InventoryHasBlankSlot())
                 {
-                    _playerEquipment.UnEquip(equipped, equipSlot);
+                    _playerEquipment.UnEquip(_playerInventory,equipped, equipSlot);
                 }
 
                 return;

@@ -56,5 +56,14 @@ namespace Code.StatusEffectSystem.StatusEffects
             CurrentTime = 0;
             ResetStatusEffect();
         }
+
+        public void SetStrongerValue(StatusEffectInfo info)
+        {
+            Priority = info.Priority;
+            _value = info.Value;
+            SetRemainingTime(info.ApplyTime);
+            ReleaseStatusEffect(_target);
+            ApplyStatusEffect(_target);
+        }
     }
 }

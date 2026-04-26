@@ -76,6 +76,11 @@ namespace Code.StatusEffectSystem
         private AbstractStatusEffect CreateStatusEffect(StatusEffectInfo info)
         {
             var data = GetStatusEffect(info.StatusEffect);
+            if (data == null)
+            {
+                Debug.Log($"Find data is null, StatusEffect Type is {info.StatusEffect}");
+                return null;
+            }
             AbstractStatusEffect newStatusEffect = data.CreateStatusEffect(_target, info);
             return newStatusEffect;
         }
@@ -110,6 +115,12 @@ namespace Code.StatusEffectSystem
             if (activeStatusEffect == null)
                 return false;
 
+            if (info.IsOverWrite || info.Priority >= activeStatusEffect.Priority)
+            {
+                activeStatusEffect.SetStrongerValue(info);
+                return true;
+            }
+            
             float nextDuration = Mathf.Max(info.ApplyTime, activeStatusEffect.RemainingTime);
             activeStatusEffect.SetRemainingTime(nextDuration);
             return true;
