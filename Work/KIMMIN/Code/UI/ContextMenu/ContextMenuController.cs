@@ -50,8 +50,10 @@ namespace Work.Code.UI.ContextMenu
         {
             foreach (var menu in menus)
             {
-                if (menu == null) continue;
-                var newMenu = Instantiate(menu.menu, menuRoot);
+                if (menu == null)
+                    continue;
+                
+                BaseContextMenu newMenu = Instantiate(menu.menu, menuRoot);
                 newMenu.DisableUI();
                 _instances.TryAdd(menu, newMenu);
             }
@@ -75,7 +77,8 @@ namespace Work.Code.UI.ContextMenu
 
         private void HandleToggleUI(UIBase ui, bool isActive)
         {
-            if(!isActive) HideCurrentMenu();    
+            if(!isActive)
+                HideCurrentMenu();    
         }
 
         public void UnbindContextMenu(InteractableUI owner)
@@ -91,10 +94,12 @@ namespace Work.Code.UI.ContextMenu
 
         private void ShowContextMenu(InteractableUI owner)
         {
-            if (!_contextMenus.TryGetValue(owner, out var menuData)) return;
+            if (!_contextMenus.TryGetValue(owner, out var menuData))
+                return;
 
             var data = menuData.Data?.Invoke();
-            if (data == null) return;
+            if (data == null)
+                return;
 
             HideCurrentMenu();
             
@@ -111,7 +116,8 @@ namespace Work.Code.UI.ContextMenu
 
         public void HideCurrentMenu()
         {
-            if (_currentMenu == null) return;
+            if (_currentMenu == null)
+                return;
 
             _currentMenu.OnAction -= HideCurrentMenu;
             _currentMenu.CloseMenu();

@@ -67,11 +67,11 @@ namespace Scripts.SkillSystem.Skills
         
          private async UniTaskVoid OnHitGetAdditionalTime()
          {
-             _owner.OnHit += OnHitTarget;
+             _owner.OnAttack += OnHitTarget;
              
              await UniTask.WaitUntil(()=> !_isBuffActive);
              
-             _owner.OnHit -= OnHitTarget;
+             _owner.OnAttack -= OnHitTarget;
          }
 
          private void OnHitTarget(Entity dealer, IDamageable target)

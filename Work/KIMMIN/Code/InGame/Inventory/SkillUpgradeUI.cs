@@ -62,7 +62,7 @@ namespace InGame.InventorySystem
                 : string.Empty;
         }
 
-        public void Clear()
+        public void ClearUI()
         {
             _equipableItem = null;
             DisableUI(true);

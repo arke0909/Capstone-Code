@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using Work.LKW.Code.Items;
+﻿using Code.DataSystem;
+using UnityEngine;
 using Work.LKW.Code.Items.ItemInfo;
 
 namespace Scripts.Combat.Datas
@@ -13,6 +13,10 @@ namespace Scripts.Combat.Datas
         public float maxPitchDeg;
         public AnimationCurve speedCurve;
         public AnimationCurve pitchCurve;
+        [ExcelColumn("damageMultiplier")]
+        public float damageMultiplier = 1;
+        [ExcelColumn("defPierceLevel")]
+        public int defPierceLevel = 0;
         public override ItemCreateData CreateItem()
         {
             return new ItemCreateData(new ThrowableItem(this), 1);

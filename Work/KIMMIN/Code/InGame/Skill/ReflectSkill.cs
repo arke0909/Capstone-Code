@@ -51,7 +51,7 @@ namespace Work.Code.Skills
 
                 Vector3 reflectDir = -bullet.transform.forward;
                 Vector3 position = context.HitPoint + context.HitNormal * 0.05f;
-                newBullet.InitBullet(_owner, shooter, position, reflectDir, ownerLayer);
+                newBullet.InitProjectile(_owner, shooter, position, reflectDir, ownerLayer);
                 bullet.PushBullet();
                 return true;
             }

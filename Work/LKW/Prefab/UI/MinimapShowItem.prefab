@@ -164,7 +164,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 220c6ba146ec490d8845ec18541818e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <SyncChildScale>k__BackingField: 1
-  <NormalizedPos>k__BackingField: {x: 0, y: 0}
-  <PoolItem>k__BackingField: {fileID: 11400000, guid: 14b76e73b0490ba4c9ff9885b0d919c9, type: 2}
   <Image>k__BackingField: {fileID: 762393053647442953}
+  <PoolItem>k__BackingField: {fileID: 11400000, guid: 14b76e73b0490ba4c9ff9885b0d919c9, type: 2}

@@ -2,7 +2,7 @@
 using UnityEditor;
 using System.Linq;
 using UnityEngine;
-using Work.Code.Crafting;
+using Work.Code.Craft;
 using Work.LKW.Code.Items.ItemInfo;
 
 public static class ItemRecipeMapBuilder
@@ -27,32 +27,31 @@ public static class ItemRecipeMapBuilder
 
         foreach (var item in allItems)
         {
-            var entry = new CraftableItemListSO.Recipe
+            Recipe recipe = new Recipe { item = item };
+
+            foreach (CraftTreeSO tree in allRecipes)
             {
-                item = item
-            };
+                int ingredientCount = tree.isBinary ? 2 : 3;
+                
+                if (tree.nodeList.Count <= 1)
+                    continue;
 
-            foreach (var recipe in allRecipes)
-            {
-                int ingredientCount = recipe.isBinary ? 2 : 3;
-                if (recipe.nodeList.Count <= 1) continue;
+                var craftItems = tree.nodeList.Skip(1)
+                    .Take(Mathf.Min(ingredientCount, tree.nodeList.Count - 1));
 
-                var ingredients = recipe.nodeList.Skip(1)
-                    .Take(Mathf.Min(ingredientCount, recipe.nodeList.Count - 1));
-
-                if (ingredients.Any(n => n.Item == item))
+                if (craftItems.Any(n => n.Item == item))
                 {
-                    var resultItem = recipe.Item;
+                    ItemDataSO resultItem = tree.Item;
 
-                    if (resultItem != null && !entry.results.Contains(resultItem))
+                    if (resultItem != null && !recipe.results.Contains(resultItem))
                     {
-                        entry.results.Add(resultItem);
+                        recipe.results.Add(resultItem);
                     }
                 }
             }
 
-            if (entry.results.Count > 0)
-                map.recipes.Add(entry);
+            if (recipe.results.Count > 0)
+                map.recipes.Add(recipe);
         }
 
         EditorUtility.SetDirty(map);

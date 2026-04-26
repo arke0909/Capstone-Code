@@ -13,7 +13,7 @@ using Scripts.Combat.ItemObjects;
 
 namespace Scripts.Combat.Datas
 {
-    public class GunItem : Weapon, IAttackable, IReloadable, IBulletShooter
+    public class GunItem : Weapon, IAttackable, IReloadable, IProjectileShooter
     {
         public GunObject GunObj => WeaponObj as GunObject;
         public BulletItem currentBulletItem;
@@ -23,6 +23,8 @@ namespace Scripts.Combat.Datas
         public int CurrentBulletCnt => _currentBullet;
         public float DefaultDamage => GunItemData.defaultDamage;
         public float ProjectileSpeed => GunItemData.bulletSpeed;
+        public float DamageMultiplier => BulletData.damageMultiplier;
+        public int DefPierceLevel =>BulletData.defPierceLevel;
         public BulletDataSO BulletData => currentBulletItem.bulletDataSO;
 
 
@@ -78,6 +80,8 @@ namespace Scripts.Combat.Datas
                 return true;
             }
         }
+
+
 
         public void Reload()
         {

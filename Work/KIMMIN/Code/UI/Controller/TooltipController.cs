@@ -82,7 +82,7 @@ namespace Code.UI.Controller
             }
         }
 
-        public void BindEnterTooltip<TData>(InteractableUI owner, Func<TData> dataCallback, float delay, UIEventHandler handler)
+        private void BindEnterTooltip<TData>(InteractableUI owner, Func<TData> dataCallback, float delay, UIEventHandler handler)
         {
             handler.BindUIEvent(owner, _ => {
                 var state = GetState(owner);
@@ -98,7 +98,7 @@ namespace Code.UI.Controller
             }, EUIEvent.PointerEnter);
         }
 
-        public void BindExitTooltip(InteractableUI owner, UIEventHandler handler)
+        private void BindExitTooltip(InteractableUI owner, UIEventHandler handler)
         {
             handler.BindUIEvent(owner, _ => {
                 if (!_states.TryGetValue(owner, out var state)) return;

@@ -43,18 +43,6 @@ namespace Work.LKW.Code.Items
                     _statCompo.AddModifier(addStat.targetStat, this,addStat.value);
                 }
             }
-            
-            _skillManager = entity.Get<SkillManager>();
-            
-            if (_skillManager != null)
-            {
-                _skillManager.AddSkill(Skill);
-            
-                if (_skillManager.TryGetSkill(Skill, out Scripts.SkillSystem.Skill skill))
-                {
-                    skill.SetLevel(SkillLevel);
-                }
-            }
         }
 
         public virtual void OnUnequip(Entity entity)
@@ -70,9 +58,7 @@ namespace Work.LKW.Code.Items
                     _statCompo.RemoveModifier(addStat.targetStat, this);
                 }
             }
-            
-            _skillManager?.RemoveSkill(Skill);
-            _skillManager = null;
+           
         }
         public virtual bool LevelUpSkill()
         {
@@ -85,6 +71,27 @@ namespace Work.LKW.Code.Items
                 return true;
             }
             return false;
+        }
+
+        public void RegisterSkill()
+        {
+            _skillManager = _owner.Get<SkillManager>();
+            
+            if (_skillManager != null)
+            {
+                _skillManager.AddSkill(Skill);
+            
+                if (_skillManager.TryGetSkill(Skill, out Scripts.SkillSystem.Skill skill))
+                {
+                    skill.SetLevel(SkillLevel);
+                }
+            }
+        }
+
+        public void DeregisterSkill()
+        {
+            _skillManager?.RemoveSkill(Skill);
+            _skillManager = null;
         }
     }
 }

@@ -99,6 +99,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <PoolItem>k__BackingField: {fileID: 11400000, guid: faca2e8b7501c214ab1253d4c7d555a3, type: 2}
   _rigidbody: {fileID: 3417762798269504872}
+  _collider: {fileID: 6751234700040601034}
   groundLayer:
     serializedVersion: 2
     m_Bits: 128

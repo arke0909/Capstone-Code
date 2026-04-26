@@ -11,33 +11,33 @@ namespace InGame.PlayerUI
     { 
         [SerializeField] private Image indicatorUI;
 
-        private MenuButtonUI[] _menus;
+        private PlayerMenuUIButton[] _menus;
         private UIPanel _prevPanel;
 
         protected override void Awake()
         {
             base.Awake();
-            EventBus.Subscribe<PlayerUIEvent>(HandlePlayerUI);
+            DisableUI();
+
+            _menus = GetComponentsInChildren<PlayerMenuUIButton>();
             
-            _menus = GetComponentsInChildren<MenuButtonUI>();
             foreach (var menu in _menus)
             {
                 menu.MenuButton.onClick.AddListener(() => ChangeUI(menu));
             }
             
-            DisableUI();
+            EventBus.Subscribe<PlayerUIEvent>(HandlePlayerUI);
         }
 
         protected override void OnDestroy()
         {
-            EventBus.Unsubscribe<PlayerUIEvent>(HandlePlayerUI);
-
             foreach (var menu in _menus)
             {
                 menu.MenuButton.onClick.RemoveAllListeners();
             }
+            
+            EventBus.Unsubscribe<PlayerUIEvent>(HandlePlayerUI);
         }
-        
         
         private void HandlePlayerUI(PlayerUIEvent evt)
         {
@@ -51,28 +51,31 @@ namespace InGame.PlayerUI
         {
             base.EnableUI(isFade);
 
-            if (!UIManager.Instance.GetCurrentPanel(out var panel)) return;
+            if (!UIManager.Instance.TryGetCurrentPanel(out var panel))
+                return;
 
             foreach (var menu in _menus)
             {
-                if(menu.Panel == panel)
+                if (menu.Panel == panel)
+                {
                     SetMenuUI(menu, true);
+                }
             }
         }
 
-        private void ChangeUI(MenuButtonUI menu)
+        private void ChangeUI(PlayerMenuUIButton playerMenuUI)
         {
             _prevPanel?.DisableUI();
-            _prevPanel = menu.Panel;
-            menu.Panel.EnableUI();
+            _prevPanel = playerMenuUI.Panel;
             
-            SetMenuUI(menu, true);
+            SetMenuUI(playerMenuUI, true);
         }
 
-        private void SetMenuUI(MenuButtonUI menu, bool isActive)
+        private void SetMenuUI(PlayerMenuUIButton playerMenuUI, bool isActive)
         {
+            playerMenuUI.EnableUI();
             DisableHighlight();
-            menu.SetHighlight(isActive);
+            playerMenuUI.SetHighlight(isActive);
         }
 
         private void DisableHighlight()

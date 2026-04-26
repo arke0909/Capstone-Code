@@ -25,8 +25,9 @@ namespace Code.UI.Bar
             HandleBossCombatEntered(new BossCombatEnteredEvent(null));
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             EventBus<BossCombatEnteredEvent>.OnEvent -= HandleBossCombatEntered;
         }
 

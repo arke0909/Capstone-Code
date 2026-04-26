@@ -1,24 +1,34 @@
 ﻿using Chipmunk.ComponentContainers;
 using Code.InventorySystems;
 using Scripts.Entities;
+using SHS.Scripts;
 using UnityEngine;
 using Work.LKW.Code.Items;
 using Work.LKW.Code.Items.ItemInfo;
 
 namespace Scripts.Combat.Datas
 {
-    public class ThrowableItem : Weapon, IAttackable
+    public class ThrowableItem : Weapon, IAttackable,IProjectileShooter
     {
         private Inventory _inventory;
         
         public GameObject Dealer => WeaponObj.gameObject;
+        public ThrowableDataSO ThrowableData { get; private set; }
         public Entity Owner => _entity;
 
         private Entity _entity;
-        
-        
+        public float DefaultDamage => ThrowableData.defaultDamage;
+
+        public float ProjectileSpeed => ThrowableData.speedCurve.Evaluate(0);
+
+        public float DamageMultiplier =>ThrowableData.damageMultiplier;
+
+        public int DefPierceLevel => ThrowableData.defPierceLevel;
+
         public ThrowableItem(ItemDataSO itemData) : base(itemData)
         {
+            Debug.Assert(itemData is ThrowableDataSO a, $"Invalid ThrowableItem : {itemData}");
+            ThrowableData = itemData as ThrowableDataSO; 
         }
 
         public AttackableState CurrentAttackableState { get

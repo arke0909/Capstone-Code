@@ -48,8 +48,10 @@ namespace Code.UI.Inventory
 
         protected virtual void HandleClick(ItemSlot item) { }
 
-        protected virtual void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
+            
             EventBus.Unsubscribe<HoveringSlotEvent>(HandleHoveringItem);
             _hoveringSlot.OnValueChanged -= HandleHoveringSlotChange;
             

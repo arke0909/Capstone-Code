@@ -85,7 +85,7 @@ namespace Code.Players
         {
             if (evt.Item is EquipableItem equipalbeItem)
             {
-                if (UnEquip(evt.TargetSlot.OwnerInventory, equipalbeItem, evt.EquipSlot, byDrag: true))
+                if (UnEquip(evt.TargetSlot.OwnerInventory, evt.EquipSlot, byDrag: true))
                     evt.TargetSlot.SetData(equipalbeItem, 1);
             }
         }
@@ -280,11 +280,13 @@ namespace Code.Players
             {
                 EquipableItem equipped = equipSlot.Item as EquipableItem;
 
-                if (!UnEquip(sourceSlot.OwnerInventory, equipped, equipSlot, sourceSlot, byDrag)) return false;
+                if (!UnEquip(sourceSlot.OwnerInventory, equipSlot, sourceSlot, byDrag)) return false;
             }
 
             equipSlot.SetData(equipable, 1);
-
+            if (equipSlot.HasSkill)
+                equipable.RegisterSkill();
+            
             EquipPartType equipPartType = equipSlot.EquipPartType;
 
             int equipSlotLocalIndex = GetLocalIndex(equipSlot.Index);
@@ -309,8 +311,10 @@ namespace Code.Players
             return true;
         }
         
-        public bool UnEquip(Inventory targetInventory, EquipableItem equipped, EquipSlot equipSlot, ItemSlot sourceSlot = null , bool byDrag = false)
+        public bool UnEquip(Inventory targetInventory, EquipSlot equipSlot, ItemSlot sourceSlot = null , bool byDrag = false)
         {
+            EquipableItem equipped = equipSlot?.Equipable;
+            
             bool isExchange = sourceSlot != null;
 
             if (equipSlot == null || equipped == null)
@@ -332,6 +336,8 @@ namespace Code.Players
 
             // 장비 슬롯 비우기
             equipSlot.SetData(null);
+            if(equipSlot.HasSkill)
+                equipped.DeregisterSkill();
 
             // 실제 장착 중이던 아이템이면 외형/스탯 해제
             if (equipped.IsEquipped)

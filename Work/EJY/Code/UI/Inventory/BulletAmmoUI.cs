@@ -21,7 +21,7 @@ namespace Code.UI.Inventory
         [SerializeField] private DynamicText ammoText;
         [SerializeField] private SoundID emptySoundID;
         
-        private RectTransform Rect => selectedImage.transform as RectTransform;
+        private RectTransform BulletImageRect => selectedImage.transform as RectTransform;
         private InfoUI[] _infoUIs;
         private List<ReplaceBulletData> _replaceBulletDatas;
         private int _currentReplaceDataIndex = 0;
@@ -90,7 +90,7 @@ namespace Code.UI.Inventory
             if(idx < 0 || idx >= _infoUIs.Length) return;
             
             RectTransform rect = _infoUIs[idx].transform as RectTransform;
-            Rect.position = rect.position;
+            BulletImageRect.position = rect.position;
         }
 
         private void HandleReplaceBulletList(ReplaceBulletListEvent evt)
@@ -99,7 +99,7 @@ namespace Code.UI.Inventory
             
             foreach (var infoUI in _infoUIs)
             {
-                infoUI.Clear();
+                infoUI.ClearUI();
             }
 
             _totalCnt = evt.Data.Count;
@@ -132,7 +132,7 @@ namespace Code.UI.Inventory
             SetAmmoText(element.CurrentBulletCnt, element.GunItemData.maxAmmoCapacity);
         }
 
-        public void Clear() { }
+        public void ClearUI() { }
         
         private void HandleChangeWeapon(ChangeHandlingEvent evt)
         {

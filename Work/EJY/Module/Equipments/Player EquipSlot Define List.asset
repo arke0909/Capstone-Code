@@ -17,24 +17,29 @@ MonoBehaviour:
     equipPart: 0
     allowedEquipSlot: 0
     canHandle: 1
+    hasSkill: 1
     index: 0
   - slotName: "\uBCF4\uC870 \uBB34\uAE30"
     equipPart: 0
     allowedEquipSlot: 0
     canHandle: 1
+    hasSkill: 0
     index: 1
   - slotName: "\uADFC\uC811 \uBB34\uAE30"
     equipPart: 0
     allowedEquipSlot: 1
     canHandle: 1
+    hasSkill: 0
     index: 2
   - slotName: "\uD5EC\uBA67"
     equipPart: 1
     allowedEquipSlot: 2
     canHandle: 0
+    hasSkill: 1
     index: 3
   - slotName: "\uAC11\uC637"
     equipPart: 2
     allowedEquipSlot: 3
     canHandle: 0
+    hasSkill: 1
     index: 4

@@ -20,17 +20,23 @@ MonoBehaviour:
   description: 
   rarity: 0
   rarityWeight: 123123123
-  value: 0
+  value: 11
   maxStack: 99
+  maxSpawnCount: 99
   addStats: []
   modelOffset: {x: 0, y: 0, z: 0}
   equipmentPrefab: {fileID: 1817765348722129825, guid: 0f9f15a51a3987840a09dd9ee26f8f8f, type: 3}
+  skillDB: {fileID: 0}
   maxDurability: 0
   attackRange: 20
   defaultDamage: 0
   attackSpeed: 1
   controller: {fileID: 22100000, guid: dd8ede781edc90249bd0062d18c844e9, type: 2}
   fireRate: 0
+  attackSoundID:
+    _entity: {fileID: 0}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 0}
   minSpeed: 5
   maxSpeed: 15
   minPitchDeg: 5
@@ -83,3 +89,5 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  damageMultiplier: 1
+  defPierceLevel: 0

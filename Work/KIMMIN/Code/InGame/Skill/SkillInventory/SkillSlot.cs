@@ -34,7 +34,7 @@ namespace Work.Code.SkillInventory
         {
             if (skill == null || skill.SkillData == null)
             {
-                Clear();
+                ClearUI();
                 return;
             };
             
@@ -66,7 +66,7 @@ namespace Work.Code.SkillInventory
             outline.DOColor(color, 0.1f);
         }
 
-        public void Clear()
+        public void ClearUI()
         {
             UnbindTooltip();
             OnUnequipped?.Invoke(CurrentSkill);
@@ -83,7 +83,7 @@ namespace Work.Code.SkillInventory
         public void SetEquip(Skill skill)
         {
             if (skill == null)
-                Clear();
+                ClearUI();
             else 
                 EnableFor(skill);
         }

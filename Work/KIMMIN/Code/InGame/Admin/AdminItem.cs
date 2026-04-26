@@ -45,6 +45,6 @@ namespace Work.Code.Admin
             _item = item;
         }
 
-        public void Clear() { }
+        public void ClearUI() { }
     }
 }

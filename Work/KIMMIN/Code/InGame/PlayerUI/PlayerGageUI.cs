@@ -48,21 +48,31 @@ namespace InGame.PlayerUI
 
         private void Update()
         {
-            if (!_isActive) return;
-            
+            if (!_isActive)
+                return;
+
+            SetGageUI();
+            CheckTimer();
+        }
+
+        private void CheckTimer()
+        {
+            if (Time.time - _startTime >= _duration)
+            {
+                _onComplete?.Invoke();
+                ClearUI();
+            }
+        }
+
+        private void SetGageUI()
+        {
             float time = Time.time - _startTime;
             string remainTime = (_duration - time).ToString("0.0");
             fill.rectTransform.localScale = new Vector3(time / _duration, 1, 1);
             gageText.text = $"{_gageText} {remainTime}초";
-
-            if (Time.time - _startTime >= _duration)
-            {
-                _onComplete?.Invoke();
-                Clear();
-            }
         }
 
-        public void Clear()
+        public void ClearUI()
         {
             gageText.text = string.Empty;
             _onComplete = null;

@@ -11,8 +11,6 @@ namespace Scripts.Combat.Projectiles
         [SerializeField] private PoolManagerSO poolManager;
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.collider.name == _owner.name)
-                return;
             Vector3 areaPos = transform.position;
             if(Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit,50, groundLayer))
                 areaPos = hit.point;

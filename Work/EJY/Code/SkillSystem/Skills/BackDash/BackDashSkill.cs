@@ -76,7 +76,7 @@ namespace Code.SkillSystem.Skills.BackDash
             if (addDamageMultiply && !isIncreased)
             {
                 _owner.OnDamageCalc += DamageMultiply;
-                _owner.OnHit += UnsubscribeDamageCalc;
+                _owner.OnAttack += UnsubscribeDamageCalc;
                 isIncreased = true;
             }
             
@@ -95,7 +95,7 @@ namespace Code.SkillSystem.Skills.BackDash
         private void UnsubscribeDamageCalc(Entity dealer, IDamageable target)
         {
             _owner.OnDamageCalc -= DamageMultiply;
-            _owner.OnHit -= UnsubscribeDamageCalc;
+            _owner.OnAttack -= UnsubscribeDamageCalc;
             isIncreased = false;
         }
 

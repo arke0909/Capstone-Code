@@ -5,7 +5,7 @@ using Code.DataSystem;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
-using Work.Code.Crafting;
+using Work.Code.Craft;
 
 namespace Work.LKW.Code.Items.ItemInfo
 {

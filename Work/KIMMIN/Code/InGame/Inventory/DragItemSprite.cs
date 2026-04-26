@@ -25,8 +25,8 @@ namespace InGame.InventorySystem
             _icon = GetComponent<Image>();
             _rect = GetComponent<RectTransform>();
             _prevMousePos = Input.mousePosition;
-            DisableUI();
             
+            DisableUI();
             EventBus.Subscribe<DragEvent>(HandleDrag);
         }
 
@@ -34,6 +34,7 @@ namespace InGame.InventorySystem
         {
             _icon.sprite = evt.Sprite;
             _isDragging = evt.IsDragStart;
+            
             if (_isDragging)
                 EnableUI();
             else

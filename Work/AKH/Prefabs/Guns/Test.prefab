@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aa85f4ed93821c46acd443f10d8d344, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <GrabableObjectBehavior>k__BackingField: {fileID: 0}
   speedCurve:
     serializedVersion: 2
     m_Curve:
@@ -95,6 +96,9 @@ MonoBehaviour:
     m_RotationOrder: 4
   throwItem: {fileID: 11400000, guid: faca2e8b7501c214ab1253d4c7d555a3, type: 2}
   poolManager: {fileID: 11400000, guid: c413011c9deace64aa106d229c06e489, type: 2}
+  ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 4160
 --- !u!1001 &3709488669349294102
 PrefabInstance:
   m_ObjectHideFlags: 0

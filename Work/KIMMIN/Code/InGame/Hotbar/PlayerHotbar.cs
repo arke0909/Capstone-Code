@@ -11,7 +11,6 @@ using Scripts.Players.States;
 using System.Collections.Generic;
 using UnityEngine;
 using Work.LKW.Code.Items;
-using static Code.InventorySystems.InventoryUtility;
 
 namespace Code.InventorySystem
 {
@@ -44,7 +43,7 @@ namespace Code.InventorySystem
                     var hotbar = new HotbarSlot(null);
                     hotbar.SetOwner(_inventory);
                     hotbar.HotbarType = kvp.Key;
-                    hotbar.SetIndex(i + (int)SlotType.Hotbar);
+                    hotbar.Index = i;
                     _slots.Add(hotbar);
                 }
 
@@ -85,26 +84,22 @@ namespace Code.InventorySystem
 
         private void HandleEquipHotbar(EquipHotbarEvent evt)
         {
-            int idx = evt.Index;
-            
-            if (!IsValidIndex(idx))
+            if (!IsValidIndex(evt.Index))
                 return;
 
-            if (evt.Item is not EquipableItem || !CheckValidItem(idx, evt.Item))
+            if (evt.Item is not EquipableItem || !CheckValidItem(evt.Index, evt.Item))
                 return;
 
-            _slots[idx].SetData(evt.Item, GetHotbarStack(evt.Item));
+            _slots[evt.Index].SetData(evt.Item, GetHotbarStack(evt.Item));
             UpdateUI();
         }
 
         private void HandleUnEquipHotbar(UnEquipHotbarEvent evt)
         {
-            int idx = evt.Index;
-            
-            if (!IsValidIndex(idx))
+            if (!IsValidIndex(evt.Index))
                 return;
 
-            _slots[idx].SetData(null);
+            _slots[evt.Index].SetData(null);
             UpdateUI();
         }
         
@@ -144,7 +139,7 @@ namespace Code.InventorySystem
             if (slot.Item == null)
                 return false;
 
-            if (!CheckValidItem(GetLocalIndex(slot.Index), slot.Item))
+            if (!CheckValidItem(slot.Index, slot.Item))
             {
                 slot.SetData(null);
                 return true;

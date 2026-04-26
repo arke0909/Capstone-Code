@@ -51,23 +51,24 @@ namespace InGame.InventorySystem
         {
             base.Awake();
             button.onClick.AddListener(HandleClick);
-            BindContextMneu(inventoryMenu, () => ItemSlot);
+            BindContextMenu(inventoryMenu, () => ItemSlot);
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
             button.onClick.RemoveListener(HandleClick);
-            UnBindContextMneu();
+            UnBindContextMenu();
         }
 
         public void EnableFor(ItemSlot itemSlot)
         {
             if (itemSlot == null || itemIcon == null ||
-                stackText == null || nameText == null) return;
+                stackText == null || nameText == null)
+                return;
 
             ItemSlot = itemSlot;
-            var item = ItemSlot.Item;
+            ItemBase item = ItemSlot.Item;
             if (item == null) return;
 
             SetBackground(true);
@@ -93,7 +94,7 @@ namespace InGame.InventorySystem
             BindTooltip(() => ItemSlot.Item.ItemData);
         }
 
-        public void Clear()
+        public void ClearUI()
         {
             ItemSlot = null;
             SetBackground(false);
@@ -107,20 +108,26 @@ namespace InGame.InventorySystem
         public void SetBackground(bool isEnable)
         {
             if (background == null) return;
+            
             background.gameObject.SetActive(isEnable);
         }
 
         public void SetBackgroundColor(Color32 color, bool isDefault = false)
         {
             if (ItemSlot == null || ItemSlot.Item == null)
+            {
                 colorBackground.color = isDefault ? _defaultColor : color;
+            }
             else
+            {
                 background.color = isDefault ? _originColor : color;
+            }
         }
 
         public void SetOutlineColor(Color32 color, bool isDefault = false)
         {
             if (outline == null) return;
+            
             outline.color = isDefault ? Color.white : color;
         }
 
@@ -132,7 +139,9 @@ namespace InGame.InventorySystem
 
         private void ShowSkill(EquipableItem equipItem)
         {
-            if (equipItem.Skill == null) return;
+            if (equipItem.Skill == null)
+                return;
+            
             skillBackground.gameObject.SetActive(true);
             skillIcon.sprite = equipItem.Skill.skillIcon;
             BindTooltip(() => equipItem.Skill);
@@ -146,7 +155,10 @@ namespace InGame.InventorySystem
         protected override void HandleDragEnd(PointerEventData eventData)
         {
             base.HandleDragEnd(eventData);
-            if (ItemSlot == null || ItemSlot.Item == null) return;
+            
+            if (ItemSlot == null || ItemSlot.Item == null)
+                return;
+            
             EventBus<EndDragEvent>.Raise(new EndDragEvent());
         }
         
@@ -163,9 +175,11 @@ namespace InGame.InventorySystem
         protected override void HandleDragStart(PointerEventData eventData)
         {
             base.HandleDragStart(eventData);
-            if (ItemSlot == null || ItemSlot.Item == null) return;
+            
+            if (ItemSlot == null || ItemSlot.Item == null)
+                return;
+            
             EventBus<StartDragEvent>.Raise(new StartDragEvent(this));
-
         }
 
         public void OnDrop(PointerEventData eventData)

@@ -1,5 +1,3 @@
-using System;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -9,14 +7,14 @@ namespace Work.Code.UI.Misc
     public class DynamicText : MonoBehaviour
     {
         public TextMeshProUGUI Text { get; private set; }
-        private ITextEffect[] _effects;
+        private ITextEffect[] _textEffects;
         
         private void Awake()
         {
             Text = GetComponent<TextMeshProUGUI>();
-            _effects = GetComponentsInChildren<ITextEffect>();
+            _textEffects = GetComponentsInChildren<ITextEffect>();
 
-            foreach (var effect in _effects)
+            foreach (var effect in _textEffects)
             {
                 effect.InitText(Text);
             }
@@ -28,7 +26,7 @@ namespace Work.Code.UI.Misc
             Text.text = text;
             
             if (nonEffect) return;
-            foreach (var effect in _effects)
+            foreach (var effect in _textEffects)
             {
                 effect.PlayEffect(Text);
             }
@@ -36,7 +34,7 @@ namespace Work.Code.UI.Misc
 
         public void PlayEffect()
         {
-            foreach (var effect in _effects)
+            foreach (var effect in _textEffects)
             {
                 effect.PlayEffect(Text);
             }

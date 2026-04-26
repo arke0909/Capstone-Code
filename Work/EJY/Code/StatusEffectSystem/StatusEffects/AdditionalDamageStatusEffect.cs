@@ -1,4 +1,4 @@
-using Scripts.Combat;
+﻿using Scripts.Combat;
 using Scripts.Combat.Datas;
 using Scripts.Entities;
 
@@ -16,12 +16,12 @@ namespace Code.StatusEffectSystem.StatusEffects
         public override void ApplyStatusEffect(Entity entity)
         {
             base.ApplyStatusEffect(entity);
-            entity.OnHit += HandleOnHit;
+            entity.OnAttack += HandleOnHit;
         }
 
         public override void ReleaseStatusEffect(Entity entity)
         {
-            entity.OnHit -= HandleOnHit;
+            entity.OnAttack -= HandleOnHit;
         }
 
         private void HandleOnHit(Entity dealer, IDamageable target)

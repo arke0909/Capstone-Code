@@ -10,16 +10,15 @@ namespace InGame.PlayerUI
     {
         [SerializeField] PlayerInputSO playerInput;
         [SerializeField] private GameObject inventoryPanel;
-        [SerializeField] private GameObject hotbarUI;
-        [SerializeField] private GameObject lootSlotUI;
+        [SerializeField] private UIBase lootSlotUI;
         private bool _withLoot;
         
         protected override void Awake()
         {
             base.Awake();
+            
             playerInput.OnInventoryPressed += HandleInventoryPressed;
             EventBus.Subscribe<OpenPlayerUIEvent>(HandleOpenPlayerUIEvent);
-            DisableUI();
         }
 
         private void HandleInventoryPressed()
@@ -31,12 +30,13 @@ namespace InGame.PlayerUI
         {
             ToggleUI(true);
             _withLoot = evt.WithLootInventory;
-            UIUtility.FadeUI(lootSlotUI.gameObject, 0.1f, !IsActive);
+            lootSlotUI.EnableUI();
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
+            
             playerInput.OnInventoryPressed -= HandleInventoryPressed;
             EventBus.Unsubscribe<OpenPlayerUIEvent>(HandleOpenPlayerUIEvent);
         }
@@ -48,14 +48,14 @@ namespace InGame.PlayerUI
             if (_withLoot)
             {
                 _withLoot = false; 
-                UIUtility.FadeUI(lootSlotUI.gameObject, 0.1f, !IsActive);
+                lootSlotUI.DisableUI();
             }
         }
 
         public override void DisableUI(bool isFade = false)
         {
             base.DisableUI(isFade);
-            UIUtility.FadeUI(lootSlotUI.gameObject, 0.1f, true);
+            lootSlotUI.DisableUI();
             playerInput.SetPlayerInput(true);
         }
     }

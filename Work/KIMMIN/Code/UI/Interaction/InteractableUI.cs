@@ -25,32 +25,32 @@ namespace Work.Code.UI.Core.Interaction
 
         protected void BindTooltip<T>(Func<T> data, float duration = 0f)
         {
-            UIOverlayManager.Instance?.BindTooltip(this, data, duration);
+            OverlayUIManager.Instance?.BindTooltip(this, data, duration);
         }
 
         protected void UnbindTooltip()
         {
-            UIOverlayManager.Instance?.UnbindTooltip(this);
+            OverlayUIManager.Instance?.UnbindTooltip(this);
         }
         
-        protected void BindContextMneu<T>(ContextMenuSO menu, Func<T> data)
+        protected void BindContextMenu<T>(ContextMenuSO menu, Func<T> data)
         {
-            UIOverlayManager.Instance?.BindContextMenu(this, menu, data);
+            OverlayUIManager.Instance?.BindContextMenu(this, menu, data);
         }
 
-        protected void UnBindContextMneu()
+        protected void UnBindContextMenu()
         {
-            UIOverlayManager.Instance?.UnbindContextMenu(this);
+            OverlayUIManager.Instance?.UnbindContextMenu(this);
         }
         
         protected void BindPopup(IPopupable popupable)
         {
-            UIOverlayManager.Instance?.BindPopup(popupable);
+            OverlayUIManager.Instance?.BindPopup(popupable);
         }
         
         protected void UnBindPopup(IPopupable popupable)
         {
-            UIOverlayManager.Instance?.UnbindPopup(popupable);
+            OverlayUIManager.Instance?.UnbindPopup(popupable);
         }
 
         protected virtual void ClearInteractEvents() { }

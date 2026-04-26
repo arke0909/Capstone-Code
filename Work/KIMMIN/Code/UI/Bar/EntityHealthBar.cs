@@ -25,11 +25,13 @@ namespace Code.UI.Bar
             _localEventBus = componentContainer.Get<LocalEventBus>();
             _localEventBus.Subscribe<HealthChangeEvent>(HandleHealthChanged);
         }
-        
-        private void OnDestroy()
+
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             _localEventBus.Unsubscribe<HealthChangeEvent>(HandleHealthChanged);
         }
+        
         private void HandleHealthChanged(HealthChangeEvent @event)
         {
             SetBar(@event.CurrentHealth, @event.MaxHealth, HandleAfterEffect);

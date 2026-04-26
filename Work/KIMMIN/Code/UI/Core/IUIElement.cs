@@ -3,7 +3,7 @@ namespace Code.UI.Core
     public interface IUIElement<T>
     {
         public void EnableFor(T element);
-        void Clear();
+        void ClearUI();
     }
     
     public interface IUIElement<T1, T2>

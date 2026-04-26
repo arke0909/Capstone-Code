@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Code.UI.Core;
 using UnityEngine;
-using Work.Code.Crafting;
+using Work.Code.Craft;
 using Work.LKW.Code.Items.ItemInfo;
 
 namespace Code.UI.Tooltip
@@ -21,11 +21,11 @@ namespace Code.UI.Tooltip
                 if (idx >= _uiCache.Count)
                 {
                     var ui = Instantiate(craftableItemUI, root);
-                    ui.EnableFor(item);
+                    ui.EnableCraftableItemUI(item);
                     _uiCache.Add(ui);
                 }
                 else
-                    _uiCache[idx].EnableFor(item);
+                    _uiCache[idx].EnableCraftableItemUI(item);
                 
                 idx++;
             }

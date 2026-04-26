@@ -11,7 +11,7 @@ namespace Scripts.Entities
 {
     public abstract class Entity : MonoBehaviour, IContainerComponent, IHitTransform, IStunable
     {
-        public delegate void OnHitDelegate(Entity dealer, IDamageable target);
+        public delegate void OnAttackDelegate(Entity dealer, IDamageable target);
 
         public delegate float OnDamageCalcDelegate(Entity dealer, Transform target);
 
@@ -22,7 +22,7 @@ namespace Scripts.Entities
         public Transform HitTransform => hitBodyTrm;
 
         public OnDamageCalcDelegate OnDamageCalc;
-        public OnHitDelegate OnHit; // 내가 맞출 때
+        public OnAttackDelegate OnAttack; // 내가 맞출 때
         public UnityEvent OnHitEvent; // 내가 맞을 때
         public UnityEvent OnDeadEvent;
 

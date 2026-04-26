@@ -13,7 +13,7 @@ using Work.Code.Misc;
 
 namespace Scripts.Combat.Projectiles
 {
-    public class Bullet : MonoBehaviour, IPoolable, IDamageDelaer
+    public class Bullet : MonoBehaviour, IProjectile, IDamageDelaer
     {
         [SerializeField] private float hitOffset = 0f;
         [SerializeField] private bool UseFirePointRotation;
@@ -32,7 +32,7 @@ namespace Scripts.Combat.Projectiles
         public GameObject Dealer => gameObject;
         public Entity Owner => _owner;
         public Vector3 Velocity => rb.linearVelocity;
-        public IBulletShooter ProjectileShooter { get; private set; }
+        public IProjectileShooter ProjectileShooter { get; private set; }
         
         private Pool _myPool;
         private Entity _owner;
@@ -51,14 +51,14 @@ namespace Scripts.Combat.Projectiles
             _previousPosition = transform.position;
         }
 
-        public void InitBullet(Entity owner, IBulletShooter projectileShooter, Vector3 initPos, Vector3 direction,
+        public void InitProjectile(Entity owner, IProjectileShooter projectileShooter, Vector3 initPos, Vector3 direction,
             LayerMask excludeLayer)
         {
             _collider.excludeLayers = excludeLayer;
             InitBullet(owner, projectileShooter, initPos, direction);
         }
 
-        public void InitBullet(Entity owner, IBulletShooter projectileShooter, Vector3 initPos, Vector3 direction)
+        public void InitBullet(Entity owner, IProjectileShooter projectileShooter, Vector3 initPos, Vector3 direction)
         {
             _owner = owner;
             ProjectileShooter = projectileShooter;
@@ -146,9 +146,7 @@ namespace Scripts.Combat.Projectiles
                 DamageCalcCompo calcCompo = _owner.Get<DamageCalcCompo>();
                 DamageData damageData;
 
-                BulletDataSO bulletData = ProjectileShooter.BulletData; //총알 장착이 이제 잇음
-
-                float finalDamageMultiply = bulletData.damageMultiplier;
+                float finalDamageMultiply = ProjectileShooter.DamageMultiplier;
 
                 if (_owner.OnDamageCalc != null)
                 {
@@ -159,7 +157,7 @@ namespace Scripts.Combat.Projectiles
                 }
 
                 damageData = calcCompo.CalculateDamage(ProjectileShooter.DefaultDamage, finalDamageMultiply,
-                    bulletData.defPierceLevel, DamageType.RANGE);
+                    ProjectileShooter.DefPierceLevel, DamageType.RANGE);
 
                 DamageContext context = new DamageContext
                 {
@@ -171,7 +169,7 @@ namespace Scripts.Combat.Projectiles
                 };
                     
                 damageable.ApplyDamage(context);
-                _owner.OnHit?.Invoke(_owner, damageable);
+                _owner.OnAttack?.Invoke(_owner, damageable);
             }
             else
             {

@@ -24,16 +24,18 @@ namespace Code.InGame.Hotbar
             slotUI?.EnableFor(slot);
         }
 
-        public void Clear()
+        public void ClearUI()
         {
-            slotUI?.Clear();
+            slotUI?.ClearUI();
         }
 
+        #if UNITY_EDITOR
         private void OnValidate()
         {
             name = $"{HotbarType}_HotbarSlot_{transform.GetSiblingIndex()}";
             if (indexText != null)
                 indexText.text = GetLocalIndex(Index + 1).ToString();
         }
+        #endif
     }
 }

@@ -20,7 +20,7 @@ namespace Code.UI.Inventory
             cntText.text = bullet.bulletCnt.ToString();
         }
 
-        public void Clear()
+        public void ClearUI()
         {
             gameObject.SetActive(false);
             ammoName.text = string.Empty;

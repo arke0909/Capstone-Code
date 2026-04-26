@@ -10,7 +10,7 @@ namespace Work.Code.UI.ContextMenu
     public class BaseContextAction : InteractableUI { }
     
     [RequireComponent(typeof(Button))]
-    public abstract class BaseContextAction<T> : BaseContextAction, IContextAction<T>
+    public abstract class BaseContextAction<T> : BaseContextAction
     { 
         protected Player _owner;
         

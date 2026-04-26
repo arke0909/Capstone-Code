@@ -1,4 +1,4 @@
-using Work.Code.Crafting;
+using Work.Code.Craft;
 
 namespace Work.Code.UI.ContextMenu
 {

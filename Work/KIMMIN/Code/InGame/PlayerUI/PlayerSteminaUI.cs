@@ -39,7 +39,9 @@ namespace InGame.PlayerUI
             if (evt.CurrentStamina >= evt.MaxStamina)
             {
                 if (staminaUI.IsActive)
+                {
                     staminaUI.DisableUI(true);
+                }
                 
                 return;
             }
@@ -54,7 +56,9 @@ namespace InGame.PlayerUI
 
         private void LateUpdate()
         {
-            if (_cam == null) return;
+            if (_cam == null) 
+                return;
+            
             gameObject.transform.forward = _cam.transform.forward;
             gameObject.transform.position = _player.transform.position + offset;
         }

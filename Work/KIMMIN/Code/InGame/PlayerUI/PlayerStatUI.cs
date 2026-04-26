@@ -16,34 +16,30 @@ namespace InGame.PlayerUI
     {
         [SerializeField] private BarComponent thirstBar;
         [SerializeField] private BarComponent healthBar;
+        
         [Inject] private Player _player;
         private LocalEventBus _localEventBus;
+        
         private void Start()
         {
             _localEventBus = _player.Get<LocalEventBus>();
-            _localEventBus.Subscribe<FoodChangeEvent>(HandleChangeFood);
             _localEventBus.Subscribe<WaterChangeEvent>(HandleChangeWater);
             _localEventBus.Subscribe<HealthChangeEvent>(HandleChangeHealth);
         }
         private void OnDestroy()
         {
-            _localEventBus.Subscribe<FoodChangeEvent>(HandleChangeFood);
             _localEventBus.Subscribe<WaterChangeEvent>(HandleChangeWater);
             _localEventBus.Subscribe<HealthChangeEvent>(HandleChangeHealth);
         }
-        private void HandleChangeHealth(HealthChangeEvent @event)
+        
+        private void HandleChangeHealth(HealthChangeEvent evt)
         {
-            healthBar.SetBar(@event.CurrentHealth, @event.MaxHealth);
+            healthBar.SetBar(evt.CurrentHealth, evt.MaxHealth);
         }
 
-        private void HandleChangeWater(WaterChangeEvent @event)
+        private void HandleChangeWater(WaterChangeEvent evt)
         {
-            thirstBar.SetBar(@event.CurrentWater, @event.MaxWater);
-        }
-
-        private void HandleChangeFood(FoodChangeEvent @event)
-        {
-            //hungerBar.SetBar(@event.CurrentFood, @event.MaxFood);
+            thirstBar.SetBar(evt.CurrentWater, evt.MaxWater);
         }
     }
 }

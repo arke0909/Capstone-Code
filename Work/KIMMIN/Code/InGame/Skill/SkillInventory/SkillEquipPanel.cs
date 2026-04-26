@@ -79,7 +79,7 @@ namespace Work.Code.SkillInventory
             ui.OnDragEndEvent += HandleDragEnd;
             ui.OnDropSkill += HandleDropSkill;
             ui.OnEquipped += HandleEquip;
-            ui.Clear();
+            ui.ClearUI();
         }
 
         private void UnbindUI(SkillSlot ui)
@@ -167,7 +167,7 @@ namespace Work.Code.SkillInventory
                 if (ui.CurrentSkill != null && !skillSet.Contains(ui.CurrentSkill))
                 {
                     _model.RemoveSkill(ui.CurrentSkill); 
-                    ui.Clear();
+                    ui.ClearUI();
                     isChanged = true;
                 }
             }

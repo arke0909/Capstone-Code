@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace SHS.Scripts.Summon.Turrets
 {
-    public class Turret : Entity, ISummonable, IBulletShooter
+    public class Turret : Entity, ISummonable, IProjectileShooter
     {
         [Header("Detection")] [SerializeField] private LayerMask targetLayer;
         [SerializeField] private LayerMask wallLayer;
@@ -38,12 +38,15 @@ namespace SHS.Scripts.Summon.Turrets
         public float DefaultDamage => damage;
         public float ProjectileSpeed => bulletSpeed;
         public Transform CurrentFirePoint => firePoints[_currentAmmo % firePoints.Length];
-        public BulletDataSO BulletData => bulletData;
         public float DetectionRange => detectionRange;
         public LayerMask TargetLayer => targetLayer;
         public Collider[] DetectedColliders => _detectedColliders;
         public Player TargetPlayer => _targetPlayer;
         public bool CanFire => _currentAmmo > 0;
+
+        public float DamageMultiplier => bulletData.damageMultiplier;
+
+        public int DefPierceLevel => bulletData.defPierceLevel;
 
         private Collider[] _detectedColliders = new Collider[10];
         private Player _targetPlayer;
@@ -105,7 +108,7 @@ namespace SHS.Scripts.Summon.Turrets
             _currentAmmo--;
             Bullet bullet = poolManager.Pop(bulletPrefab) as Bullet;
             Debug.Assert(bullet != null, $"Projectile Pool is empty : Pool Item ({bulletPrefab.name})");
-            bullet.InitBullet(this, this, CurrentFirePoint.position, direction, 1 << gameObject.layer);
+            bullet.InitProjectile(this, this, CurrentFirePoint.position, direction, 1 << gameObject.layer);
             fireEffects[_currentAmmo % fireEffects.Length].Play();
         }
 

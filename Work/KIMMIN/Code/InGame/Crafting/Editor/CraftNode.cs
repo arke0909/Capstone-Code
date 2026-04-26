@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Work.Code.Crafting;
+using Work.Code.Craft;
 
 namespace Code.InGame.Crafting.Editor
 {

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Ami.BroAudio;
 using DewmoLib.Dependencies;
 using DewmoLib.ObjectPool.RunTime;
@@ -33,12 +33,12 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
         {
             base.EnableSkill();
             Debug.Log("미사일 작동");
-            _owner.OnHit += HandleOnHit;
+            _owner.OnAttack += HandleOnHit;
         }
 
         public override void DisableSkill()
         {
-            _owner.OnHit -= HandleOnHit;
+            _owner.OnAttack -= HandleOnHit;
             base.DisableSkill();
         }
 

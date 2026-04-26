@@ -24,10 +24,10 @@ namespace Code.UI.Core
     { 
         [SerializeField] private PlayerInputSO playerInput;
 
-        private readonly HashSet<UIBase> _registeredUIs = new();
+        private readonly HashSet<UIBase> _registeredUI = new();
         private readonly Stack<UIBase> _uiStack = new();
         
-        public UIOverlayManager OverlayManager => UIOverlayManager.Instance;
+        public OverlayUIManager Manager => OverlayUIManager.Instance;
         public event Action OnUIStackChanged;
 
         private void Awake()
@@ -37,7 +37,7 @@ namespace Code.UI.Core
 
         private void OnDestroy()
         {
-            foreach (var ui in _registeredUIs)
+            foreach (var ui in _registeredUI)
             {
                 ui.OnToggleUI -= HandleChangeUIState;
             }
@@ -47,31 +47,31 @@ namespace Code.UI.Core
         
         public void RegisterUI(UIBase ui)
         {
-            if (!_registeredUIs.Add(ui)) return;
+            if (!_registeredUI.Add(ui)) return;
             ui.OnToggleUI += HandleChangeUIState;
         }
 
         public void UnRegisterUI(UIBase ui)
         {
-            if (!_registeredUIs.Contains(ui)) return;
-            _registeredUIs.Remove(ui);
+            if (!_registeredUI.Contains(ui)) return;
+            _registeredUI.Remove(ui);
             ui.OnToggleUI -= HandleChangeUIState;
         }
         
         private void HandleChangeUIState(UIBase ui, bool isFade)
         {
-            HandleToggle(ui, ui.IsActive, isFade);
-            HandleStack(ui, ui.IsActive);
+            ToggleUI(ui, ui.IsActive, isFade);
+            TryStackUI(ui, ui.IsActive);
         }
 
-        private void HandleStack(UIBase ui, bool isActive)
+        private void TryStackUI(UIBase ui, bool isActive)
         {
             if (!CanStack(ui)) return;
 
             if (isActive)
-                PushUI(ui);
+                PushStack(ui);
             else
-                PopUI();
+                PopStack();
             
             OnUIStackChanged?.Invoke();
             playerInput.SetPlayerInput(_uiStack.Count == 0);
@@ -84,8 +84,8 @@ namespace Code.UI.Core
 
         private void HandlePressEsc()
         {
-            if (OverlayManager.HasActiveOverlay())
-                OverlayManager.CloseAllOverlays();
+            if (Manager.HasActiveOverlay())
+                Manager.CloseAllOverlays();
             
             if (_uiStack.Count == 0)
             {
@@ -94,10 +94,10 @@ namespace Code.UI.Core
             }
             
             EventBus.Raise(new PlayerUIEvent(false));
-            PopUI();
+            PopStack();
         }
 
-        public void PushUI(UIBase ui)
+        public void PushStack(UIBase ui)
         {
             if (_uiStack.Contains(ui)) return;
 
@@ -107,7 +107,7 @@ namespace Code.UI.Core
             _uiStack.Push(ui);
         }
 
-        private void ClearStack()
+        public void ClearStack()
         {
             while (_uiStack.Count > 0)
             {
@@ -116,14 +116,14 @@ namespace Code.UI.Core
             }
         }
         
-        public void PopUI()
+        public void PopStack()
         {
             if (_uiStack.Count == 0) return;
             var top = _uiStack.Pop();
             top.DisableUI();
         }
 
-        public bool GetCurrentPanel(out UIPanel panel)
+        public bool TryGetCurrentPanel(out UIPanel panel)
         {
             panel = null;
             
@@ -139,12 +139,7 @@ namespace Code.UI.Core
             return false;
         }
         
-        public bool HasStackUI()
-        {
-            return _uiStack.Count > 0;
-        }
-        
-        private void HandleToggle(UIBase ui, bool isActive, bool useFade)
+        private void ToggleUI(UIBase ui, bool isActive, bool useFade)
         {
             var cg = ui.CanvasGroup;
             cg.DOKill(true);
@@ -167,11 +162,16 @@ namespace Code.UI.Core
                 ToggleCanvasGroup(cg, isActive);
             }
         }
-
+        
         private void ToggleCanvasGroup(CanvasGroup cg, bool isActive)
         {
             cg.interactable = isActive;
             cg.blocksRaycasts = isActive;
+        }
+        
+        public bool HasStackUI()
+        {
+            return _uiStack.Count > 0;
         }
     }
 }

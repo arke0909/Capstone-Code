@@ -38,6 +38,7 @@ namespace Code.InGame.Hotbar
         public void OnPressed()
         {
             _hotbarTween.Kill();
+            
             transform.localScale = Vector3.one;
             _hotbarTween = transform.DOScale(0.9f, 0.07f)
                 .SetLoops(2, LoopType.Yoyo);
@@ -53,13 +54,14 @@ namespace Code.InGame.Hotbar
             {
                 countText.gameObject.SetActive(true);
                 icon.gameObject.SetActive(true);
+                
                 icon.sprite = equipableItem.ItemData.itemImage;
                 countText.text = slot.Stack.ToString();
                 background.color = _activeColor;
             }
         }
 
-        public void Clear()
+        public void ClearUI()
         {
             icon.gameObject.SetActive(false);
             countText.gameObject.SetActive(false);

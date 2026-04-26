@@ -183,7 +183,7 @@ namespace Scripts.SkillSystem.Skills.Grab
                 };
 
                 damageable.ApplyDamage(context);
-                _owner?.OnHit?.Invoke(_owner, damageable);
+                _owner?.OnAttack?.Invoke(_owner, damageable);
             }
 
             PullTargetAsync(targetEntity).Forget();

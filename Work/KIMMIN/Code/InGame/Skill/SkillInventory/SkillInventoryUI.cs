@@ -66,7 +66,7 @@ namespace Work.Code.SkillInventory
                 if (i < skills.Length)
                     _skillUIs[i].EnableFor(skills[i]);
                 else
-                    _skillUIs[i].Clear();
+                    _skillUIs[i].ClearUI();
             }
             
             OnChangeInventory?.Invoke(skills);
