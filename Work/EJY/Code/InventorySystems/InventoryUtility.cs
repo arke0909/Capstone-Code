@@ -11,8 +11,7 @@ namespace Code.InventorySystems
         {
             SlotType.Inventory,
             SlotType.Equip,
-            SlotType.Hotbar,
-            SlotType.ItemContainer
+            SlotType.Hotbar
         };
 
         public static bool TryGetSlot<T>(ItemSlot itemSlot, SlotType slotType, out T slot) where T : ItemSlot

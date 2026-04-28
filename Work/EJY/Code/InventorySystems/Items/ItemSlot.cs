@@ -13,7 +13,6 @@ namespace Code.InventorySystems.Items
         Inventory = 0,
         Equip = 5000,
         Hotbar = 10000,
-        ItemContainer = 15000,
     }
     
     [Serializable]

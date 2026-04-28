@@ -29,6 +29,7 @@ namespace Scripts.Players
         public NoiseGenerator NoiseGenerator => _noiseGenerator;
 
         public StateMachine<PlayerStateEnum> StateMachine => _stateMachine;
+
         private LocalEventBus _localEventBus;
 
         public override void OnInitialize(ComponentContainer componentContainer)

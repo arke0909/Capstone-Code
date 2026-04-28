@@ -20996,6 +20996,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 556d869f080ca51478a171744b5052d3, type: 2}
   - {fileID: 11400000, guid: de2fb001db655cc4f9bbc241c6759ae3, type: 2}
   - {fileID: 11400000, guid: 8b94ea1e12f580644a2cbf0cb917b271, type: 2}
+  - {fileID: 11400000, guid: fe59c705a74e2e5428b0569a750d3782, type: 2}
   _noiseGenerator: {fileID: 1136712736072608331}
 --- !u!114 &637904465195396257
 MonoBehaviour:
@@ -21287,7 +21288,13 @@ MonoBehaviour:
   <SkillData>k__BackingField: {fileID: 11400000, guid: 211ccb0472dfa3846a5fe3d4cb6434f2, type: 2}
   cooldown: 10
   fireRateBuffSO: {fileID: 11400000, guid: c9cb1c84afb983542935615aa975ac8a, type: 2}
-  bulletReduceRateBuffSO: {fileID: 11400000, guid: 587ea31c859d99940ab1d417466dc9b7, type: 2}
+  bulletReduceRate:
+    statusEffect: 0
+    isPercent: 0
+    priority: 0
+    effectValue: []
+    isOverrideApplyTime: 0
+    overrideTime: 0
   fireRateStatSO: {fileID: 11400000, guid: a53115f89bf4eec40aa365a073976a2e, type: 2}
   isOnHitAddFireRate: 0
   isBulletReduceRateDecrease: 0

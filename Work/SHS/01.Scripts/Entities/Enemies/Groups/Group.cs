@@ -24,7 +24,6 @@ namespace Code.SHS.Entities.Enemies.Groups
         {
             if (IsCombat)
                 return;
-            Debug.Log("Detect");
             OnTargetDetected?.Invoke(entity);
             IsCombat = true;
         }

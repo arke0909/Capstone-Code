@@ -1,5 +1,6 @@
-using Chipmunk.ComponentContainers;
+﻿using Chipmunk.ComponentContainers;
 using Scripts.FSM;
+using Scripts.Modules.Blackboards;
 using System;
 
 namespace Scripts.Players.States
@@ -16,17 +17,19 @@ namespace Scripts.Players.States
         ItemUse,
         AimSkill,
         Stun,
+        CraftItem,
     }
     public abstract class PlayerState : State
     {
         protected CharacterMovement _movement;
         protected Player _player;
         protected readonly float _inputThreshold = 0.1f;
-
+        protected Blackboard _blackboard;
         public PlayerState(ComponentContainer container, int animationHash) : base(container, animationHash)
         {
             _player = container.GetCompo<Player>();
             _movement = container.GetCompo<CharacterMovement>();
+            _blackboard = _player.Blackboard;
         }
         public override void Enter()
         {

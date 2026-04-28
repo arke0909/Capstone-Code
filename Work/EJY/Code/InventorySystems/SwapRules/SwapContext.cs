@@ -34,6 +34,8 @@ public class SwapContext
 
         public bool IsStartHotbar => StartSlotType == SlotType.Hotbar;
         public bool IsTargetHotbar => TargetSlotType == SlotType.Hotbar;
+        public bool IsStartStorage => StartSlotType == SlotType.Inventory;
+        public bool IsTargetStorage => TargetSlotType == SlotType.Inventory;
 
         public SwapContext(ItemSlot startSlot, ItemSlot targetSlot)
         {

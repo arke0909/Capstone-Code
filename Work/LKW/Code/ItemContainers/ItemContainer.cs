@@ -53,7 +53,6 @@ namespace Work.LKW.Code.ItemContainers
 
         protected override void CreateSlot(int idx)
         {
-            idx += (int)SlotType.ItemContainer;
             base.CreateSlot(idx);
         }
 

@@ -14,6 +14,7 @@ namespace Code.InventorySystems.SwapRules
                 new EquipToOccupiedItemSlotSwapRule(),
                 new HotbarToEmptySlotSwapRule(),
                 new ItemToHotbarSwapRule(),
+                new ItemCountMergeRule(),
                 new DefaultSlotSwapRule(),
             };
         }

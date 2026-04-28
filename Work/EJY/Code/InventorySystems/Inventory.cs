@@ -251,18 +251,80 @@ namespace Code.InventorySystems
             return createData.Item;
         }
 
+        private bool CanAddItemToSlot(ItemSlot targetSlot, ItemBase item)
+        {
+            if (targetSlot == null || item == null)
+                return false;
+
+            if (targetSlot.OwnerInventory != this)
+                return false;
+
+            return targetSlot.IsBlank ||
+                   (!targetSlot.IsFull && targetSlot.Item.ItemData == item.ItemData);
+        }
+
+        private int GetAddableItemCountForSlot(ItemSlot targetSlot, ItemBase item, int count)
+        {
+            if (count <= 0 || !CanAddItemToSlot(targetSlot, item))
+                return 0;
+
+            int remainCapacity = targetSlot.IsBlank
+                ? item.ItemData.maxStack
+                : item.ItemData.maxStack - targetSlot.Stack;
+
+            return Mathf.Min(count, remainCapacity);
+        }
+
+        private int AddItemToSlotInternal(ItemSlot targetSlot, ItemBase item, int count, ref bool allowReuseSourceReference)
+        {
+            int addAmount = GetAddableItemCountForSlot(targetSlot, item, count);
+            if (addAmount <= 0)
+                return 0;
+
+            if (!targetSlot.IsBlank)
+            {
+                targetSlot.AddItem(addAmount);
+                return addAmount;
+            }
+
+            ItemBase slotItem;
+            if (allowReuseSourceReference)
+            {
+                slotItem = item;
+                slotItem.SetOwner(Owner);
+                allowReuseSourceReference = false;
+            }
+            else
+            {
+                slotItem = CreateItemInstance(item);
+            }
+
+            targetSlot.SetData(slotItem, addAmount);
+            return addAmount;
+        }
+
+        public int AddItemToSlot(ItemSlot targetSlot, ItemBase item, int count = 1)
+        {
+            if (item == null || count <= 0)
+                return 0;
+
+            bool allowReuseSourceReference = item.ItemData.maxStack == 1 && count == 1;
+            int added = AddItemToSlotInternal(targetSlot, item, count, ref allowReuseSourceReference);
+
+            if (added > 0)
+                UpdateInventory();
+
+            return added;
+        }
+
         public int AddItemInternal(ItemBase item, int count, bool allowReuseSourceReference = false)
         {
             int remain = count;
 
             foreach (var slot in GetItemSlots(item.ItemData))
             {
-                if (slot.IsBlank || slot.IsFull)
-                    continue;
-
-                int addAmount = Mathf.Min(remain, item.ItemData.maxStack - slot.Stack);
-                slot.AddItem(addAmount);
-                remain -= addAmount;
+                int added = AddItemToSlotInternal(slot, item, remain, ref allowReuseSourceReference);
+                remain -= added;
 
                 if (remain <= 0)
                     return count;
@@ -273,22 +335,8 @@ namespace Code.InventorySystems
                 if (remain <= 0)
                     break;
 
-                int addAmount = Mathf.Min(remain, item.ItemData.maxStack);
-                ItemBase slotItem;
-
-                if (allowReuseSourceReference)
-                {
-                    slotItem = item;
-                    slotItem.SetOwner(Owner);
-                    allowReuseSourceReference = false;
-                }
-                else
-                {
-                    slotItem = CreateItemInstance(item);
-                }
-
-                slot.SetData(slotItem, addAmount);
-                remain -= addAmount;
+                int added = AddItemToSlotInternal(slot, item, remain, ref allowReuseSourceReference);
+                remain -= added;
             }
 
             return count - remain;

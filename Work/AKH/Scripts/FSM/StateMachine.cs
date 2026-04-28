@@ -16,7 +16,6 @@ namespace Scripts.FSM
         [SerializeField, ReadOnly] public TEnum CurrentStateEnum;
 
         private Dictionary<TEnum, State> _states;
-
         public StateMachine(ComponentContainer container, StateDataSO[] stateList)
         {
             _states = new Dictionary<TEnum, State>();

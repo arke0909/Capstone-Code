@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Work.Code.Craft.View;
 using Work.LKW.Code.Items.ItemInfo;
 
@@ -43,10 +43,7 @@ namespace Work.Code.Craft.Presenter
 
         private void HandleRequestCraft(CraftTreeSO tree)
         {
-            if (!_model.TryCraft(tree))
-            {
-                Debug.Log($"{tree.Item.itemName} 재료 부족");
-            }
+            _model.TryCraft(tree);
         }
         
         public void DisposePresenter()

@@ -8,13 +8,9 @@ namespace Code.InventorySystems.SwapRules
     {
         public bool CanInteract(SwapContext context)
         {
-            bool isItemStorageTarget =
-                context.TargetSlotType == SlotType.Inventory ||
-                context.TargetSlotType == SlotType.ItemContainer;
-
             return context.IsStartEquip &&
                    !context.IsTargetBlank &&
-                   isItemStorageTarget &&
+                   context.IsTargetStorage &&
                    context.StartEquipSlot.CanEquip(context.TargetItem);
         }
 

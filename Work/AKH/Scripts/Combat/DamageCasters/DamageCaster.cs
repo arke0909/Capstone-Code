@@ -22,7 +22,6 @@ namespace Scripts.Combat
                     DamageData = damageData,
                     HitPoint = position,
                     HitNormal = normal,
-                    Source = _owner.gameObject,
                     Attacker = _owner
                 };
                     

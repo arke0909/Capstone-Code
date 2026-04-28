@@ -1,4 +1,5 @@
-using Chipmunk.ComponentContainers;
+﻿using Chipmunk.ComponentContainers;
+using Scripts.Modules.Blackboards;
 using UnityEngine;
 
 namespace Chipmunk.Modules.StatSystem
@@ -11,7 +12,8 @@ namespace Chipmunk.Modules.StatSystem
         public override void OnInitialize(ComponentContainer componentContainer)
         {
             base.OnInitialize(componentContainer);
-
+            IBlackboardOwner blackboardOwner = componentContainer.GetSubclassComponent<IBlackboardOwner>();
+            Blackboard blackboard = blackboardOwner?.Blackboard;
             stats.Clear();
             if (statOverrides == null || statOverrides.Length == 0)
             {
@@ -24,6 +26,7 @@ namespace Chipmunk.Modules.StatSystem
 
                 StatSO stat = statOverride.CreateStat();
                 AddStat(stat);
+                blackboard?.Set<StatSO>(stat.statName, stat);
             }
         }
     }
