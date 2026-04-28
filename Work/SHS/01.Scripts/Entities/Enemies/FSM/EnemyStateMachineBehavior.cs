@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Code.SHS.Entities.Enemies.FSM
 {
-    public class EnemyStateMachineBehavior : MonoBehaviour, IContainerComponent,ILocalEventSubscriber<EnemySpawnEvent>
+    public class EnemyStateMachineBehavior : MonoBehaviour, IContainerComponent, ILocalEventSubscriber<EnemySpawnEvent>
     {
         [SerializeField] private EnemyStateEnum _initialState;
         [SerializeField] private StateMachine<EnemyStateEnum> _stateMachine;
@@ -15,6 +15,7 @@ namespace Code.SHS.Entities.Enemies.FSM
 
         public void OnInitialize(ComponentContainer componentContainer)
         {
+            ComponentContainer = componentContainer;
         }
 
         private void Update()
@@ -24,7 +25,7 @@ namespace Code.SHS.Entities.Enemies.FSM
 
         private void OnDestroy()
         {
-            _stateMachine?.Dispose();
+            ResetStateMachine();
         }
 
         public void ChangeState(EnemyStateEnum newState, bool forced = false)
@@ -34,10 +35,19 @@ namespace Code.SHS.Entities.Enemies.FSM
 
         public void OnLocalEvent(EnemySpawnEvent eventData)
         {
-            System.Diagnostics.Stopwatch stopwatch = new();
-            stopwatch.Start();
+            ResetStateMachine();
+            if (eventData.EnemyData == null || eventData.EnemyData.stateDatas == null ||
+                eventData.EnemyData.stateDatas.Length == 0)
+                return;
+
             _stateMachine = new StateMachine<EnemyStateEnum>(ComponentContainer, eventData.EnemyData.stateDatas);
             _stateMachine?.ChangeState(_initialState);
+        }
+
+        public void ResetStateMachine()
+        {
+            _stateMachine?.Dispose();
+            _stateMachine = null;
         }
     }
 }

@@ -22894,7 +22894,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6adde3a0fb36f641a43dc6f0693adcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensitivity: 18
+  sensitivity: 1
   clampMargin: 8
   whatIsGround:
     serializedVersion: 2

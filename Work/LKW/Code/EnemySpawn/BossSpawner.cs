@@ -30,11 +30,7 @@ namespace Code.EnemySpawn
             EnemySO bossData = BossDict[evt.Area];
 
             Vector3 spawnPos = evt.Position;
-
-            GameObject enemyObject = Instantiate(bossData.enemyPrefab, spawnPos, Quaternion.identity);
-
-            Enemy enemy = enemyObject.GetComponent<Enemy>();
-            enemy.SpawnEnemy(spawnPos,bossData);
+            EnemySpawnUtility.SpawnEnemy(bossData, spawnPos, Quaternion.identity);
         }
     }
 }

@@ -31,16 +31,6 @@ namespace Code.InventorySystems
             EventBus.Unsubscribe<SwapItemSlotEvent>(HandleSwapItemSlot);
         }
 
-        private bool IsResponsibleForSwap(ItemSlot startSlot, ItemSlot targetSlot)
-        {
-            Inventory eventOwner = startSlot.OwnerInventory != null ? startSlot.OwnerInventory : targetSlot.OwnerInventory;
-
-            if (eventOwner != null)
-                return eventOwner == _inventory;
-
-            return _inventory is PlayerInventory;
-        }
-
         private static void UpdateRelatedInventories(ItemSlot startSlot, ItemSlot targetSlot)
         {
             startSlot.OwnerInventory?.UpdateInventory();
@@ -60,13 +50,10 @@ namespace Code.InventorySystems
                 return;
             }
 
-            if (startSlot == targetSlot)
-                return;
-
-            if (!IsResponsibleForSwap(startSlot, targetSlot))
-                return;
-
             SwapContext context = new SwapContext(startSlot, targetSlot);
+            
+            if (context.IsSameSlot || context.IsStartBlank)
+                return;
 
             foreach (ISlotSwapInteractRule rule in _rules)
             {
@@ -74,11 +61,9 @@ namespace Code.InventorySystems
                     continue;
 
                 rule.Interact(context);
+                UpdateRelatedInventories(startSlot, targetSlot);
                 break;
             }
-
-            UpdateRelatedInventories(startSlot, targetSlot);
         }
-
     }
 }

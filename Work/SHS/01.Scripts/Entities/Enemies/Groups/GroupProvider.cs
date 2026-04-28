@@ -1,5 +1,6 @@
 ﻿using Chipmunk.ComponentContainers;
 using Chipmunk.Library.Utility.GameEvents.Local;
+using Code.SHS.Entities.Enemies.Events.Local;
 using Scripts.Entities;
 using SHS.Scripts.Combats.Events;
 using UnityEngine;
@@ -14,7 +15,8 @@ namespace Code.SHS.Entities.Enemies.Groups
     {
         public Group group;
     }
-    public class GroupProvider : MonoBehaviour, IContainerComponent, ILocalEventSubscriber<EntityDeadEvent>
+    public class GroupProvider : MonoBehaviour, IContainerComponent, ILocalEventSubscriber<EntityDeadEvent>,
+        ILocalEventSubscriber<EnemySpawnEvent>
     {
         private Enemy _owner;
         public Group CurrentGroup => _currentGroup;
@@ -43,6 +45,11 @@ namespace Code.SHS.Entities.Enemies.Groups
             }
         }
         public void OnLocalEvent(EntityDeadEvent eventData)
+        {
+            SetGroup(null);
+        }
+
+        public void OnLocalEvent(EnemySpawnEvent eventData)
         {
             SetGroup(null);
         }

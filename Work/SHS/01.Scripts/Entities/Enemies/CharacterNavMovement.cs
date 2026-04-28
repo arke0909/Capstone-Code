@@ -124,5 +124,13 @@ namespace Code.SHS.Entities.Enemies
         public void SetPosition(Vector3 position)
         {
         }
+
+        public override void ResetMovementState(Vector3 position, Quaternion rotation)
+        {
+            _canMove = true;
+            MoveType = NavMoveType.Idle;
+            SpeedMultiplier = 1f;
+            base.ResetMovementState(position, rotation);
+        }
     }
 }

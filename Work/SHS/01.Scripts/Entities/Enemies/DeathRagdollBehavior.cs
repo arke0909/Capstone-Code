@@ -1,12 +1,14 @@
-using System;
+﻿using System;
 using Chipmunk.Library.Utility.GameEvents.Local;
+using Code.SHS.Entities.Enemies.Events.Local;
 using SHS.Scripts.Combats.Events;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Code.SHS.Entities.Enemies
 {
-    public class DeathRagdollBehavior : MonoBehaviour, ILocalEventSubscriber<EntityDeadEvent>
+    public class DeathRagdollBehavior : MonoBehaviour, ILocalEventSubscriber<EntityDeadEvent>,
+        ILocalEventSubscriber<EnemySpawnEvent>
     {
         private Animator _animator;
         private Rigidbody[] _rigidbodies;
@@ -19,15 +21,7 @@ namespace Code.SHS.Entities.Enemies
             _animator = GetComponent<Animator>();
             _rigidbodies = GetComponentsInChildren<Rigidbody>();
             _colliders = GetComponentsInChildren<Collider>();
-            foreach (var rb in _rigidbodies)
-            {
-                rb.isKinematic = true;
-            }
-
-            foreach (var col in _colliders)
-            {
-                col.enabled = false;
-            }
+            ResetRagdoll();
         }
 
         public void OnLocalEvent(EntityDeadEvent eventData)
@@ -52,6 +46,31 @@ namespace Code.SHS.Entities.Enemies
             {
                 col.enabled = true;
             }
+        }
+
+        public void ResetRagdoll()
+        {
+            _isRagdollActive = false;
+
+            if (_animator != null)
+            {
+                _animator.enabled = true;
+            }
+
+            foreach (var rb in _rigidbodies)
+            {
+                rb.isKinematic = true;
+            }
+
+            foreach (var col in _colliders)
+            {
+                col.enabled = false;
+            }
+        }
+
+        public void OnLocalEvent(EnemySpawnEvent eventData)
+        {
+            ResetRagdoll();
         }
     }
 }

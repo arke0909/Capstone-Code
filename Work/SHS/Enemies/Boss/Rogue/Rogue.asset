@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Rogue
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 8744048729638733587, guid: 9f11f78ccce62c44bb4b712647f20d08, type: 3}
+  enemyPoolItem: {fileID: 11400000, guid: 3feb023dbf9d42de9582e5c1df9cf9f2, type: 2}
   spawnRarityWeight: 50
   equipments:
   - type: 0

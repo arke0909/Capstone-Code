@@ -7,33 +7,21 @@ namespace Scripts.Combat.Datas
 {
     public class MeleeWeaponItem : Weapon, IAttackable
     {
-        private int _comboCounter;
-
-        public GameObject Dealer => WeaponObj.gameObject;
-        public Entity Owner => null;
-        
         public MeleeWeaponItem(ItemDataSO itemData) : base(itemData)
         {
         }
 
-        public AttackableState CurrentAttackableState { get
+        public override AttackableState CurrentAttackableState { get
             {
                 if (!IsEquipped)
                     return AttackableState.NotEquipped;
                 return AttackableState.CanAttack;
             } }
 
-        public void EnterAttack()
+        public override void AttackTrigger()
         {
-        }
-
-        public void AttackTrigger()
-        {
+            base.AttackTrigger();
             WeaponObj.Attack();
-        }
-
-        public void EndAnimation()
-        {
         }
     }
 }

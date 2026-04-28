@@ -1,4 +1,4 @@
-using Code.TimeSystem;
+﻿using Code.TimeSystem;
 using DewmoLib.Dependencies;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -12,7 +12,7 @@ namespace Work.Code.Map
         [SerializeField] private AnimationCurve exposureCurve;
         [SerializeField] private AnimationCurve temperatureCurve;
         [SerializeField] private Gradient colorFilter;
-        [SerializeField] private float updateInterval = 0.5f;
+        //[SerializeField] private float updateInterval = 0.5f;
         
         [Inject] private TimeController _timeController;
 

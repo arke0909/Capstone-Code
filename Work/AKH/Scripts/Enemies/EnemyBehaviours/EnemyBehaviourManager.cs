@@ -15,6 +15,7 @@ namespace Scripts.Enemies.EnemyBehaviours
     public class EnemyBehaviourManager : MonoBehaviour, IContainerComponent, ILocalEventSubscriber<EnemySpawnEvent>
     {
         private SerializedDictionary<EnemyStateEnum, List<EnemyBehaviour>> _behaviours = new();
+        private readonly List<EnemyBehaviour> _spawnedBehaviours = new();
 
         public ComponentContainer ComponentContainer { get; set; }
         public EnemyBehaviour CurrentBehaviour { get; private set; }
@@ -32,11 +33,16 @@ namespace Scripts.Enemies.EnemyBehaviours
 
         public void OnLocalEvent(EnemySpawnEvent spawnEvent)
         {
+            ResetRuntimeBehaviours();
+            if (spawnEvent.EnemyData == null || spawnEvent.EnemyData.behaviourPrefabs == null)
+                return;
+
             foreach (var enemyBehaviorPatch in spawnEvent.EnemyData.behaviourPrefabs)
             {
                 if (enemyBehaviorPatch == null)
                     continue;
                 EnemyBehaviour behaviour = Instantiate(enemyBehaviorPatch.Value, transform);
+                _spawnedBehaviours.Add(behaviour);
                 enemyBehaviorPatch.ApplySetter(behaviour);
                 foreach (var state in behaviour.TargetStates)
                     _behaviours[state].Add(behaviour);
@@ -44,6 +50,26 @@ namespace Scripts.Enemies.EnemyBehaviours
             }
 
             RebuildBehaviourCache();
+        }
+
+        public void ResetRuntimeBehaviours()
+        {
+            CurrentBehaviour = null;
+            foreach (var behaviours in _behaviours.Values)
+            {
+                behaviours.Clear();
+            }
+
+            for (int i = 0; i < _spawnedBehaviours.Count; i++)
+            {
+                EnemyBehaviour behaviour = _spawnedBehaviours[i];
+                if (behaviour != null)
+                {
+                    Destroy(behaviour.gameObject);
+                }
+            }
+
+            _spawnedBehaviours.Clear();
         }
 
 

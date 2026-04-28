@@ -114,7 +114,7 @@ namespace Code.InventorySystems
         }
 
         // 실질적으로 넣을 수 있는 아이템의 개수 구하기
-        public int GetAddableItemCount(ItemBase item, int requestCount)
+        private int GetAddableItemCount(ItemBase item, int requestCount)
         {
             // 타겟 인벤토리의 같은 아이템 슬롯들의 남은 공간
             List<ItemSlot> targetSlots = GetItemSlots(item.ItemData).ToList();
@@ -208,6 +208,23 @@ namespace Code.InventorySystems
             InventoryChanged?.Invoke();
         }
 
+        public void ClearInventory(bool clearOwners = true)
+        {
+            for (int i = 0; i < CurrentInventorySize; i++)
+            {
+                ItemSlot slot = itemSlots[i];
+                if (slot.Item != null && clearOwners &&
+                    (slot.Item is EquipableItem equipableItem && equipableItem.IsEquipped) == false)
+                {
+                    slot.Item.SetOwner(null);
+                }
+
+                slot.Clear();
+            }
+
+            UpdateInventory();
+        }
+
         public virtual void OnInitialize(ComponentContainer componentContainer)
         {
             Owner = componentContainer.GetSubclassComponent<Entity>();
@@ -234,7 +251,7 @@ namespace Code.InventorySystems
             return createData.Item;
         }
 
-        private int AddItemInternal(ItemBase item, int count, bool allowReuseSourceReference = false)
+        public int AddItemInternal(ItemBase item, int count, bool allowReuseSourceReference = false)
         {
             int remain = count;
 
@@ -251,8 +268,6 @@ namespace Code.InventorySystems
                     return count;
             }
 
-            bool canReuseSourceReference = allowReuseSourceReference;
-
             foreach (var slot in GetItemSlots(null))
             {
                 if (remain <= 0)
@@ -261,11 +276,11 @@ namespace Code.InventorySystems
                 int addAmount = Mathf.Min(remain, item.ItemData.maxStack);
                 ItemBase slotItem;
 
-                if (canReuseSourceReference)
+                if (allowReuseSourceReference)
                 {
                     slotItem = item;
                     slotItem.SetOwner(Owner);
-                    canReuseSourceReference = false;
+                    allowReuseSourceReference = false;
                 }
                 else
                 {

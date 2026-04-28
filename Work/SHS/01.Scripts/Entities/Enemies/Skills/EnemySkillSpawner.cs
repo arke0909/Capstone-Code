@@ -16,6 +16,7 @@ namespace Code.SHS.Entities.Enemies.Skills
         private SkillManager _skillManager;
         private ActiveSkillComponent _activeSkillComponent;
         private PassiveSkillComponent _passiveSkillComponent;
+        private readonly List<Skill> _spawnedSkills = new();
 
         public void OnInitialize(ComponentContainer componentContainer)
         {
@@ -26,9 +27,31 @@ namespace Code.SHS.Entities.Enemies.Skills
 
         public void OnLocalEvent(EnemySpawnEvent eventData)
         {
+            ResetRuntimeSkills();
             EnemySO enemySO = eventData.EnemyData;
+            if (enemySO == null)
+                return;
+
             SpawnSkills(enemySO);
             EquipSkills(enemySO);
+        }
+
+        public void ResetRuntimeSkills()
+        {
+            _activeSkillComponent?.ClearSkills();
+            _passiveSkillComponent?.ClearSkills();
+            _skillManager?.SetSkills(Array.Empty<Skill>());
+
+            for (int i = 0; i < _spawnedSkills.Count; i++)
+            {
+                Skill skill = _spawnedSkills[i];
+                if (skill != null)
+                {
+                    Destroy(skill.gameObject);
+                }
+            }
+
+            _spawnedSkills.Clear();
         }
 
 
@@ -43,6 +66,7 @@ namespace Code.SHS.Entities.Enemies.Skills
                 skill.transform.position = transform.position;
                 skillPatch.ApplySetter(skill);
                 skillInstances.Add(skill);
+                _spawnedSkills.Add(skill);
             }
 
 
@@ -54,6 +78,7 @@ namespace Code.SHS.Entities.Enemies.Skills
                 skill.transform.position = transform.position;
                 skillPatch.ApplySetter(skill);
                 skillInstances.Add(skill);
+                _spawnedSkills.Add(skill);
             }
 
             _skillManager.SetSkills(skillInstances);
@@ -63,7 +88,7 @@ namespace Code.SHS.Entities.Enemies.Skills
 
         private void EquipSkills(EnemySO enemySO)
         {
-            foreach(var patch in enemySO.activeSkill)
+            foreach (var patch in enemySO.activeSkill)
             {
                 if (patch.Value == null)
                     continue;
@@ -71,7 +96,7 @@ namespace Code.SHS.Entities.Enemies.Skills
                 _activeSkillComponent.ChangeSkill(activeSkill.SkillData, patch.Key);
             }
 
-            foreach(var patch in enemySO.passiveSkill)
+            foreach (var patch in enemySO.passiveSkill)
             {
                 if (patch.Value == null)
                     continue;

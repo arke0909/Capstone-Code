@@ -7,10 +7,10 @@ namespace Code.DataSystem.Editor
     public class TypeSelectButton
     {
         public Action<ItemType> OnButtonClicked;
+        private VisualElement _rootElement;
         
         public Button Button { get; private set; }
         public ItemType Type { get; private set; }
-        private VisualElement _rootElement;
         
         public string Name
         {

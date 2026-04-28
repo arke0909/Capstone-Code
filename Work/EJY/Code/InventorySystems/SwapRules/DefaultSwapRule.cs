@@ -4,11 +4,11 @@ namespace Code.InventorySystems.SwapRules
 {
     public class DefaultSlotSwapRule : ISlotSwapInteractRule
     {
-        public bool CanInteract(SwapContext context) 
+        public bool CanInteract(SwapContext context)
             => !context.IsStartEquip &&
                !context.IsTargetEquip &&
-               (context.StartSlotType == SlotType.Inventory || context.TargetSlotType == SlotType.Inventory ||
-                context.StartSlotType == SlotType.ItemContainer || context.TargetSlotType == SlotType.ItemContainer);
+               !context.IsStartHotbar &&
+               !context.IsTargetHotbar;
 
         public void Interact(SwapContext context)
         {

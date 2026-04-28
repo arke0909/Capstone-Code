@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Melee
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 600493579497088898, guid: f4838d7dfa586564eab6e4b7d3fad1af, type: 3}
+  enemyPoolItem: {fileID: 11400000, guid: a2474b1841564b9eb2db88de38bd9620, type: 2}
   spawnRarityWeight: 50
   equipments:
   - type: 0

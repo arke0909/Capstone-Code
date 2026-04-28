@@ -25,7 +25,7 @@ namespace Code.EnemySpawn
 
         private void SetUpSpawnZone()
         {
-            if (spawnPoints == null && spawnPoints.Count <= 0)
+            if (spawnPoints == null || spawnPoints.Count <= 0)
                 return;
 
             spawnEnemies = spawnList.GetSpawnEnemies(spawnPoints.Count);
@@ -50,10 +50,7 @@ namespace Code.EnemySpawn
         {
             if (enemyData == null || enemyData.enemyPrefab == null) return;
 
-            GameObject enemyObject = Instantiate(enemyData.enemyPrefab, position, rotation);
-
-            Enemy enemy = enemyObject.GetComponent<Enemy>();
-            enemy.SpawnEnemy(position,enemyData);
+            EnemySpawnUtility.SpawnEnemy(enemyData, position, rotation);
         }
     }
 }

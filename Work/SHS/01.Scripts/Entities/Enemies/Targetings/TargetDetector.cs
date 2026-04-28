@@ -2,6 +2,7 @@
 using Chipmunk.Library.Utility.GameEvents.Local;
 using Chipmunk.Modules.StatSystem;
 using Code.SHS.Entities.Enemies;
+using Code.SHS.Entities.Enemies.Events.Local;
 using Code.SHS.Entities.Enemies.Groups;
 using Code.SHS.Entities.Enemies.Targetings.Events;
 using Scripts.Entities;
@@ -14,7 +15,7 @@ using UnityEngine;
 namespace Code.SHS.Targetings.Enemies
 {
     public class TargetDetector : MonoBehaviour, IContainerComponent, ILocalEventSubscriber<DamagedEvent>,
-        ILocalEventSubscriber<NoiseListenedEvent>
+        ILocalEventSubscriber<NoiseListenedEvent>, ILocalEventSubscriber<EnemySpawnEvent>
     {
         [SerializeField] private StatSO detectionRange;
         [SerializeField] private float closeDetectionRange = 2f;
@@ -149,6 +150,11 @@ namespace Code.SHS.Targetings.Enemies
                 _targetProvider.SetTarget(player);
             else
                 _targetProvider.TargetLost(eventData.NoisePosition);
+        }
+
+        public void OnLocalEvent(EnemySpawnEvent eventData)
+        {
+            enabled = true;
         }
 
 

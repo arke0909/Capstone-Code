@@ -27,6 +27,7 @@ public class PlayerInputSO : ScriptableObject, Control.IPlayerActions, Control.I
     public bool AttackKey { get; private set; } = false;
     public bool CameraLock { get; private set; } = false;
     public Vector2 MovementKey { get; private set; }
+    public Vector2 MouseScreenPosition => _screenPosition;
     private Control _controls;
 
     private Vector3 _worldPosition;

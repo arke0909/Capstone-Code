@@ -18,11 +18,13 @@ namespace Code.DataSystem.Editor
 {
     public class ItemSOGeneratorEditor : EditorWindow
     {
+        [Header("Assets")]
         [SerializeField] private VisualTreeAsset visualTreeAsset;
         [SerializeField] private ItemDataBaseSO itemDataBase;
         [SerializeField] private VisualTreeAsset itemAsset;
         [SerializeField] private VisualTreeAsset selectBtnAsset;
 
+        [Header("Path")]
         [SerializeField] private string savePath = "Assets/DataSystem/SO/ItemData";
         [SerializeField] private string filePath = "Assets/DataSystem/Item_Table.xlsx";
 
@@ -43,7 +45,6 @@ namespace Code.DataSystem.Editor
         private VisualElement _infoView;
         private ScrollView _buttonView;
         private ItemSOPreview _selectedItemPreview;
-                
         private UnityEditor.Editor _cachedEditor;
 
         [MenuItem("Tools/ItemSOGenerator")]

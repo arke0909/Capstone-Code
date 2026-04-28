@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Code.InventorySystems;
 using DewmoLib.Utiles;
 using UnityEngine;
@@ -24,7 +24,7 @@ namespace Code.InventorySystems.Items
         [field: SerializeField] public int Stack { get; protected set; }
         public bool IsFull => !IsBlank && Stack == Item.ItemData.maxStack;
         public bool IsBlank => Item == null;
-        public int Index { get; protected set; }
+        public int Index { get; set; }
 
         public ItemSlot(ItemBase item, int stack = 0)
         {
@@ -39,7 +39,14 @@ namespace Code.InventorySystems.Items
         {
             Item = item;
             bool slotEmpty = item == null;
-            Stack = slotEmpty ? 0 : Mathf.Clamp(stack, 1, item.ItemData.maxStack);
+            if (slotEmpty)
+            {
+                Stack = 0;
+                return;
+            }
+            
+            Stack = Mathf.Clamp(stack, 1, item.ItemData.maxStack);
+            Item.SetOwner(OwnerInventory.Owner);
         }
         
         public int AddItem(int amount = 1)

@@ -30,8 +30,8 @@ namespace Work.LKW.Code.ItemContainers
 
                 int count = container.GetRandomCount();
                 List<ItemDataSO> resultItems = new List<ItemDataSO>();
-                resultItems.AddRange(itemDB.GetRandomItems(targetItems, container.AllowedSpawnArea, count));
-
+                
+                resultItems.AddRange(itemDB.GetRandomItems(targetItems, container.AllowedSpawnArea, container.SpawnSection, count));
 
                 container.SetUpItem(resultItems);
             }

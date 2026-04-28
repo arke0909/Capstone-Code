@@ -90,7 +90,33 @@ namespace Code.SHS.Entities.Enemies
 
         public void OnLocalEvent(EnemySpawnEvent spawnEvent)
         {
+            ResetRuntimeEquipment();
+            if (spawnEvent.EnemyData == null)
+                return;
+
             SetSpawnEquipments(spawnEvent.EnemyData.equipments);
+        }
+
+        public void ResetRuntimeEquipment()
+        {
+            foreach (EnemyEquipSlot slot in _equips.Values)
+            {
+                if (slot.Item == null)
+                    continue;
+
+                EquipableItem equippedItem = slot.Item;
+                if (equippedItem.ItemData is EquipItemDataSO equipItemData)
+                {
+                    UnEquip(equippedItem, equipItemData);
+                }
+                else
+                {
+                    equippedItem.Unequip(_entity);
+                    slot.Clear();
+                }
+            }
+
+            _enemyInventory?.ClearInventory();
         }
 
         public void SetSpawnEquipments(EnemyEquipData[] equipments)

@@ -1,10 +1,14 @@
 ﻿using Chipmunk.ComponentContainers;
 using Chipmunk.Library.Utility.GameEvents.Local;
+using Code.Combat;
 using Code.EnemySpawn;
 using Code.SHS.Entities.Enemies.Combat;
 using Code.SHS.Entities.Enemies.Events.Local;
 using Code.SHS.Entities.Enemies.FSM;
+using Code.SHS.Entities.Enemies.Groups;
+using Code.SHS.Entities.Enemies.Skills;
 using Code.SHS.Targetings.Enemies;
+using DewmoLib.ObjectPool.RunTime;
 using Scripts.Combat;
 using Scripts.Combat.Datas;
 using Scripts.Combat.Fovs;
@@ -15,17 +19,17 @@ using SHS.Scripts.Combats.Events;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
-using Code.Combat;
-using Code.SHS.Entities.Enemies.Groups;
 
 namespace Code.SHS.Entities.Enemies
 {
-    public class Enemy : Entity, IKnockbackable, IStateEntity, IFindable, IPullable
+    public class Enemy : Entity, IKnockbackable, IStateEntity, IFindable, IPullable, IPoolable
     {
         [SerializeField] public LayerMask playerLayerMask;
-
+        [SerializeField] public EnemySO test;
         public float movingRange = 5;
 
+        public PoolItemSO PoolItem => _runtimePoolItem;
+        public GameObject GameObject => gameObject;
         public TargetProvider TargetProvider { get; private set; }
         public EnemyStateMachineBehavior StateMachineBehavior { get; private set; }
         public EnemySO EnemyData { get; private set; }
@@ -35,8 +39,10 @@ namespace Code.SHS.Entities.Enemies
         [field: SerializeField] public UnityEvent<bool> OnFound { get; private set; }
         [field: SerializeField] public Vector3 SpawnPos { get; private set; }
 
-        private EnemyStunState _stunState;
         private LocalEventBus _localEventBus;
+        private Pool _pool;
+        private PoolItemSO _runtimePoolItem;
+        private int _defaultLayer;
 
         public override void OnInitialize(ComponentContainer componentContainer)
         {
@@ -46,11 +52,20 @@ namespace Code.SHS.Entities.Enemies
             StateMachineBehavior = ComponentContainer.GetComponent<EnemyStateMachineBehavior>(true);
             GroupProvider = ComponentContainer.GetComponent<GroupProvider>();
             _localEventBus = ComponentContainer.GetComponent<LocalEventBus>();
+            _defaultLayer = gameObject.layer;
             OnDeadEvent.AddListener(HandleEnemyDead);
         }
+
         private void Start()
         {
             OnFound?.Invoke(((IFindable)this).IsFounded);
+        }
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Semicolon))
+            {
+                SpawnEnemy(transform.position, test);
+            }
         }
 
         private void HandleEnemyDead()
@@ -62,11 +77,14 @@ namespace Code.SHS.Entities.Enemies
 
         public void SpawnEnemy(Vector3 position, EnemySO enemyData)
         {
-            LocalEventBus localEventBus = ComponentContainer.GetComponent<LocalEventBus>(true);
-            localEventBus.Raise(new EnemySpawnEvent(enemyData));
             EnemyData = enemyData;
             SpawnPos = position;
-            _stunState = StateMachineBehavior.StateMachine.GetState<EnemyStunState>(EnemyStateEnum.Stun);
+            _runtimePoolItem = enemyData != null ? enemyData.enemyPoolItem : null;
+            transform.position = position;
+
+            ResetItem();
+            Quaternion spawnRotation = transform.rotation;
+            _localEventBus.Raise(new EnemySpawnEvent(enemyData, position, spawnRotation));
         }
 
         public void ChangeState(EnemyStateEnum newState, bool forced = false)
@@ -86,7 +104,11 @@ namespace Code.SHS.Entities.Enemies
 
         public override void Stun(float duration)
         {
-            _stunState.SetStunDuration(duration);
+            EnemyStunState stunState = StateMachineBehavior.StateMachine?.GetState<EnemyStunState>(EnemyStateEnum.Stun);
+            if (stunState == null)
+                return;
+
+            stunState.SetStunDuration(duration);
             ChangeState(EnemyStateEnum.Stun);
             _localEventBus.Raise(new StunnedEvent(duration));
         }
@@ -103,6 +125,33 @@ namespace Code.SHS.Entities.Enemies
         public void Pull(Vector3 pullOffset)
         {
             NavMovement.Move(pullOffset);
+        }
+
+        public void SetUpPool(Pool pool)
+        {
+            _pool = pool;
+        }
+
+        public void ResetItem()
+        {
+            IsDead = false;
+            gameObject.layer = _defaultLayer;
+        }
+
+        public void SetRuntimePoolItem(PoolItemSO poolItem)
+        {
+            _runtimePoolItem = poolItem;
+        }
+
+        public void ReleaseToPool()
+        {
+            if (_pool != null && _runtimePoolItem != null)
+            {
+                _pool.Push(this);
+                return;
+            }
+
+            Destroy(gameObject);
         }
     }
 }

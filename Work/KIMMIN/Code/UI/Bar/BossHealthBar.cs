@@ -16,10 +16,10 @@ namespace Code.UI.Bar
         private CanvasGroup canvasGroup;
         private HealthCompo drawingHealthCompo;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             Debug.Log("<color=green>BossHealthBar Awake</color>");
-            ;
             canvasGroup = gameObject.GetComponent<CanvasGroup>();
             EventBus<BossCombatEnteredEvent>.OnEvent += HandleBossCombatEntered;
             HandleBossCombatEntered(new BossCombatEnteredEvent(null));

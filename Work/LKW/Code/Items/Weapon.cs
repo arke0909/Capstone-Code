@@ -1,4 +1,5 @@
 ﻿using Chipmunk.ComponentContainers;
+using Scripts.Combat.Datas;
 using Scripts.Combat.ItemObjects;
 using Scripts.Entities;
 using UnityEngine;
@@ -6,11 +7,13 @@ using Work.LKW.Code.Items.ItemInfo;
 
 namespace Work.LKW.Code.Items
 {
-    public abstract class Weapon : EquipableItem    
+    public abstract class Weapon : HandItem, IAttackable
     {
+        private static int _attackSpeedHash = Animator.StringToHash("AttackSpeed");
+        
         public WeaponDataSO WeaponData { get; private set; }
         public WeaponObject WeaponObj => ItemObject as WeaponObject;
-        private static int _attackSpeedHash = Animator.StringToHash("AttackSpeed");
+        
         public Weapon(ItemDataSO itemData) : base(itemData)
         {
             Debug.Assert(itemData is WeaponDataSO, "Invalid EquipItemData");
@@ -31,5 +34,20 @@ namespace Work.LKW.Code.Items
             animator.SetParam(_attackSpeedHash, 1);
         }
 
+        public GameObject Dealer => WeaponObj.gameObject;
+        public Entity Owner => _owner;
+        public abstract AttackableState CurrentAttackableState { get; }
+        
+        public virtual void EnterAttack()
+        {
+        }
+
+        public virtual void AttackTrigger()
+        {
+        }
+
+        public virtual void EndAnimation()
+        {
+        }
     }
 }

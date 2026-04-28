@@ -16,9 +16,7 @@ namespace Work.LKW.Code.Items
         [SerializeField] private PoolItemSO viewItemPool;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private LayerMask whatIsPlayer;
-        
         [SerializeField] private GameObject interactCircle;
-        [field: SerializeField] public Outlinable Outlinable { get; private set; }
         
         private ItemBase _item;
         private int _stack;
@@ -26,6 +24,7 @@ namespace Work.LKW.Code.Items
         
         public PoolItemSO PoolItem => viewItemPool;
         public GameObject GameObject => gameObject;
+        [field: SerializeField] public Outlinable Outlinable { get; private set; }
         
         public void SetUpPool(Pool pool)
         {

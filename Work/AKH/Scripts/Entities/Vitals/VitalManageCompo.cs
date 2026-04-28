@@ -1,12 +1,19 @@
 ﻿using Chipmunk.ComponentContainers;
 using Chipmunk.Library.Utility.GameEvents.Local;
 using Chipmunk.Modules.StatSystem;
+using Code.SHS.Entities.Enemies.Events.Local;
 using UnityEngine;
 
 namespace Scripts.Entities.Vitals
 {
+    public interface IVitalResettable
+    {
+        void ResetVital();
+    }
+
     public delegate void OnVitalChanged(StatSO vitalStat, float before, float after);
-    public abstract class VitalManageCompo<TEvent> : MonoBehaviour, IContainerComponent, IAfterInitialze
+    public abstract class VitalManageCompo<TEvent> : MonoBehaviour, IContainerComponent, IAfterInitialze,
+        IVitalResettable, ILocalEventSubscriber<EnemySpawnEvent>
         where TEvent : IVitalEvent, new()
     {
         public event OnVitalChanged OnValueChanged;
@@ -74,6 +81,17 @@ namespace Scripts.Entities.Vitals
         {
             CurrentValue += value;
             _stopTimer = Mathf.Max(timer,_stopTimer);
+        }
+
+        public virtual void ResetVital()
+        {
+            _stopTimer = 0f;
+            CurrentValue = _maxValue;
+        }
+
+        public void OnLocalEvent(EnemySpawnEvent eventData)
+        {
+            ResetVital();
         }
     }
 }

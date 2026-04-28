@@ -31,7 +31,6 @@ namespace Code.ETC
             car.OnDispatch.AddListener(SpawnAllPolice);
             _waitForSeconds = new WaitForSeconds(spawnDelay);
             policeCount = spawnCount;
-            policeCount = spawnCount;
         }
 
         private void OnDestroy()
@@ -56,22 +55,24 @@ namespace Code.ETC
 
         public void SpawnPolice()
         {
-            GameObject enemyObject = Instantiate(policeData.enemyPrefab, spawnPos.position, Quaternion.identity);
-            Enemy police = enemyObject.GetComponent<Enemy>();
-            
-            police.SpawnEnemy(spawnPos.position,policeData);
+            Enemy police = EnemySpawnUtility.SpawnEnemy(policeData, spawnPos.position, Quaternion.identity);
+            if (police == null)
+                return;
             
             police.GetComponent<NavMeshAgent>().SetDestination(targetPos.position);
             police.ChangeState(EnemyStateEnum.SprintTo);
             
-            police.OnDeadEvent.AddListener(() =>
+            UnityAction handleDead = null;
+            handleDead = () =>
             {
+                police.OnDeadEvent.RemoveListener(handleDead);
                 policeCount--;
                 if (policeCount <= 0)
                 {
                     OnEndDispatch.Invoke();
                 }
-            });
+            };
+            police.OnDeadEvent.AddListener(handleDead);
         }
     }
 }

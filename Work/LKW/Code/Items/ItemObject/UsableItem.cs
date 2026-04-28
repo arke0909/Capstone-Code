@@ -9,7 +9,7 @@ using Work.Code.GameEvents;
 
 namespace Work.LKW.Code.Items
 {
-    public abstract class UsableItem : Weapon, IUsable
+    public abstract class UsableItem : HandItem, IUsable
     {
         public UsableItem(ItemDataSO itemData) : base(itemData)
         {

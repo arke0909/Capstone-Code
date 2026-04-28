@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: P239
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 600493579497088898, guid: 8ed35caa013454f49b9df6ae8ecb32dc, type: 3}
+  enemyPoolItem: {fileID: 11400000, guid: 722e00fce40d4c50899757fc410a0e79, type: 2}
   spawnRarityWeight: 30
   equipments:
   - type: 0

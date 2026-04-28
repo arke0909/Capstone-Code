@@ -6,10 +6,12 @@ using Scripts.Combat.Datas;
 using Scripts.Entities;
 using UnityEngine;
 using Work.LKW.Code.Items;
+using Chipmunk.Library.Utility.GameEvents.Local;
+using Code.SHS.Entities.Enemies.Events.Local;
 
 namespace Scripts.Combat
 {
-    public class AttackCompo : MonoBehaviour, IContainerComponent
+    public class AttackCompo : MonoBehaviour, IContainerComponent, ILocalEventSubscriber<EnemySpawnEvent>
     {
         public ComponentContainer ComponentContainer { get; set; }
         public bool IsAim { get; set; }
@@ -42,6 +44,11 @@ namespace Scripts.Combat
         public virtual void OnInitialize(ComponentContainer componentContainer)
         {
             _enemyEquipment = componentContainer.Get<EnemyEquipment>();
+        }
+
+        public void OnLocalEvent(EnemySpawnEvent eventData)
+        {
+            IsAim = false;
         }
     }
 }

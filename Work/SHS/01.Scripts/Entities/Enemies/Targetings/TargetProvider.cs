@@ -1,6 +1,7 @@
 ﻿using Chipmunk.ComponentContainers;
 using Chipmunk.Library.Utility.GameEvents.Local;
 using Code.SHS.Entities.Enemies.Events;
+using Code.SHS.Entities.Enemies.Events.Local;
 using Code.SHS.Entities.Enemies.Groups;
 using Code.SHS.Entities.Enemies.Targetings.Events;
 using Scripts.Entities;
@@ -9,7 +10,8 @@ using UnityEngine;
 
 namespace Code.SHS.Targetings.Enemies
 {
-    public class TargetProvider : MonoBehaviour, IContainerComponent, ILocalEventSubscriber<LeaveGroupEvent>, ILocalEventSubscriber<JoinGroupEvent>
+    public class TargetProvider : MonoBehaviour, IContainerComponent, ILocalEventSubscriber<LeaveGroupEvent>,
+        ILocalEventSubscriber<JoinGroupEvent>, ILocalEventSubscriber<EnemySpawnEvent>
     {
         [SerializeField] private float targetForgetDuration = 5f;
         public Entity CurrentTarget => _currentTarget;
@@ -92,6 +94,20 @@ namespace Code.SHS.Targetings.Enemies
             _targetForgetTimer = 0f;
             _localEventBus.Raise(new TargetLostEvent(lastKnownPosition));
         }
+
+        public void ResetTargetState(Vector3 lastKnownPosition)
+        {
+            _currentTarget = null;
+            _target = null;
+            _lastPosition = lastKnownPosition;
+            _targetForgetTimer = 0f;
+        }
+
+        public void OnLocalEvent(EnemySpawnEvent eventData)
+        {
+            ResetTargetState(eventData.Position);
+        }
+
         public void OnLocalEvent(JoinGroupEvent eventData)
         {
             _group = eventData.group;

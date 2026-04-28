@@ -10,11 +10,11 @@ namespace Code.DataSystem.Editor
 {
     public class ItemSOPreview
     {
+        public event Action<ItemSOPreview> OnSelectEvent;
+        
         private Label _nameLabel;
         private Label _idLabel;
         private VisualElement _rootElement;
-
-        public event Action<ItemSOPreview> OnSelectEvent;
         
         public string Name
         {

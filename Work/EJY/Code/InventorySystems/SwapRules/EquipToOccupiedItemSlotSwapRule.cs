@@ -4,7 +4,7 @@ using InGame.InventorySystem;
 
 namespace Code.InventorySystems.SwapRules
 {
-    public class EquipToEmptySlotSwapRule : ISlotSwapInteractRule
+    public class EquipToOccupiedItemSlotSwapRule : ISlotSwapInteractRule
     {
         public bool CanInteract(SwapContext context)
         {
@@ -13,16 +13,14 @@ namespace Code.InventorySystems.SwapRules
                 context.TargetSlotType == SlotType.ItemContainer;
 
             return context.IsStartEquip &&
-                   context.IsTargetBlank &&
-                   isItemStorageTarget;
+                   !context.IsTargetBlank &&
+                   isItemStorageTarget &&
+                   context.StartEquipSlot.CanEquip(context.TargetItem);
         }
 
         public void Interact(SwapContext context)
         {
-            EventBus.Raise(new UnEquipByDragEvent(
-                context.StartItem,
-                context.StartEquipSlot,
-                context.TargetSlot));
+            // Nothing
         }
     }
 }

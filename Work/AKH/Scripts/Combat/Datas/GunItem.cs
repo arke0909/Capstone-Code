@@ -13,13 +13,11 @@ using Scripts.Combat.ItemObjects;
 
 namespace Scripts.Combat.Datas
 {
-    public class GunItem : Weapon, IAttackable, IReloadable, IProjectileShooter
+    public class GunItem : Weapon, IReloadable, IProjectileShooter
     {
         public GunObject GunObj => WeaponObj as GunObject;
         public BulletItem currentBulletItem;
         public GunDataSO GunItemData => EquipItemData as GunDataSO;
-        public GameObject Dealer => WeaponObj.gameObject;
-        public Entity Owner => _owner;
         public int CurrentBulletCnt => _currentBullet;
         public float DefaultDamage => GunItemData.defaultDamage;
         public float ProjectileSpeed => GunItemData.bulletSpeed;
@@ -41,7 +39,9 @@ namespace Scripts.Combat.Datas
         }
 
         #region attack region
-        AttackableState IAttackable.CurrentAttackableState { get 
+        public override AttackableState CurrentAttackableState
+        {
+            get
             {
                 if (!IsEquipped)
                     return AttackableState.NotEquipped;
@@ -50,9 +50,10 @@ namespace Scripts.Combat.Datas
                 if (Time.time - _lastAttackTime < GunItemData.fireRate * _entityGunStatInfo.FireRate)
                     return AttackableState.Delayed;
                 return AttackableState.CanAttack;
-            } }
+            }
+        }
 
-        public void EnterAttack()
+        public override void EnterAttack()
         {
             if (_entityGunStatInfo.BulletReduceRate > Random.value)
                 _currentBullet = Mathf.Max(_currentBullet - 1, 0);
@@ -143,14 +144,6 @@ namespace Scripts.Combat.Datas
                 currentBulletItem = bulletItem;
                 _currentBullet = 0;
             }
-        }
-
-        public void AttackTrigger()
-        {
-        }
-
-        public void EndAnimation()
-        {
         }
     }
 }

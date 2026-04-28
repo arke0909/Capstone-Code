@@ -11,6 +11,7 @@ namespace Code.InventorySystems.SwapRules
                 new EquipToEquipSwapRule(),
                 new EquipToEmptySlotSwapRule(),
                 new ItemToEquipSwapRule(),
+                new EquipToOccupiedItemSlotSwapRule(),
                 new HotbarToEmptySlotSwapRule(),
                 new ItemToHotbarSwapRule(),
                 new DefaultSlotSwapRule(),

@@ -1,6 +1,8 @@
 ﻿using System;
 using Chipmunk.ComponentContainers;
+using Chipmunk.Library.Utility.GameEvents.Local;
 using Chipmunk.Modules.StatSystem;
+using Code.SHS.Entities.Enemies.Events.Local;
 using Scripts.Combat;
 using Scripts.Combat.Datas;
 using Scripts.Entities;
@@ -10,7 +12,8 @@ using UnityEngine.AI;
 namespace Code.SHS.Entities.Enemies
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public class NavMovement : MonoBehaviour, IContainerComponent, IAfterInitialze, IKnockbackable
+    public class NavMovement : MonoBehaviour, IContainerComponent, IAfterInitialze, IKnockbackable,
+        ILocalEventSubscriber<EnemySpawnEvent>
     {
         [SerializeField] protected NavMeshAgent agent;
         [SerializeField] protected float stopOffset = 0.05f;
@@ -226,6 +229,31 @@ namespace Code.SHS.Entities.Enemies
             _lastDestination = Vector3.positiveInfinity;
             _lastPathUpdateTime = 0f;
             _isCalculatingPath = false;
+        }
+
+        public virtual void ResetMovementState(Vector3 position, Quaternion rotation)
+        {
+            transform.SetPositionAndRotation(position, rotation);
+            SetLookAtTarget(null);
+            ResetPathUpdate();
+
+            if (!agent.isActiveAndEnabled)
+                return;
+
+            if (agent.isOnNavMesh)
+            {
+                agent.ResetPath();
+                agent.Warp(position);
+            }
+
+            agent.velocity = Vector3.zero;
+            agent.isStopped = true;
+        }
+
+        public void OnLocalEvent(EnemySpawnEvent eventData)
+        {
+            enabled = true;
+            ResetMovementState(eventData.Position, eventData.Rotation);
         }
 
         public void WarpToPosition(Vector3 position) => agent.Warp(position);

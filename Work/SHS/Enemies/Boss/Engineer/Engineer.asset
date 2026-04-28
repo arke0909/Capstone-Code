@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Engineer
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 5828945573837349811, guid: 68b90966ee00d6a439b51bf86fcf0238, type: 3}
+  enemyPoolItem: {fileID: 11400000, guid: bd41e007c9af43298aff7cad6fe8b592, type: 2}
   spawnRarityWeight: 100
   equipments:
   - type: 0

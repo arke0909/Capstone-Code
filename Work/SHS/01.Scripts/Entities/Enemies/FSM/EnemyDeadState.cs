@@ -18,6 +18,7 @@ namespace Code.SHS.Entities.Enemies.FSM
         public override void Enter()
         {
             base.Enter();
+            _destroyTimer = 0f;
             _movement.SetStop(true);
             _movement.SetLookAtTarget(null);
             _movement.enabled = false;
@@ -29,7 +30,7 @@ namespace Code.SHS.Entities.Enemies.FSM
             base.Update();
             _destroyTimer += Time.deltaTime;
             if (_destroyTimer >= DestroyDelay)
-                Object.Destroy(_enemy);
+                _enemy.ReleaseToPool();
         }
     }
 }

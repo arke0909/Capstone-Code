@@ -80,11 +80,7 @@ namespace Work.Code.MapEvents
             {
                 Vector3 spawnPos = position.GetRandomInsideUnitCircle(2f, 5f);
                 EnemySO enemy = enemies[Random.Range(0, enemies.Count)];
-                
-                Enemy newEnemy = Instantiate(enemy.enemyPrefab, spawnPos, Quaternion.identity)
-                    .GetComponent<Enemy>();
-                
-                newEnemy.SpawnEnemy(spawnPos, enemy);
+                EnemySpawnUtility.SpawnEnemy(enemy, spawnPos, Quaternion.identity, _poolManager);
             }
         }
 

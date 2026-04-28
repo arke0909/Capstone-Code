@@ -1,4 +1,5 @@
 using Chipmunk.GameEvents;
+using Code.InventorySystems.Items;
 using InGame.InventorySystem;
 
 namespace Code.InventorySystems.SwapRules
@@ -7,25 +8,20 @@ namespace Code.InventorySystems.SwapRules
     {
         public bool CanInteract(SwapContext context)
         {
-            return context.IsTargetEquip;
+            bool isItemStorageSource =
+                context.StartSlotType == SlotType.Inventory ||
+                context.StartSlotType == SlotType.ItemContainer;
+
+            return isItemStorageSource &&
+                   context.IsTargetEquip &&
+                   context.TargetEquipSlot.CanEquip(context.StartItem);
         }
 
         public void Interact(SwapContext context)
         {
-            if (!context.TargetEquipSlot.CanEquip(context.StartItem))
-                return;
-
-            void OnEquipByDragSuccess()
-            {
-                if (context.StartInventory != context.TargetInventory)
-                    context.StartInventory.RemoveItem(context.StartItem, 1, false);
-            }
-
             EventBus.Raise(new EquipByDragEvent(
-                context.StartItem,
                 context.TargetLocalIndex,
-                context.StartSlot,
-                OnEquipByDragSuccess));
+                context.StartSlot));
         }
     }
 }

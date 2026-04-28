@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Work.LKW.Code.Items.ItemInfo
 {
-    public abstract class WeaponDataSO : EquipItemDataSO
+    public abstract class WeaponDataSO : HandItemDataSO
     {
         [ExcelColumn("maxDurability")] 
         public int maxDurability;
@@ -15,7 +15,6 @@ namespace Work.LKW.Code.Items.ItemInfo
         public float defaultDamage;
         [ExcelColumn("attackSpeed")] 
         public float attackSpeed;
-        public AnimatorOverrideController controller;
         [ExcelColumn("fireRate")] // 연사 속도
         public float fireRate;
         

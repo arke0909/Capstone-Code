@@ -1,4 +1,5 @@
-﻿using Chipmunk.ComponentContainers;
+﻿using System;
+using Chipmunk.ComponentContainers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Scripts.Combat.Datas;
@@ -45,9 +46,9 @@ namespace SHS.Scripts.Crosshairs
         private GunDataSO _currentGunData;
         private GunObject _currentGunObject;
 
-        private Vector2 _userAimPx;
-        private Vector2 _recoilTargetPx;
-        private Vector2 _recoilCurrentPx;
+        private Vector2 _userCursorPixel;
+        private Vector2 _recoilTargetPixel;
+        private Vector2 _recoilOffsetPixel;
         private Vector2 _recoilVelocityPx;
         private Vector3 _aimPosition;
         private float _lastShotTime = -999f;
@@ -59,6 +60,7 @@ namespace SHS.Scripts.Crosshairs
             _player = componentContainer.Get<Player>(true);
             _equipment = componentContainer.Get<PlayerEquipment>();
             _localEventBus = componentContainer.Get<LocalEventBus>();
+            _player.PlayerInput.OnCursorMoved += HandleCursorMove;
 
             _localEventBus.Subscribe<ItemEquippedEvent>(HandleItemEquipped);
             _localEventBus.Subscribe<ItemUnEquippedEvent>(HandleItemUnEquipped);
@@ -66,7 +68,7 @@ namespace SHS.Scripts.Crosshairs
 
             EventBus.Subscribe<ChangeCursorEvent>(HandleChangeCursor);
 
-            _userAimPx = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+            _userCursorPixel = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
         }
 
         public void AfterInitialize()
@@ -88,16 +90,22 @@ namespace SHS.Scripts.Crosshairs
         {
             if (IsCursorLocked)
             {
-                Vector2 mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
-                _userAimPx += mouseDelta * sensitivity;
-                ClampToScreen(ref _userAimPx);
-
                 TickRecoilRecovery();
                 TickRecoilFollow();
             }
 
             UpdateSpreadRadiusPixels();
         }
+
+        private void HandleCursorMove(Vector2 delta)
+        {
+            if (IsCursorLocked)
+            {
+                _userCursorPixel += delta * sensitivity;
+                ClampToScreen(ref _userCursorPixel);
+            }
+        }
+
 
         private void LateUpdate()
         {
@@ -143,7 +151,7 @@ namespace SHS.Scripts.Crosshairs
             Vector3 position = transform.position;
             return Vector3.Distance(position, targetPosition);
         }
-        
+
         private void HandleChangeCursor(ChangeCursorEvent evt)
         {
             IsCursorLocked = evt.IsLocked;
@@ -151,10 +159,10 @@ namespace SHS.Scripts.Crosshairs
             if (IsCursorLocked)
             {
                 if (Mouse.current != null)
-                    _userAimPx = Mouse.current.position.ReadValue();
+                    _userCursorPixel = Mouse.current.position.ReadValue();
 
-                _recoilTargetPx = Vector2.zero;
-                _recoilCurrentPx = Vector2.zero;
+                _recoilTargetPixel = Vector2.zero;
+                _recoilOffsetPixel = Vector2.zero;
                 _recoilVelocityPx = Vector2.zero;
             }
             else
@@ -216,15 +224,15 @@ namespace SHS.Scripts.Crosshairs
             float kickX = recoilData.horizontalRecoil * horizontalMultiplier * recoilData.pixelsPerRecoilUnit;
 
             GetPlayerScreenAxes(out Vector2 rightAxis, out Vector2 forwardAxis);
-            _recoilTargetPx += rightAxis * kickX + forwardAxis * kickY;
+            _recoilTargetPixel += rightAxis * kickX + forwardAxis * kickY;
         }
 
         private void TickRecoilFollow()
         {
             float smoothTime = Mathf.Max(0.001f, _currentGunData != null ? _currentGunData.recoilDuration : 0.05f);
-            _recoilCurrentPx = Vector2.SmoothDamp(
-                _recoilCurrentPx,
-                _recoilTargetPx,
+            _recoilOffsetPixel = Vector2.SmoothDamp(
+                _recoilOffsetPixel,
+                _recoilTargetPixel,
                 ref _recoilVelocityPx,
                 smoothTime,
                 Mathf.Infinity,
@@ -244,10 +252,10 @@ namespace SHS.Scripts.Crosshairs
             float rate = _currentGunData.recoilRecovery / recoveryTime;
             float alpha = 1f - Mathf.Exp(-rate * Time.deltaTime);
 
-            _recoilTargetPx = Vector2.Lerp(_recoilTargetPx, Vector2.zero, alpha);
+            _recoilTargetPixel = Vector2.Lerp(_recoilTargetPixel, Vector2.zero, alpha);
 
-            if (_recoilTargetPx.sqrMagnitude < 0.01f)
-                _recoilTargetPx = Vector2.zero;
+            if (_recoilTargetPixel.sqrMagnitude < 0.01f)
+                _recoilTargetPixel = Vector2.zero;
         }
 
         private void UpdateSpreadRadiusPixels()
@@ -300,7 +308,7 @@ namespace SHS.Scripts.Crosshairs
 
         private Vector2 GetFinalAimPx()
         {
-            Vector2 finalAim = _userAimPx + _recoilCurrentPx;
+            Vector2 finalAim = _userCursorPixel + _recoilOffsetPixel;
             ClampToScreen(ref finalAim);
             return finalAim;
         }

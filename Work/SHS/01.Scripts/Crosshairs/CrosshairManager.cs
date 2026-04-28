@@ -48,14 +48,6 @@ namespace SHS.Scripts.Crosshairs
             CurrentCrosshair.SetRangeText(_crosshairBehavior.GetDistance());
         }
 
-
-        public Vector2 GetCrosshairScreenPosition()
-        {
-            return _crosshairBehavior != null
-                ? _crosshairBehavior.GetCrosshairScreenPosition()
-                : new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
-        }
-
         private void HandleCrosshairChange(CrosshairChangeEvent eventData)
         {
             GunDataSO gunData = eventData.GunData;

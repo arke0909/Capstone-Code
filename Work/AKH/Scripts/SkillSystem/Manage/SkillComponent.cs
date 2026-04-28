@@ -71,6 +71,18 @@ namespace Scripts.SkillSystem.Manage
             OnSkillsChanged?.Invoke();
         }
 
+        public virtual void ClearSkills()
+        {
+            foreach (SkillSocket socket in Sockets.Values)
+            {
+                socket.ChangeItem(null);
+            }
+
+            _socketBySkillDic.Clear();
+            _skills.Clear();
+            OnSkillsChanged?.Invoke();
+        }
+
         public void ChangeSkill(SkillDataSO skillData, TSlotType targetSlot)
         {
             if (!Sockets.TryGetValue(targetSlot, out TSocketType socket))

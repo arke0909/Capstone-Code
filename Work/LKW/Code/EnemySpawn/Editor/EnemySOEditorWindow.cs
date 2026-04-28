@@ -25,6 +25,7 @@ namespace Code.EnemySpawn.Editor
         private Vector2 scrollPosition;
 
         private SerializedProperty enemyPrefabProperty;
+        private SerializedProperty enemyPoolItemProperty;
         private SerializedProperty spawnRarityWeightProperty;
         private SerializedProperty equipmentsProperty;
         private SerializedProperty bulletDataProperty;
@@ -188,6 +189,7 @@ namespace Code.EnemySpawn.Editor
             }
 
             enemyPrefabProperty = enemySerializedObject.FindProperty("enemyPrefab");
+            enemyPoolItemProperty = enemySerializedObject.FindProperty("enemyPoolItem");
             spawnRarityWeightProperty = enemySerializedObject.FindProperty("spawnRarityWeight");
             equipmentsProperty = enemySerializedObject.FindProperty("equipments");
             bulletDataProperty = enemySerializedObject.FindProperty("bulletData");
@@ -205,6 +207,7 @@ namespace Code.EnemySpawn.Editor
         private void ClearProperties()
         {
             enemyPrefabProperty = null;
+            enemyPoolItemProperty = null;
             spawnRarityWeightProperty = null;
             equipmentsProperty = null;
             bulletDataProperty = null;
@@ -372,6 +375,7 @@ namespace Code.EnemySpawn.Editor
         private void DrawCoreSection()
         {
             EditorGUILayout.PropertyField(enemyPrefabProperty);
+            EditorGUILayout.PropertyField(enemyPoolItemProperty);
             EditorGUILayout.PropertyField(bulletDataProperty);
         }
 

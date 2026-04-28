@@ -12,10 +12,8 @@ namespace Code.UI.Tooltip
             
         protected override void ShowData(FoodDataSO data)
         {
-            if (data.foodAmount != 0)
-                BindStat(foodText, StatType.Hunger, data.foodAmount);
-            if (data.waterAmount != 0)
-                BindStat(waterText, StatType.Thirst, data.waterAmount);
+            if (data.staminaAmount != 0)
+                BindStat(foodText, StatType.Hunger, data.staminaAmount);
         }
     }
 }

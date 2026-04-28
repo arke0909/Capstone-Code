@@ -2,14 +2,15 @@
 using Chipmunk.GameEvents;
 using Code.GameEvents;
 using Code.InventorySystems.Items;
-using Work.LKW.Code.ItemContainers;
 using InGame.InventorySystem;
+using Work.LKW.Code.ItemContainers;
 using Scripts.Combat.Datas;
 using Scripts.Players;
 using UnityEngine;
 using Work.Code.GameEvents;
 using Work.LKW.Code.Events;
 using Work.LKW.Code.Items;
+using static Code.InventorySystems.InventoryUtility;
 
 namespace Code.Players
 {
@@ -65,11 +66,13 @@ namespace Code.Players
 
             int itemStack = _hoveringSlot.Stack;
             
-            if (_hoveringSlot is EquipSlot equipSlot && item is EquipableItem equipped)
+            if (TryGetSlot(_hoveringSlot, SlotType.Equip, out EquipSlot equipSlot))
             {
+                EquipableItem equipped = equipSlot.Equipable;
+                
                 if (_playerInventory.InventoryHasBlankSlot())
                 {
-                    _playerEquipment.UnEquip(_playerInventory, equipSlot);
+                    _playerEquipment.UnEquipToInventory(equipSlot);
                 }
 
                 return;
@@ -85,13 +88,8 @@ namespace Code.Players
             {
                 if (item is EquipableItem equipalbeItem and not UsableItem and not ThrowableItem)
                 {
-                    bool isSuccess = _playerEquipment.EquipByKey(equipalbeItem, _hoveringSlot);
-                    if (isSuccess)
-                    {
-                        // 장착 성공하면 아이템 삭제
-                        _playerInventory.RemoveItem(equipalbeItem, 1, false);
-                    }
-                        
+                    _playerEquipment.EquipFromInventory(equipalbeItem, _hoveringSlot);
+
                 }
                 else if (_openedItemContainer != null)
                 {

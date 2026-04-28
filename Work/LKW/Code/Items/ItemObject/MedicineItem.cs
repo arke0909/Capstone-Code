@@ -14,6 +14,7 @@ namespace Work.LKW.Code.Items
         {
             HealAmount = healAmount;
         }
+        
         public override void Use(Entity user)
         {
             if (user.TryGet<HealthCompo>(out var healthCompo))

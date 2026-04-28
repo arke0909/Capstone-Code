@@ -1,22 +1,15 @@
-﻿using Chipmunk.GameEvents;
-using Work.LKW.Code.Events;
-﻿using Chipmunk.ComponentContainers;
-using Scripts.Entities;
-using Scripts.Entities.Vitals;
+﻿using Scripts.Entities;
 using Work.LKW.Code.Items.ItemInfo;
-using UnityEngine;
 
 namespace Work.LKW.Code.Items
 {
     public class FoodItem : UsableItem
     {
-        public int FoodAmount { get; set; }
-        public int WaterAmount { get; set; }
+        public int StaminiaAmount { get; set; }
         
-        public FoodItem(ItemDataSO itemData,int foodAmount, int waterAmount) : base(itemData)
+        public FoodItem(ItemDataSO itemData,int staminaAmount) : base(itemData)
         {
-            FoodAmount = foodAmount;
-            WaterAmount = waterAmount;
+            StaminiaAmount = staminaAmount;
         }
 
         public override void Use(Entity user)

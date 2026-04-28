@@ -9,9 +9,9 @@ namespace Work.LKW.Code.Items
     [Serializable]
     public abstract class ItemBase
     {
-        [field: SerializeField] public ItemDataSO ItemData { get; protected set; }
-
         protected Entity _owner; 
+
+        [field: SerializeField] public ItemDataSO ItemData { get; protected set; }
 
         public ItemBase(ItemDataSO itemData)
         {

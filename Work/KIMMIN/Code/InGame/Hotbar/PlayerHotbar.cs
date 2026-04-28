@@ -1,4 +1,4 @@
-﻿using AYellowpaper.SerializedCollections;
+﻿﻿using AYellowpaper.SerializedCollections;
 using Chipmunk.ComponentContainers;
 using Chipmunk.GameEvents;
 using Code.GameEvents;
@@ -11,6 +11,7 @@ using Scripts.Players.States;
 using System.Collections.Generic;
 using UnityEngine;
 using Work.LKW.Code.Items;
+using static Code.InventorySystems.InventoryUtility;
 
 namespace Code.InventorySystem
 {
@@ -18,7 +19,7 @@ namespace Code.InventorySystem
     {
         Gun, Melee, Item
     }
-    public class PlayerHotbar : MonoBehaviour, IContainerComponent
+    public class PlayerHotbar : MonoBehaviour, IContainerComponent, IAfterInitialze
     {
         [field: SerializeField] public HotbarType[] HotbarTypes { get; private set; }
         [SerializeField] private SerializedDictionary<HotbarType, int> hotbarCount = new();
@@ -34,6 +35,16 @@ namespace Code.InventorySystem
             _equipment = componentContainer.Get<PlayerEquipment>();
             _inventory = componentContainer.Get<PlayerInventory>();
 
+            _player.PlayerInput.OnItemUsePressed += UseSlot;
+            _inventory.InventoryChanged += HandleInventoryChanged;
+            
+            EventBus.Subscribe<EquipHotbarEvent>(HandleEquipHotbar);
+            EventBus.Subscribe<UnEquipHotbarEvent>(HandleUnEquipHotbar);
+            EventBus.Subscribe<HotbarUseEvent>(HandleUseHotbar);
+        }
+
+        public void AfterInitialize()
+        {
             int total = 0;
             
             foreach (var kvp in hotbarCount)
@@ -43,21 +54,14 @@ namespace Code.InventorySystem
                     var hotbar = new HotbarSlot(null);
                     hotbar.SetOwner(_inventory);
                     hotbar.HotbarType = kvp.Key;
-                    hotbar.Index = i;
+                    hotbar.SetIndex(i + (int)SlotType.Hotbar);
                     _slots.Add(hotbar);
                 }
 
                 total += kvp.Value;
             }
-
-            _player.PlayerInput.OnItemUsePressed += UseSlot;
-            _inventory.InventoryChanged += HandleInventoryChanged;
-            
-            EventBus.Subscribe<EquipHotbarEvent>(HandleEquipHotbar);
-            EventBus.Subscribe<UnEquipHotbarEvent>(HandleUnEquipHotbar);
-            EventBus.Subscribe<HotbarUseEvent>(HandleUseHotbar);
         }
-
+        
         private void OnDestroy()
         {
             if (_player != null)
@@ -84,22 +88,26 @@ namespace Code.InventorySystem
 
         private void HandleEquipHotbar(EquipHotbarEvent evt)
         {
-            if (!IsValidIndex(evt.Index))
+            int idx = evt.Index;
+            
+            if (!IsValidIndex(idx))
                 return;
 
-            if (evt.Item is not EquipableItem || !CheckValidItem(evt.Index, evt.Item))
+            if (evt.Item is not EquipableItem || !CheckValidItem(idx, evt.Item))
                 return;
 
-            _slots[evt.Index].SetData(evt.Item, GetHotbarStack(evt.Item));
+            _slots[idx].SetData(evt.Item, GetHotbarStack(evt.Item));
             UpdateUI();
         }
 
         private void HandleUnEquipHotbar(UnEquipHotbarEvent evt)
         {
-            if (!IsValidIndex(evt.Index))
+            int idx = evt.Index;
+            
+            if (!IsValidIndex(idx))
                 return;
 
-            _slots[evt.Index].SetData(null);
+            _slots[idx].SetData(null);
             UpdateUI();
         }
         
@@ -139,7 +147,7 @@ namespace Code.InventorySystem
             if (slot.Item == null)
                 return false;
 
-            if (!CheckValidItem(slot.Index, slot.Item))
+            if (!CheckValidItem(GetLocalIndex(slot.Index), slot.Item))
             {
                 slot.SetData(null);
                 return true;
