@@ -18,6 +18,8 @@ namespace Scripts.Combat.Datas
 
         public float ProjectileSpeed => ThrowableData.speedCurve.Evaluate(0);
 
+        public float ProjectileMaxRange => ThrowableData.attackRange;
+
         public float DamageMultiplier =>ThrowableData.damageMultiplier;
 
         public int DefPierceLevel => ThrowableData.defPierceLevel;

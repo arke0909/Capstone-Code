@@ -20,7 +20,7 @@ namespace Work.Code.UI.Misc
             }
         }
 
-        public void SetText(string text, bool nonEffect = false)
+        public virtual void SetText(string text, bool nonEffect = false)
         {
             if (Text.text == text) return;
             Text.text = text;

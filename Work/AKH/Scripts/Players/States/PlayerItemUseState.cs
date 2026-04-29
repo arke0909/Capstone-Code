@@ -1,6 +1,7 @@
 ﻿using Chipmunk.ComponentContainers;
 using Code.InventorySystems.Equipments;
 using Code.Players;
+using UnityEngine;
 using Work.LKW.Code.Items;
 
 namespace Scripts.Players.States

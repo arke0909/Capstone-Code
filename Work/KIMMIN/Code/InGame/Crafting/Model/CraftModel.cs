@@ -23,10 +23,12 @@ namespace Work.Code.Craft
             targetTree = TargetTreeSO;
         }
     }
+    
     public class CraftModel
     {
-        public PlayerInventory Inventory { get; private set; }
         private Player _player;
+        public PlayerInventory Inventory { get; private set; }
+        
         public CraftModel(Player player)
         {
             Inventory = player.Get<PlayerInventory>();

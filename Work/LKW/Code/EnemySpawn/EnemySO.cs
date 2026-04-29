@@ -13,6 +13,7 @@ using Scripts.SkillSystem.Manage;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
+using SHS.Scripts.Entities.Levels.Growths;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Work.LKW.Code.Items.ItemInfo;
@@ -29,25 +30,26 @@ namespace Code.EnemySpawn
     [CreateAssetMenu(fileName = "Enemy Data", menuName = "SO/EnemySpawn/EnemySO", order = 0)]
     public class EnemySO : ScriptableObject
     {
-        [Header("Spawn Settings")]
-        public GameObject enemyPrefab;
+        [Header("Spawn Settings")] public GameObject enemyPrefab;
         public PoolItemSO enemyPoolItem;
         public int spawnRarityWeight;
+        public GrowthTableSO growthTable;
+
 
         [Header("Equipment Settings")] public EnemyEquipData[] equipments;
         public BulletDataSO bulletData;
 
         [InlineButton("LoadStatsFromPrefab", "Load From Prefab")]
         public List<StatOverride> statOverrides;
+
         public StateDataSO[] stateDatas;
         [Header("Behavior Settings")] public FieldPatch<EnemyBehaviour>[] behaviourPrefabs;
 
-        [Header("Skill Settings")]
-        [SerializeField]
+        [Header("Skill Settings")] [SerializeField]
         public SerializedDictionary<PassiveSlotType, FieldPatch<PassiveSkill>> passiveSkill = new();
 
-        [SerializeField]
-        public SerializedDictionary<ActiveSlotType, FieldPatch<ActiveSkill>> activeSkill = new();
+        [SerializeField] public SerializedDictionary<ActiveSlotType, FieldPatch<ActiveSkill>> activeSkill = new();
+
 
         private void OnEnable()
         {
@@ -69,6 +71,7 @@ namespace Code.EnemySpawn
                 Debug.LogWarning("Enemy Prefab is not assigned. Cannot load stats.");
                 return;
             }
+
             var prefabStatOverrideBehavior = enemyPrefab.GetComponentInChildren<StatOverrideBehavior>();
             if (prefabStatOverrideBehavior == null)
             {

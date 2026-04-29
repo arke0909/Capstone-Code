@@ -17,6 +17,7 @@ namespace InGame.PlayerUI
         {
             base.Awake();
             
+            lootSlotUI.DisableUI();
             playerInput.OnInventoryPressed += HandleInventoryPressed;
             EventBus.Subscribe<OpenPlayerUIEvent>(HandleOpenPlayerUIEvent);
         }
@@ -30,7 +31,11 @@ namespace InGame.PlayerUI
         {
             ToggleUI(true);
             _withLoot = evt.WithLootInventory;
-            lootSlotUI.EnableUI();
+
+            if (_withLoot)
+            {
+                lootSlotUI.EnableUI();
+            }
         }
 
         protected override void OnDestroy()
@@ -55,7 +60,6 @@ namespace InGame.PlayerUI
         public override void DisableUI(bool isFade = false)
         {
             base.DisableUI(isFade);
-            lootSlotUI.DisableUI();
             playerInput.SetPlayerInput(true);
         }
     }

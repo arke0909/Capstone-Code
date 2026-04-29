@@ -52,12 +52,6 @@ namespace Scripts.Players.States
             }
         }
 
-        public override void Update()
-        {
-            base.Update();
-            //StopPlayerGageEvent로 게이지 중단 가능
-        }
-
         private void HandleCompleteReload()
         {
             _player.ChangeState(PlayerStateEnum.Idle);

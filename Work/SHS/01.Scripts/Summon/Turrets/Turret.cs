@@ -37,6 +37,7 @@ namespace SHS.Scripts.Summon.Turrets
 
         public float DefaultDamage => damage;
         public float ProjectileSpeed => bulletSpeed;
+        public float ProjectileMaxRange => detectionRange;
         public Transform CurrentFirePoint => firePoints[_currentAmmo % firePoints.Length];
         public float DetectionRange => detectionRange;
         public LayerMask TargetLayer => targetLayer;

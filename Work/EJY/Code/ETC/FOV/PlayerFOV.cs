@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -88,10 +88,6 @@ namespace Code
             }
             float radian = degree * Mathf.Deg2Rad;
             return new Vector3(Mathf.Sin(radian), 0, Mathf.Cos(radian));
-        }
-
-        private void Update()
-        {
         }
 
         private void LateUpdate()

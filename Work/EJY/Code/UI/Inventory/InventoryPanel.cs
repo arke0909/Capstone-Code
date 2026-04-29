@@ -90,7 +90,7 @@ namespace Code.UI.Inventory
 
         protected override void HandleClick(ItemSlot slot)
         {
-            if (slot.Item is EquipableItem item)
+            if (slot.Item is EquipableItem item && isPlayerInventory)
             {
                 skillUpgradeUI.EnableFor(item);
             }

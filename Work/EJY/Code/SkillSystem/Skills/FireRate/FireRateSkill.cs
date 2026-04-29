@@ -16,6 +16,8 @@ namespace Code.SkillSystem.Skills.FireRate
         [SerializeField] private BuffSO fireRateBuffSO;
         [SerializeField] private StatusEffectCreateData bulletReduceRate;
         [SerializeField] private StatSO fireRateStatSO;
+        [SerializeField] private FireRateSkillVFX fireRateSkillVFX;
+        [SerializeField] private Transform vfxPos;
         [SerializeField] private bool isOnHitAddFireRate;
         [SerializeField] private bool isBulletReduceRateDecrease;
         [SerializeField] private float onHitFireRateAmount = 0.025f, maxFireRate = 0.5f;
@@ -32,8 +34,6 @@ namespace Code.SkillSystem.Skills.FireRate
             _entityStatusEffect = container.Get<EntityStatusEffect>();
             _stat = container.Get<StatOverrideBehavior>();
             _vfxComponent = container.Get<VFXComponent>();
-            
-            _entityStatusEffect.OnStatusEffectReleased += HandleFireRateReleased;
         }
 
         private void OnDestroy()
@@ -55,7 +55,7 @@ namespace Code.SkillSystem.Skills.FireRate
 
         public override void StartAndUseSkill()
         {
-            _vfxComponent.PlayVFX("FireRate", transform.position, Quaternion.identity);
+            _vfxComponent.PlayVFX("FireRate", vfxPos.position, Quaternion.identity);
             
             var statusEffectInfos = fireRateBuffSO.GetStatusEffectInfo();
 
@@ -69,6 +69,8 @@ namespace Code.SkillSystem.Skills.FireRate
             {
                 _owner.OnAttack += OnHitAddFireRate;
             }
+            
+            _entityStatusEffect.OnStatusEffectReleased += HandleFireRateReleased;
         }
 
         private void HandleFireRateReleased(AbstractStatusEffect statusEffect)
@@ -84,6 +86,7 @@ namespace Code.SkillSystem.Skills.FireRate
                 targetStat.RemoveModifier(this);
             }
             _vfxComponent.StopVFX("FireRate");
+            _entityStatusEffect.OnStatusEffectReleased -= HandleFireRateReleased;
         }
 
         private void OnHitAddFireRate(Entity dealer, IDamageable target)
@@ -92,6 +95,7 @@ namespace Code.SkillSystem.Skills.FireRate
                 return;
 
             _totalFireRate = Mathf.Min(_totalFireRate + onHitFireRateAmount, maxFireRate);
+            fireRateSkillVFX.SetRateOverTime(_totalFireRate / maxFireRate);
 
             var targetStat = _stat.GetStat(fireRateStatSO);
             targetStat.RemoveModifier(this);

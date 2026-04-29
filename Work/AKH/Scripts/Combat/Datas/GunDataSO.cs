@@ -33,6 +33,9 @@ namespace Scripts.Combat.Datas
         [ExcelColumn("bulletSpeed")] // 총알 속도
         public float bulletSpeed;
 
+        [ExcelColumn("maxRange")] // 총알 최대 사거리. 0이면 attackRange를 사용
+        public float maxRange;
+
         [ExcelColumn("maxAmmoCapacity")] // 탄창 용량
         public int maxAmmoCapacity;
 

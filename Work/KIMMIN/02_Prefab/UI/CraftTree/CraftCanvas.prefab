@@ -711,7 +711,7 @@ MonoBehaviour:
   m_Padding:
     m_Left: 25
     m_Right: 25
-    m_Top: 25
+    m_Top: 50
     m_Bottom: 25
   m_ChildAlignment: 4
   m_Spacing: 10

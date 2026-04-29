@@ -21,6 +21,7 @@ namespace Scripts.Combat.Datas
         public int CurrentBulletCnt => _currentBullet;
         public float DefaultDamage => GunItemData.defaultDamage;
         public float ProjectileSpeed => GunItemData.bulletSpeed;
+        public float ProjectileMaxRange => GunItemData.maxRange > 0f ? GunItemData.maxRange : GunItemData.attackRange;
         public float DamageMultiplier => BulletData.damageMultiplier;
         public int DefPierceLevel =>BulletData.defPierceLevel;
         public BulletDataSO BulletData => currentBulletItem.bulletDataSO;

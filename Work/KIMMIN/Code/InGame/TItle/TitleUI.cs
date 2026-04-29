@@ -11,23 +11,26 @@ namespace Work.Code.Setting
     {
         [SerializeField] private Button playbutton;
         [SerializeField] private Button exitButton;
+        [SerializeField] private Button tutorialButton;
         [SerializeField] private TransitionSettings transition;
 
         private void Awake()
         {
-            playbutton.onClick.AddListener(HandlePlay);
+            playbutton.onClick.AddListener(() => HandlePlay(SceneDefine.MAP_SCENE));
+            tutorialButton.onClick.AddListener(() => HandlePlay(SceneDefine.TUTORIAL_SCENE));
             exitButton.onClick.AddListener(() => Application.Quit());
         }
 
         private void OnDestroy()
         {
-            playbutton.onClick.RemoveListener(HandlePlay);
+            playbutton.onClick.RemoveAllListeners();
+            tutorialButton.onClick.RemoveAllListeners();
             exitButton.onClick.RemoveAllListeners();
         }
 
-        private void HandlePlay()
+        private void HandlePlay(string sceneName)
         {
-            TransitionManager.Instance().Transition(SceneDefine.MAP_SCENE, transition, 0f);
+            TransitionManager.Instance().Transition(sceneName, transition, 0f);
         }
     }
 }

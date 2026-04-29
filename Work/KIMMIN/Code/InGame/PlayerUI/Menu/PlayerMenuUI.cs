@@ -12,7 +12,7 @@ namespace InGame.PlayerUI
         [SerializeField] private Image indicatorUI;
 
         private PlayerMenuUIButton[] _menus;
-        private UIPanel _prevPanel;
+        private UIPanel _currentPanel;
 
         protected override void Awake()
         {
@@ -65,15 +65,15 @@ namespace InGame.PlayerUI
 
         private void ChangeUI(PlayerMenuUIButton playerMenuUI)
         {
-            _prevPanel?.DisableUI();
-            _prevPanel = playerMenuUI.Panel;
-            
+            _currentPanel?.DisableUI();
+            _currentPanel = playerMenuUI.Panel;
+            _currentPanel.EnableUI(true);
+
             SetMenuUI(playerMenuUI, true);
         }
 
         private void SetMenuUI(PlayerMenuUIButton playerMenuUI, bool isActive)
         {
-            playerMenuUI.EnableUI();
             DisableHighlight();
             playerMenuUI.SetHighlight(isActive);
         }

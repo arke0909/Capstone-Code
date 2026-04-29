@@ -29,6 +29,7 @@ namespace Scripts.Combat.Fovs
         public LayerMask _enemyMask;
         public LayerMask _obstacleMask;
     }
+    [DefaultExecutionOrder(10000)]
     public class FovCompo : MonoBehaviour, IContainerComponent
     {
         [Serializable]
@@ -42,20 +43,17 @@ namespace Scripts.Combat.Fovs
         {
             get
             {
-                if (aimProvider == null)
-                    return transform.forward;
-                else
-                {
-                    Vector3 aimDir = aimProvider.GetAimPosition() - transform.position;
-                    aimDir.y = 0;
-                    return aimDir.normalized;
-                }
+                return _fovDirection.sqrMagnitude > 0.0001f ? _fovDirection : GetFallbackDirection();
             }
         }
 
         public ComponentContainer ComponentContainer { get; set; }
 
         [SerializeField, Min(0.01f)] private float _edgeSoftnessWorld = 0.9f;
+        [SerializeField] private bool _detachFromOwnerOnInitialize = true;
+        [SerializeField] private bool _ignoreParentRotation = true;
+        [SerializeField, Range(0f, 2f)] private float _directionJitterAngle = 0.2f;
+        [SerializeField, Min(0f)] private float _directionSmoothSpeed = 45f;
 
         public float _enemyFindDelay;
         public float _meshResolution;
@@ -66,10 +64,14 @@ namespace Scripts.Combat.Fovs
         public FOVInfo[] fovInfos;
 
         private IAimProvider aimProvider;
+        private Transform _ownerTransform;
+        private Vector3 _fovDirection = Vector3.forward;
         private List<MeshFilter> _viewMeshFilter;
         private Mesh[] _viewMesh;
         private Coroutine find;
         private readonly HashSet<Transform> before = new();
+        private bool _isInitialized;
+        private bool _isCameraPreCullRegistered;
 
         public Vector3 DirFromAngle(float degree, bool angleIsGlobal)
         {
@@ -81,6 +83,14 @@ namespace Scripts.Combat.Fovs
         }
         public void OnInitialize(ComponentContainer componentContainer)
         {
+            if (_isInitialized)
+                return;
+
+            _isInitialized = true;
+            _ownerTransform = transform.parent;
+            if (_detachFromOwnerOnInitialize && _ownerTransform != null)
+                transform.SetParent(null, true);
+
             _viewMeshFilter = new List<MeshFilter>(fovInfos.Length);
             foreach (Transform item in transform)
                 _viewMeshFilter.Add(item.GetComponent<MeshFilter>());
@@ -91,6 +101,7 @@ namespace Scripts.Combat.Fovs
                 _viewMeshFilter[i].mesh = _viewMesh[i];
             }
             aimProvider = componentContainer?.GetSubclassComponent<IAimProvider>();
+            RefreshFovPose();
         }
 
         private void Start()
@@ -101,15 +112,123 @@ namespace Scripts.Combat.Fovs
 #endif
             SetEnable(true);
         }
-        private void Update()
+
+        private void OnEnable()
         {
-            transform.localRotation = Quaternion.identity; // 회전 고정
+            RegisterCameraPreCull();
+        }
+
+        private void OnDisable()
+        {
+            UnregisterCameraPreCull();
         }
 
         private void LateUpdate()
         {
-            for (int i = 0; i < fovInfos.Length; i++)
+            RefreshFovPose();
+            RebuildFovMeshes();
+        }
+
+        private void RegisterCameraPreCull()
+        {
+            if (_isCameraPreCullRegistered)
+                return;
+
+            Camera.onPreCull += HandleCameraPreCull;
+            _isCameraPreCullRegistered = true;
+        }
+
+        private void UnregisterCameraPreCull()
+        {
+            if (!_isCameraPreCullRegistered)
+                return;
+
+            Camera.onPreCull -= HandleCameraPreCull;
+            _isCameraPreCullRegistered = false;
+        }
+
+        private void HandleCameraPreCull(Camera camera)
+        {
+            if (!isActiveAndEnabled || !IsMainRenderCamera(camera))
+                return;
+
+            RefreshFovPose();
+            RebuildFovMeshes();
+        }
+
+        private static bool IsMainRenderCamera(Camera camera)
+        {
+            Camera mainCamera = Camera.main;
+            return mainCamera == null || camera == mainCamera;
+        }
+
+        private void RefreshFovPose()
+        {
+            StabilizeTransform();
+            RefreshFovDirection();
+        }
+
+        private void RebuildFovMeshes()
+        {
+            if (_viewMesh == null || fovInfos == null)
+                return;
+
+            int count = Mathf.Min(fovInfos.Length, _viewMesh.Length);
+            for (int i = 0; i < count; i++)
                 DrawFieldOfView(fovInfos[i], _viewMesh[i]);
+        }
+
+        private void StabilizeTransform()
+        {
+            if (!_ignoreParentRotation)
+                return;
+
+            transform.SetPositionAndRotation(GetAimOrigin(), Quaternion.identity);
+        }
+
+        private Vector3 GetAimOrigin()
+        {
+            return _ownerTransform != null ? _ownerTransform.position : transform.position;
+        }
+
+        private void RefreshFovDirection()
+        {
+            Vector3 targetDirection = ResolveTargetDirection();
+            if (_fovDirection.sqrMagnitude <= 0.0001f)
+            {
+                _fovDirection = targetDirection;
+                return;
+            }
+
+            if (Vector3.Angle(_fovDirection, targetDirection) <= _directionJitterAngle)
+                return;
+
+            if (_directionSmoothSpeed <= 0f)
+            {
+                _fovDirection = targetDirection;
+                return;
+            }
+
+            float t = 1f - Mathf.Exp(-_directionSmoothSpeed * Time.deltaTime);
+            _fovDirection = Vector3.Slerp(_fovDirection, targetDirection, t).normalized;
+        }
+
+        private Vector3 ResolveTargetDirection()
+        {
+            if (aimProvider == null)
+                return GetFallbackDirection();
+
+            Vector3 direction = aimProvider.GetAimPosition() - transform.position;
+            direction.y = 0f;
+            return direction.sqrMagnitude > 0.0001f ? direction.normalized : GetFallbackDirection();
+        }
+
+        private Vector3 GetFallbackDirection()
+        {
+            Vector3 direction = _ownerTransform != null ? _ownerTransform.forward : transform.forward;
+
+            direction.y = 0f;
+            return direction.sqrMagnitude > 0.0001f ? direction.normalized : Vector3.forward;
         }
         private EdgeInfo FindEdge(FOVInfo fovInfo, ViewCastInfo minViewCast, ViewCastInfo maxViewCast)
         {

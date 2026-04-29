@@ -119,5 +119,10 @@ namespace Scripts.SkillSystem.Manage
             slotType = kvp.Key;
             return kvp.Value != null;
         }
+
+        public bool HasAnySkill()
+        {
+            return _skills.Count(skill => !skill.Key.defaultSkill) > 1;
+        }
     }
 }

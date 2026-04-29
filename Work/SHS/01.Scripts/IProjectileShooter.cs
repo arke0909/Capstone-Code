@@ -6,6 +6,7 @@ namespace SHS.Scripts
     {
         float DefaultDamage { get; }
         float ProjectileSpeed { get; }
+        float ProjectileMaxRange { get; }
         float DamageMultiplier { get; }
         int DefPierceLevel { get; }
     }

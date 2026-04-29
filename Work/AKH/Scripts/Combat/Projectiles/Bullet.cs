@@ -38,7 +38,9 @@ namespace Scripts.Combat.Projectiles
         private Entity _owner;
         private Collider _collider;
         private Vector3 _previousPosition;
+        private Vector3 _spawnPosition;
         private Vector3 _onInitVelocity;
+        private float _maxTravelDistance;
         private bool _isReturningToPool;
 
         private void Awake()
@@ -48,6 +50,7 @@ namespace Scripts.Combat.Projectiles
 
         private void FixedUpdate()
         {
+            CheckMaxTravelDistance();
             _previousPosition = transform.position;
         }
 
@@ -64,6 +67,7 @@ namespace Scripts.Combat.Projectiles
             ProjectileShooter = projectileShooter;
             _isReturningToPool = false;
             _previousPosition = initPos;
+            _spawnPosition = initPos;
 
             transform.position = initPos;
             if (direction.sqrMagnitude > 0.0001f)
@@ -71,6 +75,7 @@ namespace Scripts.Combat.Projectiles
             float speed = ProjectileShooter.ProjectileSpeed;
             rb.linearVelocity = direction.normalized * speed;
             _onInitVelocity = rb.linearVelocity;
+            _maxTravelDistance = ProjectileShooter?.ProjectileMaxRange ?? 0f;
             
             trail.Clear();
 
@@ -85,7 +90,9 @@ namespace Scripts.Combat.Projectiles
             _collider.excludeLayers = 0;
             _isReturningToPool = false;
             _previousPosition = transform.position;
+            _spawnPosition = transform.position;
             _onInitVelocity = Vector3.zero;
+            _maxTravelDistance = 0f;
             
             if (rb != null)
             {
@@ -118,6 +125,24 @@ namespace Scripts.Combat.Projectiles
         public void SetUpPool(Pool pool)
         {
             _myPool = pool;
+        }
+
+        private void CheckMaxTravelDistance()
+        {
+            if (_isReturningToPool || _maxTravelDistance <= 0f)
+                return;
+
+            float maxDistanceSqr = _maxTravelDistance * _maxTravelDistance;
+            if ((transform.position - _spawnPosition).sqrMagnitude < maxDistanceSqr)
+                return;
+
+            _isReturningToPool = true;
+            rb.linearVelocity = Vector3.zero;
+
+            if (_myPool != null)
+                _myPool.Push(this);
+            else
+                gameObject.SetActive(false);
         }
 
         private async void OnTriggerEnter(Collider other)

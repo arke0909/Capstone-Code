@@ -42,7 +42,20 @@ namespace Work.Code.Craft
                 return _itemCache;
             }
         }
-        
+        private static readonly Dictionary<ItemType, float> _craftTime = new()
+        {
+            {ItemType.Armor,3f },
+            {ItemType.Bullet,3f },
+            {ItemType.Food,3f },
+            {ItemType.Gun,3f },
+            {ItemType.Helmet,3f },
+            {ItemType.Material,3f },
+            {ItemType.Medicine,3f },
+            {ItemType.MeleeWeapon,3f },
+            {ItemType.None,3f },
+            {ItemType.Throw,3f },
+        };
+        public float CraftTime => _craftTime[Item.itemType];
 #if UNITY_EDITOR
         private void OnValidate()
         {

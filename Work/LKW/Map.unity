@@ -603,6 +603,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &634394389
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 634394391}
+  - component: {fileID: 634394390}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &634394390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 634394389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e97364b001be480f99d3e1f6bec78713, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itmLis:
+  - {fileID: 11400000, guid: c86e5ebdf6b03eb45b29b6039ba82573, type: 2}
+  - {fileID: 11400000, guid: 49da9b71da0ee524c8d4526af6c8cc05, type: 2}
+--- !u!4 &634394391
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 634394389}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &717988300
 Mesh:
   m_ObjectHideFlags: 0
@@ -1003,13 +1050,9 @@ PrefabInstance:
       propertyPath: _terrain
       value: 
       objectReference: {fileID: 417430425}
-    - target: {fileID: 7686132548588103284, guid: 86c7d8f78ec56014db9a463306af7352, type: 3}
-      propertyPath: <HotbarTypes>k__BackingField.Array.size
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 7686132548588103284, guid: 86c7d8f78ec56014db9a463306af7352, type: 3}
-      propertyPath: hotbarCount._serializedList.Array.data[2].Value
-      value: 4
+    - target: {fileID: 4955278255445752952, guid: 86c7d8f78ec56014db9a463306af7352, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9109,6 +9152,10 @@ PrefabInstance:
       propertyPath: m_NavMeshData
       value: 
       objectReference: {fileID: 23800000, guid: e4a574c9da4f95443b9bdaa8e9cb13ae, type: 2}
+    - target: {fileID: 2250531650150797627, guid: f83974e2af359c541b373f5af9323897, type: 3}
+      propertyPath: <Area>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2339240448618105684, guid: f83974e2af359c541b373f5af9323897, type: 3}
       propertyPath: m_Name
       value: Level
@@ -9598,3 +9645,4 @@ SceneRoots:
   - {fileID: 515924591}
   - {fileID: 4959113234483292091}
   - {fileID: 1241807721}
+  - {fileID: 634394391}

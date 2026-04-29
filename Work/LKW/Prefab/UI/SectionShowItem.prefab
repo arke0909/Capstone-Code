@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 18, y: 18}
+  m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1994626934369129449
 CanvasRenderer:
@@ -90,6 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Image>k__BackingField: {fileID: 6843989222765171130}
+  <PoolItem>k__BackingField: {fileID: 0}
 --- !u!1 &3756360560999830522
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
-﻿using Chipmunk.ComponentContainers;
+﻿using System;
+using Chipmunk.ComponentContainers;
 using Chipmunk.Library.Utility.GameEvents.Local;
 using Code.SkillSystem;
 using Scripts.SkillSystem;
@@ -23,6 +24,8 @@ namespace Scripts.SkillSystem.Manage
         public Dictionary<SkillType, ISkillCompo> skillCompos;
         private Dictionary<SkillDataSO, Skill> _skills = new();
         private LocalEventBus _localEventBus;
+
+        public Action OnSkillEquip;
 
         public void OnInitialize(ComponentContainer componentContainer)
         {
@@ -56,6 +59,7 @@ namespace Scripts.SkillSystem.Manage
                 if (skillCompos.TryGetValue(skillEnumType, out ISkillCompo skillCompo))
                 {
                     skillCompo.ChangeSkill(skillData, slotIndex);
+                    OnSkillEquip?.Invoke();
                 }
             }
         }
@@ -64,6 +68,7 @@ namespace Scripts.SkillSystem.Manage
         {
             if (skillData == null)
                 return;
+            
             if (TryGetSkill(skillData, out Skill skill))
             {
                 SkillType skillEnumType = skill.SkillType;

@@ -24,6 +24,7 @@ namespace Code.UI.Core
     { 
         [SerializeField] private PlayerInputSO playerInput;
 
+        private bool _isLocked;
         private readonly HashSet<UIBase> _registeredUI = new();
         private readonly Stack<UIBase> _uiStack = new();
         
@@ -66,7 +67,7 @@ namespace Code.UI.Core
 
         private void TryStackUI(UIBase ui, bool isActive)
         {
-            if (!CanStack(ui)) return;
+            if (!CanStack(ui) || _isLocked) return;
 
             if (isActive)
                 PushStack(ui);
@@ -84,6 +85,8 @@ namespace Code.UI.Core
 
         private void HandlePressEsc()
         {
+            if(_isLocked) return;
+            
             if (Manager.HasActiveOverlay())
                 Manager.CloseAllOverlays();
             
@@ -118,7 +121,9 @@ namespace Code.UI.Core
         
         public void PopStack()
         {
-            if (_uiStack.Count == 0) return;
+            if (_uiStack.Count == 0 || _isLocked)
+                return;
+            
             var top = _uiStack.Pop();
             top.DisableUI();
         }
@@ -173,5 +178,7 @@ namespace Code.UI.Core
         {
             return _uiStack.Count > 0;
         }
+        
+        public void SetLockState(bool isLocked) => _isLocked = isLocked;
     }
 }

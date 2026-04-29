@@ -96,7 +96,10 @@ namespace Code.InventorySystem
             if (evt.Item is not EquipableItem || !CheckValidItem(idx, evt.Item))
                 return;
 
-            _slots[idx].SetData(evt.Item, GetHotbarStack(evt.Item));
+            ItemSlot inventorySlot = FindInventorySlot(evt.Item);
+            ItemBase slotItem = inventorySlot?.Item ?? evt.Item;
+
+            _slots[idx].SetData(slotItem, GetHotbarStack(slotItem, inventorySlot));
             UpdateUI();
         }
 
@@ -116,11 +119,11 @@ namespace Code.InventorySystem
             if (!IsValidIndex(index) || _player.StateMachine.CurrentStateEnum == PlayerStateEnum.ItemUse)
                 return;
 
-            if (!TryResolveSlot(index, out EquipableItem equipable))
+            if (!TryResolveSlot(index, out HandItem handItem))
                 return;
 
-            _equipment.ChangeHandlingHotbarItem(equipable as Weapon);
-            if (equipable is IUsable)
+            _equipment.ChangeHandlingHotbarItem(handItem);
+            if (handItem is IUsable)
                 _player.ChangeState(PlayerStateEnum.ItemUse);
         }
         
@@ -169,27 +172,28 @@ namespace Code.InventorySystem
                 return true;
             }
 
-            int stack = GetHotbarStack(inventorySlot.Item);
+            int stack = GetHotbarStack(inventorySlot.Item, inventorySlot);
             if (slot.Item == inventorySlot.Item && slot.Stack == stack)
                 return false;
 
+            
             slot.SetData(inventorySlot.Item, stack);
             return true;
         }
 
-        private bool TryResolveSlot(int index, out EquipableItem equipable)
+        private bool TryResolveSlot(int index, out HandItem handItem)
         {
-            equipable = null;
+            handItem = null;
             var slot = _slots[index];
 
             bool isUpdated = SyncHotbarSlot(slot);
             if (isUpdated)
                 UpdateUI();
 
-            if (slot.Item is not EquipableItem validItem)
+            if (slot.Item is not HandItem validItem)
                 return false;
 
-            equipable = validItem;
+            handItem = validItem;
             return true;
         }
 
@@ -213,10 +217,10 @@ namespace Code.InventorySystem
             return null;
         }
 
-        private int GetHotbarStack(ItemBase item)
+        private int GetHotbarStack(ItemBase item, ItemSlot inventorySlot)
         {
             if (item is UsableItem or ThrowableItem)
-                return Mathf.Max(1, _inventory.GetItemCount(item.ItemData));
+                return inventorySlot != null ? inventorySlot.Stack : 1;
 
             return 1;
         }

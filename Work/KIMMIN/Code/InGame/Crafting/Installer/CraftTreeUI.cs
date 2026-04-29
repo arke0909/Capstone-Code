@@ -4,6 +4,7 @@ using Scripts.Players;
 using UnityEngine;
 using Work.Code.Craft.Presenter;
 using Work.Code.Craft.View;
+using Work.Code.GameEvents;
 
 namespace Work.Code.Craft.Installer
 {
@@ -26,6 +27,8 @@ namespace Work.Code.Craft.Installer
         private void Start()
         {
             playerInput.OnCraftTreePressed += HandleToggleUI;
+            _player.LocalEventBus.Subscribe<StartCraftingEvent>(HandleStartCrafting);
+            _player.LocalEventBus.Subscribe<CompleteCraftingEvent>(HandleCompleteCrafting);
                 
             _model = new CraftModel(_player);
 
@@ -44,6 +47,18 @@ namespace Work.Code.Craft.Installer
             };
 
             _menuPresenter = new CraftMenuPresenter(context);
+        }
+        
+        private void HandleStartCrafting(StartCraftingEvent evt)
+        {
+            UIManager.Instance.SetLockState(true);
+            DisableUI();
+        }
+
+        private void HandleCompleteCrafting(CompleteCraftingEvent evt)
+        {
+            UIManager.Instance.SetLockState(false);
+            EnableUI();
         }
 
         private void HandleToggleUI()

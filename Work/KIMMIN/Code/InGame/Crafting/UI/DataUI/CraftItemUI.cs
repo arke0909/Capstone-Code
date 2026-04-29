@@ -21,6 +21,7 @@ namespace Work.Code.Craft
         [SerializeField] private Image star;
         
         private Sequence _showAnimSeq;
+        private LayoutElement _layoutElement;
         
         private readonly float _animDuration = 0.3f;
         private const string TooltipText = "우클릭으로 메뉴 열기";
@@ -36,6 +37,7 @@ namespace Work.Code.Craft
         protected override void Awake()
         {
             base.Awake();
+            _layoutElement = GetComponent<LayoutElement>();
             BindTooltip(() => TooltipText, 0.5f);
             BindContextMenu(craftItemMenu, () => this);
         }
@@ -57,6 +59,18 @@ namespace Work.Code.Craft
             background.color = UIDefine.RarityColors[(int)item.rarity];
             title.text = item.itemName;
             star.gameObject.SetActive(IsFavorite);
+        }
+
+        public override void EnableUI(bool isFade = false)
+        {
+            base.EnableUI(isFade);
+            _layoutElement.ignoreLayout = false;
+        }
+
+        public override void DisableUI(bool isFade = false)
+        {
+            base.DisableUI(isFade);
+            _layoutElement.ignoreLayout = true;
         }
 
         public void SetTree(CraftTreeSO tree) => Tree = tree;

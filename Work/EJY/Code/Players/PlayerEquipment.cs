@@ -1,4 +1,5 @@
-﻿using AYellowpaper.SerializedCollections;
+﻿using System;
+using AYellowpaper.SerializedCollections;
 using Chipmunk.ComponentContainers;
 using Chipmunk.GameEvents;
 using Code.GameEvents;
@@ -34,6 +35,9 @@ namespace Code.Players
 
         public int HandlingIndex => _handlingIndex;
         public int HandledIndex => _handledIndex;
+
+        public event Action OnEquipItem;
+        public event Action OnUnEquipItem;
 
         public void OnInitialize(ComponentContainer componentContainer)
         {
@@ -179,13 +183,13 @@ namespace Code.Players
 
         #region Change Handle Item About Hotbar
 
-        public void ChangeHandlingHotbarItem(Weapon weapon)
+        public void ChangeHandlingHotbarItem(HandItem handItem)
         {
-            if (weapon == null)
+            if (handItem == null)
                 return;
 
             // 이 무기가 equip slot에 실제로 꽂혀 있는 장비면 그 슬롯 index를 추적
-            EquipSlot equipSlot = _equipSlots.FirstOrDefault(slot => slot.Equipable == weapon);
+            EquipSlot equipSlot = _equipSlots.FirstOrDefault(slot => slot.Equipable == handItem);
 
             if (equipSlot != null)
             {
@@ -197,7 +201,7 @@ namespace Code.Players
                 _handledIndex = _handlingIndex;
             }
 
-            SetHandItem(weapon);
+            SetHandItem(handItem);
         }
 
         public void RestoreHandledEquip()
@@ -267,6 +271,7 @@ namespace Code.Players
             if (sourceSlot.Item == equipableItem)
                 sourceSlot.SetData(null);
             
+            sourceSlot.OwnerInventory?.UpdateInventory();
             return true;
         }
 
@@ -322,6 +327,7 @@ namespace Code.Players
                 EventBus.Raise(new EquipHotbarEvent(equipSlotLocalIndex, equipableItem));
 
             EventBus.Raise(new UpdateEquipUIEvent(_equipSlots.ToList()));
+            OnEquipItem?.Invoke();
 
             return true;
         }
@@ -375,6 +381,8 @@ namespace Code.Players
             }
 
             EventBus.Raise(new UpdateEquipUIEvent(_equipSlots.ToList()));
+            OnUnEquipItem?.Invoke();
+            
             return true;
         }
 

@@ -61,7 +61,7 @@ namespace Scripts.Players
         private Vector3 _velocity;
         public Vector3 Velocity => _velocity;
         private ComponentContainer _container;
-
+        
         ComponentContainer IContainerComponent.ComponentContainer { get; set; }
 
         private float _verticalVelocity;
