@@ -10,12 +10,12 @@ using Work.LKW.Code.Items.ItemInfo;
 
 namespace Code.InventorySystems
 {
-    public abstract class Inventory : MonoBehaviour, IContainerComponent
+    public class Inventory : MonoBehaviour, IContainerComponent
     {
         public Entity Owner { get; private set; }
         public ComponentContainer ComponentContainer { get; set; }
         [SerializeField] private int _currentInventorySize = 4;
-
+        
         protected int CurrentInventorySize
         {
             get => _currentInventorySize;
@@ -36,6 +36,8 @@ namespace Code.InventorySystems
         [SerializeField] protected List<ItemSlot> itemSlots;
 
         public event Action InventoryChanged;
+        public event Action InventoryEmpty;
+
 
         protected virtual void Awake()
         {
@@ -205,6 +207,9 @@ namespace Code.InventorySystems
 
         public void UpdateInventory()
         {
+            if(_currentInventorySize == 0)
+                InventoryEmpty?.Invoke();
+            
             InventoryChanged?.Invoke();
         }
 

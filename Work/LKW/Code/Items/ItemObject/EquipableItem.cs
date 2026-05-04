@@ -88,6 +88,28 @@ namespace Work.LKW.Code.Items
             }
         }
 
+        public void SetSkill(SkillDataSO skill, int level = 1)
+        {
+            bool wasRegistered = _skillManager != null;
+
+            if (wasRegistered)
+                DeregisterSkill();
+
+            Skill = skill;
+            SkillLevel = Mathf.Max(1, level);
+
+            if (wasRegistered)
+                RegisterSkill();
+        }
+
+        public void CopySkillFrom(EquipableItem source)
+        {
+            if (source == null)
+                return;
+
+            SetSkill(source.Skill, source.SkillLevel);
+        }
+
         public void DeregisterSkill()
         {
             _skillManager?.RemoveSkill(Skill);

@@ -1506,6 +1506,7 @@ GameObject:
   - component: {fileID: 4588664476400934707}
   - component: {fileID: 1073599670365403843}
   - component: {fileID: 729621334417217967}
+  - component: {fileID: 2097788400393456432}
   m_Layer: 5
   m_Name: inventoryUI
   m_TagString: Untagged
@@ -1601,6 +1602,22 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &2097788400393456432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8212099073145134869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a65018b5ac0acb5458d42a94b02825d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  root: {fileID: 4366367172038209033}
+  skillUpgradeUI: {fileID: 0}
+  bagTitleText: {fileID: 2532795509564404882}
+  scrollRect: {fileID: 5040928773161311724}
 --- !u!1001 &26036132376728017
 PrefabInstance:
   m_ObjectHideFlags: 0

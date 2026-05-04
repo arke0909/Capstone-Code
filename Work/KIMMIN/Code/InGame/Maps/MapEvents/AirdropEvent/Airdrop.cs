@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Chipmunk.GameEvents;
 using DewmoLib.ObjectPool.RunTime;
@@ -21,7 +21,7 @@ namespace Work.Code.MapEvents.Elements
         [SerializeField] private List<ItemDataSO> airDropItems;
         
         private bool _isDropping = false;
-        private ItemContainer _itemContainer;
+        private ItemContainerInventory _Inventory;
 
         private Pool _pool;
         
@@ -32,7 +32,7 @@ namespace Work.Code.MapEvents.Elements
 
         private void Awake()
         {
-            _itemContainer = GetComponent<ItemContainer>();
+            _Inventory = GetComponent<ItemContainerInventory>();
         }
 
         public void StartDrop(Vector3 position, float height, Action<Vector3> landingCallback = null)
@@ -54,7 +54,7 @@ namespace Work.Code.MapEvents.Elements
         private void SetUpContainer()
         {
             int index = UnityEngine.Random.Range(0, airDropItems.Count);
-            _itemContainer.SetUpItem(airDropItems[index]);
+            _Inventory.SetUpItem(airDropItems[index]);
         }
 
         private void Update()

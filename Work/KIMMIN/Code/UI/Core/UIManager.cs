@@ -28,7 +28,7 @@ namespace Code.UI.Core
         private readonly HashSet<UIBase> _registeredUI = new();
         private readonly Stack<UIBase> _uiStack = new();
         
-        public OverlayUIManager Manager => OverlayUIManager.Instance;
+        public OverlayUIManager OverlayManager => OverlayUIManager.Instance;
         public event Action OnUIStackChanged;
 
         private void Awake()
@@ -68,6 +68,9 @@ namespace Code.UI.Core
         private void TryStackUI(UIBase ui, bool isActive)
         {
             if (!CanStack(ui) || _isLocked) return;
+            
+            if (OverlayManager.HasActiveOverlay())
+                OverlayManager.CloseAllOverlays();
 
             if (isActive)
                 PushStack(ui);
@@ -86,9 +89,6 @@ namespace Code.UI.Core
         private void HandlePressEsc()
         {
             if(_isLocked) return;
-            
-            if (Manager.HasActiveOverlay())
-                Manager.CloseAllOverlays();
             
             if (_uiStack.Count == 0)
             {

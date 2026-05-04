@@ -11,6 +11,7 @@ namespace Work.Code.Craft
         [field: SerializeField] public CraftTreeSO Tree { get; set; }
         [field: SerializeField] public int Count { get; set; }
         [field: SerializeField] public bool IsChild { get; set; }
+        [field: SerializeField] public bool InheritSkillToCraftResult { get; set; }
         
         public NodeData Clone()
         {
@@ -20,6 +21,7 @@ namespace Work.Code.Craft
                 Count = this.Count,
                 IsChild = this.IsChild,
                 Tree = this.Tree,
+                InheritSkillToCraftResult = this.InheritSkillToCraftResult,
             };
         }
     }

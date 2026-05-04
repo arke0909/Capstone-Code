@@ -4,6 +4,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
+using SHS.Scripts.Crosshairs;
 
 namespace Scripts.Combat.Fovs
 {
@@ -64,6 +66,7 @@ namespace Scripts.Combat.Fovs
         public FOVInfo[] fovInfos;
 
         private IAimProvider aimProvider;
+        private CrosshairBehavior _crosshairBehavior;
         private Transform _ownerTransform;
         private Vector3 _fovDirection = Vector3.forward;
         private List<MeshFilter> _viewMeshFilter;
@@ -72,6 +75,7 @@ namespace Scripts.Combat.Fovs
         private readonly HashSet<Transform> before = new();
         private bool _isInitialized;
         private bool _isCameraPreCullRegistered;
+        private int _lastRenderPoseFrame = -1;
 
         public Vector3 DirFromAngle(float degree, bool angleIsGlobal)
         {
@@ -101,6 +105,7 @@ namespace Scripts.Combat.Fovs
                 _viewMeshFilter[i].mesh = _viewMesh[i];
             }
             aimProvider = componentContainer?.GetSubclassComponent<IAimProvider>();
+            _crosshairBehavior = aimProvider as CrosshairBehavior;
             RefreshFovPose();
         }
 
@@ -123,18 +128,13 @@ namespace Scripts.Combat.Fovs
             UnregisterCameraPreCull();
         }
 
-        private void LateUpdate()
-        {
-            RefreshFovPose();
-            RebuildFovMeshes();
-        }
-
         private void RegisterCameraPreCull()
         {
             if (_isCameraPreCullRegistered)
                 return;
 
             Camera.onPreCull += HandleCameraPreCull;
+            RenderPipelineManager.beginCameraRendering += HandleBeginCameraRendering;
             _isCameraPreCullRegistered = true;
         }
 
@@ -144,14 +144,29 @@ namespace Scripts.Combat.Fovs
                 return;
 
             Camera.onPreCull -= HandleCameraPreCull;
+            RenderPipelineManager.beginCameraRendering -= HandleBeginCameraRendering;
             _isCameraPreCullRegistered = false;
         }
 
         private void HandleCameraPreCull(Camera camera)
         {
+            HandleCameraPreRender(camera);
+        }
+
+        private void HandleBeginCameraRendering(ScriptableRenderContext context, Camera camera)
+        {
+            HandleCameraPreRender(camera);
+        }
+
+        private void HandleCameraPreRender(Camera camera)
+        {
             if (!isActiveAndEnabled || !IsMainRenderCamera(camera))
                 return;
 
+            if (_lastRenderPoseFrame == Time.frameCount)
+                return;
+
+            _lastRenderPoseFrame = Time.frameCount;
             RefreshFovPose();
             RebuildFovMeshes();
         }
@@ -218,9 +233,17 @@ namespace Scripts.Combat.Fovs
             if (aimProvider == null)
                 return GetFallbackDirection();
 
-            Vector3 direction = aimProvider.GetAimPosition() - transform.position;
+            Vector3 direction = GetCurrentAimPosition() - transform.position;
             direction.y = 0f;
             return direction.sqrMagnitude > 0.0001f ? direction.normalized : GetFallbackDirection();
+        }
+
+        private Vector3 GetCurrentAimPosition()
+        {
+            if (_crosshairBehavior != null && Camera.main != null)
+                return _crosshairBehavior.GetCrosshairPlanePosition();
+
+            return aimProvider.GetAimPosition();
         }
 
         private Vector3 GetFallbackDirection()

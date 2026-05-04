@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 7762936290254513969}
   - component: {fileID: 8371056398282861980}
   - component: {fileID: 6908426943252915324}
-  - component: {fileID: 2033931022435354088}
   - component: {fileID: 4745579368892809880}
   m_Layer: 5
   m_Name: InventoryCanvas
@@ -90,7 +89,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &8371056398282861980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,24 +121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerInput: {fileID: 11400000, guid: 4e3c85c501a7f4e46b46ca7017e2cbd8, type: 2}
   inventoryPanel: {fileID: 4768169925248789975}
-  lootSlotUI: {fileID: 1150468871154011283}
---- !u!114 &2033931022435354088
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4721160272490608790}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c038e14a8d84e85aa23715643622570, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  root: {fileID: 1100213250752339147}
-  skillUpgradeUI: {fileID: 3500775912388157904}
-  bagTitleText: {fileID: 1223432948809500240}
-  scrollRect: {fileID: 0}
-  isPlayerInventory: 1
+  lootSlotUI: {fileID: 6424881668691822554}
 --- !u!225 &4745579368892809880
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -380,6 +362,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5247078341254010028, guid: 738de04ebcce09c4f84286926aaf2413, type: 3}
+      propertyPath: skillUpgradeUI
+      value: 
+      objectReference: {fileID: 3500775912388157904}
     - target: {fileID: 5903173087170034234, guid: 738de04ebcce09c4f84286926aaf2413, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -681,22 +667,22 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 738de04ebcce09c4f84286926aaf2413, type: 3}
---- !u!114 &1150468871154011283 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2166186834359181285, guid: 738de04ebcce09c4f84286926aaf2413, type: 3}
-  m_PrefabInstance: {fileID: 1294958775381054326}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c038e14a8d84e85aa23715643622570, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &5712811990614993939 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6827283423731531621, guid: 738de04ebcce09c4f84286926aaf2413, type: 3}
   m_PrefabInstance: {fileID: 1294958775381054326}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6424881668691822554 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5247078341254010028, guid: 738de04ebcce09c4f84286926aaf2413, type: 3}
+  m_PrefabInstance: {fileID: 1294958775381054326}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a65018b5ac0acb5458d42a94b02825d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1862877061699793919
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2611,10 +2597,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2097788400393456432, guid: 13b8723b9e3f70e418825d9f9e38bbcf, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8212099073145134869, guid: 13b8723b9e3f70e418825d9f9e38bbcf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1303564467908854860}
   m_SourcePrefab: {fileID: 100100000, guid: 13b8723b9e3f70e418825d9f9e38bbcf, type: 3}
 --- !u!224 &1100213250752339147 stripped
 RectTransform:
@@ -2637,11 +2627,38 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8212099073145134869, guid: 13b8723b9e3f70e418825d9f9e38bbcf, type: 3}
   m_PrefabInstance: {fileID: 3737088085323084482}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1303564467908854860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4768169925248789975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53fe58e0c510303418969a722306bd9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  root: {fileID: 1100213250752339147}
+  skillUpgradeUI: {fileID: 3500775912388157904}
+  bagTitleText: {fileID: 1223432948809500240}
+  scrollRect: {fileID: 8514116473081671470}
 --- !u!224 &6463100099728254391 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7668863378258843509, guid: 13b8723b9e3f70e418825d9f9e38bbcf, type: 3}
   m_PrefabInstance: {fileID: 3737088085323084482}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8514116473081671470 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5040928773161311724, guid: 13b8723b9e3f70e418825d9f9e38bbcf, type: 3}
+  m_PrefabInstance: {fileID: 3737088085323084482}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5141529988833900375
 PrefabInstance:
   m_ObjectHideFlags: 0

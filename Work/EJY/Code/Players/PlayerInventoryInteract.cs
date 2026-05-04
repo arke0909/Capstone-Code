@@ -3,7 +3,6 @@ using Chipmunk.GameEvents;
 using Code.GameEvents;
 using Code.InventorySystems.Items;
 using InGame.InventorySystem;
-using Work.LKW.Code.ItemContainers;
 using Scripts.Combat.Datas;
 using Scripts.Players;
 using UnityEngine;
@@ -11,6 +10,7 @@ using Work.Code.GameEvents;
 using Work.LKW.Code.Events;
 using Work.LKW.Code.Items;
 using static Code.InventorySystems.InventoryUtility;
+using Code.InventorySystems;
 
 namespace Code.Players
 {
@@ -19,7 +19,7 @@ namespace Code.Players
         public ComponentContainer ComponentContainer { get; set; }
 
         private ItemSlot _hoveringSlot;
-        private ItemContainer _openedItemContainer;
+        private Inventory _openedRightInventory;
         private Player _player;
         private PlayerInventory _playerInventory;
         private PlayerEquipment _playerEquipment;
@@ -33,7 +33,7 @@ namespace Code.Players
             
             EventBus.Subscribe<ItemEquipRequestEvent>(HandleItemEquipRequest);
             EventBus.Subscribe<HoveringSlotEvent>(HandleHoveringItem);
-            EventBus.Subscribe<OpenItemContainerEvent>(HandleOpenItemContainer);
+            EventBus.Subscribe<OpenRightInventoryEvent>(HandleOpenItemContainer);
             EventBus.Subscribe<PlayerUIEvent>(HandlePlayerUI);
         }
 
@@ -48,7 +48,7 @@ namespace Code.Players
             _player.PlayerInput.OnItemInteractPressed -= HandleItemInteractPressed;
             EventBus.Unsubscribe<ItemEquipRequestEvent>(HandleItemEquipRequest);
             EventBus.Unsubscribe<HoveringSlotEvent>(HandleHoveringItem);
-            EventBus.Unsubscribe<OpenItemContainerEvent>(HandleOpenItemContainer);
+            EventBus.Unsubscribe<OpenRightInventoryEvent>(HandleOpenItemContainer);
             EventBus.Unsubscribe<PlayerUIEvent>(HandlePlayerUI);
         }
 
@@ -79,9 +79,9 @@ namespace Code.Players
             }
 
             // 파밍한 상자에 있다면
-            if (_openedItemContainer != null && _openedItemContainer.ContainsItem(item))
+            if (_openedRightInventory != null && _openedRightInventory.ContainsItem(item))
             {
-                _openedItemContainer.MoveItem(_playerInventory, _hoveringSlot, itemStack);
+                _openedRightInventory.MoveItem(_playerInventory, _hoveringSlot, itemStack);
             }
             // 이미 인벤토리 안에 있다면,
             else if (_playerInventory.ContainsItem(item))
@@ -91,22 +91,22 @@ namespace Code.Players
                     _playerEquipment.EquipFromInventory(equipalbeItem, _hoveringSlot);
 
                 }
-                else if (_openedItemContainer != null)
+                else if (_openedRightInventory != null)
                 {
-                    _playerInventory.MoveItem(_openedItemContainer, _hoveringSlot, itemStack);
+                    _playerInventory.MoveItem(_openedRightInventory, _hoveringSlot, itemStack);
                 }
             }
         }
 
-        private void HandleOpenItemContainer(OpenItemContainerEvent evt)
+        private void HandleOpenItemContainer(OpenRightInventoryEvent evt)
         {
-            _openedItemContainer = evt.ItemContainer;
+            _openedRightInventory = evt.RightInventory;
         }
 
         private void HandlePlayerUI(PlayerUIEvent evt)
         {
             if (!evt.IsEnabled)
-                _openedItemContainer = null;
+                _openedRightInventory = null;
         }
     }
 }

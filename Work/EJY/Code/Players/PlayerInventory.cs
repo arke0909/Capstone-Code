@@ -81,7 +81,6 @@ namespace Code.Players
 
         protected override void OnDestroy()
         {
-            
             InventoryChanged -= UpdateUI;
         }
 
@@ -92,8 +91,8 @@ namespace Code.Players
 
         private void UpdateUI()
         {
-            EventBus.Raise(new UpdateInventoryUIEvent
-                { ItemSlots = itemSlots, isPlayerInventory = true, SlotCnt = CurrentInventorySize });
+            EventBus.Raise(new UpdateLeftInventoryUIEvent
+                { ItemSlots = itemSlots, SlotCnt = CurrentInventorySize });
         }
     }
 }

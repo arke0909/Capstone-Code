@@ -284,10 +284,10 @@ RectTransform:
   - {fileID: 823313667317548795}
   m_Father: {fileID: 6700624314194468964}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 170, y: -100}
-  m_SizeDelta: {x: 310, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &4589948786633002860
 MonoBehaviour:
@@ -663,10 +663,10 @@ RectTransform:
   - {fileID: 4670717991476973974}
   m_Father: {fileID: 6700624314194468964}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 512.5, y: -75}
-  m_SizeDelta: {x: 345, y: 150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &649636048118259107
 MonoBehaviour:
@@ -6310,6 +6310,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 3368721932393773554, guid: 1b5f9b4d66ab3f74082be0a0a8e99918, type: 3}
+      propertyPath: skillUpgradeUI
+      value: 
+      objectReference: {fileID: 5066669345833534267}
     - target: {fileID: 3382797182342130437, guid: 1b5f9b4d66ab3f74082be0a0a8e99918, type: 3}
       propertyPath: m_Layer
       value: 5
@@ -9627,6 +9631,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a359c20a3e8c4513bfd0492a3288ce71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5066669345833534267 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3500775912388157904, guid: 1b5f9b4d66ab3f74082be0a0a8e99918, type: 3}
+  m_PrefabInstance: {fileID: 8558297003919352555}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 622c3a0c529544bcb0ce4e48d0131ca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &7221620835513768915 stripped

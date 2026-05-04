@@ -2379,6 +2379,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3453396828289803569, guid: 87363fba2434e1a40a4a6ac4a82285b8, type: 3}
+      propertyPath: scrollRect
+      value: 
+      objectReference: {fileID: 1507921644066684444}
     - target: {fileID: 3515161270663563130, guid: 87363fba2434e1a40a4a6ac4a82285b8, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -4244,6 +4248,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1590356946938240026, guid: 87363fba2434e1a40a4a6ac4a82285b8, type: 3}
   m_PrefabInstance: {fileID: 1441200965339657177}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1507921644066684444 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 66738270913072581, guid: 87363fba2434e1a40a4a6ac4a82285b8, type: 3}
+  m_PrefabInstance: {fileID: 1441200965339657177}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5931311389875499234 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5066669345833534267, guid: 87363fba2434e1a40a4a6ac4a82285b8, type: 3}

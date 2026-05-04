@@ -32,6 +32,7 @@ public class CraftTreeEditor : EditorWindow
     private Button _tripleTreeButton;
     private ObjectField _itemField;
     private ObjectField _treeField;
+    private Toggle _inheritSkillToggle;
     
     private string _rootFolderPath;
 
@@ -64,6 +65,8 @@ public class CraftTreeEditor : EditorWindow
         _generateButton = root.Q<Button>("GenerateButton");
         _binaryTreeButton = root.Q<Button>("BinaryTreeButton");
         _tripleTreeButton = root.Q<Button>("TripleTreeButton");
+        _inheritSkillToggle = new Toggle("Inherit Skill");
+        _countField.parent?.Add(_inheritSkillToggle);
 
         _countField.RegisterValueChangedCallback(_ =>  
             ChangeNodeData(m => m.Count = _countField.value));
@@ -71,6 +74,8 @@ public class CraftTreeEditor : EditorWindow
             ChangeNodeData(m => m.Item = _itemField.value as ItemDataSO));
         _treeField.RegisterValueChangedCallback(_ => 
             ChangeNodeData(m => m.Tree = _treeField.value as CraftTreeSO));
+        _inheritSkillToggle.RegisterValueChangedCallback(_ =>
+            ChangeNodeData(m => m.InheritSkillToCraftResult = _inheritSkillToggle.value));
         
         _generateButton.RegisterCallback<ClickEvent>(HandleGenerate);
         _binaryTreeButton.RegisterCallback<ClickEvent>(_ =>
@@ -167,6 +172,7 @@ public class CraftTreeEditor : EditorWindow
         _itemField.SetValueWithoutNotify(node.NodeData.Item);
         _treeField.SetValueWithoutNotify(node.NodeData.Tree);
         _countField.SetValueWithoutNotify(node.NodeData.Count);
+        _inheritSkillToggle.SetValueWithoutNotify(node.NodeData.InheritSkillToCraftResult);
     }
     
     private void ChangeNodeData(Action<NodeData> modify, CraftTreeSO tree = null)

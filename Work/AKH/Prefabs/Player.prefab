@@ -15695,7 +15695,7 @@ ParticleSystemRenderer:
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
   m_UseCustomVertexStreams: 1
-  m_VertexStreams: 000103042224
+  m_VertexStreams: 000304
   m_UseCustomTrailVertexStreams: 0
   m_TrailVertexStreams: 00010304
   m_Mesh: {fileID: 0}
@@ -20996,6 +20996,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: de2fb001db655cc4f9bbc241c6759ae3, type: 2}
   - {fileID: 11400000, guid: 8b94ea1e12f580644a2cbf0cb917b271, type: 2}
   - {fileID: 11400000, guid: fe59c705a74e2e5428b0569a750d3782, type: 2}
+  - {fileID: 11400000, guid: e81a6463c3ba1f548a873467b8c432e8, type: 2}
   _noiseGenerator: {fileID: 1136712736072608331}
 --- !u!114 &637904465195396257
 MonoBehaviour:
@@ -21289,10 +21290,11 @@ MonoBehaviour:
   cooldown: 10
   fireRateBuffSO: {fileID: 11400000, guid: c9cb1c84afb983542935615aa975ac8a, type: 2}
   bulletReduceRate:
-    statusEffect: 0
-    isPercent: 0
-    priority: 0
-    effectValue: []
+    statusEffect: 8192
+    isPercent: 1
+    priority: 1
+    effectValue:
+    - -0.4
     isOverrideApplyTime: 0
     overrideTime: 0
   fireRateStatSO: {fileID: 11400000, guid: a53115f89bf4eec40aa365a073976a2e, type: 2}
@@ -22485,8 +22487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26bc5a25dcfb475e8bd487d11c51493c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bottomRingRateOverTime: 10
-  bottomRing: {fileID: 1027536285977920895}
+  particleByHeatRatio: {fileID: 7413771249019988813}
 --- !u!1 &4763956357897837812
 GameObject:
   m_ObjectHideFlags: 0
@@ -23175,7 +23176,7 @@ Transform:
   m_GameObject: {fileID: 5595347305543311048}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -40339,6 +40340,7 @@ GameObject:
   - component: {fileID: 5849317148696205147}
   - component: {fileID: 1027536285977920895}
   - component: {fileID: 7026800867540839628}
+  - component: {fileID: 7413771249019988813}
   m_Layer: 0
   m_Name: BottomRing
   m_TagString: Untagged
@@ -40551,7 +40553,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 0.43137255}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -45255,6 +45257,20 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &7413771249019988813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9199567390578795701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8eb8e57504754d169fa900b3f3dbc223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rateOverTime: 10
+  particle: {fileID: 1027536285977920895}
 --- !u!1001 &353892174523673127
 PrefabInstance:
   m_ObjectHideFlags: 0

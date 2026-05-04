@@ -1,28 +1,23 @@
-﻿using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using Chipmunk.ComponentContainers;
+﻿using Chipmunk.GameEvents;
 using Code.GameEvents;
-using Chipmunk.GameEvents;
 using Code.InventorySystems.Items;
 using DewmoLib.Dependencies;
 using InGame.InventorySystem;
 using Scripts.Players;
-using Scripts.SkillSystem;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Work.Code.UI;
-using Work.LKW.Code.Items;
 
 namespace Code.UI.Inventory
 {
-    public class InventoryPanel : AbstractSlotUIsPanel
+    public abstract class InventoryPanel<T>
+        : AbstractSlotUIsPanel where T : IUpdateInventoryUIEvent
     {
-        [SerializeField] private SkillUpgradeUI skillUpgradeUI;
-        [SerializeField] private TextMeshProUGUI bagTitleText;
-        [SerializeField] private ScrollRect scrollRect;
-        [SerializeField] private bool isPlayerInventory;
+        [SerializeField] protected SkillUpgradeUI skillUpgradeUI;
+        [SerializeField] protected TextMeshProUGUI bagTitleText;
+        [SerializeField] protected ScrollRect scrollRect;
 
         [Inject] private Player _player;
         private List<ItemSlot> _slots;
@@ -32,12 +27,12 @@ namespace Code.UI.Inventory
         protected override void Awake()
         {
             base.Awake();
-            EventBus.Subscribe<UpdateInventoryUIEvent>(HandleUpdateInventoryUI);
+            EventBus.Subscribe<T>(HandleUpdateInventoryUI);
             UpdateSlotUI();
         }
         protected override void OnDestroy()
         {
-            EventBus.Unsubscribe<UpdateInventoryUIEvent>(HandleUpdateInventoryUI);
+            EventBus.Unsubscribe<T>(HandleUpdateInventoryUI);
             base.OnDestroy();
         }
 
@@ -53,7 +48,7 @@ namespace Code.UI.Inventory
             {
                 slotUI.ClearUI();
             }
-            
+
             // 현재 인벤토리 슬롯 개수만큼만 업데이트
             for (int i = 0; i < _currentSlotCnt; i++)
             {
@@ -68,18 +63,15 @@ namespace Code.UI.Inventory
             }
 
             scrollRect.vertical = _currentSlotCnt > MinScrollSize;
-            
+
             if (_currentSlotCnt <= MinScrollSize)
             {
                 scrollRect.normalizedPosition = new Vector2(0, 1);
             }
         }
 
-        private void HandleUpdateInventoryUI(UpdateInventoryUIEvent evt)
+        private void HandleUpdateInventoryUI(T evt)
         {
-            if(evt.isPlayerInventory != isPlayerInventory) return;
-            
-            // 실제 인벤토리에서 받아온 데이터들
             _slots = evt.ItemSlots;
             _currentSlotCnt = evt.SlotCnt;
 
@@ -90,10 +82,6 @@ namespace Code.UI.Inventory
 
         protected override void HandleClick(ItemSlot slot)
         {
-            if (slot.Item is EquipableItem item && isPlayerInventory)
-            {
-                skillUpgradeUI.EnableFor(item);
-            }
         }
     }
 }

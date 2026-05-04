@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 8011708694840513587}
   - component: {fileID: 5387618580962955700}
   - component: {fileID: 2519628224139279863}
-  - component: {fileID: 2166186834359181285}
   - component: {fileID: 3852833184715526416}
   - component: {fileID: 6096014490427416418}
+  - component: {fileID: 5247078341254010028}
   m_Layer: 5
   m_Name: LootInvntory
   m_TagString: Untagged
@@ -109,22 +109,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &2166186834359181285
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7711837536387850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c038e14a8d84e85aa23715643622570, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  root: {fileID: 8710023171169118177}
-  dragItem: {fileID: 0}
-  bagTitleText: {fileID: 4683294522225802901}
-  isPlayerInventory: 0
 --- !u!225 &3852833184715526416
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -151,6 +135,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!114 &5247078341254010028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7711837536387850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a65018b5ac0acb5458d42a94b02825d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  root: {fileID: 8710023171169118177}
+  skillUpgradeUI: {fileID: 0}
+  bagTitleText: {fileID: 4683294522225802901}
+  scrollRect: {fileID: 0}
 --- !u!1 &149389107464756722
 GameObject:
   m_ObjectHideFlags: 0

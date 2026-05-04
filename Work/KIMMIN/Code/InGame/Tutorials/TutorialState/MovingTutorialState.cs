@@ -1,6 +1,4 @@
-using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Work.Code.Tutorials
 {

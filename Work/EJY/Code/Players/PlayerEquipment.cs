@@ -314,13 +314,13 @@ namespace Code.Players
             if (_equips.TryGetValue(equipPartType, out EquipableItem equippingItem) && equippingItem == null)
             {
                 _equips[equipPartType] = equipableItem;
+                equipableItem.Equip(_player, equipTrms[equipPartType]);
+                
                 if (equipPartType == EquipPartType.Hand)
                 {
                     UpdateHandleIndex(equipSlotLocalIndex);
                     EventBus.Raise(new ChangeHandlingEvent(equipableItem));
                 }
-
-                equipableItem.Equip(_player, equipTrms[equipPartType]);
             }
 
             if (equipPartType == EquipPartType.Hand)

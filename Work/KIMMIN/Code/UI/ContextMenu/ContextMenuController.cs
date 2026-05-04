@@ -94,12 +94,11 @@ namespace Work.Code.UI.ContextMenu
 
         private void ShowContextMenu(InteractableUI owner)
         {
-            if (!_contextMenus.TryGetValue(owner, out var menuData))
+            if (!_contextMenus.TryGetValue(owner, out ContextMenuData menuData))
                 return;
 
             var data = menuData.Data?.Invoke();
-            if (data == null)
-                return;
+            if (data == null) return;
 
             HideCurrentMenu();
             
@@ -124,6 +123,8 @@ namespace Work.Code.UI.ContextMenu
             _currentMenu = null;
             panel.DisableUI();
         }
+        
+        public bool HasActiveMenu() => _currentMenu != null;
 
         private void SetPosition(RectTransform rect)
         {

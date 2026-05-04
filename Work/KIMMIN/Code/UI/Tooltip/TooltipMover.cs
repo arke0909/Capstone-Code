@@ -14,7 +14,7 @@ namespace Code.UI.Tooltip
         private VerticalLayoutGroup _layout;
         private Vector3 _prevMousePos;
 
-        public void Init(RectTransform tooltipRoot)
+        public void InitMover(RectTransform tooltipRoot)
         {
             _tooltipRoot = tooltipRoot;
             _layout = _tooltipRoot.GetComponent<VerticalLayoutGroup>();

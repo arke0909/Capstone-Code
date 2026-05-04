@@ -123,7 +123,7 @@ namespace Work.LKW.Code.Items
         }
         
         public List<ItemDataSO> GetRandomItems(SpawnArea area, SpawnSection section, int count)
-        {
+        {   
             List<ItemDataSO> sectionItems = GetItemBySpawnSection(section);
             List<ItemDataSO> areaItems = GetItemBySpawnArea(area);
             

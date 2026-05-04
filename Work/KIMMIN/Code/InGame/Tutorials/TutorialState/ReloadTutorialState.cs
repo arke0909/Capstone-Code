@@ -1,7 +1,5 @@
 using Chipmunk.GameEvents;
 using Code.GameEvents;
-using Scripts.Players;
-using UnityEngine;
 
 namespace Work.Code.Tutorials
 {

@@ -56,6 +56,7 @@ namespace Code.SkillSystem.Skills.FireRate
         public override void StartAndUseSkill()
         {
             _vfxComponent.PlayVFX("FireRate", vfxPos.position, Quaternion.identity);
+            fireRateSkillVFX.PlayMuzzleSmog();
             
             var statusEffectInfos = fireRateBuffSO.GetStatusEffectInfo();
 
@@ -86,6 +87,8 @@ namespace Code.SkillSystem.Skills.FireRate
                 targetStat.RemoveModifier(this);
             }
             _vfxComponent.StopVFX("FireRate");
+            fireRateSkillVFX.ResetHeatRatio();
+            fireRateSkillVFX.StopMuzzleSmog();
             _entityStatusEffect.OnStatusEffectReleased -= HandleFireRateReleased;
         }
 
@@ -95,7 +98,7 @@ namespace Code.SkillSystem.Skills.FireRate
                 return;
 
             _totalFireRate = Mathf.Min(_totalFireRate + onHitFireRateAmount, maxFireRate);
-            fireRateSkillVFX.SetRateOverTime(_totalFireRate / maxFireRate);
+            fireRateSkillVFX.SetHeatRatio(_totalFireRate / maxFireRate);
 
             var targetStat = _stat.GetStat(fireRateStatSO);
             targetStat.RemoveModifier(this);

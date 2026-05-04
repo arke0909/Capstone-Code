@@ -16,9 +16,11 @@ namespace Code.UI.Controller
 
         private void Awake()
         {
-            foreach (var popup in popups)
+            foreach (BasePopup popup in popups)
             {
-                if (popup == null) continue;
+                if (popup == null)
+                    continue;
+                
                 _popupMap.TryAdd(popup.DataType, popup);
             }
         }
@@ -35,14 +37,14 @@ namespace Code.UI.Controller
         
         private void HandleClickPopup<T>(Func<T> data, ICallbackData callback)
         {
-            var type = data.Invoke();
+            T type = data.Invoke();
             if (type == null) return;
             ShowPopup(type, callback);
         }
         
         public void ShowPopup<T>(T data, ICallbackData callback = null)
         {
-            var type = data.GetType();
+            Type type = data.GetType();
             if (!_popupMap.TryGetValue(type, out var prefab))
             {
                 Debug.LogWarning($"Popup not found for type: {type}");
@@ -59,18 +61,29 @@ namespace Code.UI.Controller
             _popupStack.Push(popup);
         }
         
-        public void CloseTopPopup()
+        public void HidePopup()
         {
-            if (_popupStack.Count == 0) return;
+            if (_popupStack.Count == 0)
+                return;
 
-            var popup = _popupStack.Pop();
-            var type = popup.DataType;
-            popup.ClosePopup();
+            BasePopup popup = _popupStack.Pop();
+            Type type = popup.DataType;
+            popup.HidePopup();
 
             if (!_pool.ContainsKey(type))
                 _pool[type] = new Stack<BasePopup>();
 
             _pool[type].Push(popup);
         }
+        
+        public void HideAllPopups()
+        {
+            while (_popupStack.Count > 0)
+            {
+                HidePopup();
+            }
+        }
+        
+        public bool HasActivePopup() => _popupStack.Count > 0;
     }
 }

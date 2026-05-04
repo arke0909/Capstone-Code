@@ -100,5 +100,6 @@ namespace Work.LKW.Code.Items.ItemInfo
         public int maxSpawnCount;
 
         public abstract ItemCreateData CreateItem();
+
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Code.UI.Core;
 using Code.UI.Tooltip;
 using UnityEngine;
@@ -9,10 +10,10 @@ using Work.Code.UI.Core.Interaction;
 
 namespace Code.UI.Controller
 {
-    class TooltipState
+    public class TooltipContext
     {
-        public Coroutine DelayRoutine;
-        public List<BaseTooltip> Tooltips = new();
+        public Coroutine delayRoutine;
+        public List<BaseTooltip> tooltips = new();
     }
     
     [DefaultExecutionOrder(-10)]
@@ -23,8 +24,8 @@ namespace Code.UI.Controller
         [SerializeField] private Transform tooltipRoot;
         
         private Dictionary<Type, BaseTooltip> _tooltipMap = new();
-        private Dictionary<Type, Queue<BaseTooltip>> _pool = new();
-        private Dictionary<InteractableUI, TooltipState> _states = new();
+        private Dictionary<Type, Queue<BaseTooltip>> _tooltipPools = new();
+        private Dictionary<InteractableUI, TooltipContext> _contexts = new();
         
         private bool _rebuildFlag;
         private Coroutine _rebuildCoroutine;
@@ -34,7 +35,7 @@ namespace Code.UI.Controller
         private void Awake()
         {
             MappingTooltip();
-            tooltipMover.Init(RootRect);
+            tooltipMover.InitMover(RootRect);
         }
 
         private void LateUpdate()
@@ -54,7 +55,7 @@ namespace Code.UI.Controller
 
         private void MappingTooltip()
         {
-            foreach (var tooltip in tooltipTypes)
+            foreach (BaseTooltip tooltip in tooltipTypes)
             {
                 if(tooltip == null) continue;
                 _tooltipMap.TryAdd(tooltip.DataType, tooltip);
@@ -63,108 +64,123 @@ namespace Code.UI.Controller
         
         public void BindTooltip<T>(InteractableUI owner, Func<T> data, float delay)
         {
-            var handler = owner.EventHandler;
+            UIEventHandler handler = owner.EventHandler;
             BindEnterTooltip(owner, data, delay, handler);
             BindExitTooltip(owner, handler);
         }
         
         public void UnbindTooltip(InteractableUI owner)
         {
-            if(owner == null || owner.EventHandler == null) return;
+            if(owner == null || owner.EventHandler == null)
+                return;
             
             var handler = owner.EventHandler;
             handler.ClearUIEvent(owner, EUIEvent.PointerEnter);
             handler.ClearUIEvent(owner, EUIEvent.PointerExit);
             
-            if (_states.TryGetValue(owner, out var state))
+            if (_contexts.TryGetValue(owner, out var context))
             {
-                HideTooltip(state);
+                HideTooltip(context);
             }
         }
 
-        private void BindEnterTooltip<TData>(InteractableUI owner, Func<TData> dataCallback, float delay, UIEventHandler handler)
+        private void BindEnterTooltip<T>(InteractableUI owner, Func<T> dataCallback, float delay, UIEventHandler handler)
         {
-            handler.BindUIEvent(owner, _ => {
-                var state = GetState(owner);
-                StopDelayRoutine(state);
+            handler.BindUIEvent(owner, _ => 
+            {
+                var context = Getcontext(owner);
+                StopDelayRoutine(context);
 
-                var data = dataCallback.Invoke();
+                T data = dataCallback.Invoke();
                 if (data == null) return;
                 
                 if (delay > 0)
-                    state.DelayRoutine = StartCoroutine(ShowTooltipRoutine(state, data, delay));
+                    context.delayRoutine = StartCoroutine(ShowTooltipRoutine(context, data, delay));
                 else
-                    ShowTooltip(state, data);
+                    ShowTooltip(context, data);
             }, EUIEvent.PointerEnter);
         }
 
         private void BindExitTooltip(InteractableUI owner, UIEventHandler handler)
         {
-            handler.BindUIEvent(owner, _ => {
-                if (!_states.TryGetValue(owner, out var state)) return;
-                StopDelayRoutine(state);
-                HideTooltip(state);
+            handler.BindUIEvent(owner, _ => 
+            {
+                if (!_contexts.TryGetValue(owner, out var context))
+                    return;
+                
+                StopDelayRoutine(context);
+                HideTooltip(context);
             }, EUIEvent.PointerExit);
         }
         
-        private void StopDelayRoutine(TooltipState state)
+        private void StopDelayRoutine(TooltipContext context)
         {
-            if (state.DelayRoutine != null)
+            if (context.delayRoutine != null)
             {
-                StopCoroutine(state.DelayRoutine);
-                state.DelayRoutine = null;
+                StopCoroutine(context.delayRoutine);
+                context.delayRoutine = null;
             }
         }
 
-        private IEnumerator ShowTooltipRoutine(TooltipState state, object data, float delay)
+        private IEnumerator ShowTooltipRoutine<T>(TooltipContext context, T data, float delay)
         {
             yield return new WaitForSeconds(delay);
-            ShowTooltip(state, data);
+            ShowTooltip(context, data);
         }
         
-        private void ShowTooltip(TooltipState state, object data)
+        private void ShowTooltip<T>(TooltipContext context, T data)
         {
-            var type = data.GetType();
-            if (!_tooltipMap.TryGetValue(type, out var prefab)) return;
+            Type type = data.GetType();
+            if (!_tooltipMap.TryGetValue(type, out BaseTooltip prefab))
+                return;
 
             BaseTooltip tooltip;
-            if (_pool.TryGetValue(type, out var queue) && queue.Count > 0)
+            if (_tooltipPools.TryGetValue(type, out var queue) && queue.Count > 0)
                 tooltip = queue.Dequeue();
             else
                 tooltip = Instantiate(prefab, tooltipRoot);
 
-            _rebuildFlag = true;
             tooltip.ShowTooltip(data);
-            state.Tooltips.Add(tooltip);
-            SortTooltips(state);
+            context.tooltips.Add(tooltip);
+            SortTooltips(context);
+            
+            _rebuildFlag = true;
         }
 
-        private void HideTooltip(TooltipState state)
+        private void HideTooltip(TooltipContext context)
         {
-            StopDelayRoutine(state);
+            StopDelayRoutine(context);
 
-            foreach (var tooltip in state.Tooltips)
+            foreach (BaseTooltip tooltip in context.tooltips)
             {
-                var type = tooltip.DataType;
+                Type type = tooltip.DataType;
 
-                if (!_pool.ContainsKey(type))
-                    _pool[type] = new Queue<BaseTooltip>();
+                if (!_tooltipPools.ContainsKey(type))
+                    _tooltipPools[type] = new Queue<BaseTooltip>();
 
                 tooltip.HidePopup();
-                _pool[type].Enqueue(tooltip);
+                _tooltipPools[type].Enqueue(tooltip);
             }
 
-            state.Tooltips.Clear();
+            context.tooltips.Clear();
         }
         
-        private TooltipState GetState(InteractableUI owner)
+        public void HideAll()
         {
-            if (!_states.TryGetValue(owner, out var state))
+            foreach (var context in _contexts.Values)
             {
-                state = new TooltipState();
-                _states[owner] = state;
+                HideTooltip(context);
             }
-            return state;
+        }
+        
+        private TooltipContext Getcontext(InteractableUI owner)
+        {
+            if (!_contexts.TryGetValue(owner, out var context))
+            {
+                context = new TooltipContext();
+                _contexts[owner] = context;
+            }
+            return context;
         }
         
         private IEnumerator RebuildLayout()
@@ -173,14 +189,17 @@ namespace Code.UI.Controller
             LayoutRebuilder.ForceRebuildLayoutImmediate(RootRect);
         }
         
-        private void SortTooltips(TooltipState state)
+        private void SortTooltips(TooltipContext context)
         {
-            state.Tooltips.Sort((a, b) => b.SortOrder.CompareTo(a.SortOrder));
+            context.tooltips.Sort((a, b) => b.SortOrder.CompareTo(a.SortOrder));
 
-            for (int i = 0; i < state.Tooltips.Count; i++)
+            for (int i = 0; i < context.tooltips.Count; i++)
             {
-                state.Tooltips[i].transform.SetSiblingIndex(i);
+                context.tooltips[i].transform.SetSiblingIndex(i);
             }
         }
+        
+        public bool HasActiveTooltip() 
+            => _contexts.Values.Any(c => c.tooltips.Count > 0);
     }
 }

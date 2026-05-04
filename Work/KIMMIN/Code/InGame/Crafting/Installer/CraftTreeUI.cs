@@ -69,9 +69,8 @@ namespace Work.Code.Craft.Installer
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            
-            playerInput.OnCraftTreePressed -= HandleToggleUI;
 
+            playerInput.OnCraftTreePressed -= HandleToggleUI;
             _menuPresenter.DisposePresenter();
             _treePresenter.DisposePresenter();
         }

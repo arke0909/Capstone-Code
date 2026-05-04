@@ -1,7 +1,9 @@
+using System;
 using DewmoLib.Dependencies;
 using Scripts.Players;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Work.Code.UI.Misc;
 
 namespace Work.Code.Tutorials
@@ -12,7 +14,6 @@ namespace Work.Code.Tutorials
 
         [Inject] private Player _player;
         private TutorialState[] _tutorialStates;
-
         private TutorialState _currentState;
         private int _tutorialIndex;
 
@@ -26,6 +27,12 @@ namespace Work.Code.Tutorials
             }
             
             ChangeTutorialState(_tutorialStates[_tutorialIndex]);
+        }
+
+        private void Update()
+        {
+            if (Keyboard.current.oKey.wasPressedThisFrame)
+                HandleTutorialComplete();
         }
 
         private void HandleTutorialComplete()

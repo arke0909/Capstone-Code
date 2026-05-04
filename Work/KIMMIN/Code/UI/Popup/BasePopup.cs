@@ -10,7 +10,7 @@ namespace Code.UI.Popup
         
         public abstract void ShowPopup(object data, ICallbackData callback = null);
         
-        public virtual void ClosePopup() => DisableUI(true);
+        public virtual void HidePopup() => DisableUI(true);
     }
     
     public abstract class BasePopup<TData, TCallback> : BasePopup where TCallback : ICallbackData
@@ -24,9 +24,9 @@ namespace Code.UI.Popup
             ShowPopup((TData)data, (TCallback)callback);
         }
 
-        public override void ClosePopup()
+        public override void HidePopup()
         {
-            base.ClosePopup();
+            base.HidePopup();
             _callback = default;
         }
         

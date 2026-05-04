@@ -4,6 +4,7 @@ using System.Linq;
 using Work.LKW.Code.Items;
 using Work.LKW.Code.Items.ItemInfo;
 using Work.LKW.Code.ItemContainers;
+using Chipmunk.ComponentContainers;
 
 namespace Work.LKW.Code.ItemContainers
 {
@@ -33,7 +34,8 @@ namespace Work.LKW.Code.ItemContainers
                 
                 resultItems.AddRange(itemDB.GetRandomItems(targetItems, container.AllowedSpawnArea, container.SpawnSection, count));
 
-                container.SetUpItem(resultItems);
+                var inventory = container.Inventory;
+                inventory.SetUpItem(resultItems);
             }
         }
     }

@@ -15,12 +15,21 @@ namespace Code.GameEvents
     public struct UpdateHotbarUIMessageEvent : IEvent
     {
     }
-    
-    public struct UpdateInventoryUIEvent : IEvent
+    public interface IUpdateInventoryUIEvent : IEvent
     {
-        public List<ItemSlot> ItemSlots;
-        public bool isPlayerInventory;
-        public int SlotCnt;
+        List<ItemSlot> ItemSlots { get; }
+        int SlotCnt { get; }
+    }
+    public struct UpdateLeftInventoryUIEvent : IUpdateInventoryUIEvent
+    {
+        public List<ItemSlot> ItemSlots { get; set; }
+
+        public int SlotCnt { get; set; }
+    }
+    public struct UpdateRightInventoryUIEvent : IUpdateInventoryUIEvent
+    {
+        public List<ItemSlot> ItemSlots { get; set; }
+        public int SlotCnt { get; set; }
     }
     public struct UpdateEquipUIEvent : IEvent
     {

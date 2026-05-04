@@ -253,6 +253,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4523915154933771559, guid: e23c01250b829c447b75b05f01945c49, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3231430584070405538}
+    - targetCorrespondingSourceObject: {fileID: 4523915154933771559, guid: e23c01250b829c447b75b05f01945c49, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6953895393216252310}
+    - targetCorrespondingSourceObject: {fileID: 4523915154933771559, guid: e23c01250b829c447b75b05f01945c49, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7599392993948922566}
   m_SourcePrefab: {fileID: 100100000, guid: e23c01250b829c447b75b05f01945c49, type: 3}
 --- !u!1 &4796466273003805841 stripped
 GameObject:
@@ -292,20 +298,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf4c8619310a440d9dfdbeb3a1c603a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentInventorySize: 4
-  itemSlots: []
+  helpText: {fileID: 8041857984508983291}
+  <Outlinable>k__BackingField: {fileID: 3231430584070405538}
   allowedTypes: 
-  AllowedSpawnArea: 0
+  <AllowedSpawnArea>k__BackingField: 0
+  <SpawnSection>k__BackingField: 0
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 64
   minItems: 1
   maxItems: 4
-  helpText: {fileID: 8041857984508983291}
-  <Outlinable>k__BackingField: {fileID: 3231430584070405538}
-  references:
-    version: 2
-    RefIds: []
 --- !u!114 &6369120137120980249
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,6 +372,35 @@ MonoBehaviour:
     fillPass:
       shader: {fileID: 0}
       serializedProperties: []
+--- !u!114 &6953895393216252310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4796466273003805841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce4d7f566fd641b4d8fed1a8e3509a6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _currentInventorySize: 4
+  itemSlots: []
+  references:
+    version: 2
+    RefIds: []
+--- !u!114 &7599392993948922566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4796466273003805841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b46dcb74cf4b291489ab4f768ed93fa8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &5322032124117173803 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3856203271465416605, guid: e23c01250b829c447b75b05f01945c49, type: 3}

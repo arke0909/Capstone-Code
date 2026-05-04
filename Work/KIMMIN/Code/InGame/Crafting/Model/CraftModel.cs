@@ -27,7 +27,7 @@ namespace Work.Code.Craft
     public class CraftModel
     {
         private Player _player;
-        public PlayerInventory Inventory { get; private set; }
+        public PlayerInventory Inventory { get; }
         
         public CraftModel(Player player)
         {

@@ -9,10 +9,5 @@ namespace Scripts.Players.States
         {
             _myMoveType = MoveType.Walk;
         }
-        public override void Update()
-        {
-            base.Update();
-
-        }
     }
 }
