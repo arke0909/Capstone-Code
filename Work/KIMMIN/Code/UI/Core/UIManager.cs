@@ -48,13 +48,17 @@ namespace Code.UI.Core
         
         public void RegisterUI(UIBase ui)
         {
-            if (!_registeredUI.Add(ui)) return;
+            if (!_registeredUI.Add(ui))
+                return;
+            
             ui.OnToggleUI += HandleChangeUIState;
         }
 
         public void UnRegisterUI(UIBase ui)
         {
-            if (!_registeredUI.Contains(ui)) return;
+            if (!_registeredUI.Contains(ui))
+                return;
+            
             _registeredUI.Remove(ui);
             ui.OnToggleUI -= HandleChangeUIState;
         }
@@ -67,7 +71,8 @@ namespace Code.UI.Core
 
         private void TryStackUI(UIBase ui, bool isActive)
         {
-            if (!CanStack(ui) || _isLocked) return;
+            if (!CanStack(ui) || _isLocked)
+                return;
             
             if (OverlayManager.HasActiveOverlay())
                 OverlayManager.CloseAllOverlays();

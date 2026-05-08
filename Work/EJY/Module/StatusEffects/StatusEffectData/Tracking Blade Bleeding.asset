@@ -17,9 +17,18 @@ MonoBehaviour:
   statusEffectCreateData:
   - statusEffect: 512
     isPercent: 1
-    level: 1
+    priority: 0
     effectValue:
     - 20
     isOverrideApplyTime: 0
     overrideTime: 0
+    useCustomBehaviorSettings: 1
+    canOverlap: 1
+    isOverWrite: 0
+    useSharedStack: 1
+    maxStack: 99
+    stackValueMode: 1
+    stackDecayMode: 0
+    stackDecayInterval: 0
+    refreshTimerOnReapply: 1
   applyTime: 10

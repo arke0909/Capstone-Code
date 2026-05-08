@@ -302,7 +302,6 @@ MonoBehaviour:
   <Outlinable>k__BackingField: {fileID: 3231430584070405538}
   allowedTypes: 
   <AllowedSpawnArea>k__BackingField: 0
-  <SpawnSection>k__BackingField: 0
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 64
@@ -386,6 +385,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _currentInventorySize: 4
   itemSlots: []
+  isSelfInitialize: 0
   references:
     version: 2
     RefIds: []

@@ -6,7 +6,7 @@ namespace Code.StatusEffectSystem.StatusEffects
 {
     public class AdditionalDamageStatusEffect : AbstractStatusEffect
     {
-        private readonly DamageData _damageData;
+        private DamageData _damageData;
         
         public AdditionalDamageStatusEffect(Entity target, StatusEffectInfo statusEffectInfo) : base(target, statusEffectInfo)
         {
@@ -27,6 +27,11 @@ namespace Code.StatusEffectSystem.StatusEffects
         private void HandleOnHit(Entity dealer, IDamageable target)
         {
             target?.ApplyDamage(_damageData, dealer);
+        }
+
+        protected override void OnValueChanged()
+        {
+            _damageData.damage = _value;
         }
     }
 }

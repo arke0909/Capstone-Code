@@ -97,11 +97,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5601c05ec7f87a440a7ab94c4f88f12d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  despawnTime: 1
   hitOffset: 0
   UseFirePointRotation: 0
   rotationOffset: {x: 90, y: 0, z: 0}
   hitEffect: {fileID: 0}
   flashEffect: {fileID: 709879641292266045}
+  bulletDespawnEffect: {fileID: 0}
   rb: {fileID: 8096002413455648323}
   Detached: []
   trail: {fileID: 8211625857709795779}

@@ -49,7 +49,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d6c985dc570419e898cb5fc4f2887d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  indexOffset: 3
   slotUI: {fileID: 5969523528643678387}
   indexText: {fileID: 0}
   <HotbarType>k__BackingField: 0

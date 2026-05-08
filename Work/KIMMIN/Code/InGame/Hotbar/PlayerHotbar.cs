@@ -1,4 +1,4 @@
-﻿﻿using AYellowpaper.SerializedCollections;
+﻿using AYellowpaper.SerializedCollections;
 using Chipmunk.ComponentContainers;
 using Chipmunk.GameEvents;
 using Code.GameEvents;
@@ -123,6 +123,8 @@ namespace Code.InventorySystem
                 return;
 
             _equipment.ChangeHandlingHotbarItem(handItem);
+            UpdateUI();
+            
             if (handItem is IUsable)
                 _player.ChangeState(PlayerStateEnum.ItemUse);
         }

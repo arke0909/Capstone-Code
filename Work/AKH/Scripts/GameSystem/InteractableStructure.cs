@@ -1,4 +1,5 @@
-﻿using EPOOutline;
+﻿using DewmoLib.ObjectPool.RunTime;
+using EPOOutline;
 using Scripts.Entities;
 using Unity.AppUI.UI;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace Scripts.GameSystem
         [SerializeField] private AppearEffect helpText;
 
         [field: SerializeField] public Outlinable Outlinable { get; private set; }
+
         private Camera _cam;
         private bool _isSelected;
         protected virtual void Awake()
@@ -46,6 +48,5 @@ namespace Scripts.GameSystem
         }
 
         public abstract void Interact(Entity interactor);
-
     }
 }

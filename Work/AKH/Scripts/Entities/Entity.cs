@@ -13,7 +13,7 @@ namespace Scripts.Entities
     public abstract class Entity : MonoBehaviour, IContainerComponent, IHitTransform, IStunable,IBlackboardOwner
     {
         public delegate void OnAttackDelegate(Entity dealer, IDamageable target);
-
+        public delegate void OnKillDelegate(float exp);
         public delegate float OnDamageCalcDelegate(Entity dealer, Transform target);
 
         [SerializeField] private Transform hitBodyTrm;
@@ -23,6 +23,7 @@ namespace Scripts.Entities
 
         public OnDamageCalcDelegate OnDamageCalc;
         public OnAttackDelegate OnAttack; // 내가 맞출 때
+        public OnKillDelegate OnKill;
         public UnityEvent OnHitEvent; // 내가 맞을 때
         public UnityEvent OnDeadEvent;
 

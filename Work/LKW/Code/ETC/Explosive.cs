@@ -21,14 +21,16 @@ namespace Code.ETC
         [SerializeField] private OverlapDamageCaster damageCaster;
         [SerializeField] private MovementDataSO movementData;
         [SerializeField] private SoundID explosiveSoundID;
+        [SerializeField] private GameObject[] smokeEffects;
         
         
         [Header("Setting")] 
         [SerializeField] private float damage;
-        
+        [SerializeField] private int maxExplodeCount = 3;
         [SerializeField] private List<Explosive> nearbyExplosives;
 
         private DamageData _damageData;
+        private int _currnentExplodeCount = 0;
 
         private bool _isExplosion = false;
 
@@ -50,7 +52,11 @@ namespace Code.ETC
         {
             if (((1 << collision.gameObject.layer) & whatIsBullet) != 0)
             {
-               Explode();
+                _currnentExplodeCount++;
+                if (_currnentExplodeCount >= maxExplodeCount)
+                {
+                    Explode();
+                }
             }
         }
 

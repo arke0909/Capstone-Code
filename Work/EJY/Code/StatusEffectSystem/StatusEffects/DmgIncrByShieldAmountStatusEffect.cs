@@ -8,12 +8,10 @@ namespace Code.StatusEffectSystem.StatusEffects
     public class DmgIncrByShieldAmountStatusEffect : StatStatusEffect
     {
         private ShieldCompo _shieldCompo;
-        private float _shieldScale;
         
         public DmgIncrByShieldAmountStatusEffect(Entity target, StatusEffectInfo statusEffectInfo, StatSO statSO) : base(target, statusEffectInfo, statSO)
         {
             _shieldCompo = target.Get<ShieldCompo>();
-            _shieldScale = statusEffectInfo.Value;
         }
 
         public override void ApplyStatusEffect(Entity entity)
@@ -34,7 +32,7 @@ namespace Code.StatusEffectSystem.StatusEffects
         {
             var targetStat = _targetStat.GetStat(_targetStatSO);
             targetStat.RemoveModifier(this);
-            float addValue = _shieldScale * shieldAmount;
+            float addValue = _value * shieldAmount;
             targetStat.AddValueModifier(this, addValue);
         }
 
@@ -44,6 +42,14 @@ namespace Code.StatusEffectSystem.StatusEffects
                 _shieldCompo.OnShieldAmountChanged -= HandleShieldAmountChange;
 
             base.ReleaseStatusEffect(entity);
+        }
+
+        protected override void OnValueChanged()
+        {
+            if (!_isApplying || _shieldCompo == null)
+                return;
+
+            HandleShieldAmountChange(_shieldCompo.CurrentShieldAmount);
         }
     }
 }

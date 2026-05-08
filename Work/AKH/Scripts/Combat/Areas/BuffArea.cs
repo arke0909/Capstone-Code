@@ -12,5 +12,11 @@ namespace Scripts.Combat.Areas
         {
             buffCaster.CastBuff(transform.position, targetBuff.GetStatusEffectInfo());
         }
+
+        public void SetBuffDuration(float buffDuration)
+        { 
+            floorDuration = buffDuration;
+            this.buffDuration = buffDuration;
+        }
     }
 }

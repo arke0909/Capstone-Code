@@ -27,7 +27,6 @@ namespace Work.LKW.Code.ItemContainers
     {
         [SerializeField] private List<ItemType> allowedTypes;
         [field: SerializeField] public SpawnArea AllowedSpawnArea { get; private set; }
-        [field: SerializeField] public SpawnSection SpawnSection { get; private set; }
         [SerializeField] private LayerMask whatIsPlayer;
         [SerializeField] private int minItems = 1;
         [SerializeField] private int maxItems = 4;

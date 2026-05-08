@@ -13,6 +13,8 @@ namespace Code.EnemySpawn
 
         private void Start()
         {
+            spawnPoints ??= new List<Transform>();
+
             foreach (Transform child in transform)
             {
                 spawnPoints.Add(child);
@@ -28,15 +30,17 @@ namespace Code.EnemySpawn
             if (spawnPoints == null || spawnPoints.Count <= 0)
                 return;
 
-            spawnEnemies = spawnList.GetSpawnEnemies(spawnPoints.Count);
-
             SpawnAllEnemies();
         }
 
         public void SpawnAllEnemies()
         {
-            if (spawnPoints == null || spawnEnemies == null) return;
+            if (spawnPoints == null || spawnList == null) return;
 
+            int currentDay = TimeController.Instance.CurrentDay;
+            spawnEnemies = spawnList.GetSpawnEnemies(spawnPoints.Count, currentDay);
+
+            if (spawnEnemies == null || spawnEnemies.Count <= 0) return;
 
             for (int i = 0; i < spawnPoints.Count; i++)
             {

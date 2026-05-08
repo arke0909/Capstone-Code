@@ -11,13 +11,14 @@ namespace Code.InGame.Hotbar
 {
     public class HotbarSlotUI : MonoBehaviour, IUIElement<HotbarSlot>
     {
-        [SerializeField] private int indexOffset = 3;
+        public const int IndexOffset = 3;
+
         [SerializeField] private ItemSlotUI slotUI;
         [SerializeField] private TextMeshProUGUI indexText;
         
         [field: SerializeField] public HotbarType HotbarType { get; private set; }
         
-        public int Index => transform.GetSiblingIndex() + indexOffset + (int)SlotType.Hotbar;
+        public int Index => transform.GetSiblingIndex() + IndexOffset + (int)SlotType.Hotbar;
         
         public void EnableFor(HotbarSlot slot)
         {
@@ -28,6 +29,8 @@ namespace Code.InGame.Hotbar
         {
             slotUI?.ClearUI();
         }
+
+        public ItemSlotUI GetSlotUI() => slotUI;
 
         #if UNITY_EDITOR
         private void OnValidate()

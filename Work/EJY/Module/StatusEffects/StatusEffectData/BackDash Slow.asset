@@ -17,7 +17,9 @@ MonoBehaviour:
   statusEffectCreateData:
   - statusEffect: 4
     isPercent: 1
-    level: 1
+    priority: 0
     effectValue:
     - -0.9
+    isOverrideApplyTime: 0
+    overrideTime: 0
   applyTime: 1.5

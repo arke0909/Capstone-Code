@@ -16,6 +16,7 @@ namespace Code.SHS.Targetings.Enemies
         [SerializeField] private float targetForgetDuration = 5f;
         public Entity CurrentTarget => _currentTarget;
         public Entity Target => _target;
+        public bool HasActiveTauntTarget => _currentTarget is ITauntTarget tauntTarget && tauntTarget.IsTauntTargetActive;
         private Entity _currentTarget;
         private Entity _target;
         public Vector3 LastTargetPosition => _lastPosition;
@@ -71,6 +72,9 @@ namespace Code.SHS.Targetings.Enemies
 
         public void SetTarget(Entity target)
         {
+            if (HasActiveTauntTarget && ReferenceEquals(_currentTarget, target) == false)
+                return;
+
             Entity previousTarget = _currentTarget;
             _target = target;
             if (target != null)
@@ -120,6 +124,9 @@ namespace Code.SHS.Targetings.Enemies
         }
         private void HandleTargetDetected(Entity entity)
         {
+            if (HasActiveTauntTarget)
+                return;
+
             Entity previousTarget = _currentTarget;
             _target = entity;
             if (entity != null)

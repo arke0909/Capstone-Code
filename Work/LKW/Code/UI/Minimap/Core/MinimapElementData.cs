@@ -9,7 +9,7 @@ namespace Code.UI.Minimap.Core
         Enemy,
         SupplyIcon,
         SectionName,
-        ShowItem
+        Teleport
     }
     
     public class MinimapElementData

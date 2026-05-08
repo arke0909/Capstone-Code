@@ -178,6 +178,7 @@ MonoBehaviour:
   countText: {fileID: 7569139090177146462}
   icon: {fileID: 3679414323624755190}
   background: {fileID: 3020946151689925475}
+  outline: {fileID: 3314258384578003317}
 --- !u!1 &3871034608348304873
 GameObject:
   m_ObjectHideFlags: 0

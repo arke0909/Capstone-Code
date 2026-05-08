@@ -1,9 +1,7 @@
-﻿using Chipmunk.ComponentContainers;
-using Code.Players;
+﻿using System;
 using Scripts.Players;
 using UnityEngine;
 using Work.LKW.Code.ItemContainers;
-using Work.LKW.Code.Items.ItemInfo;
 
 namespace Work.Code.Tutorials
 {
@@ -14,13 +12,17 @@ namespace Work.Code.Tutorials
         [SerializeField] private GameObject[] arrows;
 
         private bool[] _conditions;
+        private Action[] _handlers;
 
         public override void InitializeTutorial(TutorialController tutorialController, Player player)
         {
             base.InitializeTutorial(tutorialController, player);
-            SetArrows(false);
             
-            _conditions = new bool[markings.Length];
+            _conditions = new bool[containers.Length];
+            _handlers = new Action[containers.Length];
+            
+            SetArrows(false);
+            SetMarking(false);
         }
 
         public override void EnterTutorial()
@@ -30,14 +32,11 @@ namespace Work.Code.Tutorials
             for(int i = 0; i < containers.Length; i++)
             {
                 int idx = i;
-                containers[i].Inventory.InventoryEmpty += () => HandleEmptyInventory(idx);
-            }
-
-            foreach (var marking in markings)
-            {
-                marking.SetVisual(true);
+                _handlers[i] = () => HandleEmptyInventory(idx);
+                containers[i].Inventory.InventoryEmpty += _handlers[i];
             }
             
+            SetMarking(true);
             SetArrows(true);
         }
 
@@ -60,17 +59,13 @@ namespace Work.Code.Tutorials
 
         public override void ExitTutorial()
         {
-            foreach (var marking in markings)
+            
+            for (int i = 0; i < containers.Length; i++)
             {
-                marking.SetVisual(false);
+                containers[i].Inventory.InventoryEmpty -= _handlers[i];
             }
             
-            for(int i = 0; i < containers.Length; i++)
-            {
-                int idx = i;
-                containers[i].Inventory.InventoryEmpty += () => HandleEmptyInventory(idx);
-            }
-            
+            SetMarking(false);
             SetArrows(false);
         }
 
@@ -79,6 +74,14 @@ namespace Work.Code.Tutorials
             foreach (var arrow in arrows)
             {
                 arrow.SetActive(state);
+            }
+        }
+        
+        private void SetMarking(bool state)
+        {
+            foreach (var marking in markings)
+            {
+                marking.SetEnable(state);
             }
         }
     }

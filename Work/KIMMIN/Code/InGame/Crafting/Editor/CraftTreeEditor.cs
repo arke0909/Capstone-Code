@@ -46,7 +46,6 @@ public class CraftTreeEditor : EditorWindow
 
     public void CreateGUI()
     {
-        InitializeWindow();
         VisualElement root = rootVisualElement;
         visualTreeAsset.CloneTree(root);
         CreateTree(root);
@@ -325,34 +324,5 @@ public class CraftTreeEditor : EditorWindow
         AssetDatabase.DeleteAsset(path);
         SaveAssets(treeList);
         UpdateTreeItems();
-    }
-    
-    private void InitializeWindow()
-    {
-        MonoScript monoScript = MonoScript.FromScriptableObject(this);
-        string scriptPath = AssetDatabase.GetAssetPath(monoScript);
-        _rootFolderPath = Directory.GetParent(Path.GetDirectoryName(scriptPath)).FullName.Replace('\\', '/');
-        _rootFolderPath = "Assets" + _rootFolderPath.Substring(Application.dataPath.Length);
-
-        if (treeList == null)
-        {
-            string filePath = $"{_rootFolderPath}/TreeListSO.asset";
-            treeList = AssetDatabase.LoadAssetAtPath<CraftTreeListSO>(filePath);
-            if (treeList == null)
-            {
-                Debug.LogWarning("CraftTreeListSO is not found. Create a new one");
-                treeList = CreateInstance<CraftTreeListSO>();
-                AssetDatabase.CreateAsset(treeList, filePath);
-            }
-        }
-        
-        visualTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>($"{_rootFolderPath}/Editor/CraftTreeEditor.uxml");
-        Debug.Assert(visualTreeAsset != null, "visualTreeAsset is null");
-        
-        nodeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>($"{_rootFolderPath}/Editor/CraftingNode.uxml");
-        Debug.Assert(nodeAsset != null, "node is null");
-        
-        treeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>($"{_rootFolderPath}/Editor/CraftingTreeItem.uxml");
-        Debug.Assert(treeAsset != null, "treeItem is null");
     }
 }

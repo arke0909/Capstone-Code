@@ -18,6 +18,7 @@ namespace Code.InGame.Hotbar
         [SerializeField] private TextMeshProUGUI countText;
         [SerializeField] private Image icon;
         [SerializeField] private Image background;
+        [SerializeField] private Image outline;
         
         private Tween _hotbarTween;
         private readonly Color32 _inActiveColor = new Color32(0, 0, 0, 100);
@@ -43,6 +44,11 @@ namespace Code.InGame.Hotbar
                 .SetLoops(2, LoopType.Yoyo);
             
             EventBus.Raise(new HotbarUseEvent(GetLocalIndex(Index)));
+        }
+
+        public void SetOutlineColor(Color color)
+        {
+            outline.color = color;
         }
 
         public void EnableFor(ItemSlot slot)

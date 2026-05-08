@@ -29,7 +29,7 @@ namespace Code.Hotbar
             EventBus.Unsubscribe<UpdateHotbarUIEvent>(HandleUpdateHotbar);
             base.OnDestroy();
         }
-
+        
         protected override void UpdateSlotUI()
         {
             foreach (HotbarSlotUI slotUI in _slotUis.Values)

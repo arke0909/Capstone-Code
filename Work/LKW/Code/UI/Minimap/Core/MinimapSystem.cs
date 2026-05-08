@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Chipmunk.GameEvents;
 using Code.Events;
@@ -9,14 +9,11 @@ using UnityEngine.InputSystem;
 
 namespace Code.UI.Minimap
 {
-    public class MinimapSystem : MonoBehaviour, IDependencyProvider
+    public class MinimapSystem : MonoBehaviour
     {
         [field:SerializeField] public RectTransform MinimapRect { get; set; }
         [SerializeField] private Camera minimapCamera;
 
-        [Provide]
-        public MinimapSystem GetSystem() => this;
-        
         public Dictionary<string, MinimapElementData> AllData { get; private set; } = new Dictionary<string, MinimapElementData>();
 
         public event Action<MinimapElementData> OnDataAdded;
@@ -42,7 +39,6 @@ namespace Code.UI.Minimap
             string targetId = evt.ID;
             
             if (string.IsNullOrEmpty(targetId)) return;
-          
             if (AllData.TryGetValue(targetId, out var elementData))
             {
                 OnDataRemoved?.Invoke(elementData.Id);

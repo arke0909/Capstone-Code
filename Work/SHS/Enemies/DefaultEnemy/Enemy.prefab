@@ -344,6 +344,9 @@ MonoBehaviour:
   - stat: {fileID: 11400000, guid: 1a1e5af04fdaaa8499643aab3685cf99, type: 2}
     isUseOverride: 1
     overrideValue: 2
+  - stat: {fileID: 11400000, guid: ec44098c01bc4824594094bd514e6e91, type: 2}
+    isUseOverride: 1
+    overrideValue: 50
   - stat: {fileID: 11400000, guid: 277e5bee72626544292dca8602be694e, type: 2}
     isUseOverride: 1
     overrideValue: 1
@@ -1310,6 +1313,7 @@ MonoBehaviour:
   <StatPerSecStat>k__BackingField: {fileID: 11400000, guid: 2b03206dd9ef26948a19100398b639c1, type: 2}
   defStat: {fileID: 11400000, guid: 458b46c63a1c40d4ab9a6d39717dde19, type: 2}
   damageDemodifyStat: {fileID: 11400000, guid: fa80372e43ce02f49a1a938d0bc7d871, type: 2}
+  dropExpStat: {fileID: 11400000, guid: ec44098c01bc4824594094bd514e6e91, type: 2}
   hitSound:
     _entity: {fileID: 11400000, guid: 599ff70c689d0c64194f922037562d1c, type: 2}
     ID: 0
@@ -1524,8 +1528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7e8ef25c4411499d98b21fb300d08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ManageStat>k__BackingField: {fileID: 11400000, guid: 01c6c8365bcc94641accf0713857298c, type: 2}
-  <StatPerSecStat>k__BackingField: {fileID: 0}
+  _initialLevel: 0
 --- !u!114 &4102372176445734163
 MonoBehaviour:
   m_ObjectHideFlags: 0

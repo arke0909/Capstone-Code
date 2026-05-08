@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Chipmunk.GameEvents;
+﻿using Chipmunk.GameEvents;
+using Code.UI.Minimap.Core;
 using DewmoLib.ObjectPool.RunTime;
 using DG.Tweening;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Work.Code.Core.Extension;
 using Work.LKW.Code.ItemContainers;
@@ -10,7 +11,7 @@ using Work.LKW.Code.Items.ItemInfo;
 
 namespace Work.Code.MapEvents.Elements
 {
-    public class Airdrop : MonoBehaviour, IPoolable
+    public class Airdrop : MonoBehaviour, IPoolable, IDropStructure
     {
         [SerializeField] private float dropSpeed = 5f;
         [SerializeField] private float groundDetectSize = 1f;
@@ -29,7 +30,7 @@ namespace Work.Code.MapEvents.Elements
         public GameObject GameObject => gameObject;
         
         private event Action<Vector3> LandingCallback;
-
+        private string _iconId;
         private void Awake()
         {
             _Inventory = GetComponent<ItemContainerInventory>();
@@ -42,6 +43,7 @@ namespace Work.Code.MapEvents.Elements
             
             LandingCallback = landingCallback;
             _isDropping = true;
+            _iconId = MinimapUtil.AddToMinimap(this, ElementType.SupplyIcon, null, false, position);
         }
         
         private void InitAirdrop(Vector3 position, float height)
@@ -89,11 +91,13 @@ namespace Work.Code.MapEvents.Elements
             LandingCallback = null;
         }
 
-        public void TakeAirdrop()
+        public void Cancel()
         {
             fogEffect?.Stop();
             fogEffect?.Clear();
-            
+            LandingCallback = null;
+            _isDropping = false;
+            MinimapUtil.RemoveFromMinimap(_iconId);
             _pool.Push(this);
         }
         

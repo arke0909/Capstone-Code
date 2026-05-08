@@ -26,7 +26,7 @@ namespace Scripts.Players
         }
         private void Update()
         {
-            int cnt = Physics.OverlapSphereNonAlloc(transform.position, radius,_colliders, interactLayer);
+            int cnt = Physics.OverlapSphereNonAlloc(transform.position, radius,_colliders, interactLayer,QueryTriggerInteraction.Collide);
             float closestDistance = float.MaxValue;
             if (cnt == 0)
             {

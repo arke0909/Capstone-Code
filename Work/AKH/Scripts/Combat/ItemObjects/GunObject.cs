@@ -48,14 +48,37 @@ namespace Scripts.Combat.ItemObjects
             _localEventBus = owner.Get<LocalEventBus>();
         }
 
+        private Vector3 GetPlaneAimPoint()
+        {
+            Vector3 worldAimPoint = _aimProvider.GetAimPosition();
+
+            Vector3 rayDirection = (worldAimPoint - Camera.main.transform.position).normalized;
+            Ray aimRay = new Ray(Camera.main.transform.position, rayDirection);
+
+            Plane firePlane = new Plane(Vector3.up, new Vector3(0f, fireTrm.position.y, 0f));
+
+            Vector3 planeAimPoint;
+            if (firePlane.Raycast(aimRay, out float enter))
+            {
+                planeAimPoint = aimRay.GetPoint(enter);
+            }
+            else
+            {
+                Vector3 flatDir = Vector3.ProjectOnPlane(rayDirection, Vector3.up).normalized;
+                planeAimPoint = fireTrm.position + flatDir * 10f;
+            }
+            
+            return planeAimPoint;
+        }
+        
         public override void Attack()
         {
-            Vector3 aimPoint = _aimProvider.GetAimPosition();
-
+            Vector3 planeAimPoint = GetPlaneAimPoint();
+            
             for (int i = 0; i < _gunData.bulletPerShot; i++)
             {
                 float spreadValue = GetCurrentAdsSpreadAngleDeg();
-                Vector3 direction = aimPoint - fireTrm.position;
+                Vector3 direction = (planeAimPoint - fireTrm.position).normalized;
                 direction.y = 0f;
                 direction.Normalize();
                 direction = ApplySpreadCone(direction, spreadValue);
@@ -64,7 +87,7 @@ namespace Scripts.Combat.ItemObjects
                 proj.InitBullet(_owner, _gunItem, fireTrm.position, direction);
             }
 
-            _localEventBus.Raise(new GunAttackEvent(_gunData, GetCurrentAdsSpreadAngleDeg(), aimPoint));
+            _localEventBus.Raise(new GunAttackEvent(_gunData, GetCurrentAdsSpreadAngleDeg(), planeAimPoint));
 
             _currentSpread = Mathf.Min(_currentSpread + _gunData.spreadGrow, _gunData.maxSpread);
             _lastShootTime = Time.time;

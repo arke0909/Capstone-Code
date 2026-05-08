@@ -31,12 +31,18 @@ namespace Code.Hotbar
         {
             for(int i = 0; i < _hotbars.Length; i++)
             {
-                if (evt.EquipSlots[i].Item != null)
+                var item = evt.EquipSlots[i].Item;
+                if (item != null)
                 {
                     _hotbars[i].EnableFor(evt.EquipSlots[i]);
                 }
                 else
                     _hotbars[i].ClearUI();
+                
+                if(item is EquipableItem { IsEquipped: true })
+                    _hotbars[i].SetOutlineColor(Color.green);
+                else
+                    _hotbars[i].SetOutlineColor(Color.white);
             }
         }
     }

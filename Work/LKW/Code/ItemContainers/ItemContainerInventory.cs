@@ -3,6 +3,7 @@ using Chipmunk.GameEvents;
 using Code.GameEvents;
 using Code.InventorySystems;
 using System.Collections.Generic;
+using UnityEngine;
 using Work.LKW.Code.Events;
 using Work.LKW.Code.Items.ItemInfo;
 
@@ -10,6 +11,8 @@ namespace Work.LKW.Code.ItemContainers
 {
     public class ItemContainerInventory : Inventory
     {
+        [SerializeField] private bool isSelfInitialize = false;
+        
         private bool _isSubscribe = false;
         public override void OnInitialize(ComponentContainer componentContainer)
         {
@@ -32,6 +35,8 @@ namespace Work.LKW.Code.ItemContainers
         }
         public void SetUpItem(List<ItemDataSO> items)
         {
+            ClearInventory();
+            
             for (int i = 0; i < items.Count && i < CurrentInventorySize; ++i)
             {
                 var createData = items[i].CreateItem();
@@ -44,6 +49,8 @@ namespace Work.LKW.Code.ItemContainers
 
         public void SetUpItem(ItemDataSO item)
         {
+            ClearInventory();
+            
             var createData = item.CreateItem();
             itemSlots[0].SetData(createData.Item, createData.Stack);
 

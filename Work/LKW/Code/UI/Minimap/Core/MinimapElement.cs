@@ -23,6 +23,10 @@ namespace Code.UI.Minimap.Core
         {
             var evt = new RemoveMinimapElementEvent(ID);
             Bus.Raise(evt);
+        }
+        
+        public void DestroySelf()
+        {
             _myPool.Push(this);
         }
 

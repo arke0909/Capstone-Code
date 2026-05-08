@@ -8110,6 +8110,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 6424881668691822554, guid: 1b5f9b4d66ab3f74082be0a0a8e99918, type: 3}
+      propertyPath: scrollRect
+      value: 
+      objectReference: {fileID: 66738270913072581}
     - target: {fileID: 6432852562086862176, guid: 1b5f9b4d66ab3f74082be0a0a8e99918, type: 3}
       propertyPath: m_Layer
       value: 5

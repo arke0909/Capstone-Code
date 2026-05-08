@@ -101,7 +101,7 @@ namespace SHS.Scripts.Crosshairs
 
         private void LateUpdate()
         {
-            Vector3 nextAimPosition = GetCrosshairPlanePosition();
+            Vector3 nextAimPosition = GetCrosshairWorldPosition();
             if (Vector3.Distance(transform.position, nextAimPosition) < minAimDistance)
                 return;
 

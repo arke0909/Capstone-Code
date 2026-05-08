@@ -19,7 +19,6 @@ namespace Work.Code.Tutorials
 
         public override void EnterTutorial()
         {
-            base.EnterTutorial();
             TutorialComplete();
         }
     }

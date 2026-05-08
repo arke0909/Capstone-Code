@@ -12,17 +12,26 @@ namespace Code.StatusEffectSystem
 {
     public struct StatusEffectInfo
     {
+        public int CreateDataIndex;
         public BuffSO KeySO;
         public StatusEffectEnum StatusEffect;
         public int Priority;
         public float ApplyTime;
         public float Value;
         public bool IsPercent;
+        public bool UseCustomBehaviorSettings;
         public bool CanOverlap;
         public bool IsOverWrite;
+        public bool UseSharedStack;
+        public int MaxStack;
+        public StatusEffectStackValueMode StackValueMode;
+        public StatusEffectStackDecayMode StackDecayMode;
+        public float StackDecayInterval;
+        public bool RefreshTimerOnReapply;
 
         public StatusEffectInfo(BuffSO keySO, StatusEffectCreateData data, int valueLevel = 0)
         {
+            CreateDataIndex = -1;
             KeySO = keySO;
             StatusEffect = data.statusEffect;
             Priority = data.priority;
@@ -30,8 +39,15 @@ namespace Code.StatusEffectSystem
             if (valueLevel >= data.effectValue.Length) valueLevel = data.effectValue.Length - 1;
             Value = data.effectValue[valueLevel];
             IsPercent = data.isPercent;
+            UseCustomBehaviorSettings = data.useCustomBehaviorSettings;
             CanOverlap = false;
             IsOverWrite = false;
+            UseSharedStack = data.useSharedStack;
+            MaxStack = Mathf.Max(1, data.maxStack);
+            StackValueMode = data.stackValueMode;
+            StackDecayMode = data.stackDecayMode;
+            StackDecayInterval = Mathf.Max(0.01f, data.stackDecayInterval);
+            RefreshTimerOnReapply = data.refreshTimerOnReapply;
         }
     }
 
@@ -108,10 +124,28 @@ namespace Code.StatusEffectSystem
             return data.ApplyFlag(info);
         }
 
+        private bool TryAddSharedStack(List<AbstractStatusEffect> list, StatusEffectInfo info, out AbstractStatusEffect stackedEffect)
+        {
+            stackedEffect = null;
+
+            if (!info.CanOverlap || !info.UseSharedStack)
+                return false;
+
+            stackedEffect = list.FirstOrDefault(statusEffect =>
+                info.StatusEffect == statusEffect.StatusEffectEnum &&
+                info.CreateDataIndex == statusEffect.CreateDataIndex);
+            if (stackedEffect == null)
+                return false;
+
+            stackedEffect.AddSharedStack(info);
+            return true;
+        }
+
         private bool ResetIfAlreadyApplied(IEnumerable<AbstractStatusEffect> list, StatusEffectInfo info, out AbstractStatusEffect activeStatusEffect)
         {
             activeStatusEffect = list.FirstOrDefault(statusEffect =>
-                info.StatusEffect == statusEffect.StatusEffectEnum);
+                info.StatusEffect == statusEffect.StatusEffectEnum &&
+                info.CreateDataIndex == statusEffect.CreateDataIndex);
             if (activeStatusEffect == null)
                 return false;
 
@@ -163,6 +197,12 @@ namespace Code.StatusEffectSystem
             {
                 var applyflagInfo = ApplyStatusEffectFlags(info);
                 var list = GetOrCreateStatusEffectsList(applyflagInfo);
+
+                if (TryAddSharedStack(list, applyflagInfo, out AbstractStatusEffect stackedEffect))
+                {
+                    statusEffects.Add(stackedEffect);
+                    continue;
+                }
 
                 if (!applyflagInfo.CanOverlap && ResetIfAlreadyApplied(list, applyflagInfo, out AbstractStatusEffect appliedStatusEffect))
                 {

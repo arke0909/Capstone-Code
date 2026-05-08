@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Chipmunk.GameEvents;
 using Code.EnemySpawn;
@@ -12,58 +13,42 @@ using Random = UnityEngine.Random;
 
 namespace Work.Code.MapEvents
 {
-    public class AirdropMapEvent : MapEvent
+    public class AirdropMapEvent : DropStructureEvent
     {
-        [SerializeField] private Transform[] roots;
         [SerializeField] private PoolItemSO airdropPool;
         [SerializeField] private List<EnemySO> enemies;
-        
+
         [SerializeField] private int dropCount = 1;
         [SerializeField] private int enemyCount = 5;
-        
-        [Inject] private PoolManagerMono _poolManager;
-        private readonly Queue<Airdrop> _airdropQueue = new();
-        private readonly float _height = 100f;
-        
-        protected override void StartEvent()
-        {
-            int length = roots.Length;
-            int count = Mathf.Min(dropCount, length);
-            List<int> indices = new List<int>(length);
-            
-            for (int i = 0; i < length; i++)
-            {
-                indices.Add(i);
-            }
 
-            for (int i = 0; i < length; i++)
-            {
-                int rand = Random.Range(i, length);
-                (indices[i], indices[rand]) = (indices[rand], indices[i]);
-            }
+        [Inject] private PoolManagerMono _poolManager;
+        private readonly float _height = 100f;
+
+        protected override void StartDropStructureEvent()
+        {
+            int length = AreaCount;
+            int count = Mathf.Min(dropCount, length);
+
+            Span<int> indices = stackalloc int[length];
+            FillShuffledAreaIndices(indices);
 
             for (int i = 0; i < count; i++)
             {
-                if (_airdropQueue.Count > 0)
-                {
-                    var airdrop = _airdropQueue.Dequeue();
-                    airdrop.TakeAirdrop();
-                }
-                
                 InitAirdropEvent(indices[i]);
             }
         }
 
         private void InitAirdropEvent(int areaIdx)
         {
-            int point = Random.Range(0, roots[areaIdx].childCount);
-            Vector3 position = roots[areaIdx].GetChild(point).position;
-            
-            Airdrop airdrop = _poolManager.Pop<Airdrop>(airdropPool);
+            if (!TryGetRandomAreaPoint(areaIdx, out AreaPoint areaPoint))
+                return;
+
+            Vector3 position = areaPoint.Position;
+
+            Airdrop airdrop = RegisterDropStructure(_poolManager.Pop<Airdrop>(airdropPool));
             airdrop.StartDrop(position, _height, HandleLandning);
             SpawnEnemies(position);
-            
-            _airdropQueue.Enqueue(airdrop);
+
             EventName = $"{areaIdx + 1}지역 보급 낙하!";
             EventBus.Raise(new AirdropEvent(areaIdx, position));
         }
@@ -83,18 +68,5 @@ namespace Work.Code.MapEvents
                 EnemySpawnUtility.SpawnEnemy(enemy, spawnPos, Quaternion.identity, _poolManager);
             }
         }
-
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            for(int i = 0; i < roots.Length; i++)
-            {
-                foreach(Transform trm in roots[i])
-                {
-                    trm.name = $"Area{i + 1}_Pos{trm.GetSiblingIndex() + 1}";
-                }
-            }
-        }
-#endif
     }
 }

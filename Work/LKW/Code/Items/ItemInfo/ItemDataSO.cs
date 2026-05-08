@@ -46,24 +46,33 @@ namespace Work.LKW.Code.Items.ItemInfo
     [Flags]
     public enum SpawnArea
     {
-        Area1 = 1,
-        Area2 = 2,
-        Area3 = 4,
-        Area4 = 8,
-        Area5 = 16,
-        Area6 = 32,
-        None = 64
-    }
-    
-    public enum SpawnSection
-    {
-        Section1 = 1,
-        Section2 = 2,
-        Section3 = 4,
-        Section4 = 8,
-        Section5 = 16,
-        Section6 = 32,
-        None = 64,
+        None   = 0,           // 0
+        Area1  = 1 << 0,      // 1
+        Area2  = 1 << 1,      // 2
+        Area3  = 1 << 2,      // 4
+        Area4  = 1 << 3,      // 8
+        Area5  = 1 << 4,      // 16
+        Area6  = 1 << 5,      // 32
+        Area7  = 1 << 6,      // 64
+        Area8  = 1 << 7,      // 128
+        Area9  = 1 << 8,      // 256
+        Area10 = 1 << 9,      // 512
+        Area11 = 1 << 10,     // 1024
+        Area12 = 1 << 11,     // 2048
+        Area13 = 1 << 12,     // 4096
+        Area14 = 1 << 13,     // 8192
+        Area15 = 1 << 14,     // 16384
+        Area16 = 1 << 15,     // 32768
+        Area17 = 1 << 16,     // 65536
+        Area18 = 1 << 17,     // 131072
+        Area19 = 1 << 18,     // 262144
+        Area20 = 1 << 19,     // 524288
+        Area21 = 1 << 20,     // 1048576
+        Area22 = 1 << 21,      // 2097152
+        
+        All = Area1 | Area2 | Area3 | Area4 | Area5 | Area6 | Area7 | Area8 | Area9 | Area10 |
+              Area11 | Area12 | Area13 | Area14 | Area15 | Area16 | Area17 | Area18 |
+              Area19 | Area20 | Area21 | Area22
     }
     
     
@@ -79,8 +88,6 @@ namespace Work.LKW.Code.Items.ItemInfo
         public ItemType itemType;
         [ExcelColumn("spawnArea")]
         public SpawnArea spawnArea;
-        [ExcelColumn("spawnSection")]
-        public SpawnSection spawnSection;
         
         public Sprite itemImage;
         

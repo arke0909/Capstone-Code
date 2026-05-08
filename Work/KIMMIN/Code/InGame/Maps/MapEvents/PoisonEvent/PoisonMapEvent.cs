@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Code.StatusEffectSystem;
 using DewmoLib.Dependencies;
 using DewmoLib.ObjectPool.RunTime;
-using Scripts.Combat;
+using Scripts.Combat.Areas;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -14,7 +14,7 @@ namespace Work.Code.MapEvents
         [Inject] private PoolManagerMono _poolManager;
         
         private List<GameObject> _maps = new();
-        private Dictionary<int, BoxBuffCaster> _buffs = new();
+        private Dictionary<int, BuffArea> _buffs = new();
 
         private int _index;
         private float _time;
@@ -31,7 +31,7 @@ namespace Work.Code.MapEvents
 
             for (int i = 0; i < _maps.Count; i++)
             {
-                var buff = _maps[i].GetComponentInChildren<BoxBuffCaster>();
+                var buff = _maps[i].GetComponentInChildren<BuffArea>();
                 _buffs.Add(i, buff);
             }
         }
@@ -40,7 +40,7 @@ namespace Work.Code.MapEvents
         {
             if (_isActive && Time.time - _time >= MapEventSO.duration)
             {
-                StopPoision();
+                StopPoison();
             }
         }
 
@@ -48,18 +48,19 @@ namespace Work.Code.MapEvents
         {
             _index = Random.Range(0, _maps.Count);
             EventName = $"{_index + 1}지역 독 활성화";
-            PlayPoision();
+            PlayPoison();
         }
 
-        private void PlayPoision()
+        private void PlayPoison()
         {
-            var caster = _buffs[_index];
-            caster.CastBuff(caster.transform.position, poisonEffect.GetStatusEffectInfo());
+            var buffArea = _buffs[_index];
+            buffArea.SetBuffDuration(MapEventSO.duration);
+            buffArea.Init(null, buffArea.transform.position);
             _isActive = true;
             _time = Time.time;
         }
 
-        private void StopPoision()
+        private void StopPoison()
         {
             _isActive = false;
         }

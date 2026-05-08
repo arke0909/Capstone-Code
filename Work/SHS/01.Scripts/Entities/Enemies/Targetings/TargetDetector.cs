@@ -41,6 +41,16 @@ namespace Code.SHS.Targetings.Enemies
 
         private void Update()
         {
+            if (_targetProvider.CurrentTarget is ITauntTarget tauntTarget)
+            {
+                if (tauntTarget.IsTauntTargetActive == false)
+                    _targetProvider.SetTarget(null);
+                else
+                    _targetProvider.SetTarget(_targetProvider.CurrentTarget);
+
+                return;
+            }
+
             if (_targetProvider.CurrentTarget != null)
             {
                 if (IsTargetVisible(_targetProvider.CurrentTarget) == false)
@@ -122,6 +132,7 @@ namespace Code.SHS.Targetings.Enemies
         public void OnLocalEvent(DamagedEvent eventData)
         {
             if (enabled == false) return;
+            if (_targetProvider.HasActiveTauntTarget) return;
             if (eventData.Dealer is not Player player)
                 return;
 
@@ -131,6 +142,7 @@ namespace Code.SHS.Targetings.Enemies
         public void OnLocalEvent(NoiseListenedEvent eventData)
         {
             if (enabled == false) return;
+            if (_targetProvider.HasActiveTauntTarget) return;
             if (_targetProvider.CurrentTarget != null) return; // 이미 타겟이 있을 때는 소리에 반응하지 않음
             // 소리 볼륨에 따라 반응 조절 필요.
 

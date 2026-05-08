@@ -17,7 +17,6 @@ namespace Work.Code.Tutorials
         public override void EnterTutorial()
         {
             base.EnterTutorial();
-
             _playerEquipment.OnEquipItem += HandleEquipItem;
         }
 

@@ -25,7 +25,7 @@ namespace Work.Code.Tutorials
 
         public virtual void ExitTutorial() { }
     
-        protected void TutorialComplete()
+        protected virtual void TutorialComplete()
         {
             OnTutorialComplete?.Invoke();
         }

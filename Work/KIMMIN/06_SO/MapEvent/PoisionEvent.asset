@@ -15,6 +15,6 @@ MonoBehaviour:
   eventName: "\uB3C5 \uC624\uC5FC"
   eventIcon: {fileID: 21300000, guid: 7ffc97effa3a74bdf8bf5835b4fa3f28, type: 3}
   eventColor: {r: 0.03893378, g: 0.5031446, b: 0, a: 1}
-  interval: 1440
+  interval: 100
   duration: 250
   isRepeat: 1

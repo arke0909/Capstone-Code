@@ -25,14 +25,14 @@ namespace Code.UI.Controller
             }
         }
         
-        public void BindPopup(IPopupable popup)
+        public void BindPopup(IPopupProvider popup)
         {
-            popup.OnClickHandler += HandleClickPopup;
+            popup.OnShowPopup += HandleClickPopup;
         }
 
-        public void UnbindPopup(IPopupable popup)
+        public void UnbindPopup(IPopupProvider popup)
         {
-            popup.OnClickHandler -= HandleClickPopup;
+            popup.OnShowPopup -= HandleClickPopup;
         }
         
         private void HandleClickPopup<T>(Func<T> data, ICallbackData callback)

@@ -13,8 +13,29 @@ namespace Code.StatusEffectSystem
 
         public StatusEffectInfo ApplyFlag(StatusEffectInfo info)
         {
-            info.CanOverlap = canOverlap;
-            info.IsOverWrite = isOverWrite;
+            if (!info.UseCustomBehaviorSettings)
+            {
+                info.CanOverlap = canOverlap;
+                info.IsOverWrite = isOverWrite;
+                info.UseSharedStack = false;
+                info.MaxStack = 1;
+                info.StackValueMode = StatusEffectStackValueMode.None;
+                info.StackDecayMode = StatusEffectStackDecayMode.ClearAllOnTimeout;
+                info.StackDecayInterval = 1f;
+                info.RefreshTimerOnReapply = true;
+            }
+
+            if (!info.CanOverlap)
+            {
+                info.UseSharedStack = false;
+                info.MaxStack = 1;
+            }
+            else if (info.UseSharedStack)
+            {
+                info.MaxStack = Mathf.Max(1, info.MaxStack);
+                info.StackDecayInterval = Mathf.Max(0.01f, info.StackDecayInterval);
+            }
+
             return info;
         }
         public abstract AbstractStatusEffect CreateStatusEffect(Entity target, StatusEffectInfo info);

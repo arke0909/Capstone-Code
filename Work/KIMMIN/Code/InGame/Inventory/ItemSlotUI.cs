@@ -126,6 +126,7 @@ namespace InGame.InventorySystem
 
         public void SetOutlineColor(Color32 color, bool isDefault = false)
         {
+            Debug.Log(color);
             if (outline == null) return;
             
             outline.color = isDefault ? Color.white : color;

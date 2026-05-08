@@ -18,6 +18,7 @@ namespace Scripts.Players.States
         AimSkill,
         Stun,
         CraftItem,
+        Teleport
     }
     public abstract class PlayerState : State
     {

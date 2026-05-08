@@ -14,9 +14,9 @@ namespace Code.UI.Core
         [SerializeField] private PopupController popupController;
         [SerializeField] private ContextMenuController contextMenuController;
 
-        public void BindTooltip<T>(InteractableUI owner, Func<T> data, float duration = 0f)
+        public void BindTooltip<T>(InteractableUI owner, Func<T> data, float delay = 0f)
         {
-            tooltipController.BindTooltip(owner, data, duration);
+            tooltipController.BindTooltip(owner, data, delay);
         }
 
         public void UnbindTooltip(InteractableUI owner)
@@ -24,20 +24,14 @@ namespace Code.UI.Core
             tooltipController.UnbindTooltip(owner);
         }
         
-        public void BindPopup(IPopupable popupable)
+        public void BindPopup(IPopupProvider popupProvider)
         {
-            if (popupable is not InteractableUI) 
-                return;
-            
-            popupController.BindPopup(popupable);
+            popupController.BindPopup(popupProvider);
         }
         
-        public void UnbindPopup(IPopupable popupable)
+        public void UnbindPopup(IPopupProvider popupProvider)
         {
-            if (popupable is not InteractableUI) 
-                return;
-            
-            popupController.UnbindPopup(popupable);
+            popupController.UnbindPopup(popupProvider);
         }
         
         public void BindContextMenu<T>(InteractableUI owner, ContextMenuSO menu, Func<T> data)

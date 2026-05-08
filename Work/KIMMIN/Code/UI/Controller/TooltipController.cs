@@ -64,9 +64,8 @@ namespace Code.UI.Controller
         
         public void BindTooltip<T>(InteractableUI owner, Func<T> data, float delay)
         {
-            UIEventHandler handler = owner.EventHandler;
-            BindEnterTooltip(owner, data, delay, handler);
-            BindExitTooltip(owner, handler);
+            BindEnterTooltip(owner, data, delay);
+            BindExitTooltip(owner);
         }
         
         public void UnbindTooltip(InteractableUI owner)
@@ -84,11 +83,11 @@ namespace Code.UI.Controller
             }
         }
 
-        private void BindEnterTooltip<T>(InteractableUI owner, Func<T> dataCallback, float delay, UIEventHandler handler)
+        private void BindEnterTooltip<T>(InteractableUI owner, Func<T> dataCallback, float delay)
         {
-            handler.BindUIEvent(owner, _ => 
+            owner.EventHandler.BindUIEvent(owner, _ => 
             {
-                var context = Getcontext(owner);
+                var context = GetContext(owner);
                 StopDelayRoutine(context);
 
                 T data = dataCallback.Invoke();
@@ -101,9 +100,9 @@ namespace Code.UI.Controller
             }, EUIEvent.PointerEnter);
         }
 
-        private void BindExitTooltip(InteractableUI owner, UIEventHandler handler)
+        private void BindExitTooltip(InteractableUI owner)
         {
-            handler.BindUIEvent(owner, _ => 
+            owner.EventHandler.BindUIEvent(owner, _ => 
             {
                 if (!_contexts.TryGetValue(owner, out var context))
                     return;
@@ -173,7 +172,7 @@ namespace Code.UI.Controller
             }
         }
         
-        private TooltipContext Getcontext(InteractableUI owner)
+        private TooltipContext GetContext(InteractableUI owner)
         {
             if (!_contexts.TryGetValue(owner, out var context))
             {

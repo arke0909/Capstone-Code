@@ -43,14 +43,14 @@ namespace Work.Code.UI.Core.Interaction
             OverlayUIManager.Instance?.UnbindContextMenu(this);
         }
         
-        protected void BindPopup(IPopupable popupable)
+        protected void BindPopup(IPopupProvider iPopupProvider)
         {
-            OverlayUIManager.Instance?.BindPopup(popupable);
+            OverlayUIManager.Instance?.BindPopup(iPopupProvider);
         }
         
-        protected void UnBindPopup(IPopupable popupable)
+        protected void UnBindPopup(IPopupProvider iPopupProvider)
         {
-            OverlayUIManager.Instance?.UnbindPopup(popupable);
+            OverlayUIManager.Instance?.UnbindPopup(iPopupProvider);
         }
 
         protected virtual void ClearInteractEvents() { }

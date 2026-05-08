@@ -33,6 +33,11 @@ namespace Code.StatusEffectSystem.StatusEffects
             RecalculateTicks();
         }
 
+        protected override void OnValueChanged()
+        {
+            RecalculateTicks();
+        }
+
         public override bool UpdateStatusEffect(Entity entity)
         {
             _tickTimer += Time.deltaTime;

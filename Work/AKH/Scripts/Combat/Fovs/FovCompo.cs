@@ -326,16 +326,16 @@ namespace Scripts.Combat.Fovs
                 return;
             }
 
-            List<BoundaryPoint> localBoundaryPoints = new List<BoundaryPoint>(boundaryPoints.Count);
+            Span<BoundaryPoint> localBoundaryPoints = stackalloc BoundaryPoint[boundaryPoints.Count];
             for (int i = 0; i < boundaryPoints.Count; i++)
             {
                 BoundaryPoint worldPoint = boundaryPoints[i];
-                localBoundaryPoints.Add(new BoundaryPoint
+                localBoundaryPoints[i] = new BoundaryPoint
                 {
                     point = transform.InverseTransformPoint(worldPoint.point),
                     isWallSide = worldPoint.isWallSide,
                     isTransition = worldPoint.isTransition
-                });
+                };
             }
 
             List<Vector3> vertices = new List<Vector3>();
@@ -343,11 +343,11 @@ namespace Scripts.Combat.Fovs
             List<int> triangles = new List<int>();
 
             int centerIndex = AddVertex(Vector3.zero, new Vector2(1f, 0f), vertices, uvs);
-            List<int> boundaryIndices = new List<int>(localBoundaryPoints.Count);
-            for (int i = 0; i < localBoundaryPoints.Count; i++)
+            List<int> boundaryIndices = new List<int>(localBoundaryPoints.Length);
+            for (int i = 0; i < localBoundaryPoints.Length; i++)
                 boundaryIndices.Add(AddVertex(localBoundaryPoints[i].point, new Vector2(1f, 0f), vertices, uvs));
 
-            for (int i = 0; i < localBoundaryPoints.Count - 1; i++)
+            for (int i = 0; i < localBoundaryPoints.Length - 1; i++)
             {
                 triangles.Add(centerIndex);
                 triangles.Add(boundaryIndices[i]);
@@ -357,11 +357,11 @@ namespace Scripts.Combat.Fovs
             if (isFullCircle)
             {
                 triangles.Add(centerIndex);
-                triangles.Add(boundaryIndices[localBoundaryPoints.Count - 1]);
+                triangles.Add(boundaryIndices[localBoundaryPoints.Length - 1]);
                 triangles.Add(boundaryIndices[0]);
             }
 
-            for (int i = 0; i < localBoundaryPoints.Count - 1; i++)
+            for (int i = 0; i < localBoundaryPoints.Length - 1; i++)
             {
                 BoundaryPoint from = localBoundaryPoints[i];
                 BoundaryPoint to = localBoundaryPoints[i + 1];
@@ -374,7 +374,7 @@ namespace Scripts.Combat.Fovs
 
             if (isFullCircle)
             {
-                BoundaryPoint from = localBoundaryPoints[localBoundaryPoints.Count - 1];
+                BoundaryPoint from = localBoundaryPoints[localBoundaryPoints.Length - 1];
                 BoundaryPoint to = localBoundaryPoints[0];
                 if (ShouldApplyEdgeBand(from, to))
                 {
@@ -385,7 +385,7 @@ namespace Scripts.Combat.Fovs
             else
             {
                 AddRadialBoundaryBand(localBoundaryPoints[0].point, vertices, uvs, triangles);
-                AddRadialBoundaryBand(localBoundaryPoints[localBoundaryPoints.Count - 1].point, vertices, uvs, triangles);
+                AddRadialBoundaryBand(localBoundaryPoints[localBoundaryPoints.Length - 1].point, vertices, uvs, triangles);
             }
 
             mesh.Clear();

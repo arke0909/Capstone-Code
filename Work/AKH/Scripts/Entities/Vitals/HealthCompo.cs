@@ -15,7 +15,7 @@ namespace Assets.Work.AKH.Scripts.Entities.Vitals
 {
     public class HealthCompo : VitalManageCompo<HealthChangeEvent>, IDamageable
     {
-        [SerializeField] private StatSO defStat, damageDemodifyStat;
+        [SerializeField] private StatSO defStat, damageDemodifyStat,dropExpStat;
         [SerializeField] private SoundID hitSound;
 
         private ShieldCompo _shieldCompo;
@@ -33,6 +33,7 @@ namespace Assets.Work.AKH.Scripts.Entities.Vitals
         {
             base.AfterInitialize();
             defStat = _statCompo.GetStat(defStat);
+            dropExpStat = _statCompo.GetStat(dropExpStat);
             damageDemodifyStat = _statCompo.GetStat(damageDemodifyStat);
         }
 
@@ -63,6 +64,7 @@ namespace Assets.Work.AKH.Scripts.Entities.Vitals
                 if (Mathf.Approximately(CurrentValue, 0))
                 {
                     _entity.Dead();
+                    context.Attacker?.OnKill(dropExpStat.Value);
                     _localEventBus.Raise(new EntityDeadEvent(_entity, context.HitPoint, context.HitNormal));
                 }
 

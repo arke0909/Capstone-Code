@@ -41,5 +41,15 @@ namespace Code.StatusEffectSystem.StatusEffects
             
             _targetStat.GetStat(_targetStatSO).RemoveModifier(this);
         }
+
+        protected override void OnValueChanged()
+        {
+            if (!_isApplying || _targetStatSO == null || _targetStat == null)
+                return;
+
+            var targetStat = _targetStat.GetStat(_targetStatSO);
+            targetStat.RemoveModifier(this);
+            targetStat.AddValueModifier(this, _value);
+        }
     }
 }

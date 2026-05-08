@@ -55,6 +55,11 @@ namespace Work.Code.StatusEffects.Effects
             CalcTick();
         }
 
+        protected override void OnValueChanged()
+        {
+            CalcTick();
+        }
+
         public override void ReleaseStatusEffect(Entity entity)
         {
         }

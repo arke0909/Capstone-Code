@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using Chipmunk.GameEvents;
@@ -31,7 +31,7 @@ namespace Code.UI.Minimap.Markers
         [Header("Pool")]
         [SerializeField] private PoolItemSO supplyMarkerItem;  // 하단 선택 버튼
 
-        [Inject] private MinimapSystem _minimapSystem;
+        [SerializeField] private MinimapSystem minimapSystem;
         
         private Dictionary<Button, markerData> _markerDataDictByButton = new Dictionary<Button, markerData>();
         private markerData _selectedMarker = null;
@@ -44,21 +44,6 @@ namespace Code.UI.Minimap.Markers
             _selectedMarker = _markerDataDictByButton.First().Value;
         }
 
-        private void OnEnable()
-        {
-            Bus.Subscribe<AirdropEvent>(HandleAirdropEvent);
-        }
-        
-        private void OnDisable()
-        {
-            Bus.Unsubscribe<AirdropEvent>(HandleAirdropEvent);
-        }
-        
-        private void HandleAirdropEvent(AirdropEvent evt)
-        {
-            MinimapUtil.AddToMinimap(this, ElementType.SupplyIcon, null, false, evt.Position);
-        }
-
         private void Update()
         {
             HandleRightClick();
@@ -68,7 +53,7 @@ namespace Code.UI.Minimap.Markers
         {
             if (Mouse.current.rightButton.wasPressedThisFrame)
             {
-                if(_minimapSystem.IsActiveMinimap == false) return;
+                if(minimapSystem.IsActiveMinimap == false) return;
                 
                 Vector2 mousePos = Mouse.current.position.ReadValue();
                 
@@ -104,13 +89,13 @@ namespace Code.UI.Minimap.Markers
         {
             if (_currentCount >= maxMarkerCount) return;
             
-            if (!RectTransformUtility.RectangleContainsScreenPoint(_minimapSystem.MinimapRect, mousePos)) return;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(_minimapSystem.MinimapRect, mousePos, null, out var localPos);
+            if (!RectTransformUtility.RectangleContainsScreenPoint(minimapSystem.MinimapRect, mousePos)) return;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(minimapSystem.MinimapRect, mousePos, null, out var localPos);
 
             MinimapUtil.AddToMinimap(
                 this,ElementType.Marker ,
                 _selectedMarker.markerIcon,false, 
-                _minimapSystem.MinimapToWorldPosition(localPos));
+                minimapSystem.MinimapToWorldPosition(localPos));
             
             _currentCount++;
             UpdateCountText();
@@ -118,7 +103,7 @@ namespace Code.UI.Minimap.Markers
 
         private bool TryRemoveMarker(Vector2 mousePos)
         {
-            foreach (Transform child in _minimapSystem.MinimapRect.transform)
+            foreach (Transform child in minimapSystem.MinimapRect.transform)
             {
                 if (child.TryGetComponent(out Marker marker))
                 {

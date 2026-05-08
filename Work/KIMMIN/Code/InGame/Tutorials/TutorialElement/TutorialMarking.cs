@@ -20,8 +20,7 @@ namespace Work.Code.Tutorials
 
         private void Awake()
         {
-            if(!activeOnAwake)
-                SetEnable(false);
+            SetEnable(activeOnAwake);
         }
 
         private void Update()
@@ -44,13 +43,13 @@ namespace Work.Code.Tutorials
 
         public void SetEnable(bool isEnable)
         {
-            visual.gameObject.SetActive(isEnable);
             _isEnable = isEnable;
+            SetVisual(isEnable);
         }
 
         public void SetVisual(bool isEnable)
         {
-            visual.gameObject.SetActive(isEnable);
+            visual.SetActive(isEnable);
         }
         
 #if UNITY_EDITOR

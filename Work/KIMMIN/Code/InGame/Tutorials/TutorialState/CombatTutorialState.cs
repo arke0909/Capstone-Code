@@ -12,8 +12,6 @@ namespace Work.Code.Tutorials
         [SerializeField] private EnemySO spawnEnemy;
         [SerializeField] private Transform[] spawnPoints;
         
-        [Inject] private PoolManagerMono _poolManager;
-        
         private int _currentEnemyCount;
         private readonly int _enemyCount = 3;
         private List<Enemy> _enemies = new();
@@ -49,12 +47,19 @@ namespace Work.Code.Tutorials
             {
                 enemy.OnDeadEvent.RemoveListener(HandleEnemyDead);
             }
+            
+            _enemies.Clear();
         }
 
         private void HandleEnemyDead()
         {
             _currentEnemyCount++;
             _tutorialController.SetDialogue(GetDialogue(), true);
+            
+            if (_currentEnemyCount >= _enemyCount)
+            {
+                TutorialComplete();
+            }
         }
 
         protected override string GetDialogue()
