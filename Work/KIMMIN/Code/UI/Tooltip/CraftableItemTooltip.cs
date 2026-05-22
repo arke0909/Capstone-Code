@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Code.UI.Core;
 using UnityEngine;
 using Work.Code.Craft;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Code.UI.Tooltip
 {

@@ -1141,6 +1141,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2581010600523577221, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4221661041378415842}
+    - targetCorrespondingSourceObject: {fileID: 2581010600523577221, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4486446324831512891}
   m_SourcePrefab: {fileID: 100100000, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
 --- !u!114 &359495734096798722 stripped
 MonoBehaviour:
@@ -1195,6 +1198,26 @@ MonoBehaviour:
   healthStat: {fileID: 11400000, guid: 15fc09ad501e2844986107c6459f339e, type: 2}
   defenseStat: {fileID: 11400000, guid: 458b46c63a1c40d4ab9a6d39717dde19, type: 2}
   capacityStat: {fileID: 11400000, guid: e8d35beaad87d9f48ab996860659e33d, type: 2}
+--- !u!114 &4486446324831512891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3140481511359924977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!224 &3447846464697953304 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2854607249666183532, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}

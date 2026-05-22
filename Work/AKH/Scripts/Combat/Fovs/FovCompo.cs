@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
-using SHS.Scripts.Crosshairs;
 
 namespace Scripts.Combat.Fovs
 {
@@ -34,6 +33,9 @@ namespace Scripts.Combat.Fovs
     [DefaultExecutionOrder(10000)]
     public class FovCompo : MonoBehaviour, IContainerComponent
     {
+        private const int MinEdgeResolveIterations = 7;
+        private const float TransitionCapScale = 1.25f;
+
         [Serializable]
         private struct BoundaryPoint
         {
@@ -66,7 +68,6 @@ namespace Scripts.Combat.Fovs
         public FOVInfo[] fovInfos;
 
         private IAimProvider aimProvider;
-        private CrosshairBehavior _crosshairBehavior;
         private Transform _ownerTransform;
         private Vector3 _fovDirection = Vector3.forward;
         private List<MeshFilter> _viewMeshFilter;
@@ -105,7 +106,6 @@ namespace Scripts.Combat.Fovs
                 _viewMeshFilter[i].mesh = _viewMesh[i];
             }
             aimProvider = componentContainer?.GetSubclassComponent<IAimProvider>();
-            _crosshairBehavior = aimProvider as CrosshairBehavior;
             RefreshFovPose();
         }
 
@@ -239,12 +239,7 @@ namespace Scripts.Combat.Fovs
         }
 
         private Vector3 GetCurrentAimPosition()
-        {
-            if (_crosshairBehavior != null && Camera.main != null)
-                return _crosshairBehavior.GetCrosshairPlanePosition();
-
-            return aimProvider.GetAimPosition();
-        }
+            => aimProvider.GetAimPosition();
 
         private Vector3 GetFallbackDirection()
         {
@@ -260,7 +255,8 @@ namespace Scripts.Combat.Fovs
             Vector3 minPoint = Vector3.zero;
             Vector3 maxPoint = Vector3.zero;
 
-            for (int i = 0; i < _edgeResolveIterations; i++)
+            int resolveIterations = Mathf.Max(_edgeResolveIterations, MinEdgeResolveIterations);
+            for (int i = 0; i < resolveIterations; i++)
             {
                 float angle = (minAngle + maxAngle) * 0.5f;
                 ViewCastInfo castInfo = ViewCast(fovInfo, angle);
@@ -342,6 +338,7 @@ namespace Scripts.Combat.Fovs
             List<Vector2> uvs = new List<Vector2>();
             List<int> triangles = new List<int>();
 
+            // uv.x stores visibility for the render texture mask: 1 inside FOV, 0 on the soft outer band.
             int centerIndex = AddVertex(Vector3.zero, new Vector2(1f, 0f), vertices, uvs);
             List<int> boundaryIndices = new List<int>(localBoundaryPoints.Length);
             for (int i = 0; i < localBoundaryPoints.Length; i++)
@@ -361,32 +358,7 @@ namespace Scripts.Combat.Fovs
                 triangles.Add(boundaryIndices[0]);
             }
 
-            for (int i = 0; i < localBoundaryPoints.Length - 1; i++)
-            {
-                BoundaryPoint from = localBoundaryPoints[i];
-                BoundaryPoint to = localBoundaryPoints[i + 1];
-                if (!ShouldApplyEdgeBand(from, to))
-                    continue;
-
-                float widthScale = (from.isTransition || to.isTransition) ? 1.45f : 1f;
-                AddBoundaryBand(from.point, to.point, vertices, uvs, triangles, widthScale);
-            }
-
-            if (isFullCircle)
-            {
-                BoundaryPoint from = localBoundaryPoints[localBoundaryPoints.Length - 1];
-                BoundaryPoint to = localBoundaryPoints[0];
-                if (ShouldApplyEdgeBand(from, to))
-                {
-                    float widthScale = (from.isTransition || to.isTransition) ? 1.45f : 1f;
-                    AddBoundaryBand(from.point, to.point, vertices, uvs, triangles, widthScale);
-                }
-            }
-            else
-            {
-                AddRadialBoundaryBand(localBoundaryPoints[0].point, vertices, uvs, triangles);
-                AddRadialBoundaryBand(localBoundaryPoints[localBoundaryPoints.Length - 1].point, vertices, uvs, triangles);
-            }
+            AddContinuousBoundaryBand(localBoundaryPoints, isFullCircle, vertices, uvs, triangles);
 
             mesh.Clear();
             mesh.SetVertices(vertices);
@@ -434,89 +406,178 @@ namespace Scripts.Combat.Fovs
             points.RemoveAt(lastIndex);
         }
 
-        private static bool ShouldApplyEdgeBand(BoundaryPoint from, BoundaryPoint to)
+        private void AddContinuousBoundaryBand(ReadOnlySpan<BoundaryPoint> boundaryPoints, bool isFullCircle, List<Vector3> vertices, List<Vector2> uvs, List<int> triangles)
         {
-            return true;
-        }
-
-        private void AddBoundaryBand(Vector3 a, Vector3 b, List<Vector3> vertices, List<Vector2> uvs, List<int> triangles, float widthScale = 1f)
-        {
-            Vector3 edge = b - a;
-            if (edge.sqrMagnitude <= 0.000001f)
+            int polygonPointCount = isFullCircle ? boundaryPoints.Length : boundaryPoints.Length + 1;
+            if (polygonPointCount < 3)
                 return;
 
-            Vector3 normal = Vector3.Cross(Vector3.up, edge).normalized;
-            if (normal.sqrMagnitude <= 0.000001f)
+            List<Vector3> innerPoints = new List<Vector3>(polygonPointCount);
+            List<float> widthScales = new List<float>(polygonPointCount);
+            if (!isFullCircle)
+            {
+                innerPoints.Add(Vector3.zero);
+                widthScales.Add(1f);
+            }
+
+            for (int i = 0; i < boundaryPoints.Length; i++)
+            {
+                innerPoints.Add(boundaryPoints[i].point);
+                widthScales.Add(GetBoundaryPointWidthScale(boundaryPoints, i, isFullCircle));
+            }
+
+            float signedArea = CalculateSignedAreaXZ(innerPoints);
+            if (Mathf.Abs(signedArea) <= 0.000001f)
                 return;
 
-            Vector3 midpoint = (a + b) * 0.5f;
-            const float testOffset = 0.1f;
-            float scoreA = (midpoint + normal * testOffset).sqrMagnitude;
-            float scoreB = (midpoint - normal * testOffset).sqrMagnitude;
-            Vector3 outward = scoreA >= scoreB ? normal : -normal;
-
-            float safeScale = Mathf.Max(widthScale, 0.01f);
-            float inset = Mathf.Max(_edgeSoftnessWorld * safeScale, 0.01f);
-
-            Vector3 outerA = a + outward * inset;
-            Vector3 outerB = b + outward * inset;
-
-            int ia = AddVertex(a, new Vector2(1f, 0f), vertices, uvs);
-            int ib = AddVertex(b, new Vector2(1f, 0f), vertices, uvs);
-            int oa = AddVertex(outerA, new Vector2(0f, 0f), vertices, uvs);
-            int ob = AddVertex(outerB, new Vector2(0f, 0f), vertices, uvs);
-
-            triangles.Add(ia);
-            triangles.Add(oa);
-            triangles.Add(ob);
-
-            triangles.Add(ia);
-            triangles.Add(ob);
-            triangles.Add(ib);
-        }
-        private void AddRadialBoundaryBand(Vector3 boundaryPoint, List<Vector3> vertices, List<Vector2> uvs, List<int> triangles)
-        {
-            AddRadialBoundaryBand(boundaryPoint, vertices, uvs, triangles, 1f);
-        }
-
-        private void AddRadialBoundaryBand(Vector3 boundaryPoint, List<Vector3> vertices, List<Vector2> uvs, List<int> triangles, float widthScale)
-        {
-            Vector3 dir = new Vector3(boundaryPoint.x, 0f, boundaryPoint.z);
-            if (dir.sqrMagnitude <= 0.000001f)
+            List<Vector3> edgeOutwards = BuildEdgeOutwards(innerPoints, signedArea);
+            if (edgeOutwards.Count != polygonPointCount)
                 return;
 
-            dir.Normalize();
-            float signedAngle = Vector3.SignedAngle(Vector3.forward, dir, Vector3.up);
-            Vector3 outward = signedAngle < 0f
-                ? new Vector3(-dir.z, 0f, dir.x)
-                : new Vector3(dir.z, 0f, -dir.x);
+            List<int> innerIndices = new List<int>(polygonPointCount);
+            List<int> outerIndices = new List<int>(polygonPointCount);
+            for (int i = 0; i < polygonPointCount; i++)
+            {
+                Vector3 outward = GetMiterOutward(edgeOutwards, i, out float miterScale);
+                float inset = Mathf.Max(_edgeSoftnessWorld * Mathf.Max(widthScales[i], 0.01f), 0.01f);
+                Vector3 outerPoint = innerPoints[i] + outward * inset * miterScale;
 
-            AddRadialBoundaryBand(boundaryPoint, outward, vertices, uvs, triangles, widthScale);
+                innerIndices.Add(AddVertex(innerPoints[i], new Vector2(1f, 0f), vertices, uvs));
+                outerIndices.Add(AddVertex(outerPoint, new Vector2(0f, 0f), vertices, uvs));
+            }
+
+            for (int i = 0; i < polygonPointCount; i++)
+            {
+                int next = (i + 1) % polygonPointCount;
+                AddBoundaryQuad(innerIndices[i], innerIndices[next], outerIndices[i], outerIndices[next], triangles);
+            }
+
+            int boundaryIndexOffset = isFullCircle ? 0 : 1;
+            for (int i = 0; i < boundaryPoints.Length; i++)
+            {
+                if (!boundaryPoints[i].isTransition)
+                    continue;
+
+                AddTransitionCap(
+                    boundaryIndexOffset + i,
+                    innerPoints,
+                    edgeOutwards,
+                    widthScales,
+                    vertices,
+                    uvs,
+                    triangles);
+            }
         }
 
-        private void AddRadialBoundaryBand(Vector3 boundaryPoint, Vector3 outward, List<Vector3> vertices, List<Vector2> uvs, List<int> triangles, float widthScale)
+        private static float GetBoundaryPointWidthScale(ReadOnlySpan<BoundaryPoint> boundaryPoints, int index, bool isFullCircle)
         {
-            if (outward.sqrMagnitude <= 0.000001f)
+            bool currentTransition = boundaryPoints[index].isTransition;
+            bool previousTransition = isFullCircle
+                ? boundaryPoints[(index - 1 + boundaryPoints.Length) % boundaryPoints.Length].isTransition
+                : index > 0 && boundaryPoints[index - 1].isTransition;
+            bool nextTransition = isFullCircle
+                ? boundaryPoints[(index + 1) % boundaryPoints.Length].isTransition
+                : index < boundaryPoints.Length - 1 && boundaryPoints[index + 1].isTransition;
+
+            return currentTransition || previousTransition || nextTransition ? 1.45f : 1f;
+        }
+
+        private static float CalculateSignedAreaXZ(List<Vector3> points)
+        {
+            float area = 0f;
+            for (int i = 0; i < points.Count; i++)
+            {
+                Vector3 current = points[i];
+                Vector3 next = points[(i + 1) % points.Count];
+                area += current.x * next.z - next.x * current.z;
+            }
+
+            return area * 0.5f;
+        }
+
+        private static List<Vector3> BuildEdgeOutwards(List<Vector3> points, float signedArea)
+        {
+            List<Vector3> outwards = new List<Vector3>(points.Count);
+            float outwardSign = signedArea >= 0f ? 1f : -1f;
+            for (int i = 0; i < points.Count; i++)
+            {
+                Vector3 edge = points[(i + 1) % points.Count] - points[i];
+                if (edge.sqrMagnitude <= 0.000001f)
+                {
+                    outwards.Add(Vector3.zero);
+                    continue;
+                }
+
+                outwards.Add(Vector3.Cross(Vector3.up, edge).normalized * outwardSign);
+            }
+
+            return outwards;
+        }
+
+        private static Vector3 GetMiterOutward(List<Vector3> edgeOutwards, int index, out float miterScale)
+        {
+            Vector3 previousOutward = edgeOutwards[(index - 1 + edgeOutwards.Count) % edgeOutwards.Count];
+            Vector3 nextOutward = edgeOutwards[index];
+            Vector3 miter = previousOutward + nextOutward;
+
+            if (miter.sqrMagnitude <= 0.000001f)
+            {
+                miterScale = 1f;
+                return nextOutward.sqrMagnitude > 0.000001f ? nextOutward : previousOutward;
+            }
+
+            miter.Normalize();
+            float alignment = Vector3.Dot(miter, nextOutward);
+            if (alignment <= 0.15f)
+            {
+                miterScale = 1f;
+                return nextOutward;
+            }
+
+            miterScale = Mathf.Clamp(1f / alignment, 1f, 2.5f);
+            return miter;
+        }
+
+        private static void AddBoundaryQuad(int innerA, int innerB, int outerA, int outerB, List<int> triangles)
+        {
+            triangles.Add(innerA);
+            triangles.Add(outerA);
+            triangles.Add(outerB);
+
+            triangles.Add(innerA);
+            triangles.Add(outerB);
+            triangles.Add(innerB);
+        }
+
+        private void AddTransitionCap(int pointIndex, List<Vector3> innerPoints, List<Vector3> edgeOutwards, List<float> widthScales, List<Vector3> vertices, List<Vector2> uvs, List<int> triangles)
+        {
+            Vector3 previousOutward = edgeOutwards[(pointIndex - 1 + edgeOutwards.Count) % edgeOutwards.Count];
+            Vector3 nextOutward = edgeOutwards[pointIndex];
+            if (previousOutward.sqrMagnitude <= 0.000001f || nextOutward.sqrMagnitude <= 0.000001f)
                 return;
 
-            outward.Normalize();
-            float safeScale = Mathf.Max(widthScale, 0.01f);
-            float inset = Mathf.Max(_edgeSoftnessWorld * safeScale, 0.01f);
-            Vector3 outerCenter = outward * inset;
-            Vector3 outerBoundary = boundaryPoint + outward * inset;
+            Vector3 miterOutward = GetMiterOutward(edgeOutwards, pointIndex, out float miterScale);
+            if (miterOutward.sqrMagnitude <= 0.000001f)
+                return;
 
-            int ia = AddVertex(Vector3.zero, new Vector2(1f, 0f), vertices, uvs);
-            int ib = AddVertex(boundaryPoint, new Vector2(1f, 0f), vertices, uvs);
-            int oa = AddVertex(outerCenter, new Vector2(0f, 0f), vertices, uvs);
-            int ob = AddVertex(outerBoundary, new Vector2(0f, 0f), vertices, uvs);
+            float inset = Mathf.Max(_edgeSoftnessWorld * Mathf.Max(widthScales[pointIndex], 0.01f), 0.01f);
+            Vector3 innerPoint = innerPoints[pointIndex];
+            Vector3 previousCapPoint = innerPoint + previousOutward.normalized * inset * TransitionCapScale;
+            Vector3 miterCapPoint = innerPoint + miterOutward.normalized * inset * Mathf.Min(miterScale, 2f) * TransitionCapScale;
+            Vector3 nextCapPoint = innerPoint + nextOutward.normalized * inset * TransitionCapScale;
 
-            triangles.Add(ia);
-            triangles.Add(oa);
-            triangles.Add(ob);
+            int inner = AddVertex(innerPoint, new Vector2(1f, 0f), vertices, uvs);
+            int previousCap = AddVertex(previousCapPoint, new Vector2(0f, 0f), vertices, uvs);
+            int miterCap = AddVertex(miterCapPoint, new Vector2(0f, 0f), vertices, uvs);
+            int nextCap = AddVertex(nextCapPoint, new Vector2(0f, 0f), vertices, uvs);
 
-            triangles.Add(ia);
-            triangles.Add(ob);
-            triangles.Add(ib);
+            triangles.Add(inner);
+            triangles.Add(previousCap);
+            triangles.Add(miterCap);
+
+            triangles.Add(inner);
+            triangles.Add(miterCap);
+            triangles.Add(nextCap);
         }
 
         private static Vector3 ClosestPointOnSegment(Vector3 a, Vector3 b, Vector3 point)

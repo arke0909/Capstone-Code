@@ -4,7 +4,7 @@ using Code.Players;
 using Scripts.Players;
 using Scripts.Players.States;
 using UnityEngine;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Work.Code.Craft
 {

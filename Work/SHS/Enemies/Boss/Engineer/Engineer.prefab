@@ -149,6 +149,14 @@ PrefabInstance:
       propertyPath: 'renderers.Array.data[2]'
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3594451060687249943, guid: c860746277aafea409ac52b43a9c6259, type: 3}
+      propertyPath: targetLost
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3594451060687249943, guid: c860746277aafea409ac52b43a9c6259, type: 3}
+      propertyPath: <CanMissTarget>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6689825365382193100, guid: c860746277aafea409ac52b43a9c6259, type: 3}
       propertyPath: statOverrides.Array.data[5].overrideValue
       value: 500
@@ -280,6 +288,7 @@ MonoBehaviour:
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  test: {fileID: 0}
   movingRange: 5
   <OnFound>k__BackingField:
     m_PersistentCalls:

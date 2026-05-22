@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Chipmunk.GameEvents;
 using Code.UI.Minimap.Core;
@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Work.Code.GameEvents;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Code.UI.Minimap.SectionName
 {
@@ -31,17 +31,28 @@ namespace Code.UI.Minimap.SectionName
         private void Start()
         {
             Bus.Subscribe<ShowItemsOnMap>(HandleShowItemsOnMap);
+            Bus.Subscribe<ChangePinCountEvent>(HandleChangePinCount);
         }
 
+       
         private void OnDestroy()
         {
             Bus.Unsubscribe<ShowItemsOnMap>(HandleShowItemsOnMap);
+            Bus.Unsubscribe<ChangePinCountEvent>(HandleChangePinCount);
+        }
+        
+        private void HandleChangePinCount(ChangePinCountEvent evt)
+        {
+            if (evt.Count == 0)
+            {
+                ClearSectionItems();
+            }
         }
 
         private void HandleShowItemsOnMap(ShowItemsOnMap evt)
         {
-            Debug.Log("ddd");
-            _targetItems.Clear();
+            ClearSectionItems();
+
             foreach (var item in evt.ItemList)
             {
                 if ((item.spawnArea & Area) > 0)
@@ -58,6 +69,17 @@ namespace Code.UI.Minimap.SectionName
             }
             
             // 나중에 핀해제 취소나 타겟 아이템 완성하면 아이템들 없애는 것도 해줘야함
+        }
+
+        private void ClearSectionItems()
+        {
+            for (int i = parentTrm.childCount - 1; i >= 0; i--)
+            {
+                Destroy(parentTrm.GetChild(i).gameObject);
+            }
+
+            _targetItems.Clear();  // 삭제 후 리스트 정리
+            _showItems.Clear();
         }
     }
 }

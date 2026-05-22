@@ -15,34 +15,40 @@ MonoBehaviour:
   spawnEnemyList:
   - {fileID: 11400000, guid: 41b63a5ec83eb974c8c9f0a56ef45e6a, type: 2}
   - {fileID: 11400000, guid: 20286dbc754c1694a88bb56d2e0648d4, type: 2}
-  - {fileID: 11400000, guid: a7e9e92b520771449901f12d9ae60e23, type: 2}
+  - {fileID: 11400000, guid: 0cf8fa5ad48ac9442b1d825e4299c8cc, type: 2}
+  - {fileID: 11400000, guid: b24db9b4d5079684e8b07ebac843a6cb, type: 2}
+  - {fileID: 11400000, guid: 0688d733768bda74394944b5a4b4c720, type: 2}
+  - {fileID: 11400000, guid: 38bcaea0b44a6f747a04601b40eb08fb, type: 2}
   daySpawnLists:
-  - day: 1
-    spawnEnemyList:
+  - percentage: 0.5
+    list:
+    - {fileID: 11400000, guid: 41b63a5ec83eb974c8c9f0a56ef45e6a, type: 2}
+    - {fileID: 11400000, guid: 20286dbc754c1694a88bb56d2e0648d4, type: 2}
+  - percentage: 0.5
+    list:
     - {fileID: 11400000, guid: 41b63a5ec83eb974c8c9f0a56ef45e6a, type: 2}
     - {fileID: 11400000, guid: 41b63a5ec83eb974c8c9f0a56ef45e6a, type: 2}
     - {fileID: 11400000, guid: 20286dbc754c1694a88bb56d2e0648d4, type: 2}
-  - day: 2
-    spawnEnemyList:
+  - percentage: 0.6
+    list:
     - {fileID: 11400000, guid: 41b63a5ec83eb974c8c9f0a56ef45e6a, type: 2}
     - {fileID: 11400000, guid: 20286dbc754c1694a88bb56d2e0648d4, type: 2}
-    - {fileID: 11400000, guid: a7e9e92b520771449901f12d9ae60e23, type: 2}
-  - day: 3
-    spawnEnemyList:
+    - {fileID: 11400000, guid: 0cf8fa5ad48ac9442b1d825e4299c8cc, type: 2}
+  - percentage: 0.6
+    list:
     - {fileID: 11400000, guid: 41b63a5ec83eb974c8c9f0a56ef45e6a, type: 2}
     - {fileID: 11400000, guid: 20286dbc754c1694a88bb56d2e0648d4, type: 2}
-    - {fileID: 11400000, guid: a7e9e92b520771449901f12d9ae60e23, type: 2}
     - {fileID: 11400000, guid: 0cf8fa5ad48ac9442b1d825e4299c8cc, type: 2}
-  - day: 4
-    spawnEnemyList:
-    - {fileID: 11400000, guid: 41b63a5ec83eb974c8c9f0a56ef45e6a, type: 2}
-    - {fileID: 11400000, guid: a7e9e92b520771449901f12d9ae60e23, type: 2}
+  - percentage: 0.75
+    list:
+    - {fileID: 11400000, guid: 20286dbc754c1694a88bb56d2e0648d4, type: 2}
     - {fileID: 11400000, guid: 0cf8fa5ad48ac9442b1d825e4299c8cc, type: 2}
-    - {fileID: 11400000, guid: 654621d62bf2ea943a19164cced2faf6, type: 2}
-  - day: 5
-    spawnEnemyList:
-    - {fileID: 11400000, guid: 41b63a5ec83eb974c8c9f0a56ef45e6a, type: 2}
-    - {fileID: 11400000, guid: a7e9e92b520771449901f12d9ae60e23, type: 2}
-    - {fileID: 11400000, guid: 0cf8fa5ad48ac9442b1d825e4299c8cc, type: 2}
-    - {fileID: 11400000, guid: 654621d62bf2ea943a19164cced2faf6, type: 2}
     - {fileID: 11400000, guid: b24db9b4d5079684e8b07ebac843a6cb, type: 2}
+    - {fileID: 11400000, guid: 0688d733768bda74394944b5a4b4c720, type: 2}
+  - percentage: 0.9
+    list:
+    - {fileID: 11400000, guid: 20286dbc754c1694a88bb56d2e0648d4, type: 2}
+    - {fileID: 11400000, guid: 0cf8fa5ad48ac9442b1d825e4299c8cc, type: 2}
+    - {fileID: 11400000, guid: b24db9b4d5079684e8b07ebac843a6cb, type: 2}
+    - {fileID: 11400000, guid: 0688d733768bda74394944b5a4b4c720, type: 2}
+    - {fileID: 11400000, guid: 38bcaea0b44a6f747a04601b40eb08fb, type: 2}

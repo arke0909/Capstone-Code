@@ -142,6 +142,7 @@ namespace Code.UI.Controller
             tooltip.ShowTooltip(data);
             context.tooltips.Add(tooltip);
             SortTooltips(context);
+            tooltipMover.InvalidatePosition();
             
             _rebuildFlag = true;
         }

@@ -1,8 +1,8 @@
 ﻿using Code.DataSystem;
-using Work.LKW.Code.Items;
+using Code.Items;
 using UnityEngine;
 
-namespace Work.LKW.Code.Items.ItemInfo
+namespace Code.Items.ItemInfo
 {
     [CreateAssetMenu(fileName = "MedicineDataSO", menuName = "SO/Item/MedicineData", order = 0)]
     public class MedicineDataSO : UseItemDataSO

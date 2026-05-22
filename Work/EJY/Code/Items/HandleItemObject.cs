@@ -2,9 +2,9 @@
 using Scripts.Combat.ItemObjects;
 using Scripts.Entities;
 using UnityEngine;
-using Work.LKW.Code.Items;
+using Code.Items;
 
-namespace Work.LKW.Code.Items
+namespace Code.Items
 {
     public class HandleItemObject : ItemObject, IContainerComponent
     {

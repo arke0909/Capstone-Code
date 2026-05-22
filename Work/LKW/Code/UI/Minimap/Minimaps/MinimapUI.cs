@@ -13,6 +13,8 @@ namespace Code.UI.Minimap.Minimaps
 {
     public class MinimapUI : MinimapBase
     {
+        public override EUILayer Layer => EUILayer.Panel;
+
         [Header("Zoom Settings")]
         [SerializeField] private float maxZoomInSize = 1000f;
         [SerializeField] private float maxZoomOutSize = 400f;
@@ -27,6 +29,7 @@ namespace Code.UI.Minimap.Minimaps
             base.OnEnable();
             _player.PlayerInput.OnMinimapPressed += HandleMinimapPressed;
             slider.onValueChanged.AddListener(SetSliderValue);
+            DisableUI();
         }
 
         protected override void OnDestroy()
@@ -46,7 +49,6 @@ namespace Code.UI.Minimap.Minimaps
         #region  Handler
         private void HandleMinimapPressed()
         {
-            minimapSystem.IsActiveMinimap = !minimapSystem.IsActiveMinimap;
             ToggleUI(true);
         }
 

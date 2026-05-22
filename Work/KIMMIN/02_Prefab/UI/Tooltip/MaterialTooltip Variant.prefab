@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 916908361065716086, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_fontSize
-      value: 16
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 916908361065716086, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_fontAsset
@@ -62,7 +62,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 916908361065716086, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_fontSizeBase
-      value: 16
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 916908361065716086, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_sharedMaterial
@@ -212,6 +212,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2581010600523577221, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6430237664280576839}
+    - targetCorrespondingSourceObject: {fileID: 2581010600523577221, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 338657747521735954}
   m_SourcePrefab: {fileID: 100100000, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
 --- !u!114 &14307821492351563 stripped
 MonoBehaviour:
@@ -256,6 +259,26 @@ MonoBehaviour:
   background: {fileID: 4909623226743010426}
   titleText: {fileID: 14307821492351563}
   descriptionText: {fileID: 1061749713299475899}
+--- !u!114 &338657747521735954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2437577153597367112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &4909623226743010426 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5055264989061374135, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}

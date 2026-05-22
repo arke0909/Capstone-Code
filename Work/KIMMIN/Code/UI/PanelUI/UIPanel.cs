@@ -1,11 +1,16 @@
-using Chipmunk.GameEvents;
+﻿using Chipmunk.GameEvents;
 using Code.GameEvents;
+using UnityEngine;
 
 namespace Code.UI.Core
 {
-    public abstract class UIPanel : UIBase
+    public class UIPanel : UIBase
     {
-        public override EUILayer Layer => EUILayer.Panel;
+        [SerializeField] private string panelID;
+
+        public string PanelID => panelID;
+        public sealed override EUILayer Layer => EUILayer.Panel;
+
 
         protected override void Awake()
         {

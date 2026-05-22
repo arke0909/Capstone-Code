@@ -25,13 +25,13 @@ namespace Code.SHS.Entities.Enemies.FSM
 
         public override void Update()
         {
-            if (RemainTarget == null && _movement.IsArrived)
+            if (RemainTarget == null && _movement.IsArrived && _targetProvider.CanMissTarget)
             {
                 _enemy.ChangeState(EnemyStateEnum.Idle);
                 return;
             }
 
-            if (Target != null)
+            if (RemainTarget != null)
             {
                 float distance = Vector3.Distance(_enemy.transform.position,
                     _targetProvider.CurrentTarget.transform.position);
@@ -42,8 +42,6 @@ namespace Code.SHS.Entities.Enemies.FSM
                 }
             }
 
-            Vector3 destination = Target != null ? Target.transform.position : _targetProvider.LastTargetPosition;
-            _movement.SetDestination(destination);
             UpdateMovementAnimation();
             base.Update();
         }

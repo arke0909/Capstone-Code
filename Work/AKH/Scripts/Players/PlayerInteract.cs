@@ -3,7 +3,7 @@ using Scripts.Entities;
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Work.LKW.Code.ItemContainers;
+using Code.ItemContainers;
 
 namespace Scripts.Players
 {

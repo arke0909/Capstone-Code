@@ -22,17 +22,15 @@ namespace Scripts.Combat
             _colliders = new Collider[maxCollideCount];
         }
 
-        public override bool CastDamage(DamageData damageData, Vector3 position, Vector3 direction, MovementDataSO knockBackData)
+        public override int CastDamage(DamageData damageData, Vector3 position, Vector3 direction, MovementDataSO knockBackData)
         {
             int count = Physics.OverlapSphereNonAlloc(position, castRadius, _colliders, whatIsTarget);
 
-            if (count <= 0) return false;
+            if (count <= 0) return 0;
 
             float halfAngle = castAngle * 0.5f;
             Vector3 startDir = Quaternion.Euler(0f, -halfAngle, 0f) * direction;
             Vector3 endDir = Quaternion.Euler(0f, halfAngle, 0f) * direction;
-
-            bool hitAny = false;
 
             for (int i = 0; i < count; i++)
             {
@@ -43,10 +41,9 @@ namespace Scripts.Combat
                 Vector3 normal = (position - target.position).normalized;
                 Vector3 hitPoint = _colliders[i].ClosestPoint(position);
                 ApplyDamageAndKnockback(target, damageData, hitPoint, normal, knockBackData);
-                hitAny = true;
             }
 
-            return hitAny;
+            return count;
         }
         public void ResetRadius()
         {

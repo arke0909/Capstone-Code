@@ -5,11 +5,11 @@ using Random = UnityEngine.Random;
 
 namespace Work.Code.MapEvents
 {
-    public interface IDropStructure
+    public interface ISpawnableStructure
     {
-        void Cancel();
+        void Spawn(Vector3 targetPos);
+        void Despawn();
     }
-
     public readonly struct AreaPoint
     {
         public int AreaIndex { get; }
@@ -29,7 +29,7 @@ namespace Work.Code.MapEvents
     {
         [SerializeField] private Transform[] roots;
 
-        private readonly Stack<IDropStructure> _dropStructures = new();
+        private readonly Stack<ISpawnableStructure> _dropStructures = new();
 
         protected int AreaCount => roots?.Length ?? 0;
 
@@ -41,7 +41,7 @@ namespace Work.Code.MapEvents
 
         protected abstract void StartDropStructureEvent();
 
-        protected T RegisterDropStructure<T>(T dropStructure) where T : IDropStructure
+        protected T RegisterDropStructure<T>(T dropStructure) where T : ISpawnableStructure
         {
             if (dropStructure != null)
                 _dropStructures.Push(dropStructure);
@@ -53,8 +53,8 @@ namespace Work.Code.MapEvents
             Debug.Log(_dropStructures.Count);
             while(_dropStructures.Count > 0)
             {
-                IDropStructure dropStructure = _dropStructures.Pop();
-                dropStructure?.Cancel();
+                ISpawnableStructure dropStructure = _dropStructures.Pop();
+                dropStructure?.Despawn();
             }
         }
 

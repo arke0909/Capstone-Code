@@ -9,7 +9,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Work.Code.SkillInventory;
-using Work.LKW.Code.Items;
+using Code.Items;
 
 namespace InGame.InventorySystem
 {

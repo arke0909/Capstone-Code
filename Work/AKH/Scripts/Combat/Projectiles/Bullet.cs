@@ -29,6 +29,12 @@ namespace Scripts.Combat.Projectiles
         [SerializeField] private BulletImpactEffect _bulletImpactEffect;
         [SerializeField] private PoolItemSO bulletHole;
         [SerializeField] private PoolManagerSO poolManager;
+        [SerializeField] private LayerMask hitMask;
+
+        [Header("Hit Detection (Swept Cast)")]
+        [SerializeField] private float castRadius = 0.1f;
+        // 적의 실제 hitbox는 IsTrigger=0 이므로 트리거(감지 범위 등)는 무시
+        [SerializeField] private QueryTriggerInteraction triggerInteraction = QueryTriggerInteraction.Ignore;
 
         [field: SerializeField] public PoolItemSO PoolItem { get; private set; }
         public GameObject GameObject => gameObject;
@@ -53,15 +59,52 @@ namespace Scripts.Combat.Projectiles
 
         private void FixedUpdate()
         {
+            if (_isReturningToPool)
+            {
+                _previousPosition = transform.position;
+                return;
+            }
+
             CheckMaxTravelDistance();
-            _previousPosition = transform.position;
+            if (_isReturningToPool)
+                return;
+
+            // Swept SphereCast: 이번 물리스텝에서 이동하게 될 경로를 쓸어 검사
+            Vector3 currentPos = transform.position;
+            Vector3 vel = rb.linearVelocity;
+            float dt = Time.fixedDeltaTime;
+            Vector3 moveDelta = vel * dt;
+            float distance = moveDelta.magnitude;
+
+            if (distance > 0.0001f)
+            {
+                Vector3 dir = moveDelta / distance;
+                if (Physics.SphereCast(currentPos, castRadius, dir,
+                        out RaycastHit hit, distance, hitMask, triggerInteraction))
+                {
+                    Entity hitEntity = hit.collider.GetComponentInParent<Entity>();
+                    bool isOwner = (hitEntity != null && hitEntity == _owner);
+                    if (!isOwner)
+                    {
+                        rb.linearVelocity = Vector3.zero;
+                        // hit.point에 정확히 박아두고 처리 (이 다음 물리스텝은 velocity 0이라 정지)
+                        transform.position = hit.point;
+                        HandleHit(hit.collider, hit.point, hit.normal);
+                        return;
+                    }
+                }
+            }
+
+            _previousPosition = currentPos;
         }
 
         public void InitProjectile(Entity owner, IProjectileShooter projectileShooter, Vector3 initPos,
             Vector3 direction,
             LayerMask excludeLayer)
         {
-            _collider.excludeLayers = excludeLayer;
+            //hitMask = ~excludeLayer;
+            if (_collider != null)
+                _collider.excludeLayers = excludeLayer;
             InitBullet(owner, projectileShooter, initPos, direction);
         }
 
@@ -74,8 +117,6 @@ namespace Scripts.Combat.Projectiles
             _spawnPosition = initPos;
 
             transform.position = initPos;
-            if (_collider != null)
-                _collider.enabled = true;
 
             if (direction.sqrMagnitude > 0.0001f)
                 transform.forward = direction.normalized;
@@ -94,8 +135,6 @@ namespace Scripts.Combat.Projectiles
 
         public void ResetItem()
         {
-            _collider.excludeLayers = 0;
-            _collider.enabled = true;
             _isReturningToPool = false;
             _previousPosition = transform.position;
             _spawnPosition = transform.position;
@@ -148,31 +187,22 @@ namespace Scripts.Combat.Projectiles
             ReturnToPoolAfterDelay(true).Forget();
         }
 
-        private async void OnTriggerEnter(Collider other)
+        private void HandleHit(Collider other, Vector3 hitPoint, Vector3 hitNormal)
         {
             if (_myPool == null || _isReturningToPool || other == null)
                 return;
 
-            if (!TryResolveDamageable(other, out Transform hitTransform, out IDamageable damageable))
-            {
-                if (other.isTrigger)
-                    return;
-            }
+            TryResolveDamageable(other, out Transform hitTransform, out IDamageable damageable);
 
             _isReturningToPool = true;
             PrepareForDespawn();
-            ResolveHitInfo(other, out Vector3 point, out Vector3 normal);
-            Vector3 pos = point + normal * hitOffset;
 
-            if (hitEffect != null)
-            {
-                await PlayHitEffect(pos, normal);
-            }
+            Vector3 pos = hitPoint + hitNormal * hitOffset;
 
-            if (damageable != null && ProjectileShooter != null)
+            // 1) 데미지/구멍 처리를 await보다 먼저 (지연/소실 방지)
+            if (damageable != null && ProjectileShooter != null && _owner != null)
             {
                 DamageCalcCompo calcCompo = _owner.Get<DamageCalcCompo>();
-                DamageData damageData;
 
                 float finalDamageMultiply = ProjectileShooter.DamageMultiplier;
 
@@ -184,14 +214,14 @@ namespace Scripts.Combat.Projectiles
                     }
                 }
 
-                damageData = calcCompo.CalculateDamage(ProjectileShooter.DefaultDamage, finalDamageMultiply,
+                DamageData damageData = calcCompo.CalculateDamage(ProjectileShooter.DefaultDamage, finalDamageMultiply,
                     ProjectileShooter.DefPierceLevel, DamageType.RANGE);
 
                 DamageContext context = new DamageContext
                 {
                     DamageData = damageData,
                     HitPoint = pos,
-                    HitNormal = normal,
+                    HitNormal = hitNormal,
                     Source = Dealer,
                     Attacker = Owner
                 };
@@ -202,19 +232,22 @@ namespace Scripts.Combat.Projectiles
             else
             {
                 BulletHole hole = poolManager.Pop(bulletHole) as BulletHole;
-                hole?.InitHole(pos, normal);
+                hole?.InitHole(pos, hitNormal);
             }
 
-            _bulletImpactEffect?.PlayEffect(pos, normal);
+            _bulletImpactEffect?.PlayEffect(pos, hitNormal);
+
+            // 2) VFX는 fire-and-forget (데미지 경로 지연시키지 않음)
+            if (hitEffect != null)
+            {
+                PlayHitEffect(pos, hitNormal).Forget();
+            }
 
             ReturnToPoolAfterDelay(false).Forget();
         }
 
         private void PrepareForDespawn()
         {
-            if (_collider != null)
-                _collider.enabled = false;
-
             if (rb != null)
             {
                 rb.linearVelocity = Vector3.zero;
@@ -264,21 +297,6 @@ namespace Scripts.Combat.Projectiles
             }
 
             return false;
-        }
-
-        private void ResolveHitInfo(Collider other, out Vector3 point, out Vector3 normal)
-        {
-            Vector3 referencePoint = _previousPosition;
-            point = other.ClosestPoint(referencePoint);
-
-            if ((point - referencePoint).sqrMagnitude < 0.0001f)
-                point = other.ClosestPoint(transform.position);
-
-            normal = referencePoint - point;
-            if (normal.sqrMagnitude < 0.0001f)
-                normal = -transform.forward;
-            else
-                normal.Normalize();
         }
 
         private async UniTask PlayMuzzleFlash()

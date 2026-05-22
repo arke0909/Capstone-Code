@@ -35,12 +35,6 @@ namespace Work.Code.SkillInventory
             UpdateSkills();
         }
 
-        private void Update()
-        {
-            if(Keyboard.current.lKey.wasPressedThisFrame)
-                UpdateSkills();
-        }
-
         private void OnDestroy()
         {
             _activeSkillCompo.OnSkillsChanged -= UpdateSkills;

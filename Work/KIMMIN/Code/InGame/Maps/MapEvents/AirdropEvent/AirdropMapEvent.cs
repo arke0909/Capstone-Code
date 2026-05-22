@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Chipmunk.GameEvents;
 using Code.EnemySpawn;
@@ -44,10 +44,10 @@ namespace Work.Code.MapEvents
                 return;
 
             Vector3 position = areaPoint.Position;
-
-            Airdrop airdrop = RegisterDropStructure(_poolManager.Pop<Airdrop>(airdropPool));
-            airdrop.StartDrop(position, _height, HandleLandning);
             SpawnEnemies(position);
+            position.y = _height;
+            Airdrop airdrop = RegisterDropStructure(_poolManager.Pop<Airdrop>(airdropPool));
+            airdrop.StartDrop(position, HandleLandning);
 
             EventName = $"{areaIdx + 1}지역 보급 낙하!";
             EventBus.Raise(new AirdropEvent(areaIdx, position));

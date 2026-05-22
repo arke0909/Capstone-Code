@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace Work.Code.MapEvents
 {
-    public class MapEventUI : MonoBehaviour, IUIElement<MapEvent, float>
+    public class MapEventUI : LayoutUIBase, IUIElement<MapEvent, float>
     {
         [SerializeField] private TextMeshProUGUI eventText;
         [SerializeField] private TextMeshProUGUI timeText;
@@ -18,27 +18,29 @@ namespace Work.Code.MapEvents
         [SerializeField] private Image background;
         
         private TimeController _timeController;
-        private WaitForSeconds _disableDelay = new(5f);
         private float _remainTime;
         private bool _isActive;
-        private bool _hasCooltime;
 
         [field: SerializeField] public RectTransform Rect { get; private set; }
         [field: SerializeField] public LayoutElement Layout { get; private set; }
         [field: SerializeField] public CanvasGroup Canvas { get; private set; }
         public event Action<MapEventUI> OnInActive;
-        
+
+        protected override void Awake()
+        {
+            base.Awake();
+            DisableUI(true);
+        }
+
         public void EnableFor(MapEvent evt, float remainTime = 0)
         {
-            gameObject.SetActive(true);
-
             eventText.text = evt.EventName;
             icon.sprite = evt.MapEventSO.eventIcon;
             background.color = evt.MapEventSO.eventColor;
-            _remainTime = remainTime / _timeController.TimeScale;
+            _remainTime = remainTime / _timeController.TimeScale + 1f;
             
             _isActive = true;
-            _hasCooltime = remainTime != 0;
+            EnableUI();
         }
 
         private void Update()
@@ -54,18 +56,8 @@ namespace Work.Code.MapEvents
 
             if (_remainTime <= 0)
             {
-                timeText.text = string.Empty;
-                if (_hasCooltime == false)
-                    UIUtility.FadeUI(gameObject, 0.1f, true, Clear);
-                else
-                    StartCoroutine(DisableUIRoutine());
+                DisableUI(true);
             }
-        }
-
-        private IEnumerator DisableUIRoutine()
-        {
-            yield return _disableDelay;
-            UIUtility.FadeUI(gameObject, 0.1f, true, Clear);
         }
 
         public void SetTimeController(TimeController timeController)
@@ -75,7 +67,6 @@ namespace Work.Code.MapEvents
 
         public void Clear()
         {
-            gameObject.SetActive(false);
             _isActive = false;
             _remainTime = 0;
             OnInActive?.Invoke(this);

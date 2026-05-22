@@ -26,10 +26,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _BlurPower: 2
-    - _DitherStrength: 1
-    - _EdgeBand: 0.64
-    - _NoiseScale: 2
-    - _NoiseStrength: 1
+    - _DitherStrength: 0.873
+    - _EdgeBand: 0.02
+    - _NoiseScale: 0.01
+    - _NoiseStrength: 0
     m_Colors:
     - _Color: {r: 0, g: 0, b: 0, a: 0.7058824}
     - _NoiseScroll: {r: 0, g: 0, b: 0, a: 0}

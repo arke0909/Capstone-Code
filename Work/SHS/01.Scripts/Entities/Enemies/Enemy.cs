@@ -62,10 +62,12 @@ namespace Code.SHS.Entities.Enemies
         }
         private void Update()
         {
+#if UNITY_EDITOR
             if (Input.GetKeyDown(KeyCode.Semicolon))
             {
                 SpawnEnemy(transform.position, test);
             }
+#endif
         }
 
         private void HandleEnemyDead()

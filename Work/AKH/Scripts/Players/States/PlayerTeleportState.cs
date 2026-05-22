@@ -1,6 +1,6 @@
 ﻿using Chipmunk.ComponentContainers;
 using Chipmunk.GameEvents;
-using Scripts.GameSystem.Teleports;
+using Scripts.GameSystem.Structures;
 using System;
 using UnityEngine;
 using Work.Code.Craft;
@@ -11,37 +11,32 @@ namespace Scripts.Players.States
     public class TeleportContext
     {
         public float duration;
-        public TeleportStructure targetStructure;
-        public TeleportContext(float duration, TeleportStructure targetStructure)
-        {
-            this.duration = duration;
-            this.targetStructure = targetStructure;
-        }
-        public void Deconstruct(out float duration, out TeleportStructure targetStructure)
+        public Vector3 targetPosition;
+
+        public void Deconstruct(out float duration, out Vector3 targetPosition)
         {
             duration = this.duration;
-            targetStructure = this.targetStructure;
+            targetPosition = this.targetPosition;
         }
     }
     public class PlayerTeleportState : PlayerState
     {
         private float _duration;
-        private TeleportStructure _targetStructure;
+        private Vector3 _targetPosition;
         public PlayerTeleportState(ComponentContainer container, int animationHash) : base(container, animationHash)
         {
         }
         public override void Enter()
         {
             base.Enter();
-            (_duration, _targetStructure) = _blackboard.GetOrDefault<TeleportContext>("TeleportContext");
-            Debug.Assert(_targetStructure != null, $"{_targetStructure}");
+            (_duration, _targetPosition) = _blackboard.GetOrDefault<TeleportContext>("TeleportContext");
             EventBus.Raise(new PlayerGageEvent("텔포중", _duration, HandleCompleteCraft));
 
         }
 
         private void HandleCompleteCraft()
         {
-            _movement.SetPosition(_targetStructure.transform.position);
+            _movement.SetPosition(_targetPosition);
             _player.ChangeState(PlayerStateEnum.Idle);
         }
     }

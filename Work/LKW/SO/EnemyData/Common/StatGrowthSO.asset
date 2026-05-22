@@ -12,7 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9332c13cb0b849fa8d810e44c52f877c, type: 3}
   m_Name: StatGrowthSO
   m_EditorClassIdentifier: 
-  _statGrowthDatas:
-  - targetStat: {fileID: 11400000, guid: 15fc09ad501e2844986107c6459f339e, type: 2}
-    additiveValue: 5000
-    multiplierValue: 1
+  _statGrowthDatas: []

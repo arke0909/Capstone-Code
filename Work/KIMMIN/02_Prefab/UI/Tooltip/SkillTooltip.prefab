@@ -247,8 +247,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -35}
-  m_SizeDelta: {x: 190, y: 0}
+  m_AnchoredPosition: {x: 110, y: -35}
+  m_SizeDelta: {x: 210, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2278992166948120067
 MonoBehaviour:
@@ -330,7 +330,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1390917277889533532, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 190
+      value: 210
       objectReference: {fileID: 0}
     - target: {fileID: 1390917277889533532, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_SizeDelta.y
@@ -366,7 +366,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2854607249666183532, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 103
+      value: 113
       objectReference: {fileID: 0}
     - target: {fileID: 2854607249666183532, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -480,6 +480,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2581010600523577221, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7881271854115818208}
+    - targetCorrespondingSourceObject: {fileID: 2581010600523577221, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7035431207973863067}
   m_SourcePrefab: {fileID: 100100000, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
 --- !u!114 &1929741538333042009 stripped
 MonoBehaviour:
@@ -517,3 +520,23 @@ MonoBehaviour:
   skillName: {fileID: 962499955818560893}
   skillDescription: {fileID: 1929741538333042009}
   skillIcon: {fileID: 7217281940431371242}
+--- !u!114 &7035431207973863067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3868527796900449194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1

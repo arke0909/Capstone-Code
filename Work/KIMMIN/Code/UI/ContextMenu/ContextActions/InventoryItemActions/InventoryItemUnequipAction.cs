@@ -1,7 +1,7 @@
 using Chipmunk.GameEvents;
 using Code.InventorySystems.Items;
 using Work.Code.GameEvents;
-using Work.LKW.Code.Items;
+using Code.Items;
 
 namespace Work.Code.UI.ContextMenu.InventoryItemActions
 {

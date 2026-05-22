@@ -731,6 +731,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03faf66a21e34080948d534eb8567079, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panelID: 
   playerInput: {fileID: 11400000, guid: 4e3c85c501a7f4e46b46ca7017e2cbd8, type: 2}
   activeSkillRoot: {fileID: 807493926483122983}
   passiveSkillRoot: {fileID: 4798893328776264225}
@@ -2283,7 +2284,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4110544257846126192, guid: 96244c03a3bd8f34581cb36c7de75578, type: 3}
       propertyPath: m_text
-      value: E
+      value: Q
       objectReference: {fileID: 0}
     - target: {fileID: 4110544257846126192, guid: 96244c03a3bd8f34581cb36c7de75578, type: 3}
       propertyPath: m_fontSize
@@ -3047,9 +3048,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4110544257846126192, guid: 96244c03a3bd8f34581cb36c7de75578, type: 3}
       propertyPath: m_text
-      value: 'Q
-
-'
+      value: C
       objectReference: {fileID: 0}
     - target: {fileID: 4559491639612774935, guid: 96244c03a3bd8f34581cb36c7de75578, type: 3}
       propertyPath: m_Layer
@@ -3305,7 +3304,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4110544257846126192, guid: 96244c03a3bd8f34581cb36c7de75578, type: 3}
       propertyPath: m_text
-      value: C
+      value: E
       objectReference: {fileID: 0}
     - target: {fileID: 4559491639612774935, guid: 96244c03a3bd8f34581cb36c7de75578, type: 3}
       propertyPath: m_Layer

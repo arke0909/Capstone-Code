@@ -4,7 +4,7 @@ using Code.InventorySystems.Equipments;
 using Code.InventorySystems.Items;
 using Code.Players;
 using InGame.InventorySystem;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Code.GameEvents
 {

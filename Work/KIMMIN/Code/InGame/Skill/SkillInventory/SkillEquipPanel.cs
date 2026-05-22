@@ -41,7 +41,6 @@ namespace Work.Code.SkillInventory
             
             _model = new SkillEquipModel();
             _model.OnSkillChanged += HandleSkillUpdated;
-            _model.OnSkillUnequipped += UnEquipSkill;
             playerInput.OnSkillTreePressed += HandleSkillTreePressed;
             skillInventory.OnChangeInventory += HandleChangeInventory;
         }
@@ -49,15 +48,6 @@ namespace Work.Code.SkillInventory
         private void HandleSkillTreePressed()
         {
             ToggleUI(true);
-        }
-
-        private void UnEquipSkill(Skill skill)
-        {
-            skillInventory.RemoveSkill(skill);
-            _model.RemoveSkill(skill);
-
-            HandleSkillUpdated();
-            _player.LocalEventBus.Raise(new UnEquipSkillEvnt(skill));
         }
 
         private void SetupUI(SkillSlot[] skillUI, SkillType type)
@@ -114,7 +104,6 @@ namespace Work.Code.SkillInventory
         {
             base.OnDestroy();
             _model.OnSkillChanged -= HandleSkillUpdated;
-            _model.OnSkillUnequipped -= UnEquipSkill;
             playerInput.OnSkillTreePressed -= HandleSkillTreePressed;
             skillInventory.OnChangeInventory -= HandleChangeInventory;
             

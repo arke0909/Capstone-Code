@@ -11,7 +11,7 @@ using Code.InventorySystems;
 using Code.InventorySystems.Equipments;
 using Scripts.Players;
 using UnityEngine;
-using Work.LKW.Code.Items;
+using Code.Items;
 using static Code.InventorySystems.InventoryUtility;
 
 namespace Code.Players
@@ -96,10 +96,13 @@ namespace Code.Players
             int startEquipLocalIndex = GetLocalIndex(startEquipSlot.Index);
             int targetEquipLocalIndex = GetLocalIndex(targetEquipSlot.Index);
 
+            DeregisterSkill(startEquipSlot, startSlotItem);
+            DeregisterSkill(targetEquipSlot, targetSlotItem);
+
             if (startSlotItem == null)
             {
                 targetEquipSlot.SetData(null);
-
+                
                 if (targetEquipSlot.CanHandle)
                     UpdateHotbarSlot(targetEquipLocalIndex);
             }
@@ -127,6 +130,10 @@ namespace Code.Players
                     UpdateHotbarSlot(startEquipLocalIndex, targetSlotItem);
             }
 
+            RegisterSkill(targetEquipSlot, startSlotItem);
+            RegisterSkill(startEquipSlot, targetSlotItem);
+
+            
             bool touchesCurrentHandle =
                 startEquipSlot.CanHandle &&
                 targetEquipSlot.CanHandle &&
@@ -304,8 +311,7 @@ namespace Code.Players
             }
 
             equipSlot.SetData(equipableItem, 1);
-            if (equipSlot.HasSkill)
-                equipableItem.RegisterSkill();
+            RegisterSkill(equipSlot, equipableItem);
 
             EquipPartType equipPartType = equipSlot.EquipPartType;
 
@@ -368,8 +374,7 @@ namespace Code.Players
 
             equipSlot.SetData(null);
 
-            if (equipSlot.HasSkill)
-                equipped.DeregisterSkill();
+            DeregisterSkill(equipSlot, equipped);
 
             if (equipped.IsEquipped)
             {
@@ -418,5 +423,17 @@ namespace Code.Players
         }
 
         public EquipableItem GetEquippedItem(EquipPartType partType) => _equips.GetValueOrDefault(partType);
+
+        private void RegisterSkill(EquipSlot equipSlot, EquipableItem equipableItem)
+        {
+            if (equipSlot != null && equipSlot.HasSkill && equipableItem != null)
+                equipableItem.RegisterSkill();
+        }
+        
+        private void DeregisterSkill(EquipSlot equipSlot, EquipableItem equipableItem)
+        {
+            if (equipSlot != null && equipSlot.HasSkill && equipableItem != null)
+                equipableItem.DeregisterSkill();  
+        }
     }
 }

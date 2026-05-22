@@ -1,6 +1,6 @@
 ﻿using Code.DataSystem;
 using UnityEngine;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Scripts.Combat.Datas
 {

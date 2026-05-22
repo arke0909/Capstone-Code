@@ -53,8 +53,8 @@ namespace Work.Code.MapEvents
             MapEventUI ui = _uiStack.Pop();
             ui.EnableFor(evt, remainTime);
             ui.OnInActive += HandleInActiveUI;
+            //PushUI(ui);
             LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)root);
-            PushUI(ui);
         }
         
         private void HandleInActiveUI(MapEventUI ui)

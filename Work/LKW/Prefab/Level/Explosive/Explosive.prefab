@@ -63,6 +63,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
       propertyPath: m_LocalPosition.x
       value: 39.26
       objectReference: {fileID: 0}
@@ -101,6 +113,10 @@ PrefabInstance:
     - target: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728715828343312987, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5391958093160237281, guid: 40a02b2f9de65874bb4bc88d6d4bd890, type: 3}
       propertyPath: m_Name
@@ -146,13 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b15783e4d974c01b94b865b1f8accde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitBodyTrm: {fileID: 4723039524529176096}
-  OnHitEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDeadEvent:
-    m_PersistentCalls:
-      m_Calls: []
+  maxHp: 40
   whatIsBullet:
     serializedVersion: 2
     m_Bits: 1024
@@ -164,10 +174,8 @@ MonoBehaviour:
     _entity: {fileID: 11400000, guid: ea4825251a3351c4f9d6eff9b587178d, type: 2}
     ID: 0
     <DebugObject>k__BackingField: {fileID: 5386388446182941850}
-  smokeEffects:
-  - {fileID: 0}
+  smokeEffect: {fileID: 7824686825105979062}
   damage: 60
-  maxExplodeCount: 3
   nearbyExplosives: []
 --- !u!1001 &3691246711896852340
 PrefabInstance:
@@ -183,7 +191,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1478551695740074462, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.615
       objectReference: {fileID: 0}
     - target: {fileID: 1478551695740074462, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -218,6 +226,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
+      propertyPath: looping
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
       propertyPath: ShapeModule.type
       value: 4
       objectReference: {fileID: 0}
@@ -235,14 +247,42 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
       propertyPath: InitialModule.startSize.scalar
-      value: 1.6
+      value: 1.79
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 5.22
       objectReference: {fileID: 0}
     - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
       propertyPath: InitialModule.startSize.minScalar
-      value: 0.2
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
+      propertyPath: InitialModule.startSpeed.minScalar
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.a
+      value: 0.28627452
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
@@ -258,6 +298,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
+      propertyPath: InitialModule.startLifetime.minScalar
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[0].cycleCount
       value: 0
       objectReference: {fileID: 0}
@@ -267,11 +311,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
-      value: 25
+      value: 15.95
       objectReference: {fileID: 0}
     - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.minScalar
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6402329155236130442, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.minMaxState
@@ -281,6 +325,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Smoke
       objectReference: {fileID: 0}
+    - target: {fileID: 6894780570986754498, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -289,5 +337,10 @@ PrefabInstance:
 --- !u!4 &2863497427650068138 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1478551695740074462, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
+  m_PrefabInstance: {fileID: 3691246711896852340}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7824686825105979062 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6894780570986754498, guid: 8d58a13a47c60df4dbc4c05c6b6c10d1, type: 3}
   m_PrefabInstance: {fileID: 3691246711896852340}
   m_PrefabAsset: {fileID: 0}

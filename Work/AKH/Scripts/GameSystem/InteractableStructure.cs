@@ -1,16 +1,16 @@
-﻿using DewmoLib.ObjectPool.RunTime;
-using EPOOutline;
+﻿using EPOOutline;
 using Scripts.Entities;
-using Unity.AppUI.UI;
 using UnityEngine;
 using Work.Code.UI;
-using Work.LKW.Code.ItemContainers;
+using Work.Code.UI.Interaction;
+using Code.ItemContainers;
 
 namespace Scripts.GameSystem
 {
     public abstract class InteractableStructure : MonoBehaviour, IInteractable
     {
         [SerializeField] private AppearEffect helpText;
+        [SerializeField] private InteractVisualUI interactVisualUI;
 
         [field: SerializeField] public Outlinable Outlinable { get; private set; }
 
@@ -24,6 +24,7 @@ namespace Scripts.GameSystem
         {
             Outlinable.enabled = false;
             helpText.Disappear();
+            interactVisualUI.StopHighlight();
         }
 
         private void LateUpdate()
@@ -32,17 +33,26 @@ namespace Scripts.GameSystem
             {
                 helpText.transform.forward = _cam.transform.forward;
             }
+            
+            interactVisualUI.transform.forward = _cam.transform.forward;
         }
-        public void Select()
+        
+        public virtual void Select()
         {
-            _isSelected = true;
+            if (_isSelected) return;
+
             helpText.Appear();
+            interactVisualUI.PlayHighlight();
+            
+            _isSelected = true;
             Outlinable.enabled = true;
         }
 
-        public void DeSelect()
+        public virtual void DeSelect()
         {
             helpText.Disappear();
+            interactVisualUI.StopHighlight();
+            
             _isSelected = false;
             Outlinable.enabled = false;
         }

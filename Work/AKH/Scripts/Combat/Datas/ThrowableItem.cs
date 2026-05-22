@@ -3,8 +3,8 @@ using Code.InventorySystems;
 using Scripts.Entities;
 using SHS.Scripts;
 using UnityEngine;
-using Work.LKW.Code.Items;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items;
+using Code.Items.ItemInfo;
 
 namespace Scripts.Combat.Datas
 {

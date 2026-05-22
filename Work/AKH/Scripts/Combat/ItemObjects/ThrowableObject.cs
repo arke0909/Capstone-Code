@@ -7,7 +7,7 @@ using Scripts.Combat.Projectiles;
 using Scripts.Entities;
 using SHS.Scripts;
 using UnityEngine;
-using Work.LKW.Code.Items;
+using Code.Items;
 
 namespace Scripts.Combat.ItemObjects
 {

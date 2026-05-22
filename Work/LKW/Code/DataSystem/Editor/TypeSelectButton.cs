@@ -1,6 +1,6 @@
 using System;
 using UnityEngine.UIElements;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Code.DataSystem.Editor
 {

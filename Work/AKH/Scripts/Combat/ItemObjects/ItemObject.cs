@@ -4,7 +4,7 @@ using Scripts.Entities;
 using SHS.Scripts.Entities.Players;
 using UnityEngine;
 using UnityEngine.Serialization;
-using Work.LKW.Code.Items;
+using Code.Items;
 
 namespace Scripts.Combat.ItemObjects
 {

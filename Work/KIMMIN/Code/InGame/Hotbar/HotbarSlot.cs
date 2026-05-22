@@ -2,7 +2,7 @@
 using Code.InventorySystem;
 using Code.InventorySystems.Items;
 using UnityEngine;
-using Work.LKW.Code.Items;
+using Code.Items;
 
 namespace Code.Hotbar
 {

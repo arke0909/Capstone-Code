@@ -1,6 +1,6 @@
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
-namespace Work.LKW.Code.Items
+namespace Code.Items
 {
     public class MaterialItem : ItemBase
     {

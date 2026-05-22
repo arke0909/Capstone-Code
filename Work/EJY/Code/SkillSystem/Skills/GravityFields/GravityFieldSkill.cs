@@ -31,7 +31,7 @@ namespace Code.SkillSystem.Skills.GravityFields
         
         public override void StartAndUseSkill()
         {
-            Vector3 gravityFieldPos = _aimProvider.GetAimPosition();
+            Vector3 gravityFieldPos = _aimProvider.GetWorldAimPosition();
 
             GravityField gf = _poolManagerMono.Pop<GravityField>(gravityFieldPoolItem);
             gf.Init(gravityFieldPos, isSlowEntity, isStunEntity);

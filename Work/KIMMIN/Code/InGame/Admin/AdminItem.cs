@@ -3,8 +3,8 @@ using Code.UI.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Work.LKW.Code.Items;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items;
+using Code.Items.ItemInfo;
 
 namespace Work.Code.Admin
 {

@@ -8,8 +8,8 @@ namespace Code.DataSystem
 {
     public static class AutoExcelParser
     {
-        private static Dictionary<Type, List<FieldInfo>> fieldCache = new Dictionary<Type, List<FieldInfo>>();
-        private static Dictionary<Type, List<PropertyInfo>> propertyCache = new Dictionary<Type, List<PropertyInfo>>();
+        private static readonly Dictionary<Type, List<FieldInfo>> FieldCache = new Dictionary<Type, List<FieldInfo>>();
+        private static readonly Dictionary<Type, List<PropertyInfo>> PropertyCache = new Dictionary<Type, List<PropertyInfo>>();
 
         public static void ParseRow(DataRow dataRow, int rowIndex, object instance)
         {
@@ -132,7 +132,7 @@ namespace Code.DataSystem
 
         private static List<FieldInfo> GetCacheFields(Type type)
         {
-            if (!fieldCache.ContainsKey(type))
+            if (!FieldCache.ContainsKey(type))
             {
                 var fields = new List<FieldInfo>();
                 foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
@@ -140,28 +140,28 @@ namespace Code.DataSystem
                     if (field.GetCustomAttributes<ExcelColumnAttribute>() != null)
                         fields.Add(field);
                 }
-                fieldCache[type] = fields;
+                FieldCache[type] = fields;
             }
 
-            return fieldCache[type];
+            return FieldCache[type];
         }
 
-        private static List<PropertyInfo> GetCacheProperties(Type type)
-        {
-            if (!propertyCache.ContainsKey(type))
-            {
-                var properties = new List<PropertyInfo>();
-                foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
-                {
-                    if (property.GetCustomAttributes<ExcelColumnAttribute>() != null)
-                    {
-                        properties.Add(property);
-                    }
-                }
-
-                propertyCache[type] = properties;
-            }
-            return propertyCache[type];
-        }
+        // private static List<PropertyInfo> GetCacheProperties(Type type)
+        // {
+        //     if (!PropertyCache.ContainsKey(type))
+        //     {
+        //         var properties = new List<PropertyInfo>();
+        //         foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+        //         {
+        //             if (property.GetCustomAttributes<ExcelColumnAttribute>() != null)
+        //             {
+        //                 properties.Add(property);
+        //             }
+        //         }
+        //
+        //         PropertyCache[type] = properties;
+        //     }
+        //     return PropertyCache[type];
+        // }
     }
 }

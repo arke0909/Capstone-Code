@@ -11,7 +11,6 @@ namespace Work.Code.SkillInventory
         private readonly Skill[] _activeSkills = new Skill[3];
         private readonly Skill[] _passiveSkills = new Skill[3];
         
-        public event Action<Skill> OnSkillUnequipped;
         public event Action OnSkillChanged;
 
         public void Equip(Skill sendSkill, Skill targetSkill, int index, SkillType type, bool isInventory)

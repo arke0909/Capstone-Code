@@ -1,4 +1,4 @@
-using Ami.BroAudio;
+﻿using Ami.BroAudio;
 using Chipmunk.ComponentContainers;
 using Chipmunk.GameEvents;
 using Code.GameEvents;
@@ -21,11 +21,6 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
         [SerializeField] private float missileSpeed = 8f;
         [SerializeField] private float searchRadius = 10f;
         [SerializeField] private float rotationSpeed = 720f;
-        [SerializeField] private float bezierLookAhead = 0.08f;
-        [SerializeField] private float bezierForwardFactor = 0.25f;
-        [SerializeField] private float minBezierForwardDistance = 0.5f;
-        [SerializeField] private float maxBezierForwardDistance = 3f;
-        [SerializeField] private float minimumRiseHeight = 0.5f;
         [SerializeField] private float targetImpactDistance = 1.1f;
         [SerializeField] private float impactArmDelay = 0.05f;
         [SerializeField] private float camShakeForce = 12f;
@@ -484,7 +479,7 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
                 }
             }
 
-            var data = _dmgCalcCompo.CalculateDamage(16, 1, 1, DamageType.RANGE);
+            var data = _dmgCalcCompo.CalculateDamage(20, 1, 1, DamageType.RANGE);
             overlapDamageCaster.CastDamage(data, _rigidbody.position, _lastMoveDir, null);
 
             if (missileExplosionPoolItem != null)

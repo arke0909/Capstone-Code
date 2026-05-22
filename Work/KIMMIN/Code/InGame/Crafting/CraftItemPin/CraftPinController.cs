@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Chipmunk.GameEvents;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Work.Code.GameEvents;
 
 namespace Work.Code.Craft
 {
@@ -21,6 +23,8 @@ namespace Work.Code.Craft
             {
                 RemovePin(item);
             }
+            
+            EventBus.Raise(new ChangePinCountEvent(_pinList.Count));
         }
 
         private void AddPin(CraftItemUI targetItem)

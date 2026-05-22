@@ -110,6 +110,11 @@ MonoBehaviour:
   _bulletImpactEffect: {fileID: 8491214270523815195}
   bulletHole: {fileID: 11400000, guid: 6cdb5c8c5bf2bd744b6d6579e8fd5646, type: 2}
   poolManager: {fileID: 11400000, guid: c413011c9deace64aa106d229c06e489, type: 2}
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 12480
+  castRadius: 0.1
+  triggerInteraction: 1
   <PoolItem>k__BackingField: {fileID: 11400000, guid: 09e3f30c6feb3d545b688838c743bedc, type: 2}
 --- !u!33 &6436395167528798006
 MeshFilter:
@@ -213,7 +218,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!96 &8211625857709795779
 TrailRenderer:
   serializedVersion: 3

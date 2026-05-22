@@ -1,11 +1,16 @@
 using Chipmunk.ComponentContainers;
+using Code.Items.ItemInfo;
 using Code.Players;
+using Code.UI.Inventory;
 using Scripts.Players;
+using UnityEngine;
+using PlayerInventory = InGame.PlayerUI.PlayerInventory;
 
 namespace Work.Code.Tutorials
 {
     public class EquipWeaponTutorialState : TutorialState
     {
+        [SerializeField] private LeftInventoryPanel playerInventory;
         private PlayerEquipment _playerEquipment;
         
         public override void InitializeTutorial(TutorialController tutorialController, Player player)
@@ -18,6 +23,7 @@ namespace Work.Code.Tutorials
         {
             base.EnterTutorial();
             _playerEquipment.OnEquipItem += HandleEquipItem;
+            //playerInventory.HighlightSlot(ItemType.Gun, Color.white);
         }
 
         private void HandleEquipItem()
@@ -28,6 +34,7 @@ namespace Work.Code.Tutorials
         public override void ExitTutorial()
         {
             _playerEquipment.OnEquipItem -= HandleEquipItem;
+            playerInventory.StopAllHighlightSlots();
         }
     }
 }

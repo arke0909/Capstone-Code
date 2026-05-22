@@ -1,7 +1,7 @@
 using System;
 using Code.UI.Minimap.Core;
 using UnityEngine;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 public enum SectionNameSize
 {

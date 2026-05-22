@@ -196,13 +196,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4711378117964791514}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.5493219, y: 0.30743816, z: 0.51985914, w: 0.577472}
-  m_LocalPosition: {x: -0.081, y: -0.136, z: -0.295}
+  m_LocalRotation: {x: 0.51448286, y: 0.54495513, z: 0.6298953, w: -0.20387031}
+  m_LocalPosition: {x: -0.18, y: 0.016, z: 0.28}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5737152580915211668}
-  m_LocalEulerAnglesHint: {x: 18.348, y: 77.375, z: 98.727}
+  m_LocalEulerAnglesHint: {x: -63.677, y: 106.149, z: 136.738}
 --- !u!1 &5238864694660068982
 GameObject:
   m_ObjectHideFlags: 0
@@ -576,6 +576,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rateOverTime: 50
+  baseHeatRatio: 0
   particle: {fileID: 2062712362259877034}
 --- !u!1 &6628013903258819447
 GameObject:
@@ -771,7 +772,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleByHeatRatio: {fileID: 3029521597397357274}
-  materialByHeatRatio: {fileID: 0}
+  materialByHeatRatio: {fileID: 1885510412162065241}
 --- !u!114 &1885510412162065241
 MonoBehaviour:
   m_ObjectHideFlags: 0

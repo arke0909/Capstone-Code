@@ -20,6 +20,16 @@ namespace Code.SHS.Entities.Enemies
         }
 
         public Vector3 GetAimPosition()
+            => GetWorldAimPosition();
+
+        public Vector3 GetAimPosition(float planeY)
+        {
+            Vector3 aimPosition = GetWorldAimPosition();
+            aimPosition.y = planeY;
+            return aimPosition;
+        }
+
+        public Vector3 GetWorldAimPosition()
         {
             if (_targetProvider.CurrentTarget == null)
                 return _targetProvider.LastTargetPosition;

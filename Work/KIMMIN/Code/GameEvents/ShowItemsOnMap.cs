@@ -1,14 +1,24 @@
 ﻿using System.Collections.Generic;
 using Chipmunk.GameEvents;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Work.Code.GameEvents
 {
     public struct ShowItemsOnMap : IEvent
     {
+        public ItemDataSO[] ItemList { get; }
+
+        public ShowItemsOnMap(ItemDataSO[] ItemList)
+        {
+            this.ItemList = ItemList;
+        }
+    }
+
+    public struct HideItemsOnMap : IEvent
+    {
         public List<ItemDataSO> ItemList { get; }
 
-        public ShowItemsOnMap(List<ItemDataSO> ItemList)
+        public HideItemsOnMap(List<ItemDataSO> ItemList)
         {
             this.ItemList = ItemList;
         }

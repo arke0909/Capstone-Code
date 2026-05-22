@@ -3,7 +3,7 @@ using Chipmunk.ComponentContainers;
 using Code.InventorySystems.Equipments;
 using Code.Players;
 using Scripts.Combat.Datas;
-using Work.LKW.Code.Items;
+using Code.Items;
 
 namespace Scripts.Players.States
 {

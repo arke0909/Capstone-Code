@@ -1,10 +1,10 @@
 using Code.StatusEffectSystem;
 using UnityEngine;
 using UnityEngine.Serialization;
-using Work.LKW.Code.Items;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items;
+using Code.Items.ItemInfo;
 
-namespace Work.LKW.Code.Items.ItemInfo
+namespace Code.Items.ItemInfo
 {
     [CreateAssetMenu(fileName = "StatusEffectItem", menuName = "SO/Item/StatusEffectItem", order = 0)]
     public class StatusEffectItemDataSO : UseItemDataSO

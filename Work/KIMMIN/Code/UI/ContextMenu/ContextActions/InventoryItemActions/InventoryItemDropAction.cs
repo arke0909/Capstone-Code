@@ -1,5 +1,5 @@
 using Code.InventorySystems.Items;
-using Work.LKW.Code.Items;
+using Code.Items;
 
 namespace Work.Code.UI.ContextMenu.InventoryItemActions
 {

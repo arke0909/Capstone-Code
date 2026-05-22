@@ -9,13 +9,16 @@ namespace Scripts.Combat
         [SerializeField, Range(0f, 1f)] private float castinterpolation = 1f;
         [SerializeField, Range(0, 3f)] private float castRange = 1f;
         public float CastRadius => castRadius;
-        public override bool CastDamage(DamageData damageData, Vector3 position, Vector3 direction, MovementDataSO knockBackData)
+        public override int CastDamage(DamageData damageData, Vector3 position, Vector3 direction, MovementDataSO knockBackData)
         {
             Vector3 startPosition = position + direction * -castinterpolation * 2f;
             bool isHit = Physics.SphereCast(startPosition, castRadius, transform.forward, out RaycastHit hit, castRange, whatIsTarget);
             if (isHit)
+            {
                 ApplyDamageAndKnockback(hit.collider.transform, damageData, hit.point, hit.normal, knockBackData);
-            return isHit;
+                return 1;
+            }
+            return 0;
         }
 #if UNITY_EDITOR
         private void OnDrawGizmos()

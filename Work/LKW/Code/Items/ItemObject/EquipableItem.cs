@@ -1,13 +1,13 @@
 ﻿using Chipmunk.ComponentContainers;
 using Chipmunk.Modules.StatSystem;
+using Code.Items.ItemInfo;
 using Code.SkillSystem;
 using Scripts.Combat.ItemObjects;
 using Scripts.Entities;
 using Scripts.SkillSystem.Manage;
 using UnityEngine;
-using Work.LKW.Code.Items.ItemInfo;
 
-namespace Work.LKW.Code.Items
+namespace Code.Items
 {
     public abstract class EquipableItem : ItemBase, IEquipable
     {

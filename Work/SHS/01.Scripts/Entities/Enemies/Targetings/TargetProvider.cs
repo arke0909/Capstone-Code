@@ -1,11 +1,9 @@
 ﻿using Chipmunk.ComponentContainers;
 using Chipmunk.Library.Utility.GameEvents.Local;
-using Code.SHS.Entities.Enemies.Events;
 using Code.SHS.Entities.Enemies.Events.Local;
 using Code.SHS.Entities.Enemies.Groups;
 using Code.SHS.Entities.Enemies.Targetings.Events;
 using Scripts.Entities;
-using System;
 using UnityEngine;
 
 namespace Code.SHS.Targetings.Enemies
@@ -14,6 +12,8 @@ namespace Code.SHS.Targetings.Enemies
         ILocalEventSubscriber<JoinGroupEvent>, ILocalEventSubscriber<EnemySpawnEvent>
     {
         [SerializeField] private float targetForgetDuration = 5f;
+        [field: SerializeField] public bool CanMissTarget { get; private set; } = true;
+
         public Entity CurrentTarget => _currentTarget;
         public Entity Target => _target;
         public bool HasActiveTauntTarget => _currentTarget is ITauntTarget tauntTarget && tauntTarget.IsTauntTargetActive;
@@ -40,6 +40,8 @@ namespace Code.SHS.Targetings.Enemies
 
         private void UpdateTargetRemember()
         {
+            if (!CanMissTarget)
+                return;
             if (_currentTarget != null && _target == null)
             {
                 _targetForgetTimer += Time.deltaTime;

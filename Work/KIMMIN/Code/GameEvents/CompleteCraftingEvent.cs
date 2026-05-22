@@ -1,5 +1,5 @@
 using Chipmunk.Library.Utility.GameEvents.Local;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Work.Code.GameEvents
 {

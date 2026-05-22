@@ -5,7 +5,7 @@ using Scripts.Combat.Datas;
 
 namespace Code.GameEvents
 {
-    public class ReplaceBulletListEvent : IEvent
+    public struct ReplaceBulletListEvent : IEvent
     {
         public List<ReplaceBulletData> Data { get; }
         public int Idx { get; }

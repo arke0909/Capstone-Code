@@ -6,7 +6,7 @@ using Code.Players;
 using Code.UI.Core;
 using TMPro;
 using UnityEngine;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Work.Code.Craft.View
 {
@@ -133,7 +133,7 @@ namespace Work.Code.Craft.View
         {
             nodeUI.Clear();
 
-            bool isRootNode = lineIndex is 0 or 1;
+            bool isRootNode = lineIndex != 0 && lineIndex != 1;
             int itemCount = RequestItemCount(node.Item);
             CraftNodeData craftData = new(node, itemCount, isRootNode);
 

@@ -11,7 +11,7 @@ namespace Code.UI.Tooltip
         
         public abstract void ShowTooltip(object data);
         
-        public virtual void HidePopup() => DisableUI(true);
+        public virtual void HidePopup() => DisableUI();
     }
 
     public abstract class BaseTooltip<TData> : BaseTooltip

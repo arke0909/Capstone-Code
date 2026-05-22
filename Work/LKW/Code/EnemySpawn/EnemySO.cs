@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using SHS.Scripts.Entities.Levels.Growths;
 using UnityEngine;
 using UnityEngine.Serialization;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Code.EnemySpawn
 {

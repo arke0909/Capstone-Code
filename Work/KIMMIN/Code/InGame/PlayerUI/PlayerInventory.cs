@@ -16,26 +16,36 @@ namespace InGame.PlayerUI
         protected override void Awake()
         {
             base.Awake();
-            
-            lootSlotUI.DisableUI();
+
             playerInput.OnInventoryPressed += HandleInventoryPressed;
             EventBus.Subscribe<OpenPlayerUIEvent>(HandleOpenPlayerUIEvent);
         }
 
+        private void Start()
+        {
+            ForceHideLootUI();
+        }
+
         private void HandleInventoryPressed()
         {
-            ToggleUI(true);
+            if (IsActive)
+            {
+                ToggleUI(true);
+                return;
+            }
+
+            ForceHideLootUI();
+            OpenInventoryPanel();
         }
 
         private void HandleOpenPlayerUIEvent(OpenPlayerUIEvent evt)
         {
-            ToggleUI(true);
-            _withLoot = evt.WithLootInventory;
+            OpenInventoryPanel();
 
-            if (_withLoot)
-            {
-                lootSlotUI.EnableUI();
-            }
+            if (evt.WithLootInventory)
+                OpenLootUI();
+            else
+                ForceHideLootUI();
         }
 
         protected override void OnDestroy()
@@ -48,19 +58,45 @@ namespace InGame.PlayerUI
 
         public override void ToggleUI(bool hasTween = false)
         {
+            bool willClose = IsActive;
+
             base.ToggleUI(hasTween);
-            
-            if (_withLoot)
-            {
-                _withLoot = false; 
-                lootSlotUI.DisableUI();
-            }
+
+            if (willClose || !_withLoot)
+                ForceHideLootUI();
         }
 
         public override void DisableUI(bool isFade = false)
         {
+            ForceHideLootUI();
             base.DisableUI(isFade);
             playerInput.SetPlayerInput(true);
+        }
+
+        private void OpenInventoryPanel()
+        {
+            if (!IsActive)
+                base.ToggleUI(true);
+        }
+
+        private void OpenLootUI()
+        {
+            _withLoot = true;
+
+            if (lootSlotUI == null)
+                return;
+
+            lootSlotUI.ShowUIOnInspector();
+        }
+
+        private void ForceHideLootUI()
+        {
+            _withLoot = false;
+
+            if (lootSlotUI == null)
+                return;
+
+            lootSlotUI.HideUIOnInspector();
         }
     }
 }

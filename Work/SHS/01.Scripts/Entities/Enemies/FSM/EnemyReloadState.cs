@@ -6,7 +6,8 @@ using UnityEngine;
 using Code.Combat;
 using Code.InventorySystems.Equipments;
 using SHS.Scripts.Entities.Players;
-using Work.LKW.Code.Items;
+using SHS.Scripts.Entities.Rigings;
+using Code.Items;
 
 namespace Code.SHS.Entities.Enemies.FSM
 {
@@ -15,7 +16,7 @@ namespace Code.SHS.Entities.Enemies.FSM
         private GunItem _gun;
         private EnemyEquipment _equipment;
         private EntityGunStatInfo _entityGunStatInfo;
-        private ItemGrabBehavior _itemGrabBehavior;
+        private ItemGrabRiggingController _itemGrabRiggingController;
 
         private float _reloadTime;
         private float _currentTimer = 0;
@@ -24,13 +25,13 @@ namespace Code.SHS.Entities.Enemies.FSM
         {
             _equipment = container.Get<EnemyEquipment>();
             _entityGunStatInfo = container.Get<EntityGunStatInfo>();
-            _itemGrabBehavior = container.Get<ItemGrabBehavior>();
+            _itemGrabRiggingController = container.Get<ItemGrabRiggingController>();
         }
 
         public override void Enter()
         {
             base.Enter();
-            _itemGrabBehavior?.SetWeight(0);
+            _itemGrabRiggingController?.SetWeight(0);
             _currentTimer = 0;
             _gun = null;
 
@@ -68,7 +69,7 @@ namespace Code.SHS.Entities.Enemies.FSM
                     _gun.GunItemData.maxAmmoCapacity);
                 _gun.Reload();
             }
-            _itemGrabBehavior?.SetWeight(1);
+            _itemGrabRiggingController?.SetWeight(1);
 
             base.Exit();
         }

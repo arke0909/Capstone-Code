@@ -1,3 +1,4 @@
+﻿using Code.Items.ItemInfo;
 using Code.UI.Core;
 using DewmoLib.Dependencies;
 using Scripts.Players;
@@ -19,7 +20,7 @@ namespace Work.Code.Craft.Installer
 
         [SerializeField] private CraftTreeListSO treeListSO;
         [SerializeField] private PlayerInputSO playerInput;
-
+        
         private CraftMenuPresenter _menuPresenter;
         private CraftTreePresenter _treePresenter;
         private CraftModel _model;
@@ -73,6 +74,11 @@ namespace Work.Code.Craft.Installer
             playerInput.OnCraftTreePressed -= HandleToggleUI;
             _menuPresenter.DisposePresenter();
             _treePresenter.DisposePresenter();
+        }
+
+        public void HighlightCraftItem(ItemDataSO item, bool isPlay, Color effectColor = default)
+        {
+            menuView.HighlightCraftItem(item, isPlay, effectColor);
         }
     }
 }

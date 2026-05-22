@@ -1,4 +1,4 @@
-using Chipmunk.ComponentContainers;
+﻿using Chipmunk.ComponentContainers;
 using Chipmunk.Library.Utility.GameEvents.Local;
 using Chipmunk.Modules.StatSystem;
 using Code.SHS.Entities.Enemies.Events.Local;
@@ -12,15 +12,13 @@ namespace Code.SHS.Entities.Enemies
     {
         private StatBehavior _statBehavior;
         private readonly Dictionary<string, float> _defaultBaseValues = new();
-        public ComponentContainer ComponentContainer { get; set; }
-
-        public void OnInitialize(ComponentContainer componentContainer)
+        public override void OnInitialize(ComponentContainer componentContainer)
         {
             _statBehavior = componentContainer.Get<StatBehavior>(true);
             CacheDefaultStats();
         }
 
-        public void OnLocalEvent(EnemySpawnEvent eventData)
+        public override void OnLocalEvent(EnemySpawnEvent eventData)
         {
             ResetRuntimeStats();
             if (eventData.EnemyData == null || eventData.EnemyData.statOverrides == null)

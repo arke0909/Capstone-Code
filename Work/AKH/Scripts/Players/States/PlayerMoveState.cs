@@ -40,9 +40,10 @@ namespace Scripts.Players.States
                 Vector3 direction = _movement.Direction;
                 Transform transform = _player.transform;
                 Vector3 crosshairPos = _aimProvider.GetAimPosition();
-                Vector3 dir = (crosshairPos - transform.position).normalized;
-                if (Vector3.Distance(crosshairPos, transform.position) > _cursorLimit)
-                    _movement.SetRotationInfo(dir, 15);
+                Vector3 dir = crosshairPos - transform.position;
+                dir.y = 0f;
+                if (dir.sqrMagnitude > _cursorLimit * _cursorLimit)
+                    _movement.SetRotationInfo(dir.normalized, 15);
                 _movementAnimationController.SetMoveDirection(direction);
             }
         }

@@ -8,7 +8,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Work.Code.Craft;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 using Object = UnityEngine.Object;
 
 public class CraftTreeEditor : EditorWindow

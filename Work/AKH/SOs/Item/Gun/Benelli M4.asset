@@ -22,23 +22,31 @@ MonoBehaviour:
   rarityWeight: 1
   value: 0
   maxStack: 0
+  maxSpawnCount: 0
   addStats: []
-  modelOffset: {x: 0, y: 0.025, z: 0.618}
+  modelOffset: {x: -0.046, y: 0.165, z: 0.468}
   equipmentPrefab: {fileID: 168361770237977466, guid: 659e57d7035ba9e4a9c8691ed6c72418, type: 3}
+  skillDB: {fileID: 0}
+  controller: {fileID: 22100000, guid: f137525389913154e9e8e83852dd9ac0, type: 2}
   maxDurability: 0
+  attackRange: 0
   defaultDamage: 0
   attackSpeed: 0.75
-  controller: {fileID: 22100000, guid: f137525389913154e9e8e83852dd9ac0, type: 2}
-  maxBullet: 10
-  gunType: 4
   fireRate: 0
+  attackSoundID:
+    _entity: {fileID: 0}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 0}
+  gunType: 4
   bulletPerShot: 5
   reloadTime: 1
   bulletSpeed: 45
-  maxAmmoCapacity: 0
   maxRange: 0
+  maxAmmoCapacity: 0
   aimSpeedMultiplier: 0
+  noiseRadius: 10
   defaultSpread: 0.36
+  crosshairData: {fileID: 0}
   maxSpread: 0.89
   spreadGrow: 0.25
   spreadRecover: 0.5
@@ -54,3 +62,7 @@ MonoBehaviour:
   recoilRecoveryTime: 0.12
   recoilRecovery: 550
   pixelsPerRecoilUnit: 0.45
+  reloadSound:
+    _entity: {fileID: 0}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 0}

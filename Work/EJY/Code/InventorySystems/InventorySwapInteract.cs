@@ -8,7 +8,7 @@ using InGame.InventorySystem;
 using Scripts.Combat.Datas;
 using UnityEngine;
 using Code.InventorySystems.SwapRules;
-using Work.LKW.Code.Items;
+using Code.Items;
 
 namespace Code.InventorySystems
 {

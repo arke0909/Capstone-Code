@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Work.Code.Craft
 {

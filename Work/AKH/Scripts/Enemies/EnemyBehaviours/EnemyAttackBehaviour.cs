@@ -1,16 +1,18 @@
 ﻿using Chipmunk.ComponentContainers;
 using Code.SHS.Entities.Enemies;
 using Code.SHS.Entities.Enemies.FSM;
+using Code.SHS.Entities.Enemies.FSM.BehaviourState;
 using Scripts.Combat;
 using Scripts.Combat.Datas;
 using Scripts.Entities;
 using UnityEngine;
-using Work.LKW.Code.Items;
+using Code.Items;
 
 namespace Scripts.Enemies.EnemyBehaviours
 {
     public class EnemyAttackBehaviour : EnemyBehaviour
     {
+        [SerializeField] private int attackCount;
         private AttackCompo _attackCompo;
         private EnemyInventory _inventory;
 
@@ -24,6 +26,15 @@ namespace Scripts.Enemies.EnemyBehaviours
         public override void Execute()
         {
             Weapon weapon = _attackCompo.GetCurrentWeapon<Weapon>();
+            if(_enemy.Blackboard.TryGet<EnemyAttackContext>("AttackContext", out var context))
+            {
+                context.attackCount = attackCount;
+            }
+            else
+            {
+                EnemyAttackContext newContext = new EnemyAttackContext() { attackCount = attackCount };
+                _enemy.Blackboard.Set("AttackContext", newContext);
+            }
             if (weapon is not IAttackable attackable)
                 return;
             switch (attackable.CurrentAttackableState)

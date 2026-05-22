@@ -8,8 +8,10 @@ namespace Scripts.Entities.Vitals
         protected override void Update()
         {
             base.Update();
+#if UNITY_EDITOR
             if (Input.GetKeyDown(KeyCode.Backspace) && _entity is Player)
                 _statCompo.AddModifier(ManageStat,"Cheat", 10000f);
+#endif
         }
     }
 }

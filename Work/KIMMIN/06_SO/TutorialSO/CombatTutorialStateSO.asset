@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f29192828024ebebe605f8126d77a6b, type: 3}
   m_Name: CombatTutorialStateSO
   m_EditorClassIdentifier: 
-  dialogue: "\uC801\uC744 \uCC98\uCE58\uD558\uC138\uC694"
+  dialogue: "\uC6B0\uD074\uB9AD\uC744 \uB204\uB974\uACE0 \uCD1D\uC744 \uBC1C\uC0AC\uD574
+    \uC801\uC744 \uCC98\uCE58\uD558\uC138\uC694"
   stateIcon: {fileID: 21300000, guid: 8acfdb87041c143089569d446383a47d, type: 3}

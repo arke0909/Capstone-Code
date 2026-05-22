@@ -64,7 +64,8 @@ namespace Assets.Work.AKH.Scripts.Entities.Vitals
                 if (Mathf.Approximately(CurrentValue, 0))
                 {
                     _entity.Dead();
-                    context.Attacker?.OnKill(dropExpStat.Value);
+                    if(context.Attacker !=null && dropExpStat !=null)
+                        context.Attacker.OnKill?.Invoke(dropExpStat.Value);
                     _localEventBus.Raise(new EntityDeadEvent(_entity, context.HitPoint, context.HitNormal));
                 }
 

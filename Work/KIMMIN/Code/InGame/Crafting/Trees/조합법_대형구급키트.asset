@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca62f7e28d5948408c5c73e6790860c8, type: 3}
+  m_Name: 조합법_대형구급키트
+  m_EditorClassIdentifier: 
+  treeName: 조합법_대형구급키트
+  isBinary: 1
+  nodeList:
+  - <Item>k__BackingField: {fileID: 11400000, guid: 88c64b116a7ca464f93f3a14a333c9a5, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+    <InheritSkillToCraftResult>k__BackingField: 0
+  - <Item>k__BackingField: {fileID: 11400000, guid: 24eaedcc90724414587ca8378a98d672, type: 2}
+    <Tree>k__BackingField: {fileID: 11400000, guid: f908da5aa167409ba886e3ae1ee486f6, type: 2}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+    <InheritSkillToCraftResult>k__BackingField: 0
+  - <Item>k__BackingField: {fileID: 11400000, guid: dde18da7666c53d42b6505056bf7e5c3, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+    <InheritSkillToCraftResult>k__BackingField: 0

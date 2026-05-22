@@ -10,24 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca62f7e28d5948408c5c73e6790860c8, type: 3}
-  m_Name: "\uC870\uD569\uBC95_\uAD00\uD615\uD0C4\uCC3D"
+  m_Name: 조합법_관형탄창
   m_EditorClassIdentifier: 
-  treeName: "\uC870\uD569\uBC95_\uAD00\uD615\uD0C4\uCC3D"
-  nodeList:
-  - <Item>k__BackingField: {fileID: 11400000, guid: 058aa736c88bcab4b8c6b38e4d3ff47d, type: 2}
-    <Tree>k__BackingField: {fileID: 0}
-    <Count>k__BackingField: 1
-    <IsChild>k__BackingField: 0
-  - <Item>k__BackingField: {fileID: 11400000, guid: 5c38fb5a0518fd04e83c4d46c065644c, type: 2}
-    <Tree>k__BackingField: {fileID: 0}
-    <Count>k__BackingField: 1
-    <IsChild>k__BackingField: 0
-  - <Item>k__BackingField: {fileID: 11400000, guid: 0ffb07d954f72954faaf6fb72744f113, type: 2}
-    <Tree>k__BackingField: {fileID: 0}
-    <Count>k__BackingField: 1
-    <IsChild>k__BackingField: 0
-  - <Item>k__BackingField: {fileID: 11400000, guid: cfe71061808f0c1479332abc4bd4518c, type: 2}
-    <Tree>k__BackingField: {fileID: 0}
-    <Count>k__BackingField: 1
-    <IsChild>k__BackingField: 0
+  treeName: 조합법_관형탄창
   isBinary: 0
+  nodeList:
+  - <Item>k__BackingField: {fileID: 11400000, guid: 466335b0a19d14c4a85efb373d4260b0, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+    <InheritSkillToCraftResult>k__BackingField: 0
+  - <Item>k__BackingField: {fileID: 11400000, guid: 2b7e4b3455524b047ac7a490b3e99621, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+    <InheritSkillToCraftResult>k__BackingField: 0
+  - <Item>k__BackingField: {fileID: 11400000, guid: 6fa0690b45755a5418c9490da10a5c57, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+    <InheritSkillToCraftResult>k__BackingField: 0
+  - <Item>k__BackingField: {fileID: 11400000, guid: 39c557bab8e94684eb0fca7f0f576c3f, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+    <InheritSkillToCraftResult>k__BackingField: 0

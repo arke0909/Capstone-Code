@@ -14,6 +14,7 @@ namespace SHS.Scripts.Entities.Players
         {
             ComponentContainer = componentContainer;
             _aimProvider = componentContainer.GetSubclassComponent<IAimProvider>();
+            // transform.SetParent(null);
         }
 
         private void LateUpdate()

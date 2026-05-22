@@ -23,6 +23,7 @@ namespace InGame.PlayerUI
         {
             base.Awake();
             EventBus.Subscribe<PlayerGageEvent>(HandlePlayerGage);
+            EventBus.Subscribe<StopPlayerGageEvent>(HandleStopPlayerGage);
             DisableUI();
         }
 
@@ -30,6 +31,12 @@ namespace InGame.PlayerUI
         {
             base.OnDestroy();
             EventBus.Unsubscribe<PlayerGageEvent>(HandlePlayerGage);
+            EventBus.Unsubscribe<StopPlayerGageEvent>(HandleStopPlayerGage);
+        }
+        
+        private void HandleStopPlayerGage(StopPlayerGageEvent evt)
+        {
+            ClearUI();
         }
 
         private void HandlePlayerGage(PlayerGageEvent evt)

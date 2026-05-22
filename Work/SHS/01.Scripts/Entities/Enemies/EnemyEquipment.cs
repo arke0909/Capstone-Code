@@ -13,8 +13,8 @@ using Code.EnemySpawn;
 using Code.InventorySystems.Equipments;
 using Code.SHS.Entities.Enemies.Events.Local;
 using UnityEngine;
-using Work.LKW.Code.Items;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items;
+using Code.Items.ItemInfo;
 
 namespace Code.SHS.Entities.Enemies
 {

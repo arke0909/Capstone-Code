@@ -1,6 +1,5 @@
-using System;
-using System.Threading;
-using Code.StatusEffectSystem;
+﻿using System.Threading;
+using Ami.BroAudio;
 using Cysharp.Threading.Tasks;
 using DewmoLib.Dependencies;
 using DewmoLib.ObjectPool.RunTime;
@@ -16,6 +15,7 @@ namespace Code.SkillSystem.Skills.TrackingBlade
     {
         [SerializeField] private TrackingTargetMark trackingTargetMark;
         [SerializeField] private PoolItemSO trackingBladeItemSO;
+        [SerializeField] private SoundID trackingBladeSoundID;
         [SerializeField] private LayerMask whatIsEnemy;
         [SerializeField] private Transform firePosTrm;
         [SerializeField] private float delayToFire = 1.5f;
@@ -78,6 +78,7 @@ namespace Code.SkillSystem.Skills.TrackingBlade
                    
                     firePos.x += x;
                     firePos.z += z;
+                    BroAudio.Play(trackingBladeSoundID, firePos);
 
                     TrackingBlade tb = _poolManager.Pop<TrackingBlade>(trackingBladeItemSO);
                     
@@ -104,7 +105,7 @@ namespace Code.SkillSystem.Skills.TrackingBlade
                 await UniTask.WaitForSeconds(delayToFire, cancellationToken:linkedCts.Token);
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 trackingTargetMark.CancelCharge();
                 return false;
@@ -115,16 +116,21 @@ namespace Code.SkillSystem.Skills.TrackingBlade
         {
              var results = Physics.OverlapSphere(transform.position, detectRange, whatIsEnemy);
 
+             Entity target = null;
+             
+             float minDist = detectRange;
+             
              foreach (var col in results)
              {
-                 if (col.TryGetComponent(out Entity target))
+                 float dist = Vector3.Distance(_owner.transform.position, col.transform.position);
+                 if (dist < minDist)
                  {
-                     trackingTargetMark.SetTarget(target.transform, delayToFire);
-                     return target;
+                     minDist = dist;
+                     target = col.GetComponent<Entity>();
                  }
              }
              
-             return null;
+             return target;
         }
     }
 }

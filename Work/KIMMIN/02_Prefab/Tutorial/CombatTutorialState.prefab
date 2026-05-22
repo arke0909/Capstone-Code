@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a15e02020504deba4f92ff6577ed745, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tutorialStateSO: {fileID: 11400000, guid: f5f74696df28e9443a5c2dccc756cd79, type: 2}
+  tutorialStateSO: {fileID: 11400000, guid: f5f74696df28e9443a5c2dccc756cd79, type: 2}
   spawnEnemy: {fileID: 11400000, guid: 20286dbc754c1694a88bb56d2e0648d4, type: 2}
   spawnPoints:
   - {fileID: 5330038809732036584}

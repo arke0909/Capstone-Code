@@ -16,6 +16,7 @@ namespace Code.SHS.Entities.Enemies.FSM
         public override void Enter()
         {
             base.Enter();
+            _movement.SetStop(true);
             stunTimer = 0;
         }
 
@@ -31,6 +32,7 @@ namespace Code.SHS.Entities.Enemies.FSM
 
         public override void Exit()
         {
+            _movement.SetStop(false);
             base.Exit();
         }
 

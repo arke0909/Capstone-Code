@@ -5,7 +5,7 @@ using Chipmunk.Modules.StatSystem;
 using UnityEditor;
 using UnityEngine;
 
-namespace Work.LKW.Code.Items.ItemInfo
+namespace Code.Items.ItemInfo
 {
     [Serializable]
     public struct AddStatData

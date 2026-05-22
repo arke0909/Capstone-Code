@@ -1,7 +1,9 @@
 ﻿using Chipmunk.GameEvents;
 using Code.EnemySpawn;
+using Code.UI.Minimap.Core;
 using DewmoLib.Dependencies;
 using DewmoLib.ObjectPool.RunTime;
+using Scripts.GameSystem.Structures;
 using UnityEngine;
 using Work.Code.MapEvents;
 using Random = UnityEngine.Random;
@@ -12,9 +14,9 @@ namespace Scripts.GameSystem.GameEvents
     {
         [SerializeField] private BossSpawner[] targetSpawners;
         [SerializeField] private PoolItemSO structureItem;
+        [SerializeField] private Sprite portalIcon;
 
         [Inject] private PoolManagerMono _poolManager;
-
         protected override void StartDropStructureEvent()
         {
             if (!TryGetRandomAreaPoint(out AreaPoint spawnPoint) || targetSpawners == null || targetSpawners.Length <= 0)
@@ -24,10 +26,16 @@ namespace Scripts.GameSystem.GameEvents
             if (targetSpawner == null)
                 return;
 
-            var item = RegisterDropStructure(_poolManager.Pop<PortalStructure>(structureItem));
-            item.Init(targetSpawner, spawnPoint.Position);
+            var item = RegisterDropStructure(_poolManager.Pop<InvokeCallbackStructureWithPool>(structureItem));
+            string iconId = MinimapUtil.AddToMinimap(item, ElementType.Marker, portalIcon, true, item.transform.position);
+            item.Init((entity) =>
+            {
+                targetSpawner.Enter(entity);
+                item.Despawn();
+            }, ()=>MinimapUtil.RemoveFromMinimap(iconId));
+            item.Spawn(spawnPoint.Position);
 
-            EventName = $"Area {spawnPoint.AreaIndex + 1} teleport activated!";
+            EventName = $"{spawnPoint.AreaIndex + 1} 지역 텔레포트 활성화";
             EventBus.Raise(new Work.Code.GameEvents.TeleportToMapEvent(
                 spawnPoint.AreaIndex,
                 spawnPoint.Position,

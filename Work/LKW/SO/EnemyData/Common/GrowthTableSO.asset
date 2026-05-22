@@ -12,6 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f56a4e0d2d2a4a1c8e0c316ad8206954, type: 3}
   m_Name: GrowthTableSO
   m_EditorClassIdentifier: 
-  growthTable:
-  - growthByLevel:
-    - {fileID: 11400000, guid: d9179f70ef26e474286e2b9abd0cde45, type: 2}
+  growthTable: []

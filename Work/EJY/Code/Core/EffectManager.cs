@@ -17,6 +17,11 @@ namespace Work.EJY.Code.Core
             Bus.Subscribe<PlayEffectEvent>(HandlePlayEffectEvent);
         }
 
+        private void OnDestroy()
+        {
+            Bus.Unsubscribe<PlayEffectEvent>(HandlePlayEffectEvent);
+        }
+
         private void HandlePlayEffectEvent(PlayEffectEvent evt)
         {
             PoolingEffect effect = _poolManager.Pop<PoolingEffect>(evt.PoolItemSO);

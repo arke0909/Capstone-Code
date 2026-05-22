@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Ami.BroAudio;
 using Chipmunk.ComponentContainers;
 using Chipmunk.Modules.StatSystem;
 using DewmoLib.ObjectPool.RunTime;
@@ -16,6 +17,7 @@ namespace Code.SkillSystem.Skills.GravityFields
         [SerializeField] private LayerMask whatIsEnemy;
         [SerializeField] private PoolItemSO gravityFieldPoolItem;
         [SerializeField] private StatSO moveSpeedStatSO;
+        [SerializeField] private SoundID soundID;
         [SerializeField] private int maxTargetCount;
         [SerializeField] private float sizeChangeDuration = 0.25f;
         [SerializeField] private float initExpansionSize = 2f;
@@ -52,6 +54,7 @@ namespace Code.SkillSystem.Skills.GravityFields
         public void Init(Vector3 position, bool isSlowEntity, bool isStunEntity)
         {
             transform.position = position;
+            BroAudio.Play(soundID, position);
             _isSlowEntity = isSlowEntity;
             _isStunEntity = isStunEntity;
 

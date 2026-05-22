@@ -1,8 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Chipmunk.GameEvents;
 using UnityEngine;
 using Work.Code.GameEvents;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Code.ETC
 {
@@ -13,8 +13,8 @@ namespace Code.ETC
         [ContextMenu("ShowItemsOnmMap")]
         private void ShowItemsOnMap()
         {
-            var evt  = new ShowItemsOnMap(itmLis);
-            Bus.Raise(evt);
+        //    var evt  = new ShowItemsOnMap(itmLis);
+        //    Bus.Raise(evt);
         }
     }
 }

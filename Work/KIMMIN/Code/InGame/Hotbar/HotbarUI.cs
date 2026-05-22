@@ -6,7 +6,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Work.LKW.Code.Items;
+using Code.Items;
 using static Code.InventorySystems.InventoryUtility;
 
 namespace Code.InGame.Hotbar

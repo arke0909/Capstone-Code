@@ -1,7 +1,7 @@
+using Code.Items.ItemInfo;
 using UnityEngine;
-using Work.LKW.Code.Items.ItemInfo;
 
-namespace Work.LKW.Code.Items
+namespace Code.Items
 {
     public abstract class HandItem : EquipableItem
     {

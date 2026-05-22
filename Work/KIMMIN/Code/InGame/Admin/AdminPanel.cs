@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Chipmunk.ComponentContainers;
 using Code.Players;
 using Code.UI.Core;
@@ -6,7 +6,7 @@ using DewmoLib.Dependencies;
 using Scripts.Players;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Work.LKW.Code.Items;
+using Code.Items;
 
 namespace Work.Code.Admin
 {
@@ -34,10 +34,12 @@ namespace Work.Code.Admin
 
         private void Update()
         {
+#if UNITY_EDITOR
             if (Keyboard.current.f5Key.wasPressedThisFrame)
             {
                 ToggleUI(true);
             }
+#endif
         }
     }
 }

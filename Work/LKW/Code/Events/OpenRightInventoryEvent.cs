@@ -1,6 +1,6 @@
 ﻿using Chipmunk.GameEvents;
 using Code.InventorySystems;
-using Work.LKW.Code.ItemContainers;
+using Code.ItemContainers;
 
 namespace Work.LKW.Code.Events
 {

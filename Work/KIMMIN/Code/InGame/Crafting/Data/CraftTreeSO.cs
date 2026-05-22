@@ -2,7 +2,8 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
+using Sirenix.Utilities;
 
 namespace Work.Code.Craft
 {
@@ -16,9 +17,9 @@ namespace Work.Code.Craft
         public string treeName; 
         public bool isBinary = true;
         
-        [HideInInspector] public List<NodeData> nodeList;
+        public List<NodeData> nodeList;
         private Dictionary<ItemDataSO, int> _itemCache;
-
+        private ItemDataSO[] _itemTypeCache;
         public Dictionary<ItemDataSO, int> ConsumeItems
         {
             get
@@ -42,6 +43,33 @@ namespace Work.Code.Craft
                 return _itemCache;
             }
         }
+        public ItemDataSO[] NeedItemType { get
+            {
+                if(_itemTypeCache == null || _itemTypeCache.Length == 0)
+                {
+                    HashSet<ItemDataSO> itemTypes = new();
+                    int count = isBinary ? 2 : 3;
+
+                    for (int i = 1; i <= count && i < nodeList.Count; i++)
+                    {
+                        var node = nodeList[i];
+
+                        if (node != null && node.Item != null)
+                        {
+                            itemTypes.Add(node.Item);
+                        }
+                        if (node != null && node.Tree != null)
+                        {
+                            foreach (var item in node.Tree.NeedItemType)
+                            {
+                                itemTypes.Add(item);
+                            }
+                        }
+                    }
+                    _itemTypeCache = itemTypes.ToArray();
+                }
+                return _itemTypeCache;
+            } }
         private static readonly Dictionary<ItemType, float> _craftTime = new()
         {
             {ItemType.Armor,3f },

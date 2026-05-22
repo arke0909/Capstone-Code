@@ -2,12 +2,12 @@
 using Chipmunk.GameEvents;
 using Code.GameEvents;
 using Code.InventorySystems;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 using Scripts.Entities;
 using UnityEngine;
 using Work.Code.GameEvents;
 
-namespace Work.LKW.Code.Items
+namespace Code.Items
 {
     public abstract class UsableItem : HandItem, IUsable
     {

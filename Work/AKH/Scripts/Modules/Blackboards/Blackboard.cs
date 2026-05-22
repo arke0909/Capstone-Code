@@ -22,6 +22,7 @@ namespace Scripts.Modules.Blackboards
             value = default;
             return false;
         }
+        
 
         public T GetOrDefault<T>(string key)
         {

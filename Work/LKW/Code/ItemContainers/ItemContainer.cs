@@ -1,4 +1,5 @@
-﻿using Chipmunk.ComponentContainers;
+﻿using System;
+using Chipmunk.ComponentContainers;
 using Chipmunk.GameEvents;
 using Code.GameEvents;
 using Code.InventorySystems;
@@ -6,13 +7,15 @@ using EPOOutline;
 using Scripts.Entities;
 using Scripts.GameSystem;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Work.Code.UI;
 using Work.LKW.Code.Events;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 using Random = UnityEngine.Random;
 
-namespace Work.LKW.Code.ItemContainers
+namespace Code.ItemContainers
 {
     public interface IInteractable
     {
@@ -21,22 +24,52 @@ namespace Work.LKW.Code.ItemContainers
         public void Interact(Entity interactor);
 
         public Outlinable Outlinable { get; }
-
     }
+
+    [Serializable]
+    public struct SelfInitInfo
+    {
+        public ItemDataSO itemData;
+        public int spawnCount;
+    }
+    
     public class ItemContainer : InteractableStructure,IContainerComponent
     {
+        [Header("Item Spawn Setting")]
         [SerializeField] private List<ItemType> allowedTypes;
-        [field: SerializeField] public SpawnArea AllowedSpawnArea { get; private set; }
-        [SerializeField] private LayerMask whatIsPlayer;
         [SerializeField] private int minItems = 1;
         [SerializeField] private int maxItems = 4;
+        [field: SerializeField] public SpawnArea AllowedSpawnArea { get; private set; }
+    
+        [Header("Self Initialization")]
+        [field:SerializeField] public bool IsSelfInitialized { get; private set; } = false;
+        [SerializeField, ShowIf("IsSelfInitialized")] private List<SelfInitInfo> infoList = new List<SelfInitInfo>();
+    
         public ItemContainerInventory Inventory { get; private set; }
         public ComponentContainer ComponentContainer { get; set; }
+    
+        protected override void Start()
+        {
+            base.Start();
 
-
+            InitializeSelf();
+        }
+    
         public void OnInitialize(ComponentContainer componentContainer)
         {
             Inventory = componentContainer.Get<ItemContainerInventory>();
+        }
+
+        private void InitializeSelf()
+        {
+            if(IsSelfInitialized == false) return;
+        
+            if (Inventory == null)
+            {
+                Debug.LogError($"[ItemContainer] Inventory가 null입니다: {gameObject.name}");
+                return;
+            }
+            Inventory.SetUpItemSelf(infoList);
         }
 
         public List<ItemType> GetAllowedTypes() => allowedTypes;
@@ -45,7 +78,12 @@ namespace Work.LKW.Code.ItemContainers
         [ContextMenu("Interact")]
         public override void Interact(Entity interactor)
         {
-            Inventory.Select();
+            if (Inventory == null)
+                return;
+
+            EventBus.Raise(new OpenPlayerUIEvent(true));
+            Bus.Raise(new OpenRightInventoryEvent(Inventory));
+            Inventory.OpenLootUI();
         }
 
     }

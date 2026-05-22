@@ -28,6 +28,12 @@ namespace Scripts.SkillSystem.Manage
         public void SetCooldown()
             => _cooldownTimer = CurrentActiveSkill.cooldown;
 
+        public void ReduceCooldown(float reduceCooldown)
+        {
+            _cooldownTimer = Mathf.Max(_cooldownTimer - reduceCooldown, 0f);
+            OnCoolDown?.Invoke(CurrentActiveSkill.SkillData, _cooldownTimer, CurrentActiveSkill.cooldown);
+        }
+
         public override void ChangeItem(Skill newSkill)
         {
             if (newSkill is not ActiveSkill active)

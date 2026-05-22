@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca62f7e28d5948408c5c73e6790860c8, type: 3}
+  m_Name: 조합법_접이식개머리판
+  m_EditorClassIdentifier: 
+  treeName: 조합법_접이식개머리판
+  isBinary: 0
+  nodeList:
+  - <Item>k__BackingField: {fileID: 11400000, guid: f1c426e8d0454c6439477f40d429725c, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+    <InheritSkillToCraftResult>k__BackingField: 0
+  - <Item>k__BackingField: {fileID: 11400000, guid: ed9fb4609c16d664489b4f49f344be75, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+    <InheritSkillToCraftResult>k__BackingField: 0
+  - <Item>k__BackingField: {fileID: 11400000, guid: 84916ccdad6ed974d945c6e0e3f461a5, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+    <InheritSkillToCraftResult>k__BackingField: 0
+  - <Item>k__BackingField: {fileID: 11400000, guid: 1d220c60507475c42a4de7d3d696b2fa, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+    <InheritSkillToCraftResult>k__BackingField: 0

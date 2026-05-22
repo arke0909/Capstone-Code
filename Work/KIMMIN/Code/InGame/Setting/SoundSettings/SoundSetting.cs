@@ -2,49 +2,43 @@ using System;
 using Ami.BroAudio;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.UI;
+using Work.Code.UI.ScrollBar;
 
 namespace Work.Code.Setting.SoundSettings
 {
     public class SoundSetting : MonoBehaviour
     {
-        [SerializeField] private Scrollbar masterVolumeSlider;
-        [SerializeField] private Scrollbar sfxVolumeSlider;
-        [SerializeField] private Scrollbar bgmVolumeSlider;
-
-        [SerializeField] private TextMeshProUGUI masterText;
-        [SerializeField] private TextMeshProUGUI sfxText;
-        [SerializeField] private TextMeshProUGUI bgmText;
+        [SerializeField] private BaseScrollbar masterVolumeSlider;
+        [SerializeField] private BaseScrollbar sfxVolumeSlider;
+        [SerializeField] private BaseScrollbar bgmVolumeSlider;
 
         private void Awake()
         {
-            masterVolumeSlider.onValueChanged.AddListener(HandleMasterVolumeChanged);
-            sfxVolumeSlider.onValueChanged.AddListener(HandleSFXVolumeChanged);
-            bgmVolumeSlider.onValueChanged.AddListener(HandleBGMVolumeChanged);
+            masterVolumeSlider.OnValueChanged += (HandleMasterVolumeChanged);
+            sfxVolumeSlider.OnValueChanged += (HandleSFXVolumeChanged);
+            bgmVolumeSlider.OnValueChanged += (HandleBGMVolumeChanged);
+        }
 
-            masterVolumeSlider.value = 1f;
-            sfxVolumeSlider.value = 1f;
-            bgmVolumeSlider.value = 1f;
+        private void OnDestroy()
+        {
+            masterVolumeSlider.OnValueChanged -= (HandleMasterVolumeChanged);
+            sfxVolumeSlider.OnValueChanged -= (HandleSFXVolumeChanged);
+            bgmVolumeSlider.OnValueChanged -= (HandleBGMVolumeChanged);
         }
 
         private void HandleMasterVolumeChanged(float value)
         {
-            Debug.Log(Mathf.Log10(Mathf.Clamp(value, 0.0001f, 1f)) * 20f);
             BroAudio.SetVolume(BroAudioType.All, value);
-            masterText.text = ((int)(value * 100)).ToString();
         }
 
         private void HandleSFXVolumeChanged(float value)
         {
             BroAudio.SetVolume(BroAudioType.SFX, value);
-            sfxText.text = ((int)(value * 100)).ToString();
         }
 
         private void HandleBGMVolumeChanged(float value)
         {
             BroAudio.SetVolume(BroAudioType.Music, value);
-            bgmText.text = ((int)(value * 100)).ToString();
         }
     }
 }

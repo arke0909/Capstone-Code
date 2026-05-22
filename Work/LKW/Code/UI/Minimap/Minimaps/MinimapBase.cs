@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Code.UI.Core;
@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Code.UI.Minimap.Minimaps
 {
-    public abstract class MinimapBase : UIPanel
+    public abstract class MinimapBase : UIBase
     {
         [Inject] protected Player _player;
 

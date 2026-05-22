@@ -8,6 +8,7 @@ namespace Scripts.Entities
     {
         public Action OnAnimationEndTrigger;
         public Action OnAttackVFXTrigger;
+        public Action OnAnimationImpactTrigger;
         public Action<bool> OnManualRotationTrigger;
         public Action OnDamageCastTrigger;
         public Action<bool> OnDamageToggleTrigger;
@@ -26,6 +27,7 @@ namespace Scripts.Entities
             OnAnimationEndTrigger?.Invoke();
         }
         private void CastSkill() => OnCastSkillTrigger?.Invoke();
+        private void PlayAnimationImpact() => OnAnimationImpactTrigger?.Invoke();
         private void PlayAttackVFX() => OnAttackVFXTrigger?.Invoke();
         private void StartManualRotation() => OnManualRotationTrigger?.Invoke(true);
         private void StopManualRotation() => OnManualRotationTrigger?.Invoke(false);

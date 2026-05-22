@@ -2,10 +2,14 @@
 using Code.InventorySystems.Equipments;
 using Code.Players;
 using UnityEngine;
-using Work.LKW.Code.Items;
+using Code.Items;
 
 namespace Scripts.Players.States
 {
+    public class ItemUseContext
+    {
+        public UsableItem TargetItem { get; set; }
+    }
     public class PlayerItemUseState : PlayerMoveState
     {
         private UsableItem _item;
@@ -20,9 +24,9 @@ namespace Scripts.Players.States
         public override void Enter()
         {
             base.Enter();
-
-            if (_equipment.TryGetEquippedItem(EquipPartType.Hand, out EquipableItem item) && item is UsableItem usable)
-                _item = usable;
+            ItemUseContext context = _blackboard.GetOrDefault<ItemUseContext>("ItemUseContext");
+            Debug.Assert(context != null, "Context is null");
+            _item = context.TargetItem;
         }
         public override void Update()
         {

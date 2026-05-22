@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Chipmunk.ComponentContainers;
+using Chipmunk.GameEvents;
+using Code.Items.ItemInfo;
 using Code.Players;
 using Code.UI.Core;
 using DewmoLib.Dependencies;
 using Scripts.Players;
 using UnityEngine;
 using UnityEngine.UI;
+using Work.Code.GameEvents;
 
 namespace Work.Code.Craft
 {
@@ -28,7 +31,6 @@ namespace Work.Code.Craft
         {
             _inventory = _player.Get<PlayerInventory>();
             _pinCraftItems = GetComponentsInChildren<CraftPinItemUI>(true);
-
             foreach (CraftPinItemUI pinUI in _pinCraftItems)
             {
                 pinUI.Init(_inventory);
@@ -40,12 +42,15 @@ namespace Work.Code.Craft
             if (_pinItems.ContainsKey(craftTree))
                 return;
 
-            CraftPinItemUI craftPinItemUI = _pinCraftItems.First(x => !x.IsActive);
+            CraftPinItemUI craftPinItemUI = _pinCraftItems.FirstOrDefault(x => !x.IsActive);
+            if(craftPinItemUI == null)
+                return;
             craftPinItemUI.EnablePin(craftTree);
             _pinItems.Add(craftTree, craftPinItemUI);
             _orderList.Add(craftTree);
 
             RefreshUI();
+            RefreshMapItems();
         }
 
         public void RemovePinUI(CraftTreeSO targetTree)
@@ -57,7 +62,20 @@ namespace Work.Code.Craft
                 _orderList.Remove(targetTree);
                 
                 RefreshUI();
+                RefreshMapItems();
             }
+        }
+
+        private void RefreshMapItems()
+        {
+            ItemDataSO[] needItems = _orderList
+                .Where(craftTree => craftTree != null)
+                .SelectMany(craftTree => craftTree.NeedItemType)
+                .Where(item => item != null)
+                .Distinct()
+                .ToArray();
+
+            EventBus.Raise(new ShowItemsOnMap(needItems));
         }
 
         private void RefreshUI()

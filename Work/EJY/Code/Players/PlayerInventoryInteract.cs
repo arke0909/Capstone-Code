@@ -8,7 +8,7 @@ using Scripts.Players;
 using UnityEngine;
 using Work.Code.GameEvents;
 using Work.LKW.Code.Events;
-using Work.LKW.Code.Items;
+using Code.Items;
 using static Code.InventorySystems.InventoryUtility;
 using Code.InventorySystems;
 

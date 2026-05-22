@@ -71,8 +71,7 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
 
             if (_currentHitCnt >= hitCntToFireMissile)
             {
-                Transform targetRootTrm = targetMono.transform.root;
-                IHitTransform hitTransform = targetRootTrm.gameObject.GetComponent<IHitTransform>();
+                IHitTransform hitTransform = targetMono.GetComponentInParent<IHitTransform>();
 
                 if (hitTransform == null)
                     return;
@@ -81,6 +80,7 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
 
                 for (int i = 0; i < shotMissile; ++i)
                 {
+                    Debug.Log(1);
                     var missile = _poolManager.Pop<Missile>(missilePoolItem);
                     missile.InitMissile(_owner, hitTransform.HitTransform, firePosTrm.position, isInduction, GenerateLaunchOffset(), middlePoints[i]);
                     if (isDmgRangIncrease)
@@ -89,7 +89,7 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
 
                 _currentHitCnt = 0;
                 
-                OnSkillInvoked?.Invoke();
+                OnSkillInvoked?.Invoke(); 
             }
         }
 

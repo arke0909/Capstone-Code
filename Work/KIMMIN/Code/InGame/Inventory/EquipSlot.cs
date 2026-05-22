@@ -3,7 +3,7 @@ using Code.InventorySystems.Items;
 using Code.Players;
 using Scripts.Combat.ItemObjects;
 using UnityEngine;
-using Work.LKW.Code.Items;
+using Code.Items;
 
 namespace InGame.InventorySystem
 {

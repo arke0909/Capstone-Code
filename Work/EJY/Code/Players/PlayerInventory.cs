@@ -8,7 +8,7 @@ using DewmoLib.Dependencies;
 using DewmoLib.ObjectPool.RunTime;
 using Scripts.Players;
 using UnityEngine;
-using Work.LKW.Code.Items;
+using Code.Items;
 
 namespace Code.Players
 {

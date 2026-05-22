@@ -1,13 +1,13 @@
 ﻿using Chipmunk.ComponentContainers;
 using Chipmunk.GameEvents;
 using Code.GameEvents;
+using Code.Items.ItemInfo;
 using Code.StatusEffectSystem;
 using Scripts.Entities;
 using UnityEngine;
-using Work.LKW.Code.Items;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items;
 
-namespace Work.LKW.Code.Items
+namespace Code.Items
 {
     public class StatusEffectItem : UsableItem
     {

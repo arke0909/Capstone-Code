@@ -3,8 +3,8 @@ using Code.DataSystem;
 using DewmoLib.ObjectPool.RunTime;
 using Scripts.SkillSystem;
 using UnityEngine;
-using Work.LKW.Code.Items;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items;
+using Code.Items.ItemInfo;
 using SHS.Scripts.Crosshairs;
 
 namespace Scripts.Combat.Datas

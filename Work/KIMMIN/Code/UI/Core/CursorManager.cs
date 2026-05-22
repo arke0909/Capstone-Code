@@ -18,7 +18,8 @@ namespace Code.UI.Core
 
         private void OnDestroy()
         {
-            UIManager.Instance.OnUIStackChanged -= HandleChangeUIStack;
+            if (UIManager.HasInstance)
+                UIManager.Instance.OnUIStackChanged -= HandleChangeUIStack;
         }
 
         private void HandleChangeUIStack()

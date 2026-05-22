@@ -89,7 +89,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &8371056398282861980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,6 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a359c20a3e8c4513bfd0492a3288ce71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panelID: 
   playerInput: {fileID: 11400000, guid: 4e3c85c501a7f4e46b46ca7017e2cbd8, type: 2}
   inventoryPanel: {fileID: 4768169925248789975}
   lootSlotUI: {fileID: 6424881668691822554}

@@ -1,11 +1,14 @@
 using Chipmunk.ComponentContainers;
 using Scripts.Players;
 using Scripts.SkillSystem.Manage;
+using UnityEngine;
 
 namespace Work.Code.Tutorials
 {
     public class SkillEquipTutorialState : TutorialState
     {
+        [SerializeField] private TutorialDoor tutorialDoor;
+        
         private SkillManager _skillManager;
         private ActiveSkillComponent _activeComponent;
         private PassiveSkillComponent _passiveComponent;
@@ -36,6 +39,7 @@ namespace Work.Code.Tutorials
 
         public override void ExitTutorial()
         {
+            tutorialDoor.OpenDoor();
             _skillManager.OnSkillEquip -= HandleEquipSkill;
         }
     }

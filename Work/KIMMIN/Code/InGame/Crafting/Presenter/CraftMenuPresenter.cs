@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using Work.Code.Craft.View;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Work.Code.Craft.Presenter
 {

@@ -19,23 +19,28 @@ namespace Scripts.Players
         Sprint,
         Aim
     }
+
     public struct RotationInfo
     {
         public Quaternion targetRot;
         public float rotationSpeed;
+
         public RotationInfo(Quaternion targetRot, float rotationSpeed)
         {
             this.targetRot = targetRot;
             this.rotationSpeed = rotationSpeed;
         }
     }
+
     public class CharacterMovement : MonoBehaviour, IAfterInitialze, IKnockbackable, ISkillMovement
     {
         [SerializeField] private StatSO moveSpeedStat;
         [SerializeField] private StateDataSO stunState;
         [SerializeField] private float gravity = -9.8f;
         [SerializeField] private CharacterController controller;
+
         [SerializeField] private SerializedDictionary<MoveType, StatSO> speedMultipliers;
+
         // [SerializeField] private Transform parent;
         public bool IsGround => controller.isGrounded;
         private float _moveSpeed = 12f;
@@ -61,7 +66,7 @@ namespace Scripts.Players
         private Vector3 _velocity;
         public Vector3 Velocity => _velocity;
         private ComponentContainer _container;
-        
+
         ComponentContainer IContainerComponent.ComponentContainer { get; set; }
 
         private float _verticalVelocity;
@@ -73,6 +78,7 @@ namespace Scripts.Players
             _entity = container.GetCompo<Entity>(true);
             _statOverrideBehavior = container.GetCompo<StatOverrideBehavior>();
         }
+
         public void AfterInitialize()
         {
             foreach (MoveType type in Enum.GetValues(typeof(MoveType)))
@@ -80,8 +86,10 @@ namespace Scripts.Players
                 if (speedMultipliers.TryGetValue(type, out StatSO stat))
                     speedMultipliers[type] = _statOverrideBehavior.GetStat(stat);
             }
+
             _moveSpeed = _statOverrideBehavior.SubscribeStat(moveSpeedStat, HandleMoveSpeedChange, 1f);
         }
+
         private void OnDestroy()
         {
             _statOverrideBehavior.UnSubscribeStat(moveSpeedStat, HandleMoveSpeedChange);
@@ -91,10 +99,12 @@ namespace Scripts.Players
         {
             _movementDirection = new Vector3(movementInput.x, 0, movementInput.y).normalized;
         }
+
         public void SetMovementDirection(Vector3 movementDirection)
         {
             _movementDirection = movementDirection.normalized;
         }
+
         private void FixedUpdate()
         {
             CalculateMovement();
@@ -139,11 +149,14 @@ namespace Scripts.Players
             Quaternion targetRot = Quaternion.LookRotation(direction);
             _rotationInfo = new RotationInfo(targetRot, rotationSpeed);
         }
+
         public void SetRotation(Vector3 direction)
         {
             Quaternion targetRot = Quaternion.LookRotation(direction);
             transform.rotation = targetRot;
+            SetRotationInfo(direction, 0f);
         }
+
         private void ApplyGravity()
         {
             if (IsGround && _verticalVelocity < 0)
@@ -171,8 +184,10 @@ namespace Scripts.Players
             _autoMoveStartTime = Time.time;
             _movementData = movementData;
         }
+
         private void HandleMoveSpeedChange(StatSO stat, float currentValue, float prevValue)
             => _moveSpeed = currentValue;
+
         public void KnockBack(Vector3 direction, MovementDataSO movementData)
             => ApplyMovementData(direction, movementData);
 

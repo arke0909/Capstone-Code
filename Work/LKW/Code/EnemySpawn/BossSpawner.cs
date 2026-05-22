@@ -14,7 +14,9 @@ using Scripts.Players;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Work.Code.GameEvents;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
+using Code.ItemContainers;
+using Scripts.GameSystem.Structures;
 
 namespace Code.EnemySpawn
 {
@@ -22,37 +24,54 @@ namespace Code.EnemySpawn
     {
         [SerializeField] private EnemySO bossSO;
         [SerializeField] private Transform targetTransform,playerTransform;
+        [SerializeField] private ItemContainer rewardContainer;
+        [SerializeField] private InvokeCallbackStructure returnStructure;
         [Inject] private PoolManagerMono _poolManager;
         private Enemy _currentEnemy;
-        private CharacterMovement _currentPlayer;
         private Vector3 _initPos;
+        private Vector3 _returnStructurePos;
+        private float _beforeTimeScale;
+        private void Start()
+        {
+            returnStructure.Init(Exit, null);
+            _returnStructurePos = returnStructure.transform.position;
+        }
+
         public void Enter(Entity entity)
         {
             if(_currentEnemy != null)
             {
-                _currentEnemy.OnDeadEvent.RemoveListener(Canceled);
+                _currentEnemy.OnDeadEvent.RemoveListener(HandleBossDead);
                 _currentEnemy.ReleaseToPool();
                 _currentEnemy = null;
             }
             if (!entity.TryGet<CharacterMovement>(out var movement))
                 return;
+            _beforeTimeScale = TimeController.Instance.TimeScale;
+            TimeController.Instance.TimeScale = 0;
             _currentEnemy = EnemySpawnUtility.SpawnEnemy(bossSO, targetTransform.position, Quaternion.identity, _poolManager);
-            _currentEnemy.OnDeadEvent.AddListener(Canceled);
-            _currentPlayer = movement;
+            _currentEnemy.OnDeadEvent.AddListener(HandleBossDead);
             _initPos = movement.transform.position;
             movement.SetPosition(playerTransform.position);
+            returnStructure.Despawn();
         }
 
-        public void Canceled()
+        private void HandleBossDead()
+        {
+            _currentEnemy.OnDeadEvent.RemoveListener(HandleBossDead);
+            returnStructure.Spawn(_returnStructurePos);
+        }
+
+        public void Exit(Entity entity)
         {
             if (_currentEnemy == null)
                 return;
-            _currentEnemy.OnDeadEvent.RemoveListener(Canceled);
+            TimeController.Instance.TimeScale = _beforeTimeScale;
             if(!_currentEnemy.IsDead)
                 _currentEnemy.ReleaseToPool();
-            _currentPlayer.SetPosition(_initPos);
             _currentEnemy = null;
-            _currentPlayer = null;
+            returnStructure.Despawn();
+            entity.Get<CharacterMovement>().SetPosition(_initPos);
             //스테이지 끝남
         }
     }

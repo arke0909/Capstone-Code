@@ -7,7 +7,7 @@ using Scripts.Combat.Fovs;
 using Scripts.Combat.Projectiles;
 using Scripts.Entities;
 using UnityEngine;
-using Work.LKW.Code.Items;
+using Code.Items;
 using SHS.Scripts.Combats.Events;
 using SHS.Scripts.NoiseSystems;
 
@@ -33,7 +33,7 @@ namespace Scripts.Combat.ItemObjects
         public Vector3 FirePosition => fireTrm != null ? fireTrm.position : transform.position;
 
         public Vector3 FireDirection =>
-            fireTrm != null ? _aimProvider.GetAimPosition() - fireTrm.position : Vector3.zero;
+            fireTrm != null ? _aimProvider.GetAimPosition(fireTrm.position.y) - fireTrm.position : Vector3.zero;
 
         public Transform FireTrm => fireTrm;
 
@@ -48,32 +48,9 @@ namespace Scripts.Combat.ItemObjects
             _localEventBus = owner.Get<LocalEventBus>();
         }
 
-        private Vector3 GetPlaneAimPoint()
-        {
-            Vector3 worldAimPoint = _aimProvider.GetAimPosition();
-
-            Vector3 rayDirection = (worldAimPoint - Camera.main.transform.position).normalized;
-            Ray aimRay = new Ray(Camera.main.transform.position, rayDirection);
-
-            Plane firePlane = new Plane(Vector3.up, new Vector3(0f, fireTrm.position.y, 0f));
-
-            Vector3 planeAimPoint;
-            if (firePlane.Raycast(aimRay, out float enter))
-            {
-                planeAimPoint = aimRay.GetPoint(enter);
-            }
-            else
-            {
-                Vector3 flatDir = Vector3.ProjectOnPlane(rayDirection, Vector3.up).normalized;
-                planeAimPoint = fireTrm.position + flatDir * 10f;
-            }
-            
-            return planeAimPoint;
-        }
-        
         public override void Attack()
         {
-            Vector3 planeAimPoint = GetPlaneAimPoint();
+            Vector3 planeAimPoint = _aimProvider.GetAimPosition(fireTrm.position.y);
             
             for (int i = 0; i < _gunData.bulletPerShot; i++)
             {
@@ -127,7 +104,7 @@ namespace Scripts.Combat.ItemObjects
             if (_aimProvider == null || fireTrm == null)
                 return;
 
-            Vector3 aimPoint = _aimProvider.GetAimPosition();
+            Vector3 aimPoint = _aimProvider.GetAimPosition(fireTrm.position.y);
             Gizmos.DrawLine(fireTrm.position, aimPoint);
             Gizmos.DrawWireSphere(aimPoint, 0.5f);
         }

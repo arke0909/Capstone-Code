@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Work.Code.Craft.View
 {
@@ -103,6 +103,17 @@ namespace Work.Code.Craft.View
             }
             
             createButton.onClick.RemoveAllListeners();
+        }
+
+        public void HighlightCraftItem(ItemDataSO item, bool isPlay, Color effectColor)
+        {
+            if (!_itemDict.TryGetValue(item, out CraftItemUI ui))
+                return;
+            
+            if(isPlay)
+                ui.PlayBackgroundEffect(effectColor);
+            else
+                ui.StopBackgroundEffect();
         }
     }
 }

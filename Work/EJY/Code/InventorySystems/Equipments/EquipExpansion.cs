@@ -1,7 +1,7 @@
 ﻿using System;
 using Code.InventorySystems.Equipments;
 using Code.Players;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Code.InventorySystems.Items
 {

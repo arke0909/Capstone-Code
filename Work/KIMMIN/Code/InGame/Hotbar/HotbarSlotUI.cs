@@ -1,4 +1,4 @@
-using Code.Hotbar;
+﻿using Code.Hotbar;
 using Code.InventorySystem;
 using Code.InventorySystems.Items;
 using Code.UI.Core;
@@ -11,7 +11,7 @@ namespace Code.InGame.Hotbar
 {
     public class HotbarSlotUI : MonoBehaviour, IUIElement<HotbarSlot>
     {
-        public const int IndexOffset = 3;
+        public const int IndexOffset = 2;
 
         [SerializeField] private ItemSlotUI slotUI;
         [SerializeField] private TextMeshProUGUI indexText;

@@ -1,4 +1,5 @@
 ﻿using System;
+using Ami.BroAudio;
 using Chipmunk.ComponentContainers;
 using Chipmunk.GameEvents;
 using Code.GameEvents;
@@ -22,7 +23,6 @@ namespace Code.SkillSystem.Skills.TrackingBlade
         [SerializeField] private float rotationSpeed = 120f;
         [SerializeField] private float delayToRotate = 0.5f;
         [SerializeField] private float lifeTime = 6f;
-        [SerializeField] private float additionalRotationSpeedMultiplier = 30f;
 
         public PoolItemSO PoolItem => trackingBladeItemSO;
         public GameObject GameObject => gameObject;
@@ -92,7 +92,7 @@ namespace Code.SkillSystem.Skills.TrackingBlade
                 if(entity.TryGetComponent(out IDamageable damageable))
                     damageable.ApplyDamage(new DamageData
                     {
-                        damage = 3,
+                        damage = 8,
                         defPierceLevel = 1,
                         damageType = DamageType.DOT
                     },

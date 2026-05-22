@@ -5,8 +5,8 @@ using System.Linq;
 using Code.InventorySystems.Items;
 using Scripts.Entities;
 using UnityEngine;
-using Work.LKW.Code.Items;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items;
+using Code.Items.ItemInfo;
 
 namespace Code.InventorySystems
 {
@@ -15,7 +15,7 @@ namespace Code.InventorySystems
         public Entity Owner { get; private set; }
         public ComponentContainer ComponentContainer { get; set; }
         [SerializeField] private int _currentInventorySize = 4;
-        
+
         protected int CurrentInventorySize
         {
             get => _currentInventorySize;
@@ -28,7 +28,7 @@ namespace Code.InventorySystems
                         CreateSlot(i);
                     }
                 }
-
+                
                 _currentInventorySize = value;
             }
         }
@@ -36,9 +36,8 @@ namespace Code.InventorySystems
         [SerializeField] protected List<ItemSlot> itemSlots;
 
         public event Action InventoryChanged;
-        public event Action InventoryEmpty;
 
-
+        
         protected virtual void Awake()
         {
             for (int i = 0; i < CurrentInventorySize; ++i)
@@ -116,10 +115,10 @@ namespace Code.InventorySystems
         }
 
         // 실질적으로 넣을 수 있는 아이템의 개수 구하기
-        private int GetAddableItemCount(ItemBase item, int requestCount)
+        public int GetAddableItemCount(ItemDataSO itemData, int requestCount)
         {
             // 타겟 인벤토리의 같은 아이템 슬롯들의 남은 공간
-            List<ItemSlot> targetSlots = GetItemSlots(item.ItemData).ToList();
+            List<ItemSlot> targetSlots = GetItemSlots(itemData).ToList();
             // 타겟 인벤토리의 빈 슬롯 수
             targetSlots.AddRange(GetItemSlots(null));
 
@@ -129,11 +128,11 @@ namespace Code.InventorySystems
             {
                 if (slot.Item == null)
                 {
-                    addableCnt += item.ItemData.maxStack;
+                    addableCnt += itemData.maxStack;
                 }
                 else
                 {
-                    addableCnt += item.ItemData.maxStack - slot.Stack;
+                    addableCnt += itemData.maxStack - slot.Stack;
                 }
 
 
@@ -207,9 +206,6 @@ namespace Code.InventorySystems
 
         public void UpdateInventory()
         {
-            if(_currentInventorySize == 0)
-                InventoryEmpty?.Invoke();
-            
             InventoryChanged?.Invoke();
         }
 
@@ -352,7 +348,7 @@ namespace Code.InventorySystems
             if (item == null || count <= 0)
                 return false;
 
-            if (GetAddableItemCount(item, count) < count)
+            if (GetAddableItemCount(item.ItemData, count) < count)
                 return false;
 
             bool allowReuseSourceReference = item.ItemData.maxStack == 1 && count == 1;
@@ -466,7 +462,7 @@ namespace Code.InventorySystems
             amount = Mathf.Clamp(amount, 1, sourceSlot.Stack);
 
             ItemBase sourceItem = sourceSlot.Item;
-            int addable = target.GetAddableItemCount(sourceItem, amount);
+            int addable = target.GetAddableItemCount(sourceItem.ItemData, amount);
             if (addable <= 0)
                 return 0;
 
@@ -524,6 +520,21 @@ namespace Code.InventorySystems
             }
 
             UpdateInventory();
+        }
+
+        public int GetRemainItems()
+        {
+            int total = 0;
+            
+            for (int i = 0; i < CurrentInventorySize; i++)
+            {
+                if (itemSlots[i].Item != null)
+                {
+                    total++;
+                }
+            }
+
+            return total;
         }
     }
 }

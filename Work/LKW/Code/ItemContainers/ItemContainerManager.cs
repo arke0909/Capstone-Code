@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using Work.LKW.Code.Items;
-using Work.LKW.Code.Items.ItemInfo;
-using Work.LKW.Code.ItemContainers;
-using Chipmunk.ComponentContainers;
+using Code.Items;
+using Code.Items.ItemInfo;
 using Chipmunk.GameEvents;
 using Work.Code.GameEvents;
 
-namespace Work.LKW.Code.ItemContainers
+namespace Code.ItemContainers
 {
     public class ItemContainerManager : MonoBehaviour
     {
@@ -43,10 +41,12 @@ namespace Work.LKW.Code.ItemContainers
         {
             foreach (var container in _allContainers)
             {
+                if(container.IsSelfInitialized) continue;
+                
                 List<ItemDataSO> targetItems = new List<ItemDataSO>();
                 foreach (var type in container.GetAllowedTypes())
                 {
-                    targetItems.AddRange(itemDB.GetItemByType(type));
+                    targetItems.AddRange(itemDB.GetItemsByType(type));
                 }
 
                 int count = container.GetRandomCount();

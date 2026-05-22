@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &628694692688967395
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7891400499098348562}
+  - component: {fileID: 5617868034936134469}
+  m_Layer: 0
+  m_Name: Rapid Fire Skill
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7891400499098348562
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 628694692688967395}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 41.93151, y: 4.1953363, z: -136.99124}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5617868034936134469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 628694692688967395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c7d6cb6a4f7402bb8d5e941ce85b210, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <SkillData>k__BackingField: {fileID: 11400000, guid: 2a0e38f940b547b49b24cffc0881f18c, type: 2}
+  cooldown: 12
+  firePos: {fileID: 0}
+  bulletPoolItem: {fileID: 0}
+  excludeLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  damage: 3.5
+  projectileSpeed: 35
+  projectileMaxRange: 20
+  shotInterval: 0.08
+  spreadAngle: 3
+  sameTargetDamageBonus: 0.2
+  shotCount: 8
+  extraShotCount: 4
+  defPierceLevel: 1

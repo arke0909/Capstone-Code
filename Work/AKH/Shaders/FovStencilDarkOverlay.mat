@@ -27,7 +27,8 @@ Material:
     m_Floats:
     - _BlurSize: 0.002
     - _BlurSpread: 0.002
-    - _Darkness: 0.36
+    - _Darkness: 0.423
+    - _DebugVisibilityMask: -1.26
     - _FOVAngle: 90
     - _FOVRadius: 10
     - _Softness: 0.1

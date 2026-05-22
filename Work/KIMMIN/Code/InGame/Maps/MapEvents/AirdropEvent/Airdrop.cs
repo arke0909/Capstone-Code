@@ -1,17 +1,18 @@
 ﻿using Chipmunk.GameEvents;
+using Code.ItemContainers;
+using Code.Items.ItemInfo;
 using Code.UI.Minimap.Core;
 using DewmoLib.ObjectPool.RunTime;
 using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Work.Code.Core.Extension;
-using Work.LKW.Code.ItemContainers;
-using Work.LKW.Code.Items.ItemInfo;
 
 namespace Work.Code.MapEvents.Elements
 {
-    public class Airdrop : MonoBehaviour, IPoolable, IDropStructure
+    public class Airdrop : MonoBehaviour, IPoolable, ISpawnableStructure
     {
         [SerializeField] private float dropSpeed = 5f;
         [SerializeField] private float groundDetectSize = 1f;
@@ -36,23 +37,31 @@ namespace Work.Code.MapEvents.Elements
             _Inventory = GetComponent<ItemContainerInventory>();
         }
 
-        public void StartDrop(Vector3 position, float height, Action<Vector3> landingCallback = null)
+        public void StartDrop(Vector3 position, Action<Vector3> landingCallback = null)
         {
-            InitAirdrop(position, height);
+            Spawn(position);
             SetUpContainer();
             
             LandingCallback = landingCallback;
             _isDropping = true;
             _iconId = MinimapUtil.AddToMinimap(this, ElementType.SupplyIcon, null, false, position);
         }
-        
-        private void InitAirdrop(Vector3 position, float height)
+
+        public void Spawn(Vector3 targetPos)
         {
             parachute.SetActive(true);
             parachute.transform.SetLocalScale(0.7f);
-            transform.position = new Vector3(position.x, height, position.z);
+            transform.position = targetPos;
         }
-
+        public void Despawn()
+        {
+            fogEffect?.Stop();
+            fogEffect?.Clear();
+            LandingCallback = null;
+            _isDropping = false;
+            MinimapUtil.RemoveFromMinimap(_iconId);
+            _pool.Push(this);
+        }
         private void SetUpContainer()
         {
             int index = UnityEngine.Random.Range(0, airDropItems.Count);
@@ -91,16 +100,6 @@ namespace Work.Code.MapEvents.Elements
             LandingCallback = null;
         }
 
-        public void Cancel()
-        {
-            fogEffect?.Stop();
-            fogEffect?.Clear();
-            LandingCallback = null;
-            _isDropping = false;
-            MinimapUtil.RemoveFromMinimap(_iconId);
-            _pool.Push(this);
-        }
-        
         public void SetUpPool(Pool pool)
         {
             _pool = pool;
@@ -113,5 +112,7 @@ namespace Work.Code.MapEvents.Elements
             Gizmos.color = Color.blue;
             Gizmos.DrawRay(transform.position + Vector3.up, Vector3.down * groundDetectSize);
         }
+
+
     }
 }

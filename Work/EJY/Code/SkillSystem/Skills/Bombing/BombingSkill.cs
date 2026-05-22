@@ -80,7 +80,7 @@ namespace Code.SkillSystem.Skills.Bombing
         {
             if (_isAiming)
             {
-                Vector3 targetPos = _aimProvider.GetAimPosition();
+                Vector3 targetPos = _aimProvider.GetWorldAimPosition();
                 decalObject.SetPos(targetPos);
             }
         }

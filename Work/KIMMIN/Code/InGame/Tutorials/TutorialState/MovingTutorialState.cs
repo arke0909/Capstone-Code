@@ -5,6 +5,7 @@ namespace Work.Code.Tutorials
     public class MovingTutorialState : TutorialState
     { 
         [SerializeField] private TutorialMarking marking;
+        [SerializeField] private GameObject[] arrowObjs;
 
         public override void EnterTutorial()
         {
@@ -22,6 +23,11 @@ namespace Work.Code.Tutorials
         public override void ExitTutorial()
         {
             marking.OnDetectTarget -= ExitTutorial;
+
+            foreach (var arrow in arrowObjs)
+            {
+                arrow.gameObject.SetActive(false);
+            }
         }
     }
 }

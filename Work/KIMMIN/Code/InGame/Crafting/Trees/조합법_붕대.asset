@@ -13,33 +13,20 @@ MonoBehaviour:
   m_Name: "\uC870\uD569\uBC95_\uBD95\uB300"
   m_EditorClassIdentifier: 
   treeName: "\uC870\uD569\uBC95_\uBD95\uB300"
-  nodeList:
-  - <Item>k__BackingField: {fileID: 11400000, guid: 4fe407312024df14fa4bac6efcf6bb9d, type: 2}
-    <Tree>k__BackingField: {fileID: 0}
-    <Count>k__BackingField: 1
-    <IsChild>k__BackingField: 0
-  - <Item>k__BackingField: {fileID: 11400000, guid: 841404ce6ff7b91418d8a0caebf38865, type: 2}
-    <Tree>k__BackingField: {fileID: 0}
-    <Count>k__BackingField: 1
-    <IsChild>k__BackingField: 0
-  - <Item>k__BackingField: {fileID: 11400000, guid: aaeb359f37912f44f945086080ab147e, type: 2}
-    <Tree>k__BackingField: {fileID: 0}
-    <Count>k__BackingField: 1
-    <IsChild>k__BackingField: 0
-  - <Item>k__BackingField: {fileID: 0}
-    <Tree>k__BackingField: {fileID: 0}
-    <Count>k__BackingField: 1
-    <IsChild>k__BackingField: 0
-  - <Item>k__BackingField: {fileID: 0}
-    <Tree>k__BackingField: {fileID: 0}
-    <Count>k__BackingField: 1
-    <IsChild>k__BackingField: 0
-  - <Item>k__BackingField: {fileID: 0}
-    <Tree>k__BackingField: {fileID: 0}
-    <Count>k__BackingField: 1
-    <IsChild>k__BackingField: 0
-  - <Item>k__BackingField: {fileID: 0}
-    <Tree>k__BackingField: {fileID: 0}
-    <Count>k__BackingField: 1
-    <IsChild>k__BackingField: 0
   isBinary: 1
+  nodeList:
+  - <Item>k__BackingField: {fileID: 11400000, guid: bbad5cf33a50e3944bb342c5aecc95eb, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+    <InheritSkillToCraftResult>k__BackingField: 0
+  - <Item>k__BackingField: {fileID: 11400000, guid: 9bc901473afa84c4fac92cf00094009c, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+    <InheritSkillToCraftResult>k__BackingField: 0
+  - <Item>k__BackingField: {fileID: 11400000, guid: 39c557bab8e94684eb0fca7f0f576c3f, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
+    <Count>k__BackingField: 1
+    <IsChild>k__BackingField: 0
+    <InheritSkillToCraftResult>k__BackingField: 0

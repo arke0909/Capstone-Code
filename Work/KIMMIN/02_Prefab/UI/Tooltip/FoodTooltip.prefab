@@ -350,11 +350,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2854607249666183532, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 113
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2854607249666183532, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -48.005
+      value: -48
       objectReference: {fileID: 0}
     - target: {fileID: 7885110132472418772, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_Pivot.x
@@ -449,6 +449,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2581010600523577221, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1890024590459907948}
+    - targetCorrespondingSourceObject: {fileID: 2581010600523577221, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 352520001018722944}
   m_SourcePrefab: {fileID: 100100000, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
 --- !u!1 &1074058120540924542 stripped
 GameObject:
@@ -500,6 +503,26 @@ MonoBehaviour:
   descriptionText: {fileID: 4934179209903313855}
   foodText: {fileID: 7272140421338086575}
   waterText: {fileID: 754204705320440673}
+--- !u!114 &352520001018722944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7715138839432822092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!224 &8024746831383911333 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2854607249666183532, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}

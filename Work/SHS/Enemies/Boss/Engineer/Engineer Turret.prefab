@@ -176,8 +176,8 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 8320
-  detectionRange: 7
-  damage: 5
+  detectionRange: 20
+  damage: 15
   bulletSpeed: 10
   fireRate: 5
   reloadDuration: 3
@@ -325,6 +325,11 @@ MonoBehaviour:
   <StatPerSecStat>k__BackingField: {fileID: 0}
   defStat: {fileID: 11400000, guid: 458b46c63a1c40d4ab9a6d39717dde19, type: 2}
   damageDemodifyStat: {fileID: 11400000, guid: 7a0d6ceb21222d849ad9defa279caa41, type: 2}
+  dropExpStat: {fileID: 0}
+  hitSound:
+    _entity: {fileID: 0}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 357341424337504981}
 --- !u!136 &5864827471506323516
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -5535,15 +5540,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statOverrides:
+  - stat: {fileID: 11400000, guid: 15fc09ad501e2844986107c6459f339e, type: 2}
+    isUseOverride: 1
+    overrideValue: 500
   - stat: {fileID: 11400000, guid: 94058d7303615074cbb07bb31d3f8e48, type: 2}
     isUseOverride: 1
     overrideValue: 0.75
   - stat: {fileID: 11400000, guid: 458b46c63a1c40d4ab9a6d39717dde19, type: 2}
     isUseOverride: 1
     overrideValue: 0
-  - stat: {fileID: 11400000, guid: 15fc09ad501e2844986107c6459f339e, type: 2}
-    isUseOverride: 1
-    overrideValue: 100
   - stat: {fileID: 11400000, guid: 7a0d6ceb21222d849ad9defa279caa41, type: 2}
     isUseOverride: 1
     overrideValue: 1

@@ -42,10 +42,11 @@ namespace Scripts.Players
         private void Update()
         {
             _stateMachine?.UpdateStateMachine();
-            if (Input.GetKeyDown(KeyCode.P))
-                Stun(3f);
         }
-
+        private void OnDestroy()
+        {
+            _stateMachine.CurrentState?.Exit();
+        }
         public void ChangeState(PlayerStateEnum newState, bool forced = false)
             => _stateMachine?.ChangeState(newState, forced);
 

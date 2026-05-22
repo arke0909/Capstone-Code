@@ -2,8 +2,8 @@
 using Code.InventorySystems;
 using DewmoLib.Utiles;
 using UnityEngine;
-using Work.LKW.Code.Items;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items;
+using Code.Items.ItemInfo;
 
 namespace Code.InventorySystems.Items
 {

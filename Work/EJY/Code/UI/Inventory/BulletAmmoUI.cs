@@ -49,6 +49,14 @@ namespace Code.UI.Inventory
             base.OnDestroy();
             EventBus.Unsubscribe<ChangeHandlingEvent>(HandleChangeWeapon);
             EventBus.Unsubscribe<NoAmmoSoundEvent>(HandleNoAmmo);
+            if (_isActive)
+            {
+                _isActive = false;
+
+                EventBus.Unsubscribe<OffReplaceBulletUI>(HandleOffReplaceBulletUI);
+                EventBus.Unsubscribe<AmmoUpdateEvent>(HandleGunFire);
+                EventBus.Unsubscribe<ReplaceBulletListEvent>(HandleReplaceBulletList);
+            }
         }
 
         #region Replace Ammo

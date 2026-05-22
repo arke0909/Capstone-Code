@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using Chipmunk.GameEvents;
 using Code.Events;
 using Code.UI.Minimap.Core;
+using Code.UI.Minimap.Minimaps;
 using DewmoLib.Dependencies;
 using DewmoLib.ObjectPool.RunTime;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using TMPro;
-using Work.Code.GameEvents;
 
 namespace Code.UI.Minimap.Markers
 {
@@ -32,7 +31,8 @@ namespace Code.UI.Minimap.Markers
         [SerializeField] private PoolItemSO supplyMarkerItem;  // 하단 선택 버튼
 
         [SerializeField] private MinimapSystem minimapSystem;
-        
+        [SerializeField] private MinimapUI minimapUI;
+
         private Dictionary<Button, markerData> _markerDataDictByButton = new Dictionary<Button, markerData>();
         private markerData _selectedMarker = null;
         private int _currentCount = 0;
@@ -51,10 +51,10 @@ namespace Code.UI.Minimap.Markers
 
         private void HandleRightClick()
         {
+            if (!minimapUI.IsActive) return;
+            
             if (Mouse.current.rightButton.wasPressedThisFrame)
             {
-                if(minimapSystem.IsActiveMinimap == false) return;
-                
                 Vector2 mousePos = Mouse.current.position.ReadValue();
                 
                 if (TryRemoveMarker(mousePos)) return;

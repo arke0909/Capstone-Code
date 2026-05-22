@@ -5,14 +5,12 @@ using Code.InventorySystems;
 using System.Collections.Generic;
 using UnityEngine;
 using Work.LKW.Code.Events;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
-namespace Work.LKW.Code.ItemContainers
+namespace Code.ItemContainers
 {
     public class ItemContainerInventory : Inventory
     {
-        [SerializeField] private bool isSelfInitialize = false;
-        
         private bool _isSubscribe = false;
         public override void OnInitialize(ComponentContainer componentContainer)
         {
@@ -24,15 +22,13 @@ namespace Work.LKW.Code.ItemContainers
             EventBus.Unsubscribe<PlayerUIEvent>(HandlePlayerUIEvent);
             base.OnDestroy();
         }
-        public void Select()
-        {
-            EventBus.Raise(new OpenPlayerUIEvent(true));
-            var evt = new OpenRightInventoryEvent(this);
-            Bus.Raise(evt);
 
+        public void OpenLootUI()
+        {
             HandleSubscribe();
             UpdateInventory();
         }
+        
         public void SetUpItem(List<ItemDataSO> items)
         {
             ClearInventory();
@@ -41,6 +37,20 @@ namespace Work.LKW.Code.ItemContainers
             {
                 var createData = items[i].CreateItem();
                 itemSlots[i].SetData(createData.Item, createData.Stack);
+                //Debug.Log($"{gameObject.name}에 {items[i].name} 아이템 들어감");
+            }
+
+            UpdateInventory();
+        }
+        
+        public void SetUpItemSelf(List<SelfInitInfo> items)
+        {
+            ClearInventory();
+            
+            for (int i = 0; i < items.Count && i < CurrentInventorySize; ++i)
+            {
+                var createData = items[i].itemData.CreateItem();
+                itemSlots[i].SetData(createData.Item, items[i].spawnCount);
                 //Debug.Log($"{gameObject.name}에 {items[i].name} 아이템 들어감");
             }
 

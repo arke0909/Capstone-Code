@@ -38,7 +38,7 @@ namespace Scripts.Effects
 
         public void PlayVFX(Vector3 position, Quaternion rotation, float scale)
         {
-            _originScale *= scale;
+            transform.localScale = _originScale * scale;
             PlayVFX(position, rotation);
         }
         

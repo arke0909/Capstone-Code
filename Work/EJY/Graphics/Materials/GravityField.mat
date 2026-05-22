@@ -85,7 +85,11 @@ Material:
     m_Floats:
     - _AlphaCutoff: 0.5
     - _BlendOp: 0
+    - _BottomGlowHeight: 0.18
+    - _BottomGlowIntensity: 0.7
+    - _BottomHeightWidth: 0.08
     - _BottomMask: -0.69
+    - _BottomRingWidth: 0.035
     - _BumpScale: 1
     - _CameraFadingEnabled: 0
     - _CameraFarFadeDistance: 2
@@ -97,36 +101,72 @@ Material:
     - _DetailNormalMapScale: 1
     - _DistortionBlend: 0.5
     - _DistortionEnabled: 0
-    - _DistortionStrength: 0.005
+    - _DistortionStrength: 0.012
     - _DistortionStrengthScaled: 0
     - _DstBlend: 10
-    - _EdgeWidth: 0.2
+    - _EdgeAlpha: 0.85
+    - _EdgeWidth: 0.25
     - _EmissionEnabled: 0
     - _FlipbookMode: 0
+    - _FresnelIntensity: 1.6
     - _FresnelPower: 5.01
     - _FresnelPower2: 1.94
     - _FresnelPower25: 1.57
     - _FresnelScale: 1.03
     - _FresnelScale2: 2.21
+    - _FresnelStrength: 2
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _InnerAlpha: 0.3
+    - _GroundContactAlpha: 0.92
+    - _GroundContactHeight: 0.02
+    - _GroundContactIntensity: 5
+    - _GroundContactWidth: 0.24
+    - _GroundInnerAlpha: 0.18
+    - _GroundInnerPower: 2.5
+    - _GroundLineAlpha: 0.85
+    - _GroundLineIntensity: 3
+    - _GroundLineSoftness: 0.04
+    - _GroundLineWidth: 0.035
+    - _GroundLocalY: 0
+    - _GroundWaveFrequency: 24.42
+    - _GroundWaveSpeed: 2.49
+    - _GroundWaveStrength: 1
+    - _GroundY: 0
+    - _GroundYOffset: 0.015
+    - _InnerAlpha: 0
     - _IntersectionDistance: 6.49
     - _IntersectionIntensity: 0.42
     - _LightingEnabled: 0
     - _Metallic: 0
     - _Min: -0.67
     - _Mode: 2
+    - _NoiseFrequency: 18
     - _NoiseScale: 0.5
+    - _NoiseSpeed: 0.5
     - _NoiseStrength: 1
+    - _NoiseWaveSpeed: 3
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _ParticleAmount: 0.72
+    - _ParticleIntensity: 5.5
+    - _ParticleRotateSpeed: -6.05
+    - _ParticleScale: 30
+    - _ParticleSize: 0.1
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _RadialRingFrequency: 22
+    - _RadialRingSpeed: 2.4
+    - _RadialRingStrength: 0.35
     - _Radius: 0.5
     - _ReceiveShadows: 1
+    - _RingFrequency: 28
+    - _RingSpeed: 2.5
+    - _RingStrength: 0.45
     - _Scale: 1
+    - _ScanFrequency: 4
+    - _ScanSpeed: 2
+    - _ScanStrength: 0.6
     - _SmoothnessTextureChannel: 0
     - _SoftParticlesEnabled: 0
     - _SoftParticlesFarFadeDistance: 1
@@ -148,7 +188,11 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _ForwardColor: {r: 1, g: 0, b: 0, a: 0.28235295}
     - _FresnelColor2: {r: 0, g: 0.95075655, b: 1, a: 1}
+    - _GroundContactColor: {r: 0.113096714, g: 0, b: 1, a: 1}
+    - _GroundLineColor: {r: 0, g: 0.014926195, b: 1, a: 1}
+    - _InnerColor: {r: 0.35, g: 0.2, b: 1, a: 1}
     - _IntersectionColor: {r: 0, g: 0.44369796, b: 1.0592737, a: 0}
+    - _ParticleColor: {r: 0.4, g: 1, b: 1, a: 1}
     - _Pass2: {r: 1, g: 0, b: 0, a: 1}
     - _ShieldColor: {r: 0, g: 0.43315247, b: 0.6566039, a: 1}
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}

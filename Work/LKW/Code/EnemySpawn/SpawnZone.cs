@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Code.SHS.Entities.Enemies;
 using Code.TimeSystem;
 using UnityEngine;
@@ -8,13 +8,10 @@ namespace Code.EnemySpawn
     public class SpawnZone : MonoBehaviour
     {
         [SerializeField] private List<Transform> spawnPoints;
-        [SerializeField] private List<EnemySO> spawnEnemies;
         [SerializeField] private SpawnListSO spawnList;
 
         private void Start()
         {
-            spawnPoints ??= new List<Transform>();
-
             foreach (Transform child in transform)
             {
                 spawnPoints.Add(child);
@@ -38,15 +35,20 @@ namespace Code.EnemySpawn
             if (spawnPoints == null || spawnList == null) return;
 
             int currentDay = TimeController.Instance.CurrentDay;
-            spawnEnemies = spawnList.GetSpawnEnemies(spawnPoints.Count, currentDay);
+            List<EnemySO> spawnEnemies = spawnList.GetSpawnEnemies(spawnPoints.Count, currentDay);
 
             if (spawnEnemies == null || spawnEnemies.Count <= 0) return;
 
-            for (int i = 0; i < spawnPoints.Count; i++)
-            {
-                int randomIndex = Random.Range(0, spawnEnemies.Count);
+            List<Transform> availableSpawnPoints = new List<Transform>(spawnPoints);
+            int spawnCount = Mathf.Min(spawnEnemies.Count, availableSpawnPoints.Count);
 
-                SpawnEnemy(spawnEnemies[randomIndex], spawnPoints[i].position, spawnPoints[i].rotation);
+            for (int i = 0; i < spawnCount; i++)
+            {
+                int spawnPointIndex = Random.Range(0, availableSpawnPoints.Count);
+                Transform spawnPoint = availableSpawnPoints[spawnPointIndex];
+                availableSpawnPoints.RemoveAt(spawnPointIndex);
+
+                SpawnEnemy(spawnEnemies[i], spawnPoint.position, spawnPoint.rotation);
             }
         }
 

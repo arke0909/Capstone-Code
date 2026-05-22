@@ -1,5 +1,5 @@
 using UnityEngine;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Code.UI.Tooltip
 {

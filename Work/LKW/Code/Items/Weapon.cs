@@ -1,11 +1,11 @@
 ﻿using Chipmunk.ComponentContainers;
+using Code.Items.ItemInfo;
 using Scripts.Combat.Datas;
 using Scripts.Combat.ItemObjects;
 using Scripts.Entities;
 using UnityEngine;
-using Work.LKW.Code.Items.ItemInfo;
 
-namespace Work.LKW.Code.Items
+namespace Code.Items
 {
     public abstract class Weapon : HandItem, IAttackable
     {

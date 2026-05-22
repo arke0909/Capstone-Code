@@ -2,7 +2,7 @@ using Scripts.Combat.Fovs;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Code.ETC
+namespace Code.ETC.MapObjects
 {
     public class HidableObject : MonoBehaviour, IFindable
     {

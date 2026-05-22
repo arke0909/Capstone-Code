@@ -2,7 +2,7 @@ using Chipmunk.GameEvents;
 using Code.GameEvents;
 using Code.InventorySystems.Items;
 using Scripts.Combat.Datas;
-using Work.LKW.Code.Items;
+using Code.Items;
 
 namespace Code.InventorySystems.SwapRules
 {

@@ -29,7 +29,7 @@ namespace Code.SkillSystem.Skills.Drones
 
         public override void StartAndUseSkill()
         {
-            Vector3 targetPos = _aimProvider.GetAimPosition();
+            Vector3 targetPos = _aimProvider.GetWorldAimPosition();
             targetPos.y = _owner.transform.position.y;
             
             if (Vector3.Distance(targetPos, _owner.transform.position) > range) return;

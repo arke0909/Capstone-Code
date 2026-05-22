@@ -45,5 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <SkillData>k__BackingField: {fileID: 11400000, guid: 8e9f80e92c0b7a3449a97aaf94212970, type: 2}
-  cooldown: 0
+  cooldown: 18
   gravityFieldPoolItem: {fileID: 11400000, guid: 2bfbbbc31f891b744b7d1077c9e77c5d, type: 2}
+  isSlowEntity: 0
+  isStunEntity: 0

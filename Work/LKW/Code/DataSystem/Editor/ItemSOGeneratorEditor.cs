@@ -1,4 +1,4 @@
-﻿using Work.LKW.Code.Items.ItemInfo;
+﻿using Code.Items.ItemInfo;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,7 +12,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
-using Work.LKW.Code.Items;
+using Code.Items;
 
 namespace Code.DataSystem.Editor
 {
@@ -187,7 +187,7 @@ namespace Code.DataSystem.Editor
         
         private void GenerateItemSOPreview(ItemType type)
         { 
-            List<ItemDataSO> targetItems = itemDataBase.GetItemByType(type);
+            List<ItemDataSO> targetItems = itemDataBase.GetItemsByType(type);
             if (targetItems == null || targetItems.Count <= 0)
             {
                 _itemView.Clear();

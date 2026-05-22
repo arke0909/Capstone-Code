@@ -1,7 +1,10 @@
+﻿using System.Linq;
+using Chipmunk.GameEvents;
 using Code.Players;
 using Code.UI.Core;
 using UnityEngine;
-using Work.LKW.Code.Items.ItemInfo;
+using Work.Code.GameEvents;
+using Code.Items.ItemInfo;
 
 namespace Work.Code.Craft
 {

@@ -165,7 +165,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2854607249666183532, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 113
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2854607249666183532, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -266,6 +266,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2581010600523577221, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6635676384508592144}
+    - targetCorrespondingSourceObject: {fileID: 2581010600523577221, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8910988476708434909}
   m_SourcePrefab: {fileID: 100100000, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
 --- !u!1 &6351826418066767633 stripped
 GameObject:
@@ -286,6 +289,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   craftableItemUI: {fileID: 3433665658912653984, guid: b0b0dd86dd478f64da0cda906a5501f7, type: 3}
   root: {fileID: 3069074434031084513}
+--- !u!114 &8910988476708434909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6351826418066767633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!224 &6659193434197039608 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2854607249666183532, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}

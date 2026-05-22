@@ -48,6 +48,22 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3456951479990648838, guid: 80a783a3c8c03ef4b81dd9fcb78af06d, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3456951479990648838, guid: 80a783a3c8c03ef4b81dd9fcb78af06d, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3456951479990648838, guid: 80a783a3c8c03ef4b81dd9fcb78af06d, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3456951479990648838, guid: 80a783a3c8c03ef4b81dd9fcb78af06d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4278691161087203046, guid: 80a783a3c8c03ef4b81dd9fcb78af06d, type: 3}
       propertyPath: helpText
       value: 

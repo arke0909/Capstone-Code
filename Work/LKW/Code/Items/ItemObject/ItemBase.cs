@@ -1,10 +1,10 @@
 ﻿using System;
 using Code.InventorySystems;
+using Code.Items.ItemInfo;
 using Scripts.Entities;
-using Work.LKW.Code.Items.ItemInfo;
 using UnityEngine;
 
-namespace Work.LKW.Code.Items
+namespace Code.Items
 {
     [Serializable]
     public abstract class ItemBase

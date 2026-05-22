@@ -1,7 +1,7 @@
-﻿using Scripts.Entities;
-using Work.LKW.Code.Items.ItemInfo;
+﻿using Code.Items.ItemInfo;
+using Scripts.Entities;
 
-namespace Work.LKW.Code.Items
+namespace Code.Items
 {
     public class FoodItem : UsableItem
     {

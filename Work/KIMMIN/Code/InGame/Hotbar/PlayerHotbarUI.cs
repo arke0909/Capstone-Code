@@ -2,7 +2,7 @@ using Chipmunk.GameEvents;
 using Code.GameEvents;
 using Code.InGame.Hotbar;
 using UnityEngine;
-using Work.LKW.Code.Items;
+using Code.Items;
 
 namespace Code.Hotbar
 {

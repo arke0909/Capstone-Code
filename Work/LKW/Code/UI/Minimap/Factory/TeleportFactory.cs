@@ -1,8 +1,8 @@
-using Code.UI.Minimap.Core;
+﻿using Code.UI.Minimap.Core;
 using Code.UI.Minimap.SectionName;
 using DewmoLib.ObjectPool.RunTime;
 using Minimap.Teleport;
-using Scripts.GameSystem.Teleports;
+using Scripts.GameSystem.Structures;
 using UnityEngine;
 using UnityEngine.Serialization;
 

@@ -3,7 +3,7 @@ using Code.DataSystem;
 using Scripts.Entities;
 using UnityEngine;
 
-namespace Work.LKW.Code.Items.ItemInfo
+namespace Code.Items.ItemInfo
 {
     public abstract class WeaponDataSO : HandItemDataSO
     {

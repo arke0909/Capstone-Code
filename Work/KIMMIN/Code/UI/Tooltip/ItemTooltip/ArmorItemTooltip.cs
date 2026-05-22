@@ -2,7 +2,7 @@ using Chipmunk.Modules.StatSystem;
 using TMPro;
 using UnityEngine;
 using Work.Code.UI.Utility;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Code.UI.Tooltip
 {

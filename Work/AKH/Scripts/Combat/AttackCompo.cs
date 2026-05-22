@@ -5,7 +5,7 @@ using Code.SHS.Entities.Enemies;
 using Scripts.Combat.Datas;
 using Scripts.Entities;
 using UnityEngine;
-using Work.LKW.Code.Items;
+using Code.Items;
 using Chipmunk.Library.Utility.GameEvents.Local;
 using Code.SHS.Entities.Enemies.Events.Local;
 

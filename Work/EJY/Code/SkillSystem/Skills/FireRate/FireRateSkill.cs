@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Ami.BroAudio;
 using Chipmunk.ComponentContainers;
 using Chipmunk.Modules.StatSystem;
 using Code.StatusEffectSystem;
@@ -18,6 +19,7 @@ namespace Code.SkillSystem.Skills.FireRate
         [SerializeField] private StatSO fireRateStatSO;
         [SerializeField] private FireRateSkillVFX fireRateSkillVFX;
         [SerializeField] private Transform vfxPos;
+        [SerializeField] private SoundID soundID;
         [SerializeField] private bool isOnHitAddFireRate;
         [SerializeField] private bool isBulletReduceRateDecrease;
         [SerializeField] private float onHitFireRateAmount = 0.025f, maxFireRate = 0.5f;
@@ -55,6 +57,7 @@ namespace Code.SkillSystem.Skills.FireRate
 
         public override void StartAndUseSkill()
         {
+            BroAudio.Play(soundID, _owner.transform.position);
             _vfxComponent.PlayVFX("FireRate", vfxPos.position, Quaternion.identity);
             fireRateSkillVFX.PlayMuzzleSmog();
             

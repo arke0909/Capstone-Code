@@ -33,6 +33,6 @@ namespace Scripts.Combat
                 knockbackable.KnockBack(transform.forward, knockbackData);
             }
         }
-        public abstract bool CastDamage(DamageData damageData, Vector3 position, Vector3 direction, MovementDataSO knockBackData);
+        public abstract int CastDamage(DamageData damageData, Vector3 position, Vector3 direction, MovementDataSO knockBackData);
     }
 }

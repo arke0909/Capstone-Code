@@ -1,4 +1,4 @@
-using Chipmunk.GameEvents;
+﻿using Chipmunk.GameEvents;
 using Code.UI.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,6 +28,11 @@ namespace InGame.InventorySystem
             
             DisableUI();
             EventBus.Subscribe<DragEvent>(HandleDrag);
+        }
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            EventBus.Unsubscribe<DragEvent>(HandleDrag);
         }
 
         private void HandleDrag(DragEvent evt)

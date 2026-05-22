@@ -19,7 +19,6 @@ namespace Code.UI.Minimap
         public event Action<MinimapElementData> OnDataAdded;
         public event Action<string> OnDataRemoved;
 
-        public bool IsActiveMinimap { get; set; } = false;
 
         private void OnEnable()
         {

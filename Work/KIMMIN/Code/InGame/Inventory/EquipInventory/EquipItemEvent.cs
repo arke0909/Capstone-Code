@@ -2,7 +2,7 @@
 using Chipmunk.GameEvents;
 using Code.InventorySystems.Equipments;
 using Code.InventorySystems.Items;
-using Work.LKW.Code.Items;
+using Code.Items;
 
 namespace InGame.InventorySystem
 {

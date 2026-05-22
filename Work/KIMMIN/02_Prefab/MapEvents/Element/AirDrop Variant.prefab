@@ -5080,17 +5080,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 5918989921295945545}
   m_SourcePrefab: {fileID: 100100000, guid: 80a783a3c8c03ef4b81dd9fcb78af06d, type: 3}
---- !u!114 &4097360995234721840 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4278691161087203046, guid: 80a783a3c8c03ef4b81dd9fcb78af06d, type: 3}
-  m_PrefabInstance: {fileID: 269150468292568790}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4696214571281414727}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf4c8619310a440d9dfdbeb3a1c603a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4696214571281414727 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4796466273003805841, guid: 80a783a3c8c03ef4b81dd9fcb78af06d, type: 3}
@@ -5115,9 +5104,9 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 128
-  itemContainer: {fileID: 4097360995234721840}
   airDropItems:
-  - {fileID: 11400000, guid: 85f076e77a6b1c4459b75303afe7e925, type: 2}
+  - {fileID: 11400000, guid: 61c9dcc2bc70cc043a1a671e5e36295b, type: 2}
+  - {fileID: 11400000, guid: ed9fb4609c16d664489b4f49f344be75, type: 2}
   <PoolItem>k__BackingField: {fileID: 11400000, guid: c0b20ab22fae4d044b89a39ea60affaf, type: 2}
 --- !u!65 &5918989921295945545
 BoxCollider:

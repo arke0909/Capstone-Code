@@ -6,6 +6,7 @@ using Scripts.Combat;
 using Scripts.Enemies.EnemyBehaviours;
 using Scripts.Entities;
 using Scripts.FSM;
+using Scripts.Modules.Blackboards;
 using System;
 using UnityEngine;
 
@@ -37,6 +38,7 @@ namespace Code.SHS.Entities.Enemies.FSM
         protected EnemyInventory _enemyInventory;
         protected TargetProvider _targetProvider;
         protected LocalEventBus _localEventBus;
+        protected Blackboard Blackboard => _enemy.Blackboard;
         protected Entity RemainTarget => _targetProvider.CurrentTarget;
         protected Entity Target => _targetProvider.Target;
 

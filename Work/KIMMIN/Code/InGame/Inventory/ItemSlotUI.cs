@@ -12,11 +12,12 @@ using UnityEngine.UI;
 using Work.Code.UI.ContextMenu;
 using Work.Code.UI.Interaction;
 using Work.Code.UI.Misc;
-using Work.LKW.Code.Items;
+using Code.Items;
+using Work.Code.UI.Slots;
 
 namespace InGame.InventorySystem
 {
-    public class ItemSlotUI : DraggableUI, IUIElement<ItemSlot>, IHoverable, IDroppable
+    public class ItemSlotUI : BaseSlotUI, IHoverable, IDroppable
     {
         [SerializeField] private ContextMenuSO inventoryMenu;
         [SerializeField] private CraftableItemListSO craftableItemListSO;
@@ -26,7 +27,6 @@ namespace InGame.InventorySystem
         [SerializeField] private Image background;
         [SerializeField] private Image colorBackground;
         [SerializeField] private Image skillBackground;
-        [SerializeField] private Image outline;
         [SerializeField] private Image skillIcon;
         [SerializeField] private Button button;
 

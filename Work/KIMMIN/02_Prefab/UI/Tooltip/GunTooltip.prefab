@@ -1319,11 +1319,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 916908361065716086, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_fontSize
-      value: 16
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 916908361065716086, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_fontSizeBase
-      value: 16
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 916908361065716086, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_TextWrappingMode
@@ -1343,7 +1343,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1390917277889533532, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 190
+      value: 210
       objectReference: {fileID: 0}
     - target: {fileID: 1390917277889533532, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_SizeDelta.y
@@ -1383,11 +1383,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2854607249666183532, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 103
+      value: 113
       objectReference: {fileID: 0}
     - target: {fileID: 2854607249666183532, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -106.805
+      value: -105.705
       objectReference: {fileID: 0}
     - target: {fileID: 3292856867616892995, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       propertyPath: m_SizeDelta.y
@@ -1536,6 +1536,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2581010600523577221, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8471661268650696212}
+    - targetCorrespondingSourceObject: {fileID: 2581010600523577221, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 338657747521735954}
     - targetCorrespondingSourceObject: {fileID: 8346775463800229216, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4447802149823521378}
@@ -1585,15 +1588,29 @@ MonoBehaviour:
   descriptionText: {fileID: 1061749713299475899}
   damage: {fileID: 5402259242132701615}
   firerate: {fileID: 3517671807375427088}
-  reloadTime: {fileID: 6456930668834837238}
-  bulletSpeed: {fileID: 0}
   bulletCount: {fileID: 6640120032326331881}
   fireCount: {fileID: 1341661919942016575}
-  range: {fileID: 0}
-  aimSpeed: {fileID: 0}
-  vertRecoil: {fileID: 0}
-  horiRecoil: {fileID: 0}
   spread: {fileID: 6984809674405002266}
+--- !u!114 &338657747521735954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2437577153597367112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!224 &2708931520711968161 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2854607249666183532, guid: a847ab26d491a4845ae1e6029e5658b8, type: 3}

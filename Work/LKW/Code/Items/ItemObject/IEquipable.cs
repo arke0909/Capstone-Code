@@ -1,9 +1,9 @@
-﻿using Work.LKW.Code.Items.ItemInfo;
+﻿using Code.Items.ItemInfo;
 using Scripts.Entities;
 using UnityEngine;
 using Work.SHS.Items.Events;
 
-namespace Work.LKW.Code.Items
+namespace Code.Items
 {
     public interface IEquipable
     {

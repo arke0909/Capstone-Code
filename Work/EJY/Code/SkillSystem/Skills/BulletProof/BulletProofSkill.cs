@@ -1,5 +1,6 @@
 ﻿using System.Linq;
- using Chipmunk.ComponentContainers;
+using Ami.BroAudio;
+using Chipmunk.ComponentContainers;
 using Code.StatusEffectSystem;
 using Code.StatusEffectSystem.StatusEffects;
 using Entities;
@@ -12,6 +13,7 @@ namespace Code.SkillSystem.Skills.BulletProof
         [SerializeField] private BuffSO shieldBuff;
         [SerializeField] private BuffSO dmgIncreaseByShieldBuff; // temp
         [SerializeField] private BuffSO damageMultiIncreaseData;
+        [SerializeField] private SoundID soundID;
         [SerializeField] private bool isDmgIncreaseByShield;
         [SerializeField] private bool isDmgIncreaseAtHaveShield;
         private EntityStatusEffect _entityStatusEffect;
@@ -34,6 +36,8 @@ namespace Code.SkillSystem.Skills.BulletProof
         
         public override void StartAndUseSkill()
         {
+            BroAudio.Play(soundID, _owner.transform.position);
+
             if (_isBulletProofVfxPlaying == false)
             {
                 _vfxComponent.PlayVFX("BulletProof", transform.position, Quaternion.identity);

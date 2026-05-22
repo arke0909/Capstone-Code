@@ -1,7 +1,7 @@
 ﻿using System;
 using Scripts.Players;
 using UnityEngine;
-using Work.LKW.Code.ItemContainers;
+using Code.ItemContainers;
 
 namespace Work.Code.Tutorials
 {
@@ -32,18 +32,26 @@ namespace Work.Code.Tutorials
             for(int i = 0; i < containers.Length; i++)
             {
                 int idx = i;
-                _handlers[i] = () => HandleEmptyInventory(idx);
-                containers[i].Inventory.InventoryEmpty += _handlers[i];
+                _handlers[i] = () => HandleInventoryChanged(idx);
+                containers[i].Inventory.InventoryChanged += _handlers[i];
             }
             
             SetMarking(true);
             SetArrows(true);
         }
 
-        private void HandleEmptyInventory(int idx)
+        private void HandleInventoryChanged(int idx)
         {
-            _conditions[idx] = true;
-            CheckCondition();
+            int remainCount = containers[idx].Inventory.GetRemainItems();
+
+            if (remainCount == 0)
+            {
+                _conditions[idx] = true;
+                markings[idx].SetEnable(false);
+                arrows[idx].SetActive(false);
+                
+                CheckCondition();
+            }
         }
 
         private void CheckCondition()
@@ -59,10 +67,9 @@ namespace Work.Code.Tutorials
 
         public override void ExitTutorial()
         {
-            
             for (int i = 0; i < containers.Length; i++)
             {
-                containers[i].Inventory.InventoryEmpty -= _handlers[i];
+                containers[i].Inventory.InventoryChanged -= _handlers[i];
             }
             
             SetMarking(false);

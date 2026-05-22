@@ -1,6 +1,6 @@
 ﻿using Scripts.Entities;
 
-namespace Work.LKW.Code.Items
+namespace Code.Items
 {
     public interface IUsable
     {

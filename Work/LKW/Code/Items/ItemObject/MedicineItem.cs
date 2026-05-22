@@ -1,10 +1,10 @@
 ﻿using Scripts.Entities;
-using Work.LKW.Code.Items.ItemInfo;
 using Chipmunk.ComponentContainers;
 using Assets.Work.AKH.Scripts.Entities.Vitals;
+using Code.Items.ItemInfo;
 using UnityEngine;
 
-namespace Work.LKW.Code.Items
+namespace Code.Items
 {
     public class MedicineItem : UsableItem
     {

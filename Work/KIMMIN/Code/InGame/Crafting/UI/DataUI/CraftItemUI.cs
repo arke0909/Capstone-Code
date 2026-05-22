@@ -5,19 +5,18 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Work.Code.UI.ContextMenu;
-using Work.Code.UI.Core.Interaction;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
+using Work.Code.UI.Slots;
 
 namespace Work.Code.Craft
 {
-    public class CraftItemUI : InteractableUI
+    public class CraftItemUI : BaseSlotUI
     {
         [SerializeField] private ContextMenuSO craftItemMenu;
         [SerializeField] private TextMeshProUGUI title;
         [SerializeField] private Image icon;
         [SerializeField] private Image pin;
         [SerializeField] private Image background;
-        [SerializeField] private Image outline;
         [SerializeField] private Image star;
         
         private Sequence _showAnimSeq;

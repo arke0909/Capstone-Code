@@ -1,6 +1,7 @@
 using Code.InventorySystems.Items;
 using UnityEngine;
-using Work.LKW.Code.Items;
+using Code.Items;
+using Scripts.Players.States;
 
 namespace Work.Code.UI.ContextMenu.InventoryItemActions
 {
@@ -13,13 +14,23 @@ namespace Work.Code.UI.ContextMenu.InventoryItemActions
 
         public override bool CanShow(ItemSlot data)
         {
-            return data.Item is IUsable;
+            return data.Item is UsableItem usable;
         }
 
         public override void OnAction(ItemSlot data)
         {
-            if(data.Item is IUsable usable)
-                usable.Use(_owner);
+            if (data.Item is UsableItem usable)
+            {
+                ItemUseContext context = _owner.Blackboard.GetOrDefault<ItemUseContext>("ItemUseContext");
+                if (context == null)
+                {
+                    context = new ItemUseContext();
+                    _owner.Blackboard.Set("ItemUseContext", context);
+                }
+                context.TargetItem = usable;
+                
+                _owner.ChangeState(PlayerStateEnum.ItemUse);
+            }
         }
     }
 }

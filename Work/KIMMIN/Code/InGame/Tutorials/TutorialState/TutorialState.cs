@@ -1,6 +1,7 @@
 using System;
 using Scripts.Players;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Work.Code.Tutorials
 {

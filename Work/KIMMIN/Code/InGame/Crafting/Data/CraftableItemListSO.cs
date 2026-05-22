@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 [Serializable]
 public class Recipe
@@ -13,7 +13,7 @@ public class Recipe
 [CreateAssetMenu(fileName = "ItemRecipeMap", menuName = "SO/ItemRecipeMap")]
 public class CraftableItemListSO : ScriptableObject
 {
-    [HideInInspector] public List<Recipe> recipes = new();
+    public List<Recipe> recipes = new();
     private Dictionary<ItemDataSO, List<ItemDataSO>> _itemMap;
 
     public void BuildDictionary()

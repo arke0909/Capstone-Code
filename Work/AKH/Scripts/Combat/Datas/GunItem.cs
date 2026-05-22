@@ -6,8 +6,8 @@ using System.Linq;
 using Ami.BroAudio;
 using Code.Combat;
 using UnityEngine;
-using Work.LKW.Code.Items;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items;
+using Code.Items.ItemInfo;
 using SHS.Scripts;
 using Scripts.Combat.ItemObjects;
 
@@ -54,7 +54,7 @@ namespace Scripts.Combat.Datas
             }
         }
 
-        public override void EnterAttack()
+        public override void AttackTrigger()
         {
             if (_entityGunStatInfo.BulletReduceRate > Random.value)
                 _currentBullet = Mathf.Max(_currentBullet - 1, 0);
@@ -88,6 +88,9 @@ namespace Scripts.Combat.Datas
         public void Reload()
         {
             List<BulletItem> bulletItems = GetValidBullets();
+            if (bulletItems.Count == 0)
+                return;
+
             currentBulletItem ??= bulletItems[0];
             int cnt = _inventory.GetItemCount(currentBulletItem.bulletDataSO);
             if (cnt <= 0)

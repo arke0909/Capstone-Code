@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6af0abb4c670db0439350f7ffa2c2f75, type: 3}
   m_Name: Rolling
   m_EditorClassIdentifier: 
-  maxSpeed: 10
-  duration: 0.6
+  maxSpeed: 7.5
+  duration: 0.65
   moveCurve:
     serializedVersion: 2
     m_Curve:

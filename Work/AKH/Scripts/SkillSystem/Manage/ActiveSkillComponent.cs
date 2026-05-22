@@ -7,9 +7,9 @@ namespace Scripts.SkillSystem.Manage
 {
     public enum ActiveSlotType
     {
+        Q,
         E,
         C,
-        Q,
         Space,
         None,
     }

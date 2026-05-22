@@ -67,8 +67,10 @@ namespace Code.TimeSystem
         {
             if (IsPaused) return;
             float cheatTimeScale = timeScale; //빌드본 시연용
+#if UNITY_EDITOR
             if (Input.GetKey(KeyCode.F6))
                 cheatTimeScale = 240;
+#endif
             float dt = Time.deltaTime * cheatTimeScale;
             TotalTime += dt;
             DayTime += dt;

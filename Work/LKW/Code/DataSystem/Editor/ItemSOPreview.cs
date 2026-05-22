@@ -4,7 +4,7 @@ using DewmoLib.ObjectPool.RunTime;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 namespace Code.DataSystem.Editor
 {

@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Chipmunk.GameEvents;
 using Code.GameEvents;
 using DG.Tweening;
@@ -26,17 +27,18 @@ namespace Code.UI.Core
 
         private bool _isLocked;
         private readonly HashSet<UIBase> _registeredUI = new();
+        private readonly Dictionary<string, UIPanel> _registeredPanels = new();
         private readonly Stack<UIBase> _uiStack = new();
         
         public OverlayUIManager OverlayManager => OverlayUIManager.Instance;
         public event Action OnUIStackChanged;
 
-        private void Awake()
+        protected override void Awake()
         {
             playerInput.OnToggleUIPressed += HandlePressEsc;
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
             foreach (var ui in _registeredUI)
             {
@@ -50,6 +52,9 @@ namespace Code.UI.Core
         {
             if (!_registeredUI.Add(ui))
                 return;
+
+            if (ui is UIPanel panel)
+                RegisterPanel(panel);
             
             ui.OnToggleUI += HandleChangeUIState;
         }
@@ -60,7 +65,46 @@ namespace Code.UI.Core
                 return;
             
             _registeredUI.Remove(ui);
+            
+            if (ui is UIPanel panel)
+                _registeredPanels.Remove(panel.PanelID);
+            
             ui.OnToggleUI -= HandleChangeUIState;
+        }
+
+        private void RegisterPanel(UIPanel panel)
+        {
+            if (string.IsNullOrWhiteSpace(panel.PanelID))
+                return;
+
+            if (_registeredPanels.TryGetValue(panel.PanelID, out var registeredPanel) && registeredPanel != panel)
+            {
+                Debug.Log("Duplicate Key");
+                return;
+            }
+            _registeredPanels[panel.PanelID] = panel;
+        }
+
+        public bool TryGetPanel(string panelID, out UIPanel panel)
+        {
+            panel = null;
+            if (string.IsNullOrWhiteSpace(panelID))
+                return false;
+
+            return _registeredPanels.TryGetValue(panelID, out panel);
+        }
+
+        public UIPanel GetPanel(string panelID)
+        {
+            if (TryGetPanel(panelID, out var panel))
+                return panel;
+
+            throw new KeyNotFoundException($"Panel ID '{panelID}' is not registered.");
+        }
+
+        public T GetPanel<T>(string panelID) where T : UIPanel
+        {
+            return GetPanel(panelID) as T;
         }
         
         private void HandleChangeUIState(UIBase ui, bool isFade)
@@ -85,7 +129,6 @@ namespace Code.UI.Core
             OnUIStackChanged?.Invoke();
             playerInput.SetPlayerInput(_uiStack.Count == 0);
         }
-
         private bool CanStack(UIBase ui)
         {
             return ui.Layer == EUILayer.Panel || ui.Layer == EUILayer.Popup;

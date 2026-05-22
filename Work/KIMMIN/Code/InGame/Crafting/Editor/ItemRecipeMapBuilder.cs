@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Linq;
 using UnityEngine;
 using Work.Code.Craft;
-using Work.LKW.Code.Items.ItemInfo;
+using Code.Items.ItemInfo;
 
 public static class ItemRecipeMapBuilder
 {

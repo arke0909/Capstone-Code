@@ -3,6 +3,7 @@ using System.Linq;
 using Chipmunk.GameEvents;
 using Code.GameEvents;
 using Code.InventorySystems.Items;
+using Code.Items.ItemInfo;
 using Code.UI.Core;
 using Code.UI.Core.Interaction;
 using DewmoLib.Utiles;
@@ -27,6 +28,7 @@ namespace Code.UI.Inventory
         
         protected override void Awake()
         {
+            base.Awake();
             EventBus.Subscribe<HoveringSlotEvent>(HandleHoveringItem);
 
             _hoveringSlot.OnValueChanged += HandleHoveringSlotChange;
@@ -67,6 +69,36 @@ namespace Code.UI.Inventory
             {
                 previousvalue?.SetBackgroundColor(Color.white, true);
                 nextvalue?.SetBackgroundColor(_defaultColor);
+            }
+        }
+
+        public void HighlightSlot(ItemDataSO item, Color color)
+        {
+            foreach (var slot in _slotUIs)
+            {
+                if (slot.ItemSlot.Item.ItemData == item)
+                {
+                    slot.PlayBackgroundEffect(color);
+                }
+            }
+        }
+        
+        public void HighlightSlot(ItemType itemType, Color color)
+        {
+            foreach (var slot in _slotUIs)
+            {
+                if (slot.ItemSlot.Item.ItemData.itemType == itemType)
+                {
+                    slot.PlayBackgroundEffect(color);
+                }
+            }
+        }
+
+        public void StopAllHighlightSlots()
+        {
+            foreach (var slot in _slotUIs)
+            {
+                slot.StopBackgroundEffect();
             }
         }
 

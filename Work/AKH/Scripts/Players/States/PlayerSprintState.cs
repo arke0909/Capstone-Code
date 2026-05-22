@@ -20,7 +20,7 @@ namespace Scripts.Players.States
         {
             Vector3 velocity = _movement.Velocity;
             velocity.y = 0;
-            _movement.SetRotationInfo(velocity);
+            _movement.SetRotationInfo(velocity, 15);
             _staminaCompo.ChangeValueWithTimer(-(decStatPerSec * Time.deltaTime), Time.deltaTime);
             if (!_player.PlayerInput.SprintKey || _player.PlayerInput.MovementKey == Vector2.zero)
             {

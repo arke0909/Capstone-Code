@@ -10,7 +10,7 @@ using Scripts.Players;
 using Scripts.Players.States;
 using System.Collections.Generic;
 using UnityEngine;
-using Work.LKW.Code.Items;
+using Code.Items;
 using static Code.InventorySystems.InventoryUtility;
 
 namespace Code.InventorySystem
@@ -125,8 +125,17 @@ namespace Code.InventorySystem
             _equipment.ChangeHandlingHotbarItem(handItem);
             UpdateUI();
             
-            if (handItem is IUsable)
+            if (handItem is UsableItem usable)
+            {
+                ItemUseContext context = _player.Blackboard.GetOrDefault<ItemUseContext>("ItemUseContext");
+                if (context == null)
+                {
+                    context = new ItemUseContext();
+                    _player.Blackboard.Set("ItemUseContext", context);
+                }
+                context.TargetItem = usable;
                 _player.ChangeState(PlayerStateEnum.ItemUse);
+            }
         }
         
         private void HandleInventoryChanged()
