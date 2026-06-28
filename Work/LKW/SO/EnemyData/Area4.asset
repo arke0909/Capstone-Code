@@ -24,7 +24,6 @@ MonoBehaviour:
     list:
     - {fileID: 11400000, guid: 41b63a5ec83eb974c8c9f0a56ef45e6a, type: 2}
     - {fileID: 11400000, guid: 20286dbc754c1694a88bb56d2e0648d4, type: 2}
-    - {fileID: 11400000, guid: 0cf8fa5ad48ac9442b1d825e4299c8cc, type: 2}
   - percentage: 0.5
     list:
     - {fileID: 11400000, guid: 41b63a5ec83eb974c8c9f0a56ef45e6a, type: 2}

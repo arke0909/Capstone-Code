@@ -1,5 +1,5 @@
 ﻿using Chipmunk.ComponentContainers;
-using Code.InventorySystems.Equipments;
+using Code.InventorySystems;
 using Code.Players;
 using UnityEngine;
 using Code.Items;
@@ -9,16 +9,18 @@ namespace Scripts.Players.States
     public class ItemUseContext
     {
         public UsableItem TargetItem { get; set; }
+        public bool ShouldRestoreHandledItem { get; set; }
     }
     public class PlayerItemUseState : PlayerMoveState
     {
         private UsableItem _item;
-        private PlayerEquipment _equipment;
+        private HandlingComponent _handlingComponent;
         private PlayerInventory _inventory;
+        private bool _shouldRestoreHandledItem;
         public PlayerItemUseState(ComponentContainer container, int animationHash) : base(container, animationHash)
         {
             _myMoveType = MoveType.Walk;
-            _equipment = container.Get<PlayerEquipment>();
+            _handlingComponent = container.Get<HandlingComponent>();
             _inventory = container.Get<PlayerInventory>();
         }
         public override void Enter()
@@ -27,6 +29,7 @@ namespace Scripts.Players.States
             ItemUseContext context = _blackboard.GetOrDefault<ItemUseContext>("ItemUseContext");
             Debug.Assert(context != null, "Context is null");
             _item = context.TargetItem;
+            _shouldRestoreHandledItem = context.ShouldRestoreHandledItem;
         }
         public override void Update()
         {
@@ -43,7 +46,11 @@ namespace Scripts.Players.States
                 _item.Use(_player);
             }
 
-            _equipment.RestoreHandledEquip();
+            if (_shouldRestoreHandledItem)
+                _handlingComponent.RestoreHandledEquip();
+
+            _item = null;
+            _shouldRestoreHandledItem = false;
         }
     }
 }

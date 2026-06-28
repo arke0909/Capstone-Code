@@ -20,7 +20,7 @@ namespace Code.SHS.Entities.Enemies.FSM
         }
         public override async void Enter()
         {
-            await UniTask.NextFrame();//정확히 같은 프레임에 스킬 사용하면 안됨(애니메이션)
+            //await UniTask.NextFrame();//정확히 같은 프레임에 스킬 사용하면 안됨(애니메이션)
             base.Enter();
             Debug.Assert(_skillCompo != null && _skillCompo.CurrentSkill != null && _skillCompo.CurrentSkill is IUseStateSkill,
                 "CurrentSkill is null but you are in skill state");
@@ -29,7 +29,7 @@ namespace Code.SHS.Entities.Enemies.FSM
             _stateSkill = _currentSkill as IUseStateSkill;
             _animator.SetParam(_skillHash, (int)_stateSkill.AnimType);
             _animatorTrigger.OnCastSkillTrigger += HandleSkillCast;
-            _currentSkill.StartAndUseSkill();
+            _currentSkill.StartSkill();
         }
 
         private void HandleSkillCast()

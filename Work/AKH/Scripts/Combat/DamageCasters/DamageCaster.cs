@@ -15,7 +15,10 @@ namespace Scripts.Combat
         }
         public virtual void ApplyDamageAndKnockback(Transform target, DamageData damageData, Vector3 position, Vector3 normal, MovementDataSO knockbackData = null)
         {
-            if (target.TryGetComponent(out IDamageable damageable))
+            if (!target.TryGetComponent(out IDamageable damageable))
+                damageable = target.GetComponentInParent<IDamageable>();
+
+            if (damageable != null)
             {
                 DamageContext context = new DamageContext
                 {

@@ -4,10 +4,11 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Unity.Cinemachine;
 using UnityEngine;
+using Work.Code.PlayerTasks;
 
 namespace Work.Code.Tutorials
 {
-    public class TutorialDoor : MonoBehaviour
+    public class TutorialDoor : TaskCompleteInteraction
     {
         [SerializeField] private float tweenDuration;
         [SerializeField] private float targetScale;
@@ -20,23 +21,24 @@ namespace Work.Code.Tutorials
         {
             _originalScale = transform.localScale.x;
         }
-
-        public void OpenDoor()
+        
+        
+        public override void Interact()
         {
-            doorCamera.Priority = 100;
             gameObject.transform.DOKill();
-            BroAudio.Play(doorSound);
-            
+            SetCameraPriority(100);
             OpenDoorAfterDelay();
         }
-
+        
         private async void OpenDoorAfterDelay()
         {
             await UniTask.WaitForSeconds(1.5f);
+            
+            BroAudio.Play(doorSound);
             gameObject.transform.DOScaleX(targetScale, tweenDuration)
                 .OnComplete(() =>
                 {
-                    doorCamera.Priority = -1;
+                    SetCameraPriority(-1);
                 });
         }
 
@@ -44,6 +46,12 @@ namespace Work.Code.Tutorials
         {
             transform.DOKill();
             transform.DOScaleX(_originalScale, tweenDuration);
+        }
+
+        private void SetCameraPriority(int priority)
+        {
+            if(doorCamera != null)
+                doorCamera.Priority = priority;
         }
     }
 }

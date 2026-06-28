@@ -1,4 +1,4 @@
-using Chipmunk.GameEvents;
+﻿using Chipmunk.GameEvents;
 using Code.TimeSystem;
 using DewmoLib.Dependencies;
 using UnityEngine;
@@ -22,6 +22,11 @@ namespace Work.Code.MapEvents
                 AddRepeatEvent();
             else
                 AddEvent();
+        }
+        private void Start()
+        {
+            if (MapEventSO.callOnStart)
+                OnEventCalled();
         }
 
         private void AddEvent()

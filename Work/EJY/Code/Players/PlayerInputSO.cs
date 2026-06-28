@@ -81,6 +81,11 @@ public class PlayerInputSO : ScriptableObject, Control.IPlayerActions, Control.I
             AttackKey = false;
     }
 
+    public void ConsumeAttack()
+    {
+        AttackKey = false;
+    }
+
     public Vector3 GetWorldPosition()
     {
         Camera mainCam = Camera.main; //Unity2022부터 내부 캐싱이 되서 그냥 써도 돼.

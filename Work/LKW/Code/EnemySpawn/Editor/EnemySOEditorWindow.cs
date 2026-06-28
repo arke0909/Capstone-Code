@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Chipmunk.Modules.StatSystem;
 using Code.SHS.Utility.DynamicFieldBinding;
@@ -22,6 +21,7 @@ namespace Code.EnemySpawn.Editor
         private EnemySO enemyTarget;
         private SerializedObject enemySerializedObject;
         private Object currentSelection;
+        private MonoScript enemyScript;
         private Vector2 scrollPosition;
 
         private SerializedProperty enemyPrefabProperty;
@@ -41,7 +41,7 @@ namespace Code.EnemySpawn.Editor
 
         private bool showCore = true;
         private bool showEquipment = true;
-        private bool showStats = true;
+        private bool showStats;
         private bool showStates;
         private bool showBehaviours;
         private bool showSkills;
@@ -50,6 +50,9 @@ namespace Code.EnemySpawn.Editor
         private MessageType actionMessageType = MessageType.None;
         private EditorSnapshot snapshot;
         private bool snapshotDirty = true;
+        private string selectedName = "None";
+        private string selectedType = "No Selection";
+        private string selectedPath = string.Empty;
 
         [MenuItem("Tools/EnemySOEditorWindow")]
         public static void OpenFromMenu()
@@ -108,6 +111,7 @@ namespace Code.EnemySpawn.Editor
         private void SyncFromSelection()
         {
             currentSelection = Selection.activeObject;
+            CacheSelectionInfo(currentSelection);
 
             if (currentSelection is EnemySO selectedEnemy)
             {
@@ -124,6 +128,7 @@ namespace Code.EnemySpawn.Editor
         private void SetTarget(EnemySO enemy)
         {
             currentSelection = Selection.activeObject;
+            CacheSelectionInfo(currentSelection);
 
             if (enemyTarget == enemy && enemySerializedObject != null)
             {
@@ -131,6 +136,7 @@ namespace Code.EnemySpawn.Editor
             }
 
             enemyTarget = enemy;
+            enemyScript = enemy != null ? MonoScript.FromScriptableObject(enemy) : null;
             enemySerializedObject = enemy != null ? new SerializedObject(enemy) : null;
             BindProperties();
             CreateLists();
@@ -141,6 +147,7 @@ namespace Code.EnemySpawn.Editor
         private void ClearTarget()
         {
             enemyTarget = null;
+            enemyScript = null;
             enemySerializedObject = null;
             ClearProperties();
             equipmentsList = null;
@@ -229,21 +236,23 @@ namespace Code.EnemySpawn.Editor
             DrawValidationSummary();
             EditorGUILayout.Space(4f);
 
-            DrawSection("Core", GetCoreSummary(), new Color(0.24f, 0.56f, 0.92f), ref showCore, DrawCoreSection);
-            DrawSection("Equipment", GetEquipmentSummary(), new Color(0.87f, 0.58f, 0.22f), ref showEquipment, DrawEquipmentSection);
-            DrawSection("Stats", GetStatsSummary(), new Color(0.24f, 0.72f, 0.46f), ref showStats, DrawStatsSection);
-            DrawSection("States", GetStatesSummary(), new Color(0.18f, 0.68f, 0.78f), ref showStates, DrawStatesSection);
-            DrawSection("Behaviours", GetBehavioursSummary(), new Color(0.90f, 0.36f, 0.32f), ref showBehaviours, DrawBehavioursSection);
-            DrawSection("Skills", GetSkillsSummary(), new Color(0.92f, 0.74f, 0.24f), ref showSkills, DrawSkillsSection);
+            DrawSection("Core", snapshot.CoreSummary, new Color(0.24f, 0.56f, 0.92f), ref showCore, DrawCoreSection);
+            DrawSection("Equipment", snapshot.EquipmentSummary, new Color(0.87f, 0.58f, 0.22f), ref showEquipment, DrawEquipmentSection);
+            DrawSection("Stats", snapshot.StatsSummary, new Color(0.24f, 0.72f, 0.46f), ref showStats, DrawStatsSection);
+            DrawSection("States", snapshot.StatesSummary, new Color(0.18f, 0.68f, 0.78f), ref showStates, DrawStatesSection);
+            DrawSection("Behaviours", snapshot.BehavioursSummary, new Color(0.90f, 0.36f, 0.32f), ref showBehaviours, DrawBehavioursSection);
+            DrawSection("Skills", snapshot.SkillsSummary, new Color(0.92f, 0.74f, 0.24f), ref showSkills, DrawSkillsSection);
+        }
+
+        private void CacheSelectionInfo(Object selection)
+        {
+            selectedName = selection != null ? selection.name : "None";
+            selectedType = selection != null ? selection.GetType().Name : "No Selection";
+            selectedPath = selection != null ? AssetDatabase.GetAssetPath(selection) : string.Empty;
         }
 
         private void DrawSelectionInfo()
         {
-            Object selection = currentSelection;
-            string selectedName = selection != null ? selection.name : "None";
-            string selectedType = selection != null ? selection.GetType().Name : "No Selection";
-            string selectedPath = selection != null ? AssetDatabase.GetAssetPath(selection) : string.Empty;
-
             using (new EditorGUILayout.VerticalScope(Styles.SelectionCard))
             {
                 using (new EditorGUILayout.HorizontalScope())
@@ -273,8 +282,7 @@ namespace Code.EnemySpawn.Editor
         {
             using (new EditorGUI.DisabledScope(true))
             {
-                MonoScript script = enemyTarget != null ? MonoScript.FromScriptableObject(enemyTarget) : null;
-                EditorGUILayout.ObjectField("Script", script, typeof(MonoScript), false);
+                EditorGUILayout.ObjectField("Script", enemyScript, typeof(MonoScript), false);
             }
         }
 
@@ -285,7 +293,7 @@ namespace Code.EnemySpawn.Editor
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     Rect previewRect = GUILayoutUtility.GetRect(50f, 50f, GUILayout.Width(50f), GUILayout.Height(50f));
-                    DrawPreview(previewRect, enemyTarget);
+                    DrawPreview(previewRect, snapshot.PreviewTexture);
 
                     using (new EditorGUILayout.VerticalScope())
                     {
@@ -362,14 +370,12 @@ namespace Code.EnemySpawn.Editor
 
         private void DrawValidationSummary()
         {
-            List<string> warnings = snapshot.Warnings;
-            if (warnings.Count == 0)
+            if (string.IsNullOrEmpty(snapshot.WarningMessage))
             {
                 return;
             }
 
-            string message = string.Join("\n", warnings.Select(warning => $"- {warning}"));
-            EditorGUILayout.HelpBox(message, MessageType.Warning);
+            EditorGUILayout.HelpBox(snapshot.WarningMessage, MessageType.Warning);
         }
 
         private void DrawCoreSection()
@@ -507,15 +513,8 @@ namespace Code.EnemySpawn.Editor
             GUILayout.Label($"{label}  {value}", Styles.MetricChip, GUILayout.Height(20f));
         }
 
-        private static void DrawPreview(Rect rect, EnemySO enemy)
+        private static void DrawPreview(Rect rect, Texture texture)
         {
-            Object previewTarget = enemy != null && enemy.enemyPrefab != null
-                ? enemy.enemyPrefab
-                : enemy;
-            Texture texture = previewTarget != null
-                ? EditorGUIUtility.ObjectContent(previewTarget, previewTarget.GetType()).image
-                : null;
-
             EditorGUI.DrawRect(rect, Styles.PreviewBackground);
             if (texture != null)
             {
@@ -550,7 +549,7 @@ namespace Code.EnemySpawn.Editor
             equipmentsList.drawElementCallback = (rect, index, active, focused) =>
             {
                 SerializedProperty element = equipmentsProperty.GetArrayElementAtIndex(index);
-                SerializedProperty typeProperty = element.FindPropertyRelative("type");
+                SerializedProperty typeProperty = element.FindPropertyRelative("partType");
                 SerializedProperty itemDataProperty = element.FindPropertyRelative("itemData");
 
                 Rect row = new Rect(rect.x, rect.y + 2f, rect.width, EditorGUIUtility.singleLineHeight);
@@ -558,8 +557,15 @@ namespace Code.EnemySpawn.Editor
                 Rect leftRect = new Rect(row.x, row.y, leftWidth, row.height);
                 Rect rightRect = new Rect(row.x + leftWidth + 6f, row.y, row.width - leftWidth - 6f, row.height);
 
-                EditorGUI.PropertyField(leftRect, typeProperty, GUIContent.none);
-                EditorGUI.PropertyField(rightRect, itemDataProperty, GUIContent.none);
+                if (typeProperty != null)
+                {
+                    EditorGUI.PropertyField(leftRect, typeProperty, GUIContent.none);
+                }
+
+                if (itemDataProperty != null)
+                {
+                    EditorGUI.PropertyField(rightRect, itemDataProperty, GUIContent.none);
+                }
             };
         }
 
@@ -733,42 +739,6 @@ namespace Code.EnemySpawn.Editor
             Repaint();
         }
 
-        private string GetCoreSummary()
-        {
-            return $"{snapshot.PrefabName} / {snapshot.BulletName}";
-        }
-
-        private string GetEquipmentSummary()
-        {
-            return snapshot.MissingEquipmentCount > 0
-                ? $"{snapshot.EquipmentCount} slots, {snapshot.MissingEquipmentCount} empty"
-                : $"{snapshot.EquipmentCount} slots";
-        }
-
-        private string GetStatsSummary()
-        {
-            return snapshot.DuplicatedStatNames.Count > 0
-                ? $"{snapshot.StatCount} entries, duplicates"
-                : $"{snapshot.EnabledOverrideCount} active";
-        }
-
-        private string GetStatesSummary()
-        {
-            return snapshot.MissingStateCount > 0
-                ? $"{snapshot.StateCount} entries, {snapshot.MissingStateCount} missing"
-                : $"{snapshot.StateCount} entries";
-        }
-
-        private string GetBehavioursSummary()
-        {
-            return $"{snapshot.ConfiguredBehaviourCount} / {snapshot.BehaviourCount} configured";
-        }
-
-        private string GetSkillsSummary()
-        {
-            return $"Passive {snapshot.PassiveSkillCount} / Active {snapshot.ActiveSkillCount}";
-        }
-
         private int CountConfiguredBehaviourTargets()
         {
             int count = 0;
@@ -794,7 +764,8 @@ namespace Code.EnemySpawn.Editor
                 StateCount = stateDatasProperty?.arraySize ?? 0,
                 BehaviourCount = behaviourPrefabsProperty?.arraySize ?? 0,
                 PrefabName = enemy != null && enemy.enemyPrefab != null ? enemy.enemyPrefab.name : "No Prefab",
-                BulletName = bulletDataProperty?.objectReferenceValue != null ? bulletDataProperty.objectReferenceValue.name : "No Bullet"
+                BulletName = bulletDataProperty?.objectReferenceValue != null ? bulletDataProperty.objectReferenceValue.name : "No Bullet",
+                PreviewTexture = GetPreviewTexture(enemy)
             };
 
             if (enemy == null)
@@ -802,6 +773,7 @@ namespace Code.EnemySpawn.Editor
                 nextSnapshot.HeroSubtitle = "Enemy Scriptable Object";
                 nextSnapshot.HeroStatusLine = "Configure enemy data, behaviours, and skills from one place.";
                 nextSnapshot.Warnings.Add("EnemySO target could not be resolved.");
+                nextSnapshot.BuildCachedText();
                 return nextSnapshot;
             }
 
@@ -869,11 +841,15 @@ namespace Code.EnemySpawn.Editor
                 }
             }
 
-            nextSnapshot.DuplicatedStatNames = statOccurrences
-                .Where(pair => pair.Value > 1)
-                .Select(pair => pair.Key)
-                .OrderBy(name => name)
-                .ToList();
+            foreach (KeyValuePair<string, int> pair in statOccurrences)
+            {
+                if (pair.Value > 1)
+                {
+                    nextSnapshot.DuplicatedStatNames.Add(pair.Key);
+                }
+            }
+
+            nextSnapshot.DuplicatedStatNames.Sort(StringComparer.Ordinal);
 
             if (nextSnapshot.MissingEquipmentCount > 0)
             {
@@ -903,8 +879,24 @@ namespace Code.EnemySpawn.Editor
 
             nextSnapshot.HeroStatusLine =
                 $"Stats {nextSnapshot.EnabledOverrideCount} active, behaviours {nextSnapshot.ConfiguredBehaviourCount}, skills {nextSnapshot.PassiveSkillCount + nextSnapshot.ActiveSkillCount} configured";
+            nextSnapshot.BuildCachedText();
 
             return nextSnapshot;
+        }
+
+        private static Texture GetPreviewTexture(EnemySO enemy)
+        {
+            Object previewTarget = enemy != null && enemy.enemyPrefab != null
+                ? enemy.enemyPrefab
+                : enemy;
+
+            if (previewTarget == null)
+            {
+                return null;
+            }
+
+            return AssetPreview.GetMiniThumbnail(previewTarget)
+                   ?? EditorGUIUtility.ObjectContent(previewTarget, previewTarget.GetType()).image;
         }
 
         private static int CountConfiguredSkillPatches(IEnumerable<IFieldPatchRuntime> patches)
@@ -933,10 +925,12 @@ namespace Code.EnemySpawn.Editor
                 return "(None)";
             }
 
-            SerializedObject statSerializedObject = new SerializedObject(statObject);
-            SerializedProperty statNameProperty = statSerializedObject.FindProperty("statName");
-            string statName = statNameProperty?.stringValue;
-            return string.IsNullOrWhiteSpace(statName) ? statObject.name : statName;
+            if (statObject is StatSO stat && !string.IsNullOrWhiteSpace(stat.statName))
+            {
+                return stat.statName;
+            }
+
+            return statObject.name;
         }
 
         private sealed class EditorSnapshot
@@ -956,8 +950,46 @@ namespace Code.EnemySpawn.Editor
             public string BulletName = "No Bullet";
             public string HeroSubtitle = "Enemy Scriptable Object";
             public string HeroStatusLine = string.Empty;
+            public Texture PreviewTexture;
+            public string CoreSummary = string.Empty;
+            public string EquipmentSummary = string.Empty;
+            public string StatsSummary = string.Empty;
+            public string StatesSummary = string.Empty;
+            public string BehavioursSummary = string.Empty;
+            public string SkillsSummary = string.Empty;
+            public string WarningMessage = string.Empty;
             public List<string> DuplicatedStatNames = new List<string>();
             public List<string> Warnings = new List<string>();
+
+            public void BuildCachedText()
+            {
+                CoreSummary = $"{PrefabName} / {BulletName}";
+                EquipmentSummary = MissingEquipmentCount > 0
+                    ? $"{EquipmentCount} slots, {MissingEquipmentCount} empty"
+                    : $"{EquipmentCount} slots";
+                StatsSummary = DuplicatedStatNames.Count > 0
+                    ? $"{StatCount} entries, duplicates"
+                    : $"{EnabledOverrideCount} active";
+                StatesSummary = MissingStateCount > 0
+                    ? $"{StateCount} entries, {MissingStateCount} missing"
+                    : $"{StateCount} entries";
+                BehavioursSummary = $"{ConfiguredBehaviourCount} / {BehaviourCount} configured";
+                SkillsSummary = $"Passive {PassiveSkillCount} / Active {ActiveSkillCount}";
+
+                if (Warnings.Count == 0)
+                {
+                    WarningMessage = string.Empty;
+                    return;
+                }
+
+                List<string> formattedWarnings = new List<string>(Warnings.Count);
+                for (int i = 0; i < Warnings.Count; i++)
+                {
+                    formattedWarnings.Add($"- {Warnings[i]}");
+                }
+
+                WarningMessage = string.Join("\n", formattedWarnings);
+            }
         }
 
         private static class Styles

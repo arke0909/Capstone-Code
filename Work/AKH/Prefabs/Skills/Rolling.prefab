@@ -45,8 +45,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <SkillData>k__BackingField: {fileID: 11400000, guid: 43e0c8fead6b3494184844f69e8f0c38, type: 2}
+  isWalkable: 0
   cooldown: 0.3
+  <AnimType>k__BackingField: 1
+  <TargetState>k__BackingField: {fileID: 11400000, guid: 92665a5a1cf0aec4e87819ed62d2d2e1, type: 2}
   movementData: {fileID: 11400000, guid: 6fb6cfb4c2e1722498f5438d43376b34, type: 2}
   staminaUsage: -10
   staminaStopTimer: 3
-  <TargetState>k__BackingField: {fileID: 11400000, guid: 92665a5a1cf0aec4e87819ed62d2d2e1, type: 2}
+  rollingID:
+    _entity: {fileID: 0}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 7445601798775884939}

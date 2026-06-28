@@ -7,6 +7,7 @@ using Code.InventorySystems.Items;
 using InGame.InventorySystem;
 using System.Collections.Generic;
 using System.Linq;
+using Ami.BroAudio;
 using Code.InventorySystems;
 using Code.InventorySystems.Equipments;
 using Scripts.Players;
@@ -20,6 +21,8 @@ namespace Code.Players
     {
         [SerializeField] private SerializedDictionary<EquipPartType, Transform> equipTrms;
         [SerializeField] private EquipSlotDefineListSO equipSlotDefineList;
+        [SerializeField] private SoundID equipSound;
+        [SerializeField] private SoundID unequipSound;
         public ComponentContainer ComponentContainer { get; set; }
 
         private Player _player;
@@ -30,21 +33,16 @@ namespace Code.Players
 
         // 플레리어의 슬롯
         private List<EquipSlot> _equipSlots = new List<EquipSlot>();
-        private int _handlingIndex;
-        private int _handledIndex;
-
-        public int HandlingIndex => _handlingIndex;
-        public int HandledIndex => _handledIndex;
+        public IReadOnlyList<EquipSlot> EquipSlots => _equipSlots;
 
         public event Action OnEquipItem;
         public event Action OnUnEquipItem;
 
         public void OnInitialize(ComponentContainer componentContainer)
         {
-            _player = componentContainer.GetCompo<Player>(true);
-            _playerInventory = componentContainer.GetComponent<PlayerInventory>();
+            _player = componentContainer.Get<Player>(true);
+            _playerInventory = componentContainer.Get<PlayerInventory>();
 
-            EventBus.Subscribe<SwapEquipEvent>(HandleSwapEquip);
             EventBus.Subscribe<EquipByDragEvent>(HandleEquipByDrag);
             EventBus.Subscribe<UnEquipByDragEvent>(HandleUnEquipByDrag);
         }
@@ -71,7 +69,6 @@ namespace Code.Players
 
         private void OnDestroy()
         {
-            EventBus.Unsubscribe<SwapEquipEvent>(HandleSwapEquip);
             EventBus.Unsubscribe<EquipByDragEvent>(HandleEquipByDrag);
             EventBus.Unsubscribe<UnEquipByDragEvent>(HandleUnEquipByDrag);
         }
@@ -84,175 +81,6 @@ namespace Code.Players
         private void HandleUnEquipByDrag(UnEquipByDragEvent evt)
         {
             UnEquipToSlot(evt.EquipSlot, evt.TargetSlot);
-        }
-
-        private void HandleSwapEquip(SwapEquipEvent evt)
-        {
-            EquipSlot startEquipSlot = evt.StartEquip;
-            EquipSlot targetEquipSlot = evt.TargetEquip;
-            EquipableItem startSlotItem = startEquipSlot.Item as EquipableItem;
-            EquipableItem targetSlotItem = targetEquipSlot.Item as EquipableItem;
-
-            int startEquipLocalIndex = GetLocalIndex(startEquipSlot.Index);
-            int targetEquipLocalIndex = GetLocalIndex(targetEquipSlot.Index);
-
-            DeregisterSkill(startEquipSlot, startSlotItem);
-            DeregisterSkill(targetEquipSlot, targetSlotItem);
-
-            if (startSlotItem == null)
-            {
-                targetEquipSlot.SetData(null);
-                
-                if (targetEquipSlot.CanHandle)
-                    UpdateHotbarSlot(targetEquipLocalIndex);
-            }
-            else
-            {
-                targetEquipSlot.SetData(startSlotItem, 1);
-
-                if (targetEquipSlot.CanHandle)
-                    UpdateHotbarSlot(targetEquipLocalIndex, startSlotItem);
-            }
-
-
-            if (targetSlotItem == null)
-            {
-                startEquipSlot.SetData(null);
-
-                if (startEquipSlot.CanHandle)
-                    UpdateHotbarSlot(startEquipLocalIndex);
-            }
-            else
-            {
-                startEquipSlot.SetData(targetSlotItem, 1);
-
-                if (startEquipSlot.CanHandle)
-                    UpdateHotbarSlot(startEquipLocalIndex, targetSlotItem);
-            }
-
-            RegisterSkill(targetEquipSlot, startSlotItem);
-            RegisterSkill(startEquipSlot, targetSlotItem);
-
-            
-            bool touchesCurrentHandle =
-                startEquipSlot.CanHandle &&
-                targetEquipSlot.CanHandle &&
-                (startEquipLocalIndex == _handlingIndex || targetEquipLocalIndex == _handlingIndex);
-
-            if (touchesCurrentHandle)
-            {
-                if (startSlotItem != null && targetSlotItem != null)
-                {
-                    if (startEquipLocalIndex == _handlingIndex)
-                    {
-                        RefreshHandItem(targetSlotItem);
-                    }
-                    else
-                    {
-                        RefreshHandItem(startSlotItem);
-                    }
-                }
-                else
-                {
-                    EquipSlot activeSlot = startEquipLocalIndex == _handlingIndex ? startEquipSlot : targetEquipSlot;
-                    EquipSlot swappedSlot = activeSlot == startEquipSlot ? targetEquipSlot : startEquipSlot;
-
-                    if (!activeSlot.IsBlank)
-                    {
-                        RefreshHandItem(activeSlot.Equipable);
-                    }
-                    else if (!swappedSlot.IsBlank)
-                    {
-                        UpdateHandleIndex(GetLocalIndex(swappedSlot.Index));
-                        RefreshHandItem(swappedSlot.Equipable);
-                    }
-                    else
-                    {
-                        UpdateHandleIndex(-1);
-                        RefreshHandItem(null);
-                    }
-                }
-            }
-
-            EventBus<UpdateEquipUIEvent>.Raise(new UpdateEquipUIEvent(_equipSlots.ToList()));
-        }
-
-        private void UpdateHotbarSlot(int index, EquipableItem item = null)
-        {
-            if (item == null)
-            {
-                EventBus.Raise(new UnEquipHotbarEvent(index));
-                return;
-            }
-
-            EventBus.Raise(new EquipHotbarEvent(index, item));
-        }
-
-        #region Change Handle Item About Hotbar
-
-        public void ChangeHandlingHotbarItem(HandItem handItem)
-        {
-            if (handItem == null)
-                return;
-
-            // 이 무기가 equip slot에 실제로 꽂혀 있는 장비면 그 슬롯 index를 추적
-            EquipSlot equipSlot = _equipSlots.FirstOrDefault(slot => slot.Equipable == handItem);
-
-            if (equipSlot != null)
-            {
-                UpdateHandleIndex(GetLocalIndex(equipSlot.Index));
-            }
-            else
-            {
-                // 핫바 전용 임시 아이템이면 현재 들고 있던 equip slot만 기억
-                _handledIndex = _handlingIndex;
-            }
-
-            SetHandItem(handItem);
-        }
-
-        public void RestoreHandledEquip()
-        {
-            EquipSlot handledSlot = _equipSlots.FirstOrDefault(slot => GetLocalIndex(slot.Index) == _handledIndex);
-
-            if (handledSlot == null || handledSlot.Equipable == null)
-            {
-                ChangeSpareWeapon();
-                return;
-            }
-
-            UpdateHandleIndex(GetLocalIndex(handledSlot.Index));
-            SetHandItem(handledSlot.Equipable);
-        }
-
-        private void SetHandItem(EquipableItem item)
-        {
-            if (_equips[EquipPartType.Hand] != null)
-                _equips[EquipPartType.Hand].Unequip(_player);
-
-            _equips[EquipPartType.Hand] = item;
-
-            if (item != null)
-                item.Equip(_player, equipTrms[EquipPartType.Hand]);
-
-            EventBus.Raise(new ChangeHandlingEvent(item));
-        }
-
-        #endregion
-
-        public void RefreshHandItem(EquipableItem newItem)
-        {
-            if (_equips[EquipPartType.Hand] != null)
-                _equips[EquipPartType.Hand].Unequip(_player);
-
-            _equips[EquipPartType.Hand] = newItem;
-
-            if (newItem != null)
-            {
-                newItem.Equip(_player, equipTrms[EquipPartType.Hand]);
-            }
-
-            EventBus.Raise(new ChangeHandlingEvent(newItem));
         }
 
         // 키를 통한 장착
@@ -277,7 +105,7 @@ namespace Code.Players
             // 교체가 아니면 원본 슬롯에 아직 새 장비가 남아 있으니 비운다.
             if (sourceSlot.Item == equipableItem)
                 sourceSlot.SetData(null);
-            
+
             sourceSlot.OwnerInventory?.UpdateInventory();
             return true;
         }
@@ -290,10 +118,10 @@ namespace Code.Players
 
             if (!Equip(equipSlot, equipableItem, slot))
                 return false;
-            
-            if(slot.Item == equipableItem)
+
+            if (slot.Item == equipableItem)
                 slot.SetData(null);
-            
+
             return true;
         }
 
@@ -306,8 +134,9 @@ namespace Code.Players
             {
                 if (!UnEquip(equipSlot, out EquipableItem equipped))
                     return false;
-                
-                sourceSlot.SetData(equipped, 1);
+
+                if (!TryStoreUnequippedItem(equipped, sourceSlot, true))
+                    _playerInventory.DropItem(equipped, 1);
             }
 
             equipSlot.SetData(equipableItem, 1);
@@ -317,23 +146,20 @@ namespace Code.Players
 
             int equipSlotLocalIndex = GetLocalIndex(equipSlot.Index);
 
+            if (equipSlot.CanHandle)
+                EventBus.Raise(new EquipHotbarEvent(equipSlotLocalIndex, equipableItem));
+
+            equipableItem.Equip(_player, equipTrms[equipPartType]);
+            
             if (_equips.TryGetValue(equipPartType, out EquipableItem equippingItem) && equippingItem == null)
             {
                 _equips[equipPartType] = equipableItem;
-                equipableItem.Equip(_player, equipTrms[equipPartType]);
-                
-                if (equipPartType == EquipPartType.Hand)
-                {
-                    UpdateHandleIndex(equipSlotLocalIndex);
-                    EventBus.Raise(new ChangeHandlingEvent(equipableItem));
-                }
             }
 
-            if (equipPartType == EquipPartType.Hand)
-                EventBus.Raise(new EquipHotbarEvent(equipSlotLocalIndex, equipableItem));
-
+            _player.LocalEventBus.Raise(new EquipItemEvent(equipSlot));
             EventBus.Raise(new UpdateEquipUIEvent(_equipSlots.ToList()));
             OnEquipItem?.Invoke();
+            BroAudio.Play(equipSound);
 
             return true;
         }
@@ -343,7 +169,11 @@ namespace Code.Players
             if (!UnEquip(equipSlot, out EquipableItem equipped))
                 return false;
 
-            return _playerInventory.TryAddItem(equipped);
+            if (TryStoreUnequippedItem(equipped))
+                return true;
+
+            _playerInventory.DropItem(equipped, 1);
+            return true;
         }
 
         public bool UnEquipToSlot(EquipSlot equipSlot, ItemSlot targetSlot)
@@ -354,8 +184,48 @@ namespace Code.Players
             if (!UnEquip(equipSlot, out EquipableItem equipped))
                 return false;
 
-            targetSlot.SetData(equipped, 1);
+            if (TryStoreUnequippedItem(equipped, targetSlot))
+                return true;
+
+            _playerInventory.DropItem(equipped, 1);
             return true;
+        }
+
+        public bool DropEquippedItem(EquipableItem item)
+        {
+            if (item == null || !item.IsEquipped)
+                return false;
+
+            EquipSlot equipSlot = _equipSlots.FirstOrDefault(slot => slot.Equipable == item);
+            if (equipSlot == null)
+                return false;
+
+            int stack = equipSlot.Stack;
+
+            if (!UnEquip(equipSlot, out EquipableItem equipped))
+                return false;
+
+            _playerInventory.DropItem(equipped, stack);
+            return true;
+        }
+
+        private bool TryStoreUnequippedItem(EquipableItem equipped, ItemSlot preferredSlot = null,
+            bool allowOverwritePreferredSlot = false)
+        {
+            if (equipped == null)
+                return false;
+
+            Inventory preferredInventory = preferredSlot?.OwnerInventory;
+            if (preferredInventory != null &&
+                preferredInventory.IsActiveSlot(preferredSlot) &&
+                (preferredSlot.IsBlank || allowOverwritePreferredSlot))
+            {
+                preferredSlot.SetData(equipped, 1);
+                preferredInventory.UpdateInventory();
+                return true;
+            }
+
+            return _playerInventory.TryAddItem(equipped);
         }
 
         private bool UnEquip(EquipSlot equipSlot, out EquipableItem equipped)
@@ -369,49 +239,26 @@ namespace Code.Players
             if (!_equips.ContainsKey(equipPartType))
                 return false;
 
-            if (equipPartType == EquipPartType.Hand)
-                EventBus.Raise(new UnEquipHotbarEvent(GetLocalIndex(equipSlot.Index)));
-
             equipSlot.SetData(null);
 
             DeregisterSkill(equipSlot, equipped);
 
-            if (equipped.IsEquipped)
-            {
-                equipped.Unequip(_player);
-                _equips[equipPartType] = null;
+            if (equipSlot.CanHandle)
+                EventBus.Raise(new UnEquipHotbarEvent(GetLocalIndex(equipSlot.Index)));
 
-                if (equipPartType == EquipPartType.Hand)
-                    ChangeSpareWeapon();
+
+            if (_equips.TryGetValue(equipPartType, out EquipableItem currentItem) && currentItem == equipped)
+            {
+                _equips[equipPartType] = null;
             }
 
+            _player.LocalEventBus.Raise(new UnequipItemEvent(equipSlot, equipped));
+            equipped.Unequip(_player);
             EventBus.Raise(new UpdateEquipUIEvent(_equipSlots.ToList()));
             OnUnEquipItem?.Invoke();
+            BroAudio.Play(unequipSound);
             
             return true;
-        }
-
-
-        private void ChangeSpareWeapon()
-        {
-            var equipSlot = _equipSlots.FirstOrDefault(slot => slot.CanHandle && !slot.IsBlank);
-
-            if (equipSlot == null)
-            {
-                SetHandItem(null);
-                UpdateHandleIndex(-1);
-                return;
-            }
-
-            var spareWeapon = equipSlot.Equipable;
-            SetHandItem(spareWeapon);
-            UpdateHandleIndex(GetLocalIndex(equipSlot.Index));
-        }
-
-        private void UpdateHandleIndex(int idx)
-        {
-            _handledIndex = _handlingIndex;
-            _handlingIndex = idx;
         }
 
         public bool TryGetEquippedItem(EquipPartType partType, out EquipableItem item)
@@ -421,19 +268,52 @@ namespace Code.Players
                 return false;
             return true;
         }
+        
+        public bool TryChangeSpareWeapon(out EquipSlot spareSlot)
+        {
+            spareSlot = _equipSlots.FirstOrDefault(slot => slot.CanHandle && !slot.IsBlank);
+
+            if (spareSlot == null)
+                return false;
+
+            return true;
+        }
 
         public EquipableItem GetEquippedItem(EquipPartType partType) => _equips.GetValueOrDefault(partType);
+        public Transform GetEquipTransform(EquipPartType partType) => equipTrms.GetValueOrDefault(partType);
 
-        private void RegisterSkill(EquipSlot equipSlot, EquipableItem equipableItem)
+        public void RegisterSkill(EquipSlot equipSlot, EquipableItem equipableItem)
         {
             if (equipSlot != null && equipSlot.HasSkill && equipableItem != null)
                 equipableItem.RegisterSkill();
         }
-        
-        private void DeregisterSkill(EquipSlot equipSlot, EquipableItem equipableItem)
+
+        public void DeregisterSkill(EquipSlot equipSlot, EquipableItem equipableItem)
         {
             if (equipSlot != null && equipSlot.HasSkill && equipableItem != null)
-                equipableItem.DeregisterSkill();  
+                equipableItem.DeregisterSkill();
         }
+
+        public void SetEquippedItem(EquipPartType partType, EquipableItem item)
+        {
+            if (_equips.TryGetValue(partType, out EquipableItem currentItem) == false)
+                return;
+
+            if (currentItem == item)
+            {
+                if (item != null && !item.IsEquipped)
+                    item.Equip(_player, equipTrms[partType]);
+                return;
+            }
+
+            if (currentItem != null)
+                currentItem.Unequip(_player);
+
+            _equips[partType] = item;
+
+            if (item != null)
+                item.Equip(_player, equipTrms[partType]);
+        }
+
     }
 }

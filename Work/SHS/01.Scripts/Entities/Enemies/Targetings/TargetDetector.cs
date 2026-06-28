@@ -187,6 +187,8 @@ namespace Code.SHS.Targetings.Enemies
             Gizmos.color = new Color(0.2f, 0.9f, 1f, 0.9f);
             Gizmos.DrawLine(origin, origin + leftBoundary);
             Gizmos.DrawLine(origin, origin + rightBoundary);
+            Gizmos.color = Color.black;
+            Gizmos.DrawWireSphere(origin, closeDetectionRange);
         }
 
         private Vector3 DirFromAngle(float angleOffset)

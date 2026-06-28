@@ -20,7 +20,7 @@ namespace Code.UI.Tooltip
             BindStat(firerate, StatType.FireRate, data.fireRate);
             BindStat(fireCount, StatType.FireCount, data.bulletPerShot);
             BindStat(bulletCount, StatType.BulletCount, data.maxAmmoCapacity);
-            BindStat(spread, StatType.Spread, data.defaultSpread);
+            BindStat(spread, StatType.Spread, data.ads.defaultSpread);
         }
     }
 }

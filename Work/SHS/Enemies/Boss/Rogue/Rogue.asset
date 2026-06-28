@@ -12,46 +12,1632 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5a9e70a188f4e09930eb89a37d88e73, type: 3}
   m_Name: Rogue
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 8744048729638733587, guid: 9f11f78ccce62c44bb4b712647f20d08, type: 3}
+  enemyType: 2
+  enemyPrefab: {fileID: 669838599292868045, guid: 00208491f26e7f64fb21a7243db5d0a9, type: 3}
   enemyPoolItem: {fileID: 11400000, guid: 3feb023dbf9d42de9582e5c1df9cf9f2, type: 2}
   spawnRarityWeight: 50
+  growthTable: {fileID: 0}
   equipments:
-  - type: 0
-    itemData: {fileID: 11400000, guid: 2e4a3802b6484dbcae2f54f5d2c2d9a1, type: 2}
-  bulletData: {fileID: 11400000, guid: bb727a1681535834f9e4d186eda395ab, type: 2}
-  behaviourPrefabs: []
-  skillConfigs:
-  - skillPrefab: {fileID: 1737756282980450332, guid: 9c1503c2e05ae1f4188414ed5aeb8466, type: 3}
-    targetState: {fileID: 0}
-    behaviorSetting:
-      priority: 10
-      behaviorCooldown: -1
-      conditionMode: 0
-      requireTarget: 1
-      requireAliveTarget: 1
-      useDistanceCondition: 0
-      minDistance: 0
-      maxDistance: 999
-  - skillPrefab: {fileID: 3873433538797633993, guid: 181cdefc51b0284458c072c8f20bbcf9, type: 3}
-    targetState: {fileID: 0}
-    behaviorSetting:
-      priority: 10
-      behaviorCooldown: -1
-      conditionMode: 0
-      requireTarget: 1
-      requireAliveTarget: 1
-      useDistanceCondition: 0
-      minDistance: 0
-      maxDistance: 999
-  - skillPrefab: {fileID: 3326814168894275818, guid: b85b7389bddd39c438679f931ae96de9, type: 3}
-    targetState: {fileID: 0}
-    behaviorSetting:
-      priority: 10
-      behaviorCooldown: -1
-      conditionMode: 0
-      requireTarget: 1
-      requireAliveTarget: 1
-      useDistanceCondition: 0
-      minDistance: 0
-      maxDistance: 999
-  repositionRatePerAttack: 0.2
+  - partType: 0
+    itemData: {fileID: 11400000, guid: fb2880fc734e0ee4aa5c9631ac43fd1c, type: 2}
+  bulletData: {fileID: 11400000, guid: 85895e62a6b141540bed1ffce134b191, type: 2}
+  statOverrides:
+  - stat: {fileID: 11400000, guid: ec44098c01bc4824594094bd514e6e91, type: 2}
+    isUseOverride: 1
+    overrideValue: 3
+  - stat: {fileID: 11400000, guid: f56e9638269a6094b96c0e42bbaea6d5, type: 2}
+    isUseOverride: 1
+    overrideValue: 2
+  - stat: {fileID: 11400000, guid: 15fc09ad501e2844986107c6459f339e, type: 2}
+    isUseOverride: 1
+    overrideValue: 750
+  - stat: {fileID: 11400000, guid: 1a1e5af04fdaaa8499643aab3685cf99, type: 2}
+    isUseOverride: 1
+    overrideValue: 2
+  - stat: {fileID: 11400000, guid: 2b03206dd9ef26948a19100398b639c1, type: 2}
+    isUseOverride: 1
+    overrideValue: 0
+  - stat: {fileID: 11400000, guid: 277e5bee72626544292dca8602be694e, type: 2}
+    isUseOverride: 1
+    overrideValue: 100
+  - stat: {fileID: 11400000, guid: 94058d7303615074cbb07bb31d3f8e48, type: 2}
+    isUseOverride: 1
+    overrideValue: 0.75
+  - stat: {fileID: 11400000, guid: 458b46c63a1c40d4ab9a6d39717dde19, type: 2}
+    isUseOverride: 1
+    overrideValue: 0
+  - stat: {fileID: 11400000, guid: 7a0d6ceb21222d849ad9defa279caa41, type: 2}
+    isUseOverride: 1
+    overrideValue: 1
+  - stat: {fileID: 11400000, guid: fa80372e43ce02f49a1a938d0bc7d871, type: 2}
+    isUseOverride: 1
+    overrideValue: 1
+  - stat: {fileID: 11400000, guid: 2533ba903b1e19348a60525a7a2e465e, type: 2}
+    isUseOverride: 1
+    overrideValue: 1
+  - stat: {fileID: 11400000, guid: 2b986259c8826d0449de3733d1cea9bb, type: 2}
+    isUseOverride: 1
+    overrideValue: 15
+  - stat: {fileID: 11400000, guid: a53115f89bf4eec40aa365a073976a2e, type: 2}
+    isUseOverride: 0
+    overrideValue: 0
+  - stat: {fileID: 11400000, guid: 270de5447b3a0614b94709bb54819fa7, type: 2}
+    isUseOverride: 0
+    overrideValue: 0
+  stateDatas:
+  - {fileID: 11400000, guid: 807f203f15f776148b4e57afeee770c6, type: 2}
+  - {fileID: 11400000, guid: 6d825de4210798245a6ed7ccbfa811ff, type: 2}
+  - {fileID: 11400000, guid: a8eab45ea1c00354bbfe55bd4a5f0f9f, type: 2}
+  - {fileID: 11400000, guid: 5eb4d9e98e27e6a42a5eab8923fa9a2e, type: 2}
+  - {fileID: 11400000, guid: e5b12df94bd104c4393299235c36343f, type: 2}
+  - {fileID: 11400000, guid: f1b3164b86bd2f94b81369b543e62a65, type: 2}
+  - {fileID: 11400000, guid: fb2078e82e41d0b40917096b01c27361, type: 2}
+  - {fileID: 11400000, guid: 4752365bb5733fe4097bccceff119ee0, type: 2}
+  - {fileID: 11400000, guid: 263fa95952b08ea4a8f842459494aeef, type: 2}
+  - {fileID: 11400000, guid: 3a41d7f697bfc2841bf1d0542978f4b5, type: 2}
+  - {fileID: 11400000, guid: 78221511401be5b488b6a8c7595827c5, type: 2}
+  - {fileID: 11400000, guid: 82033aa1a6498b146a7f79c63579acf8, type: 2}
+  - {fileID: 11400000, guid: 00619ee578cc37a4c9128a8ee596b4b1, type: 2}
+  behaviourPrefabs:
+  - _target: {fileID: 6966378624523003732, guid: 1b3a84a388a931146b2a8745e74698a9, type: 3}
+    _inputs:
+    - _fieldKey: Code.SHS.Entities.Enemies.Behaviors.UseSkillBehavior.slotType
+      _fieldName: slotType
+      _valueKind: 11
+      _hasOverride: 1
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 2
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.<Priority>k__BackingField
+      _fieldName: Priority
+      _valueKind: 1
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.<TargetStates>k__BackingField
+      _fieldName: TargetStates
+      _valueKind: 14
+      _hasOverride: 1
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f00000000016c000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0043006f00640065002e005300480053002e0045006e007400690074006900650073002e0045006e0065006d006900650073002e00460053004d002e0045006e0065006d0079005300740061007400650045006e0075006d002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c0069006200000000000602000000000000001e03000000000000001e04000000000000000705
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.cooldown
+      _fieldName: cooldown
+      _valueKind: 2
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.conditionType
+      _fieldName: conditionType
+      _valueKind: 11
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 1
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.conditions
+      _fieldName: conditions
+      _valueKind: 13
+      _hasOverride: 1
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f000000000180000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c006900620000000000060200000000000000022f01000000014b00000053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e0055007300650053006b0069006c006c0043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d00430053006800610072007000010000001d010800000073006c006f0074005400790070006500020000000000000005022f02000000015f00000053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e00540061007200670065007400570069007400680069006e004d006f00760065006d0065006e007400440069007300740061006e006300650043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d00430053006800610072007000020000002b011800000075007300650053006b0069006c006c0053006c006f0074004d006f00760065006d0065006e0074004400610074006100011d010800000073006c006f0074005400790070006500020000000000000001010c0000006d006f00760065006d0065006e00740044006100740061002f03000000013400000053006300720069007000740073002e0043006f006d006200610074002e00440061007400610073002e004d006f00760065006d0065006e007400440061007400610053004f002c00200041007300730065006d0062006c0079002d00430053006800610072007000030000001f01080000006d0061007800530070006500650064000000a0411f01080000006400750072006100740069006f006e000000003f0101090000006d006f0076006500430075007200760065002f04000000013200000055006e0069007400790045006e00670069006e0065002e0041006e0069006d006100740069006f006e00430075007200760065002c00200055006e0069007400790045006e00670069006e0065002e0043006f00720065004d006f00640075006c00650004000000022f05000000012e00000055006e0069007400790045006e00670069006e0065002e004b00650079006600720061006d0065005b005d002c00200055006e0069007400790045006e00670069006e0065002e0043006f00720065004d006f00640075006c00650005000000060200000000000000042f06000000012c00000055006e0069007400790045006e00670069006e0065002e004b00650079006600720061006d0065002c00200055006e0069007400790045006e00670069006e0065002e0043006f00720065004d006f00640075006c006500170103000000760065007200010000001f01060000006d005f00540069006d006500000000001f01070000006d005f00560061006c0075006500000000001f010b0000006d005f0049006e00540061006e00670065006e0074000000803f1f010c0000006d005f004f0075007400540061006e00670065006e0074000000803f17010d0000006d005f00540061006e00670065006e0074004d006f00640065002200000017010e0000006d005f00570065006900670068007400650064004d006f0064006500000000001f010a0000006d005f0049006e00570065006900670068007400000000001f010b0000006d005f004f00750074005700650069006700680074000000000005043006000000170103000000760065007200010000001f01060000006d005f00540069006d0065000000803f1f01070000006d005f00560061006c00750065000000803f1f010b0000006d005f0049006e00540061006e00670065006e0074000000803f1f010c0000006d005f004f0075007400540061006e00670065006e0074000000803f17010d0000006d005f00540061006e00670065006e0074004d006f00640065002200000017010e0000006d005f00570065006900670068007400650064004d006f0064006500000000001f010a0000006d005f0049006e00570065006900670068007400000000001f010b0000006d005f004f0075007400570065006900670068007400000000000507051e08000000000000001e0800000000000000050517010b000000730061006d0070006c00650043006f0075006e007400180000001f010e000000640069007300740061006e00630065004f0066006600730065007400000000002b011100000075007300650050006c0061006e0061007200440069007300740061006e006300650001050705
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.priorityConditions
+      _fieldName: priorityConditions
+      _valueKind: 13
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f000000000188000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e0045006e0065006d0079004200650068006100760069006f00750072005000720069006f00720069007400790043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c0069006200000000000600000000000000000705
+  - _target: {fileID: 6966378624523003732, guid: 1b3a84a388a931146b2a8745e74698a9, type: 3}
+    _inputs:
+    - _fieldKey: Code.SHS.Entities.Enemies.Behaviors.UseSkillBehavior.slotType
+      _fieldName: slotType
+      _valueKind: 11
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.<Priority>k__BackingField
+      _fieldName: Priority
+      _valueKind: 1
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.<TargetStates>k__BackingField
+      _fieldName: TargetStates
+      _valueKind: 14
+      _hasOverride: 1
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f00000000016c000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0043006f00640065002e005300480053002e0045006e007400690074006900650073002e0045006e0065006d006900650073002e00460053004d002e0045006e0065006d0079005300740061007400650045006e0075006d002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c0069006200000000000602000000000000001e03000000000000001e04000000000000000705
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.cooldown
+      _fieldName: cooldown
+      _valueKind: 2
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.conditionType
+      _fieldName: conditionType
+      _valueKind: 11
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 1
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.conditions
+      _fieldName: conditions
+      _valueKind: 13
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f000000000180000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c006900620000000000060100000000000000022f01000000014b00000053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e0055007300650053006b0069006c006c0043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d00430053006800610072007000010000001d010800000073006c006f00740054007900700065000000000000000000050705
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.priorityConditions
+      _fieldName: priorityConditions
+      _valueKind: 13
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f000000000188000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e0045006e0065006d0079004200650068006100760069006f00750072005000720069006f00720069007400790043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c0069006200000000000600000000000000000705
+  - _target: {fileID: 6966378624523003732, guid: 1b3a84a388a931146b2a8745e74698a9, type: 3}
+    _inputs:
+    - _fieldKey: Code.SHS.Entities.Enemies.Behaviors.UseSkillBehavior.slotType
+      _fieldName: slotType
+      _valueKind: 11
+      _hasOverride: 1
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 1
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.<Priority>k__BackingField
+      _fieldName: Priority
+      _valueKind: 1
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.<TargetStates>k__BackingField
+      _fieldName: TargetStates
+      _valueKind: 14
+      _hasOverride: 1
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f00000000016c000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0043006f00640065002e005300480053002e0045006e007400690074006900650073002e0045006e0065006d006900650073002e00460053004d002e0045006e0065006d0079005300740061007400650045006e0075006d002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c0069006200000000000602000000000000001e03000000000000001e04000000000000000705
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.cooldown
+      _fieldName: cooldown
+      _valueKind: 2
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.conditionType
+      _fieldName: conditionType
+      _valueKind: 11
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 1
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.conditions
+      _fieldName: conditions
+      _valueKind: 13
+      _hasOverride: 1
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f000000000180000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c006900620000000000060100000000000000022f01000000014b00000053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e0055007300650053006b0069006c006c0043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d00430053006800610072007000010000001d010800000073006c006f00740054007900700065000100000000000000050705
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.priorityConditions
+      _fieldName: priorityConditions
+      _valueKind: 13
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f000000000188000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e0045006e0065006d0079004200650068006100760069006f00750072005000720069006f00720069007400790043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c0069006200000000000600000000000000000705
+  - _target: {fileID: 114189840105380667, guid: 9709e573ae4e5a54d9b4da8f7a19ab09, type: 3}
+    _inputs:
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyAttackBehaviour.attackCount
+      _fieldName: attackCount
+      _valueKind: 1
+      _hasOverride: 1
+      _intValue: 3
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.<Priority>k__BackingField
+      _fieldName: Priority
+      _valueKind: 1
+      _hasOverride: 1
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.<TargetStates>k__BackingField
+      _fieldName: TargetStates
+      _valueKind: 14
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f00000000016c000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0043006f00640065002e005300480053002e0045006e007400690074006900650073002e0045006e0065006d006900650073002e00460053004d002e0045006e0065006d0079005300740061007400650045006e0075006d002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c0069006200000000000603000000000000001e02000000000000001e04000000000000001e03000000000000000705
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.cooldown
+      _fieldName: cooldown
+      _valueKind: 2
+      _hasOverride: 1
+      _intValue: 0
+      _floatValue: 3
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.conditionType
+      _fieldName: conditionType
+      _valueKind: 11
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 1
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.conditions
+      _fieldName: conditions
+      _valueKind: 13
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f000000000180000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c006900620000000000060300000000000000022f01000000015600000053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e0054006100720067006500740049006e00410074007400610063006b00520061006e006700650043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d004300530068006100720070000100000005022f02000000015000000053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e00430061006e00460069007200650053006100660065006c00790043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d004300530068006100720070000200000003010e00000064006f006e007400530068006f006f0074004c0061007900650072002f03000000012d00000055006e0069007400790045006e00670069006e0065002e004c0061007900650072004d00610073006b002c00200055006e0069007400790045006e00670069006e0065002e0043006f00720065004d006f00640075006c006500180010000005030107000000680061006c00660042006f0078002f04000000012b00000055006e0069007400790045006e00670069006e0065002e0056006500630074006f00720033002c00200055006e0069007400790045006e00670069006e0065002e0043006f00720065004d006f00640075006c00650020ec51b83d200ad7633f200000803f0505022f05000000015000000053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e00490073005400610072006700650074004500780069007300740043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d0043005300680061007200700003000000050705
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.priorityConditions
+      _fieldName: priorityConditions
+      _valueKind: 13
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f000000000188000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e0045006e0065006d0079004200650068006100760069006f00750072005000720069006f00720069007400790043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c0069006200000000000600000000000000000705
+  - _target: {fileID: 6395826003860127788, guid: c8757e1768a68d848b2b078b2dc438c5, type: 3}
+    _inputs:
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.MoveForwardRandomPointBehaviour.halfDeg
+      _fieldName: halfDeg
+      _valueKind: 2
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 65
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.MoveForwardRandomPointBehaviour.degWeight
+      _fieldName: degWeight
+      _valueKind: 2
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.MoveForwardRandomPointBehaviour.minRadius
+      _fieldName: minRadius
+      _valueKind: 2
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 3
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.MoveForwardRandomPointBehaviour.maxRadius
+      _fieldName: maxRadius
+      _valueKind: 2
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 5
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.<Priority>k__BackingField
+      _fieldName: Priority
+      _valueKind: 1
+      _hasOverride: 0
+      _intValue: 25
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.<TargetStates>k__BackingField
+      _fieldName: TargetStates
+      _valueKind: 14
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f00000000016c000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0043006f00640065002e005300480053002e0045006e007400690074006900650073002e0045006e0065006d006900650073002e00460053004d002e0045006e0065006d0079005300740061007400650045006e0075006d002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c0069006200000000000602000000000000001e03000000000000001e04000000000000000705
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.cooldown
+      _fieldName: cooldown
+      _valueKind: 2
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 3
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.conditionType
+      _fieldName: conditionType
+      _valueKind: 11
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 1
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.conditions
+      _fieldName: conditions
+      _valueKind: 13
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f000000000180000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c0069006200000000000600000000000000000705
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.priorityConditions
+      _fieldName: priorityConditions
+      _valueKind: 13
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f000000000188000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e0045006e0065006d0079004200650068006100760069006f00750072005000720069006f00720069007400790043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c0069006200000000000600000000000000000705
+  - _target: {fileID: 727055102752227454, guid: 3f1385100c396a344983a57c41553a00, type: 3}
+    _inputs:
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyFlankBehaviour.flankDistance
+      _fieldName: flankDistance
+      _valueKind: 2
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 4
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.<Priority>k__BackingField
+      _fieldName: Priority
+      _valueKind: 1
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.<TargetStates>k__BackingField
+      _fieldName: TargetStates
+      _valueKind: 14
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f00000000016c000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0043006f00640065002e005300480053002e0045006e007400690074006900650073002e0045006e0065006d006900650073002e00460053004d002e0045006e0065006d0079005300740061007400650045006e0075006d002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c0069006200000000000602000000000000001e02000000000000001e03000000000000000705
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.cooldown
+      _fieldName: cooldown
+      _valueKind: 2
+      _hasOverride: 1
+      _intValue: 0
+      _floatValue: 8.09
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.conditionType
+      _fieldName: conditionType
+      _valueKind: 11
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 1
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.conditions
+      _fieldName: conditions
+      _valueKind: 13
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f000000000180000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c006900620000000000060100000000000000022f01000000015000000053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e0054006100720067006500740049006e00520061006e006700650043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d00430053006800610072007000010000001f0105000000720061006e00670065000000e040050705
+    - _fieldKey: Scripts.Enemies.EnemyBehaviours.EnemyBehaviour.priorityConditions
+      _fieldName: priorityConditions
+      _valueKind: 13
+      _hasOverride: 0
+      _intValue: 0
+      _floatValue: 0
+      _doubleValue: 0
+      _longValue: 0
+      _boolValue: 0
+      _stringValue: 
+      _vector2Value: {x: 0, y: 0}
+      _vector3Value: {x: 0, y: 0, z: 0}
+      _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+      _colorValue: {r: 1, g: 1, b: 1, a: 1}
+      _enumValue: 0
+      _objectValue: {fileID: 0}
+      _managedReferenceData: 022f000000000188000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0053006300720069007000740073002e0045006e0065006d006900650073002e0045006e0065006d0079004200650068006100760069006f007500720043006f006e0064006900740069006f006e0073002e0045006e0065006d0079004200650068006100760069006f00750072005000720069006f00720069007400790043006f006e0064006900740069006f006e002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c0069006200000000000600000000000000000705
+  passiveSkill:
+    _serializedList:
+    - Key: 0
+      Value:
+        _target: {fileID: 3428363525330078648, guid: 9c1503c2e05ae1f4188414ed5aeb8466, type: 3}
+        _inputs:
+        - _fieldKey: Code.SHS.Entities.Enemies.Skills.RogueBackAttackPassiveSkill.backAttackDotThreshold
+          _fieldName: backAttackDotThreshold
+          _valueKind: 2
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: -0.15
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Code.SHS.Entities.Enemies.Skills.RogueBackAttackPassiveSkill.backAttackBonusMultiplier
+          _fieldName: backAttackBonusMultiplier
+          _valueKind: 2
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0.55
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Code.SHS.Entities.Enemies.Skills.RogueBackAttackPassiveSkill.stealthBonusMultiplier
+          _fieldName: stealthBonusMultiplier
+          _valueKind: 2
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0.35
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.PassiveSkill.OnSkillInvoked
+          _fieldName: OnSkillInvoked
+          _valueKind: 0
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skill.<SkillData>k__BackingField
+          _fieldName: SkillData
+          _valueKind: 12
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 11400000, guid: bfc451ba671a39a45944dc5fc9d979e3, type: 2}
+          _managedReferenceData: 
+  activeSkill:
+    _serializedList:
+    - Key: 0
+      Value:
+        _target: {fileID: 8566305481821517072, guid: 9d9d08332951bf34c84c80a5539265ce, type: 3}
+        _inputs:
+        - _fieldKey: Scripts.SkillSystem.Skills.CloneSkill.smokeEffectPrefab
+          _fieldName: smokeEffectPrefab
+          _valueKind: 12
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 3081322233318368611, guid: 6ef387e8e351ec74dad64181da50f6f3, type: 3}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.CloneSkill.cloneInfos
+          _fieldName: cloneInfos
+          _valueKind: 0
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.CloneSkill.hideDuration
+          _fieldName: hideDuration
+          _valueKind: 2
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0.75
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 2
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.CloneSkill.smokeDuration
+          _fieldName: smokeDuration
+          _valueKind: 2
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 1
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.CloneSkill.allShadowsDeadCooldown
+          _fieldName: allShadowsDeadCooldown
+          _valueKind: 2
+          _hasOverride: 0
+          _intValue: 24
+          _floatValue: 20
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.ActiveSkill.isWalkable
+          _fieldName: isWalkable
+          _valueKind: 5
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 25
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.ActiveSkill.cooldown
+          _fieldName: cooldown
+          _valueKind: 2
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 60
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.ActiveSkill.<AnimType>k__BackingField
+          _fieldName: AnimType
+          _valueKind: 11
+          _hasOverride: 0
+          _intValue: 1
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.ActiveSkill.<MoveType>k__BackingField
+          _fieldName: MoveType
+          _valueKind: 11
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 1
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.ActiveSkill.<TargetState>k__BackingField
+          _fieldName: TargetState
+          _valueKind: 12
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 1
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skill.<SkillData>k__BackingField
+          _fieldName: SkillData
+          _valueKind: 12
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 11400000, guid: 4da24594a4fd4f545b2b7daad8a767e5, type: 2}
+          _managedReferenceData: 
+    - Key: 2
+      Value:
+        _target: {fileID: 2791989774105378115, guid: 697ab4383d1b6c44299fc2b0075d68fe, type: 3}
+        _inputs:
+        - _fieldKey: Scripts.SkillSystem.Skills.SwiftStrikeSkill.movementData
+          _fieldName: movementData
+          _valueKind: 12
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 11400000, guid: 1b69119c42977944fbbd3bfe87ec33a9, type: 2}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.SwiftStrikeSkill.targetLayer
+          _fieldName: targetLayer
+          _valueKind: 0
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.SwiftStrikeSkill.triggerInteraction
+          _fieldName: triggerInteraction
+          _valueKind: 11
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 2
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.SwiftStrikeSkill.hitRadius
+          _fieldName: hitRadius
+          _valueKind: 2
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 1
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.SwiftStrikeSkill.maxHitCount
+          _fieldName: maxHitCount
+          _valueKind: 1
+          _hasOverride: 0
+          _intValue: 24
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.SwiftStrikeSkill.damage
+          _fieldName: damage
+          _valueKind: 2
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 25
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.SwiftStrikeSkill.damageMultiplier
+          _fieldName: damageMultiplier
+          _valueKind: 2
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 1
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.SwiftStrikeSkill.defPierceLevel
+          _fieldName: defPierceLevel
+          _valueKind: 1
+          _hasOverride: 0
+          _intValue: 1
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.SwiftStrikeSkill.damageType
+          _fieldName: damageType
+          _valueKind: 11
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 1
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.SwiftStrikeSkill.resetCooldownOnKill
+          _fieldName: resetCooldownOnKill
+          _valueKind: 5
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 1
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.SwiftStrikeSkill.dashEffectPrefab
+          _fieldName: dashEffectPrefab
+          _valueKind: 12
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 6466927237228658021, guid: 9e29a5dbd4c0d094b82c12eb12ab9a48, type: 3}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.SwiftStrikeSkill.dashEffectOffset
+          _fieldName: dashEffectOffset
+          _valueKind: 8
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0.5, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.SwiftStrikeSkill.dashEffectEulerOffset
+          _fieldName: dashEffectEulerOffset
+          _valueKind: 8
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.SwiftStrikeSkill.dashEffectLifetime
+          _fieldName: dashEffectLifetime
+          _valueKind: 2
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 1
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skills.SwiftStrikeSkill.parentDashEffectToOwner
+          _fieldName: parentDashEffectToOwner
+          _valueKind: 5
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.ActiveSkill.isWalkable
+          _fieldName: isWalkable
+          _valueKind: 5
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.ActiveSkill.cooldown
+          _fieldName: cooldown
+          _valueKind: 2
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 10
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.ActiveSkill.<AnimType>k__BackingField
+          _fieldName: AnimType
+          _valueKind: 11
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 7
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.ActiveSkill.<MoveType>k__BackingField
+          _fieldName: MoveType
+          _valueKind: 11
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 2
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.ActiveSkill.<TargetState>k__BackingField
+          _fieldName: TargetState
+          _valueKind: 12
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 11400000, guid: 78221511401be5b488b6a8c7595827c5, type: 2}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skill.<SkillData>k__BackingField
+          _fieldName: SkillData
+          _valueKind: 12
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 11400000, guid: 8fd77e1aeb912064f807968de10a987a, type: 2}
+          _managedReferenceData: 
+    - Key: 1
+      Value:
+        _target: {fileID: 232151431382252962, guid: b85b7389bddd39c438679f931ae96de9, type: 3}
+        _inputs:
+        - _fieldKey: Code.SHS.Entities.Enemies.Skills.RogueStealthSkill.stealthDuration
+          _fieldName: stealthDuration
+          _valueKind: 2
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 10
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Code.SHS.Entities.Enemies.Skills.RogueStealthSkill.stealthMaterial
+          _fieldName: stealthMaterial
+          _valueKind: 12
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 2100000, guid: 37a9e5ce1365de248acbbbfd3627f207, type: 2}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.ActiveSkill.isWalkable
+          _fieldName: isWalkable
+          _valueKind: 5
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.ActiveSkill.cooldown
+          _fieldName: cooldown
+          _valueKind: 2
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 30
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.ActiveSkill.<AnimType>k__BackingField
+          _fieldName: AnimType
+          _valueKind: 11
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.ActiveSkill.<MoveType>k__BackingField
+          _fieldName: MoveType
+          _valueKind: 11
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 1
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.ActiveSkill.<TargetState>k__BackingField
+          _fieldName: TargetState
+          _valueKind: 12
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 0}
+          _managedReferenceData: 
+        - _fieldKey: Scripts.SkillSystem.Skill.<SkillData>k__BackingField
+          _fieldName: SkillData
+          _valueKind: 12
+          _hasOverride: 0
+          _intValue: 0
+          _floatValue: 0
+          _doubleValue: 0
+          _longValue: 0
+          _boolValue: 0
+          _stringValue: 
+          _vector2Value: {x: 0, y: 0}
+          _vector3Value: {x: 0, y: 0, z: 0}
+          _vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          _colorValue: {r: 1, g: 1, b: 1, a: 1}
+          _enumValue: 0
+          _objectValue: {fileID: 11400000, guid: c2635818622e48842b931113a3b124dd, type: 2}
+          _managedReferenceData: 

@@ -90,7 +90,7 @@ namespace Code.SkillSystem.Skills.RapidFire
             _sameTargetDamageUnlocked = false;
         }
 
-        public override void StartAndUseSkill()
+        public override void OnSkillTrigger()
         {
             if (_isBurstRunning)
                 return;

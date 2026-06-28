@@ -12,7 +12,7 @@ namespace Code.SHS.Entities.Enemies.FSM
         //private float _minAimTime = 0f;
         //private float _maxAimTime = 0f;
 
-        public override float ExecuteTimer => 0f;
+        public override float ExecuteTimer => 0.1f;
 
         //private float _optimalRangeRatio = 0.7f;
 
@@ -43,6 +43,7 @@ namespace Code.SHS.Entities.Enemies.FSM
             }
 
             _movement.SetLookAtTarget(RemainTarget.transform);
+            UpdateCurrentWeaponAttack(true);
             UpdateMovementAnimation();
             base.Update();
         }

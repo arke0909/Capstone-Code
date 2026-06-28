@@ -50,7 +50,7 @@ namespace Work.Code.MapEvents
             airdrop.StartDrop(position, HandleLandning);
 
             EventName = $"{areaIdx + 1}지역 보급 낙하!";
-            EventBus.Raise(new AirdropEvent(areaIdx, position));
+            EventBus.Raise(new AirdropEvent(areaIdx, position, airdrop.Inventory));
         }
 
         private void HandleLandning(Vector3 landingPos)

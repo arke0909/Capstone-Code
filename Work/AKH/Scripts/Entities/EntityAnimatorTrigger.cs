@@ -13,6 +13,7 @@ namespace Scripts.Entities
         public Action OnDamageCastTrigger;
         public Action<bool> OnDamageToggleTrigger;
         public Action OnCastSkillTrigger;
+        public Action OnBurrowEmergeTrigger;
         private Entity _entity;
 
         public ComponentContainer ComponentContainer { get; set; }
@@ -34,6 +35,7 @@ namespace Scripts.Entities
         private void DamageCast() => OnDamageCastTrigger?.Invoke();
         private void StartDamageCast() => OnDamageToggleTrigger?.Invoke(true);
         private void StopDamageCast() => OnDamageToggleTrigger?.Invoke(false);
+        private void StartBurrowEmerge() => OnBurrowEmergeTrigger?.Invoke();
 
         public void OnInitialize(ComponentContainer componentContainer)
         {

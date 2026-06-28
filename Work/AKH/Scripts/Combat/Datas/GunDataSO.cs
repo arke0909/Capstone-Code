@@ -6,6 +6,7 @@ using UnityEngine;
 using Code.Items;
 using Code.Items.ItemInfo;
 using SHS.Scripts.Crosshairs;
+using System;
 
 namespace Scripts.Combat.Datas
 {
@@ -16,6 +17,16 @@ namespace Scripts.Combat.Datas
         AssaultRifle, // AR
         SniperRifle, // 저격총
         Shotgun, // 산탄총
+    }
+
+    [Serializable]
+    public struct GunSpreadData
+    {
+        public float defaultSpread;
+        public float maxSpread;
+        public float spreadGrow;
+        public float spreadRecover;
+        public float spreadFactor;
     }
 
     [CreateAssetMenu(fileName = "GunDataSO", menuName = "SO/Item/GunData", order = 0)]
@@ -47,22 +58,32 @@ namespace Scripts.Combat.Datas
 
         // public float noiseVolume = 0.5f; // 총소리 크기
 
-        [Header("SpreadData")] [ExcelColumn("defaultSpread")] // 기본 탄퍼짐
-        public float defaultSpread = 0.324f;
+        [Header("SpreadData")]
+        [ExcelColumnGroup("hipFire")]
+        public GunSpreadData hipFire = new GunSpreadData
+        {
+            defaultSpread = 0.324f,
+            maxSpread = 0.945f,
+            spreadGrow = 0.27f,
+            spreadRecover = 0.4f,
+            spreadFactor = 43.16f
+        };
+
+        [ExcelColumnGroup("ads")]
+        public GunSpreadData ads = new GunSpreadData
+        {
+            defaultSpread = 0.324f,
+            maxSpread = 0.945f,
+            spreadGrow = 0.27f,
+            spreadRecover = 0.4f,
+            spreadFactor = 10.79f
+        };
+
+        [ExcelColumn("adsTime")]
+        public float adsTime = 0.5f;
 
         [SerializeField] public CrosshairSO crosshairData; // 크로스헤어 데이터
-
-        [ExcelColumn("maxSpread")] // 최대 탄퍼짐
-        public float maxSpread = 0.945f;
-
-        [ExcelColumn("spreadGrow")] // 발사시 퍼짐 증가
-        public float spreadGrow = 0.27f;
-
-        [ExcelColumn("spreadRecover")] // 초당 퍼짐 회복
-        public float spreadRecover = 0.4f;
-
-        [ExcelColumn("spreadFactor")] // 퍼짐 계수
-        public float spreadFactor = 10.79f;
+        [SerializeField] public CrosshairSO aimCrosshairData; // 조준시 크로스헤어 데이터
 
         [Header("Base recoil (units)")] [ExcelColumn("verticalRecoil")] // 수직 반동
         public float verticalRecoil = 50f;

@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+using UnityEngine;
 using Work.Code.Craft.View;
 using Code.Items.ItemInfo;
+using Code.UI.Core;
 
 namespace Work.Code.Craft.Presenter
 {
@@ -24,6 +25,15 @@ namespace Work.Code.Craft.Presenter
             _menuView.OnTreeSelected += HandleTreeSelected;
             _filter.OnRefreshCraftUI += HandleRefreshCraftUI;
             _menuView.OnPinItem += HandlePinItem;
+            _treePresenter.OnTreeSelected += _menuView.SetCurrentTree;
+            _model.Inventory.InventoryChanged += HandleInventoryChanged;
+
+            HandleInventoryChanged();
+        }
+
+        private void HandleInventoryChanged()
+        {
+            _menuView.RefreshCraftableItems(_model.CanCraft, UIDefine.GreenColor);
         }
 
         private void HandlePinItem(CraftItemUI ui, bool isPinned)
@@ -31,9 +41,9 @@ namespace Work.Code.Craft.Presenter
             _pinController.ModifyPin(ui, isPinned);
         }
 
-        private void HandleRefreshCraftUI(ItemType type, bool isFavorite)
+        private void HandleRefreshCraftUI(ItemType[] types, bool isFavorite)
         {
-            _menuView.RefreshItems(type, isFavorite);
+            _menuView.RefreshItems(types, isFavorite);
         }
 
         private void HandleTreeSelected(CraftTreeSO tree)
@@ -43,7 +53,8 @@ namespace Work.Code.Craft.Presenter
 
         private void HandleRequestCraft(CraftTreeSO tree)
         {
-            _model.TryCraft(tree);
+            CraftRequestResult result = _model.TryCraft(tree);
+            _menuView.SetInventoryFullText(result == CraftRequestResult.InventoryFull);
         }
         
         public void DisposePresenter()
@@ -52,6 +63,8 @@ namespace Work.Code.Craft.Presenter
             _menuView.OnRequestCraft -= HandleRequestCraft;
             _menuView.OnTreeSelected -= HandleTreeSelected;
             _menuView.OnPinItem -= HandlePinItem;
+            _treePresenter.OnTreeSelected -= _menuView.SetCurrentTree;
+            _model.Inventory.InventoryChanged -= HandleInventoryChanged;
         }
     }
 }

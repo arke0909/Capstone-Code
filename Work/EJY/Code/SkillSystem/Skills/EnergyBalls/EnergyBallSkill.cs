@@ -77,9 +77,8 @@ namespace Code.SkillSystem.Skills.EnergyBalls
             skillSocket?.ReduceCooldown(cooldownAmount);
         }
         
-        public override void StartAndUseSkill()
+        public override void OnSkillTrigger()
         {
-            
             _vfxCompo.PlayVFX("EnergyBallMuzzle", firePos.position, Quaternion.identity);
 
             Vector3 aimPoint = _aimProvider.GetAimPosition(firePos.position.y);

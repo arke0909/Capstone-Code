@@ -149,6 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f225acba7f444edfb936f5e085313264, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotType: 0
   background: {fileID: 9007924314438632405}
   skillIcon: {fileID: 6402713232987052347}
   outline: {fileID: 8642168324744788805}
@@ -237,7 +238,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 784e4533a00504fee8c9762a47252e6f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b2244e1fc6ecd41e2889690d232a075e, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1

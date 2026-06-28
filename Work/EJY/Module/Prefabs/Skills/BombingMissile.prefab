@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   whatIsTarget:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 64
   castRadius: 4.5
   castAngle: 360
   maxCollideCount: 10
@@ -139,6 +139,49 @@ MonoBehaviour:
   floorItemSO: {fileID: 11400000, guid: db70abaffe5b8dd4cb70602e67036d5a, type: 2}
   damageCaster: {fileID: 6318410171719792367}
   slowAndAdditionalDamageData: {fileID: 11400000, guid: dd2fdf06ae0421c41bd2440f38640257, type: 2}
+  rigidbodyCompo: {fileID: 2249469103510160552}
+  visualRoot: {fileID: 6414784925755492075}
+  bombSound:
+    _entity: {fileID: 11400000, guid: 61fd0f9e38caf2342b96f12ecf9c957d, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 4357852903190938966}
+  hangDuration: 0.08
+  hoverAmplitude: 0.15
+  startFallSpeed: 2.5
+  fallAcceleration: 36
+  maxFallSpeed: 18
+  nearImpactAcceleration: 72
+  nearImpactMaxSpeed: 34
+  nearImpactDistance: 3.5
+  visualTilt: 18
+  visualSpinSpeed: 540
+  visualRotationLerp: 12
+  preImpactShakeForce: 2
+  impactShakeForce: 8
+  fallAccelerationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   <CreateFloor>k__BackingField: 0
   <SlowAndAdditionalDamage>k__BackingField: 0
 --- !u!136 &6979606434893500508

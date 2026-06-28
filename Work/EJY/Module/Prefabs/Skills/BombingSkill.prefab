@@ -129,15 +129,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <SkillData>k__BackingField: {fileID: 11400000, guid: b004201994efc534d91b50aff2fea729, type: 2}
-  upgradedList: []
-  <animName>k__BackingField: Skill
+  isWalkable: 0
   cooldown: 15
-  animHash: 0
-  targetState: {fileID: 11400000, guid: de2fb001db655cc4f9bbc241c6759ae3, type: 2}
+  <AnimType>k__BackingField: 0
+  <MoveType>k__BackingField: 1
+  <TargetState>k__BackingField: {fileID: 11400000, guid: de2fb001db655cc4f9bbc241c6759ae3, type: 2}
   decalObject: {fileID: 2362904857669209716}
   bombingItemSO: {fileID: 11400000, guid: 85128d36861585a4c91df7ca4f56544f, type: 2}
   attackStat: {fileID: 11400000, guid: 7a0d6ceb21222d849ad9defa279caa41, type: 2}
   damageModifier: {fileID: 11400000, guid: 7a0d6ceb21222d849ad9defa279caa41, type: 2}
+  targetOnSound:
+    _entity: {fileID: 11400000, guid: ac1c1a51dede050469527a7b0e899e96, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 7724333191854933772}
   defaultDamageMultiplier: 1.25
   createFloor: 1
   slowAndAdditionalDamage: 0

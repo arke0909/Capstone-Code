@@ -36,6 +36,8 @@ namespace Code.SkillSystem.Skills.FireRate
             _entityStatusEffect = container.Get<EntityStatusEffect>();
             _stat = container.Get<StatOverrideBehavior>();
             _vfxComponent = container.Get<VFXComponent>();
+            
+            fireRateSkillVFX.InitVFXCompo(_owner);
         }
 
         private void OnDestroy()
@@ -55,7 +57,7 @@ namespace Code.SkillSystem.Skills.FireRate
         private void RollbackBulletReduceRateDecrease() => isBulletReduceRateDecrease = false;
 
 
-        public override void StartAndUseSkill()
+        public override void OnSkillTrigger()
         {
             BroAudio.Play(soundID, _owner.transform.position);
             _vfxComponent.PlayVFX("FireRate", vfxPos.position, Quaternion.identity);

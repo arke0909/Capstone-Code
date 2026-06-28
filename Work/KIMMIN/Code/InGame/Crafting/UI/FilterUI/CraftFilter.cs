@@ -12,10 +12,10 @@ namespace Work.Code.Craft
         [SerializeField] private FavoriteSelectUI favoriteButton;
 
         private CraftTypeUI[] _craftTypes;
-        private ItemType _type = ItemType.None;
+        private CraftTypeUI _typeUI;
         private bool _isFavorite;
-        
-        public event Action<ItemType, bool> OnRefreshCraftUI;
+
+        public event Action<ItemType[], bool> OnRefreshCraftUI;
 
         private void Awake()
         {
@@ -41,23 +41,23 @@ namespace Work.Code.Craft
         {
             SetFavoriteState(true);
         }
-        
+
         private void SetFavoriteState(bool state)
         {
             _isFavorite = state;
             favoriteButton.OnSelect(state);
             notFavoriteButton.OnSelect(!state);
-            
-            OnRefreshCraftUI?.Invoke(_type, state);
+
+            OnRefreshCraftUI?.Invoke(_typeUI != null ? _typeUI.ItemTypes : null, state);
         }
 
-        private void HandleSelectType(ItemType type)
+        private void HandleSelectType(CraftTypeUI typeUI)
         {
-            bool isMatchType = type == _type;
-            
-            _type = isMatchType ? ItemType.None : type;
-            typeText.text = isMatchType ? "전체 아이템" : type.ToString();
-            OnRefreshCraftUI?.Invoke(_type, _isFavorite);
+            bool isMatchType = typeUI == _typeUI;
+
+            _typeUI = isMatchType ? null : typeUI;
+            typeText.text = isMatchType ? "전체 아이템" : typeUI.ItemName;
+            OnRefreshCraftUI?.Invoke(_typeUI != null ? _typeUI.ItemTypes : null, _isFavorite);
         }
 
         private void OnDestroy()
@@ -66,7 +66,7 @@ namespace Work.Code.Craft
             {
                 craftType.OnItemSelected -= HandleSelectType;
             }
-            
+
             favoriteButton.SelectButton.onClick.RemoveListener(HandleFavorite);
             notFavoriteButton.SelectButton.onClick.RemoveListener(HandleUnFavorite);
         }

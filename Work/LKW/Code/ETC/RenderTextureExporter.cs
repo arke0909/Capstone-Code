@@ -23,7 +23,7 @@ namespace Code.ETC
 
             // PNG로 변환 후 저장
             byte[] bytes = tex.EncodeToPNG();
-            File.WriteAllBytes("Assets/Work/LKW/Shader"+ "/ExportedMinimap.png", bytes);
+            File.WriteAllBytes("Assets/Work/LKW"+ "/ExportedMinimap.png", bytes);
 
             // RT 복구 및 메모리 정리
             RenderTexture.active = previous;

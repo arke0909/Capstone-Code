@@ -59,7 +59,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2034369949731003896}
   - component: {fileID: 482235647736072805}
-  - component: {fileID: 137558764843099375}
   m_Layer: 13
   m_Name: background
   m_TagString: Untagged
@@ -95,36 +94,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4264283763179080739}
   m_CullTransparentMesh: 1
---- !u!114 &137558764843099375
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4264283763179080739}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.92156863}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &4922370843986298017
 GameObject:
   m_ObjectHideFlags: 0
@@ -2390,6 +2359,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 13
       objectReference: {fileID: 0}
+    - target: {fileID: 2350254020116634481, guid: 488190db44b65974586be4a1b3748afa, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2669901458860204701, guid: 488190db44b65974586be4a1b3748afa, type: 3}
       propertyPath: <DefaultValue>k__BackingField
       value: 1
@@ -2698,6 +2671,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 13
       objectReference: {fileID: 0}
+    - target: {fileID: 8236017105279198870, guid: 488190db44b65974586be4a1b3748afa, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8236017105279198870, guid: 488190db44b65974586be4a1b3748afa, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8236017105279198870, guid: 488190db44b65974586be4a1b3748afa, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8321315655529559145, guid: 488190db44b65974586be4a1b3748afa, type: 3}
       propertyPath: m_Layer
       value: 13
@@ -2749,6 +2734,9 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1367086153830007942}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6721755276083189744, guid: 488190db44b65974586be4a1b3748afa, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9099896566303565914}
     - targetCorrespondingSourceObject: {fileID: 8794432232089349847, guid: 488190db44b65974586be4a1b3748afa, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4518782168270812665}
@@ -2766,6 +2754,25 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6681680319858396135, guid: 488190db44b65974586be4a1b3748afa, type: 3}
   m_PrefabInstance: {fileID: 6097674026611740991}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &709091502811924175 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6721755276083189744, guid: 488190db44b65974586be4a1b3748afa, type: 3}
+  m_PrefabInstance: {fileID: 6097674026611740991}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &9099896566303565914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709091502811924175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
 --- !u!224 &1963699574701711299 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5755385246916792060, guid: 488190db44b65974586be4a1b3748afa, type: 3}

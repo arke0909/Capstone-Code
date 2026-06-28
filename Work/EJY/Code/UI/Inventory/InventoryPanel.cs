@@ -15,11 +15,10 @@ namespace Code.UI.Inventory
     public abstract class InventoryPanel<T>
         : AbstractSlotUIsPanel where T : IUpdateInventoryUIEvent
     {
-        [SerializeField] protected SkillUpgradeUI skillUpgradeUI;
         [SerializeField] protected TextMeshProUGUI bagTitleText;
         [SerializeField] protected ScrollRect scrollRect;
 
-        [Inject] private Player _player;
+        [Inject] protected Player _player;
         private List<ItemSlot> _slots;
         private int _currentSlotCnt;
         private const int MinScrollSize = 30;
@@ -39,7 +38,6 @@ namespace Code.UI.Inventory
         public override void DisableUI(bool isFade = false)
         {
             base.DisableUI(isFade);
-            skillUpgradeUI?.DisableUI();
         }
 
         protected override void UpdateSlotUI()

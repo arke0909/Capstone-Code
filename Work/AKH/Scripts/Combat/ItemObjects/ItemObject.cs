@@ -1,10 +1,7 @@
-﻿using System;
-using Scripts.Combat.Fovs;
+using Code.Items;
 using Scripts.Entities;
 using SHS.Scripts.Entities.Players;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Code.Items;
 
 namespace Scripts.Combat.ItemObjects
 {
@@ -15,25 +12,32 @@ namespace Scripts.Combat.ItemObjects
         protected Entity _owner;
         protected EquipableItem _item;
         private Renderer[] _targetRenderers;
+        private FindableRenderer _findableRenderer;
 
         public virtual void InitObject(Entity owner, EquipableItem item)
         {
+            UnregisterRenderers();
             _owner = owner;
             _item = item;
-            if (owner is IFindable findable)
-            {
-                _targetRenderers = GetComponentsInChildren<Renderer>(true);
-                findable.OnFound.AddListener(HandleFounded);
-                HandleFounded(!findable.IsFounded);
-            }
+            _targetRenderers = GetComponentsInChildren<Renderer>(true);
+
+            if (_owner != null && _owner.ComponentContainer != null &&
+                _owner.ComponentContainer.TryGetComponent(out _findableRenderer))
+                _findableRenderer.AddRenderers(_targetRenderers);
         }
 
-        private void HandleFounded(bool arg0)
+        protected virtual void OnDestroy()
         {
-            for (int i = 0; i < _targetRenderers.Length; i++)
-            {
-                _targetRenderers[i].forceRenderingOff = !arg0;
-            }
+            UnregisterRenderers();
+        }
+
+        private void UnregisterRenderers()
+        {
+            if (_findableRenderer == null)
+                return;
+
+            _findableRenderer.RemoveRenderers(_targetRenderers);
+            _findableRenderer = null;
         }
     }
 }

@@ -46,7 +46,7 @@ namespace Code.StatusEffectSystem.StatusEffects
             {
                 _tickTimer -= _tick;
                 _remainingTicks--;
-                _targetHealth.CurrentValue += _restoreAmountPerTick;
+                _targetHealth.Heal(_restoreAmountPerTick, false);
             }
 
             return base.UpdateStatusEffect(entity);

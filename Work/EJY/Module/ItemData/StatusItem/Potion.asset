@@ -23,7 +23,6 @@ MonoBehaviour:
   value: 0
   maxStack: 10
   addStats: []
-  modelOffset: {x: 0, y: 0, z: 0}
   equipmentPrefab: {fileID: 0}
   maxDurability: 0
   defaultDamage: 0

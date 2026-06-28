@@ -15,7 +15,7 @@ MonoBehaviour:
   treeName: 조합법_수납형캐리어아머
   isBinary: 0
   nodeList:
-  - <Item>k__BackingField: {fileID: 11400000, guid: 8f73a343683b6c04188aea28811d6701, type: 2}
+  - <Item>k__BackingField: {fileID: 11400000, guid: 5b4e60461338adb4aa8ca7f45b3cdc39, type: 2}
     <Tree>k__BackingField: {fileID: 0}
     <Count>k__BackingField: 1
     <IsChild>k__BackingField: 0

@@ -5,6 +5,14 @@ namespace Code.UI.Minimap.Markers
 {
     public class SupplyIcon : MinimapElement
     {
-        public void SetLifeTimer() => TimeController.Instance.AddEvent(TimeUtil.Day(0.5f), RemoveSelf);
+        public void SetLifeTimer()
+        {
+            string targetId = ID;
+            TimeController.Instance.AddEvent(TimeUtil.Day(0.5f), () =>
+            {
+                if (ID == targetId)
+                    RemoveSelf();
+            });
+        }
     }
 }

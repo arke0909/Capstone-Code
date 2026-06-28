@@ -19,7 +19,6 @@ namespace Scripts.Enemies.EnemyBehaviourConditions
         {
             if (_enemy == null || _skillComponent == null)
                 return false;
-
             if (_skillComponent.Sockets.TryGetValue(slotType, out ActiveSkillSocket skillSocket))
                 return skillSocket.CanUseSkill();
             else

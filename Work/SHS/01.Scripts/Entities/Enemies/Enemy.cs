@@ -22,7 +22,7 @@ using UnityEngine.Events;
 
 namespace Code.SHS.Entities.Enemies
 {
-    public class Enemy : Entity, IKnockbackable, IStateEntity, IFindable, IPullable, IPoolable
+    public class Enemy : Entity, IKnockbackable, IStateEntity, IPullable, IPoolable
     {
         [SerializeField] public LayerMask playerLayerMask;
         [SerializeField] public EnemySO test;
@@ -35,8 +35,6 @@ namespace Code.SHS.Entities.Enemies
         public EnemySO EnemyData { get; private set; }
         public NavMovement NavMovement { get; private set; }
         public GroupProvider GroupProvider { get; private set; }
-        public int SightCount { get; set; }
-        [field: SerializeField] public UnityEvent<bool> OnFound { get; private set; }
         [field: SerializeField] public Vector3 SpawnPos { get; private set; }
 
         private LocalEventBus _localEventBus;
@@ -54,11 +52,6 @@ namespace Code.SHS.Entities.Enemies
             _localEventBus = ComponentContainer.GetComponent<LocalEventBus>();
             _defaultLayer = gameObject.layer;
             OnDeadEvent.AddListener(HandleEnemyDead);
-        }
-
-        private void Start()
-        {
-            OnFound?.Invoke(((IFindable)this).IsFounded);
         }
         private void Update()
         {
@@ -90,7 +83,12 @@ namespace Code.SHS.Entities.Enemies
         }
 
         public void ChangeState(EnemyStateEnum newState, bool forced = false)
-            => StateMachineBehavior.ChangeState(newState, forced);
+        {
+            if (IsDead && newState != EnemyStateEnum.Dead)
+                return;
+
+            StateMachineBehavior.ChangeState(newState, forced);
+        }
 
         public void ChangeState(StateDataSO stateData)
         {
@@ -116,13 +114,12 @@ namespace Code.SHS.Entities.Enemies
         }
 
         public void KnockBack(Vector3 direction, MovementDataSO movementData)
-            => NavMovement.KnockBack(direction, movementData);
+        {
+            if (IsDead)
+                return;
 
-        public void Founded()
-            => OnFound?.Invoke(true);
-
-        public void Escape()
-            => OnFound?.Invoke(false);
+            NavMovement.KnockBack(direction, movementData);
+        }
 
         public void Pull(Vector3 pullOffset)
         {

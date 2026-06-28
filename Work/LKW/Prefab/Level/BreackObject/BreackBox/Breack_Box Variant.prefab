@@ -184,7 +184,7 @@ MonoBehaviour:
   minFragmentTorque: 1
   maxFragmentTorque: 2
   breakEffect: {fileID: 11400000, guid: 079de0902a0fcb34c9b6d0c3087750d0, type: 2}
-  breackSoundID:
+  breakSoundID:
     _entity: {fileID: 11400000, guid: 28312a6f8aa3d2041a63f9611de3a229, type: 2}
     ID: 0
     <DebugObject>k__BackingField: {fileID: 2859104404322652830}

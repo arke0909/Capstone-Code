@@ -1,15 +1,15 @@
 ﻿using Code.Hotbar;
 using Code.InventorySystem;
 using Code.InventorySystems.Items;
-using Code.UI.Core;
 using InGame.InventorySystem;
 using TMPro;
 using UnityEngine;
+using Work.Code.UI.Slots;
 using static Code.InventorySystems.InventoryUtility;
 
 namespace Code.InGame.Hotbar
 {
-    public class HotbarSlotUI : MonoBehaviour, IUIElement<HotbarSlot>
+    public class HotbarSlotUI : BaseSlotUI
     {
         public const int IndexOffset = 2;
 
@@ -30,7 +30,7 @@ namespace Code.InGame.Hotbar
             slotUI?.ClearUI();
         }
 
-        public ItemSlotUI GetSlotUI() => slotUI;
+        public BaseSlotUI GetSlotUI() => slotUI;
 
         #if UNITY_EDITOR
         private void OnValidate()

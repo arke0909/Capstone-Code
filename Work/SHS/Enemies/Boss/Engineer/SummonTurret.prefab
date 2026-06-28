@@ -31,6 +31,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9182543893970398269}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4110562984901835863
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3482451088434704980}
+  m_Layer: 12
+  m_Name: SpawnTrm
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3482451088434704980
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4110562984901835863}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9182543893970398269}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5856248982415862476
 GameObject:
   m_ObjectHideFlags: 0
@@ -62,6 +93,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4619107303810860611}
+  - {fileID: 3482451088434704980}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5452380632782559615
@@ -77,9 +109,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <SkillData>k__BackingField: {fileID: 11400000, guid: d7fc9b33fde60b24482884a4b97b7898, type: 2}
-  <animName>k__BackingField: Skill
+  isWalkable: 0
   cooldown: 10
-  animHash: 0
-  summonPrefab: {fileID: 357341424337504981, guid: 89dacf10a3a723445b4870c5f9b5adc0, type: 3}
-  summonTransform: {fileID: 4619107303810860611}
+  <AnimType>k__BackingField: 0
+  <MoveType>k__BackingField: 1
   <TargetState>k__BackingField: {fileID: 11400000, guid: 78221511401be5b488b6a8c7595827c5, type: 2}
+  turretThrowSound:
+    _entity: {fileID: 11400000, guid: bab79f4714ae0404fb66f618359e7b1a, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 5856248982415862476}
+  summonPrefab: {fileID: 6806456118798731702, guid: 5e769371ccdd6194b87ad3e5dd21c0e2, type: 3}
+  summonTransform: {fileID: 4619107303810860611}
+  spawnTrm: {fileID: 3482451088434704980}
+  spawnRadius: 5
+  minSpawnRadius: 2
+  maxRetryCount: 10
+  overlapCheckRadius: 0.5
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 4202496

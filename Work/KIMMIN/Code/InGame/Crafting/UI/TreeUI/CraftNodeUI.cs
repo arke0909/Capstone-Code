@@ -16,12 +16,14 @@ namespace Work.Code.Craft
         public NodeData nodeData;
         public int count;
         public bool isNeedItem;
+        public bool isCraftableBySubItems;
 
-        public CraftNodeData(NodeData nodeData, int count = 1, bool isNeedItem = false)
+        public CraftNodeData(NodeData nodeData, int count = 1, bool isNeedItem = false, bool isCraftableBySubItems = false)
         {
             this.nodeData = nodeData;
             this.count = count;
             this.isNeedItem = isNeedItem;
+            this.isCraftableBySubItems = isCraftableBySubItems;
         }
     }
     
@@ -70,6 +72,11 @@ namespace Work.Code.Craft
             {
                 countText.text = $"{data.Count}개";
                 countText.color = Color.white;
+            }
+            else if (nodeData.isCraftableBySubItems)
+            {
+                countText.text = "제작 가능";
+                countText.color = UIDefine.GreenColor;
             }
             else
             {

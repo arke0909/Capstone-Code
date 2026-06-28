@@ -1,0 +1,399 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15b62b2ed66634b45b8502d4dcc8a721, type: 3}
+  m_Name: SupplyRewardTable
+  m_EditorClassIdentifier: 
+  dayRules:
+  - startDay: 1
+    endDay: 0
+    minRewardCount: 2
+    maxRewardCount: 3
+    supplyBudget: 0
+    stackMultiplier: 1
+    rarityWeights:
+    - rarity: 0
+      weight: 1
+    itemTypeWeights:
+    - itemType: 0
+      weight: 1
+  guaranteedGroups:
+  - groupName: Heal
+    minDay: 1
+    maxDay: 5
+    pickCount: 1
+    rewardEntries:
+    - itemData: {fileID: 11400000, guid: b685c90b1f6cece47bd451fa61b5cfa9, type: 2}
+      minDay: 1
+      maxDay: 3
+      guaranteed: 0
+      weight: 50
+      cost: 1
+      maxPickCount: 1
+      minStack: 2
+      maxStack: 5
+    - itemData: {fileID: 11400000, guid: efe41f298b5350f44898ded36acbe2e2, type: 2}
+      minDay: 1
+      maxDay: 4
+      guaranteed: 0
+      weight: 20
+      cost: 1
+      maxPickCount: 1
+      minStack: 2
+      maxStack: 5
+    - itemData: {fileID: 11400000, guid: 5af8fc4e594db6041954ae94150ceadb, type: 2}
+      minDay: 2
+      maxDay: 0
+      guaranteed: 0
+      weight: 15
+      cost: 1
+      maxPickCount: 1
+      minStack: 2
+      maxStack: 5
+    - itemData: {fileID: 11400000, guid: bbad5cf33a50e3944bb342c5aecc95eb, type: 2}
+      minDay: 2
+      maxDay: 0
+      guaranteed: 0
+      weight: 10
+      cost: 1
+      maxPickCount: 1
+      minStack: 2
+      maxStack: 5
+    - itemData: {fileID: 11400000, guid: 24eaedcc90724414587ca8378a98d672, type: 2}
+      minDay: 3
+      maxDay: 0
+      guaranteed: 0
+      weight: 5
+      cost: 1
+      maxPickCount: 1
+      minStack: 2
+      maxStack: 4
+    - itemData: {fileID: 11400000, guid: 24eaedcc90724414587ca8378a98d672, type: 2}
+      minDay: 4
+      maxDay: 0
+      guaranteed: 1
+      weight: 1
+      cost: 1
+      maxPickCount: 1
+      minStack: 2
+      maxStack: 2
+  - groupName: Weapon Upgrade
+    minDay: 1
+    maxDay: 4
+    pickCount: 1
+    rewardEntries:
+    - itemData: {fileID: 11400000, guid: ed9fb4609c16d664489b4f49f344be75, type: 2}
+      minDay: 1
+      maxDay: 2
+      guaranteed: 0
+      weight: 20
+      cost: 0
+      maxPickCount: 1
+      minStack: 1
+      maxStack: 1
+    - itemData: {fileID: 11400000, guid: ed9fb4609c16d664489b4f49f344be75, type: 2}
+      minDay: 3
+      maxDay: 0
+      guaranteed: 0
+      weight: 20
+      cost: 0
+      maxPickCount: 2
+      minStack: 1
+      maxStack: 1
+    - itemData: {fileID: 11400000, guid: 61c9dcc2bc70cc043a1a671e5e36295b, type: 2}
+      minDay: 1
+      maxDay: 2
+      guaranteed: 0
+      weight: 20
+      cost: 0
+      maxPickCount: 2
+      minStack: 1
+      maxStack: 1
+    - itemData: {fileID: 11400000, guid: 61c9dcc2bc70cc043a1a671e5e36295b, type: 2}
+      minDay: 3
+      maxDay: 0
+      guaranteed: 0
+      weight: 20
+      cost: 0
+      maxPickCount: 2
+      minStack: 1
+      maxStack: 1
+  rewardEntries:
+  - itemData: {fileID: 11400000, guid: c86e5ebdf6b03eb45b29b6039ba82573, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: 05071c7bccfd738499edc000c78978d9, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: 0ea64a81322978f47b522f8843ff791a, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: ee5f1844b2a18744baf594ad668e11e8, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: 2c4850db480dca347acb00aa5480ea6e, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: 1d220c60507475c42a4de7d3d696b2fa, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: 99d5b77b2c6464b48b20367d6dde915c, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: c0f2c55084a68df46829845409fc4648, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: 2b7e4b3455524b047ac7a490b3e99621, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: 6fa0690b45755a5418c9490da10a5c57, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: 39c557bab8e94684eb0fca7f0f576c3f, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: 46696916a1744d4449783d78e018e557, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: 0534430d2fe0b9142adf67648fa9b686, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: 689f3c38cf129cd4c9cef299d26dd575, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: 84916ccdad6ed974d945c6e0e3f461a5, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: e67c4729773c4d34daf7d4d84b5c3fa8, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: 9293e0365d089464c9cff74e10817642, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: e9cdcb58c33d6bb48bcace427fbb41ac, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: 9c96bb8af10a4aa4c85e8d25dc19c2ce, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: 5711eaef0fba67445b51b9427dca21dc, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: fdfea69201e91c84386ccb29c42737e7, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: ff7a0e37cdfb3d14bab063070aa3c86d, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: 9bc901473afa84c4fac92cf00094009c, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: c0b0152cd315e7748bdf542399a69fe9, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: 0bc3f573ec852864386e24373ee6b533, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 1
+  - itemData: {fileID: 11400000, guid: 511bcab1ffe65e145820d6c4090d6763, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 1
+  - itemData: {fileID: 11400000, guid: b3b0828b1803cc245bf8bb8fa9053677, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 1
+  - itemData: {fileID: 11400000, guid: 48240ba4fd86bab4886e39a0f02c5f8a, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 3
+  - itemData: {fileID: 11400000, guid: ae61cdeb9d2ef89449b72cc2b695a669, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 1
+  - itemData: {fileID: 11400000, guid: 35e70cb4baaa9204d8612e3b219432fb, type: 2}
+    minDay: 1
+    maxDay: 0
+    guaranteed: 0
+    weight: 5
+    cost: 1
+    maxPickCount: 1
+    minStack: 1
+    maxStack: 1

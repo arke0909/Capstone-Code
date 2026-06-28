@@ -7,14 +7,16 @@ namespace SHS.Scripts.Combats.Events
     public struct GunAttackEvent : ILocalEvent
     {
         public GunDataSO GunData { get; }
-        public float SpreadAngleDeg { get; }
         public Vector3 Position { get; }
+        public float VerticalRecoil { get; }
+        public float HorizontalRecoil { get; }
 
-        public GunAttackEvent(GunDataSO gunData, float spreadAngleDeg, Vector3 position)
+        public GunAttackEvent(GunDataSO gunData, Vector3 position, float verticalRecoil, float horizontalRecoil)
         {
             GunData = gunData;
-            SpreadAngleDeg = spreadAngleDeg;
             Position = position;
+            VerticalRecoil = verticalRecoil;
+            HorizontalRecoil = horizontalRecoil;
         }
     }
 }

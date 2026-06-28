@@ -48,9 +48,10 @@ MonoBehaviour:
   upgradedList: []
   <animName>k__BackingField: Skill
   cooldown: 3
+  <AnimType>k__BackingField: 0
+  <TargetState>k__BackingField: {fileID: 11400000, guid: 92665a5a1cf0aec4e87819ed62d2d2e1, type: 2}
   animHash: 0
   adrenalineData: {fileID: 11400000, guid: d097beeed4ab686428576ff22c3a8f79, type: 2}
-  _targetState: {fileID: 11400000, guid: 92665a5a1cf0aec4e87819ed62d2d2e1, type: 2}
   additionalTime: 0.3
   addReloadSpeed: 1
   getAdditionalTime: 0

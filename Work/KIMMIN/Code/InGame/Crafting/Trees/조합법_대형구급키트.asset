@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca62f7e28d5948408c5c73e6790860c8, type: 3}
-  m_Name: 조합법_대형구급키트
+  m_Name: "\uC870\uD569\uBC95_\uB300\uD615\uAD6C\uAE09\uD0A4\uD2B8"
   m_EditorClassIdentifier: 
-  treeName: 조합법_대형구급키트
+  treeName: "\uC870\uD569\uBC95_\uB300\uD615\uAD6C\uAE09\uD0A4\uD2B8"
   isBinary: 1
   nodeList:
   - <Item>k__BackingField: {fileID: 11400000, guid: 88c64b116a7ca464f93f3a14a333c9a5, type: 2}
@@ -25,7 +25,7 @@ MonoBehaviour:
     <Count>k__BackingField: 1
     <IsChild>k__BackingField: 0
     <InheritSkillToCraftResult>k__BackingField: 0
-  - <Item>k__BackingField: {fileID: 11400000, guid: dde18da7666c53d42b6505056bf7e5c3, type: 2}
+  - <Item>k__BackingField: {fileID: 11400000, guid: 5af8fc4e594db6041954ae94150ceadb, type: 2}
     <Tree>k__BackingField: {fileID: 0}
     <Count>k__BackingField: 1
     <IsChild>k__BackingField: 0

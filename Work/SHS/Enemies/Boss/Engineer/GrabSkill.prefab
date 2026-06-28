@@ -45,7 +45,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <SkillData>k__BackingField: {fileID: 11400000, guid: 112976183d32d1d42b19860a3500758a, type: 2}
+  isWalkable: 0
   cooldown: 12
+  <AnimType>k__BackingField: 2
+  <MoveType>k__BackingField: 1
+  <TargetState>k__BackingField: {fileID: 11400000, guid: 92665a5a1cf0aec4e87819ed62d2d2e1, type: 2}
+  grabFireSound:
+    _entity: {fileID: 11400000, guid: 24ade1f5ee4582248be6d96c34af51f4, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 6041617847086094922}
   hookProjectilePrefab: {fileID: 7476008836844655840, guid: f679a210d0fc4564e928c97624f63ef3, type: 3}
   firePoint: {fileID: 0}
   hitMask:
@@ -53,7 +61,6 @@ MonoBehaviour:
     m_Bits: 64
   projectileSpeed: 35
   projectileRange: 20
-  projectileLifeTime: 2
   spawnForwardOffset: 0.6
   pullMovementData: {fileID: 11400000, guid: cdd2ae17cdabdce488d243585c588689, type: 2}
   pullAnchor: {fileID: 0}
@@ -63,4 +70,3 @@ MonoBehaviour:
   damageMultiplier: 1
   defPierceLevel: 0
   damageType: 2
-  <TargetState>k__BackingField: {fileID: 11400000, guid: 92665a5a1cf0aec4e87819ed62d2d2e1, type: 2}

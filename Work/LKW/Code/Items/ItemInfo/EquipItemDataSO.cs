@@ -1,4 +1,3 @@
-﻿using Code.DataSystem;
 using Scripts.SkillSystem;
 using System;
 using Chipmunk.Modules.StatSystem;
@@ -17,8 +16,6 @@ namespace Code.Items.ItemInfo
     public abstract class EquipItemDataSO : ItemDataSO
     {
         public AddStatData[] addStats;
-        [ExcelColumn("modelOffset")]
-        public Vector3 modelOffset;
         public GameObject equipmentPrefab;
         public SkillDBSO skillDB;
 #if UNITY_EDITOR

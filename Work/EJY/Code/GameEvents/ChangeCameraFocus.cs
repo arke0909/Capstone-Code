@@ -7,4 +7,14 @@ namespace Code.GameEvents
     {
         public Transform TargetTrm;
     }
+
+    public struct ChangeCameraZoom : IEvent
+    {
+        public float FieldOfViewReduction { get; }
+
+        public ChangeCameraZoom(float fieldOfViewReduction)
+        {
+            FieldOfViewReduction = fieldOfViewReduction;
+        }
+    }
 }

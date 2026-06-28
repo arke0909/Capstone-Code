@@ -6,6 +6,7 @@ namespace Code.UI.Minimap.Core
     public enum ElementType
     {
         Marker,
+        LockedMarker,
         Enemy,
         SupplyIcon,
         SectionName,
@@ -21,8 +22,7 @@ namespace Code.UI.Minimap.Core
         public bool SyncChildScale { get; }
         public object Owner { get; set; }
 
-        public MinimapElementData(object owner, ElementType type,Sprite iconSprite
-            , bool syncChildScale, bool initPosWithWorldPos = false)
+        public MinimapElementData(object owner, ElementType type, Sprite iconSprite, bool syncChildScale)
         {
             Owner = owner;
             Type = type;

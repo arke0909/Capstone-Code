@@ -2,6 +2,7 @@
 using Chipmunk.ComponentContainers;
 using Chipmunk.GameEvents;
 using Chipmunk.Modules.StatSystem;
+using Code.SHS.Entities.Enemies;
 using Scripts.Combat;
 using Scripts.Combat.Datas;
 using Scripts.Entities;
@@ -17,6 +18,7 @@ namespace Assets.Work.AKH.Scripts.Entities.Vitals
     {
         [SerializeField] private StatSO defStat, damageDemodifyStat,dropExpStat;
         [SerializeField] private SoundID hitSound;
+        [SerializeField] private SoundID healSound;
 
         private ShieldCompo _shieldCompo;
         public event Action<float> OnTakeDamage;
@@ -28,6 +30,12 @@ namespace Assets.Work.AKH.Scripts.Entities.Vitals
             base.OnInitialize(componentContainer);
             _shieldCompo = componentContainer.Get<ShieldCompo>();
         }
+        protected override void Update()
+        {
+            base.Update();
+            if (Input.GetKeyDown(KeyCode.End) && _entity is Enemy)
+                ApplyDamage(new DamageData() { damage = 100 });
+        }
 
         public override void AfterInitialize()
         {
@@ -35,6 +43,21 @@ namespace Assets.Work.AKH.Scripts.Entities.Vitals
             defStat = _statCompo.GetStat(defStat);
             dropExpStat = _statCompo.GetStat(dropExpStat);
             damageDemodifyStat = _statCompo.GetStat(damageDemodifyStat);
+        }
+
+        public bool Heal(float amount, bool playSfx = true)
+        {
+            if (_entity.IsDead || amount <= 0f)
+                return false;
+
+            float before = CurrentValue;
+            CurrentValue += amount;
+
+            bool healed = CurrentValue > before;
+            if (healed && playSfx && healSound.IsValid())
+                BroAudio.Play(healSound);
+
+            return healed;
         }
 
         public void ApplyDamage(DamageData damageData, Vector3 hitPoint, Vector3 hitNormal, Entity dealer)
@@ -75,10 +98,6 @@ namespace Assets.Work.AKH.Scripts.Entities.Vitals
                 OnHit?.Invoke(context);
             }
         }
-
-        [ContextMenu("Test Take Damage")]
-        public void TestTakeDamage() => TakeDamage(new DamageData
-        { damage = 10, damageType = DamageType.DOT, defPierceLevel = 1 });
 
         private bool TakeDamage(DamageData damageData)
         {

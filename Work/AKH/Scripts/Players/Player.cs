@@ -5,7 +5,6 @@ using Scripts.FSM;
 using Scripts.Players.States;
 using System;
 using Chipmunk.Library.Utility.GameEvents.Local;
-using Code.SHS.Entities.Enemies.Combat;
 using UnityEngine;
 using SHS.Scripts.Combats.Events;
 using SHS.Scripts.NoiseSystems;
@@ -26,6 +25,7 @@ namespace Scripts.Players
 
         [Provide]
         public Player GetPlayer() => this;
+
         public NoiseGenerator NoiseGenerator => _noiseGenerator;
 
         public StateMachine<PlayerStateEnum> StateMachine => _stateMachine;
@@ -37,16 +37,19 @@ namespace Scripts.Players
             base.OnInitialize(componentContainer);
             _stateMachine = new(componentContainer, stateDatas);
             _localEventBus = componentContainer.Get<LocalEventBus>();
+            OnDeadEvent.AddListener(HandlePlayerDead);
         }
 
         private void Update()
         {
             _stateMachine?.UpdateStateMachine();
         }
+
         private void OnDestroy()
         {
             _stateMachine.CurrentState?.Exit();
         }
+
         public void ChangeState(PlayerStateEnum newState, bool forced = false)
             => _stateMachine?.ChangeState(newState, forced);
 
@@ -61,6 +64,11 @@ namespace Scripts.Players
             {
                 ChangeState(newState);
             }
+        }
+
+        private void HandlePlayerDead()
+        {
+            IsDead = true;
         }
 
         public override void Stun(float duration)

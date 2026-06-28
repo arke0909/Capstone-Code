@@ -4,10 +4,8 @@ using Chipmunk.Library.Utility.GameEvents.Local;
 using Code.SHS.Entities.Enemies;
 using Code.SHS.Entities.Enemies.Events.Local;
 using Code.SHS.Entities.Enemies.FSM;
-using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Scripts.Enemies.EnemyBehaviours
@@ -19,6 +17,7 @@ namespace Scripts.Enemies.EnemyBehaviours
 
         public ComponentContainer ComponentContainer { get; set; }
         public EnemyBehaviour CurrentBehaviour { get; private set; }
+        public bool IsBehaviourStopped { get; set; }
 
         private Enemy _enemy;
 
@@ -82,11 +81,31 @@ namespace Scripts.Enemies.EnemyBehaviours
             }
         }
 
-        public EnemyBehaviour GetOptimal(EnemyStateEnum state)
-            => _behaviours[state].FirstOrDefault(behaviour => behaviour != null && behaviour.Condition());
+        private EnemyBehaviour GetOptimal(EnemyStateEnum state)
+        {
+            EnemyBehaviour selectedBehaviour = null;
+            int selectedPriority = int.MaxValue;
+
+            foreach (EnemyBehaviour behaviour in _behaviours[state])
+            {
+                if (behaviour == null || !behaviour.Condition())
+                    continue;
+
+                int currentPriority = behaviour.GetCurrentPriority();
+                if (selectedBehaviour != null && currentPriority >= selectedPriority)
+                    continue;
+
+                selectedBehaviour = behaviour;
+                selectedPriority = currentPriority;
+            }
+
+            return selectedBehaviour;
+        }
 
         public void ExecuteOptimalCurrentState()
         {
+            if (IsBehaviourStopped)
+                return;
             EnemyBehaviour optimalBehaviour = GetOptimal(_enemy.StateMachineBehavior.StateMachine.CurrentStateEnum);
             optimalBehaviour?.Execute();
             CurrentBehaviour = optimalBehaviour;

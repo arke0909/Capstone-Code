@@ -14,4 +14,17 @@ namespace Code.DataSystem
             IsRequired = isRequired;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Field)]
+    public class ExcelColumnGroupAttribute : Attribute
+    {
+        public string Prefix { get; }
+        public bool IsRequired { get; }
+
+        public ExcelColumnGroupAttribute(string prefix, bool isRequired = false)
+        {
+            Prefix = prefix;
+            IsRequired = isRequired;
+        }
+    }
 }

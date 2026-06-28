@@ -44,7 +44,7 @@ namespace InGame.InventorySystem
 
         public override bool CanDrag()
         {
-            return base.CanDrag() && ItemSlot != null && ItemSlot.Item != null;
+            return ItemSlot != null && ItemSlot.Item != null;
         }
 
         protected override void Awake()

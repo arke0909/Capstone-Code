@@ -1,5 +1,7 @@
 ﻿using Chipmunk.ComponentContainers;
 using Code.InventorySystems;
+using Chipmunk.GameEvents;
+using Code.GameEvents;
 using Scripts.Entities;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,17 +20,19 @@ namespace Scripts.Combat.Datas
         public GunObject GunObj => WeaponObj as GunObject;
         public BulletItem currentBulletItem;
         public GunDataSO GunItemData => EquipItemData as GunDataSO;
+
         public int CurrentBulletCnt => _currentBullet;
+        public bool IsAiming { get; private set; }
         public float DefaultDamage => GunItemData.defaultDamage;
         public float ProjectileSpeed => GunItemData.bulletSpeed;
         public float ProjectileMaxRange => GunItemData.maxRange > 0f ? GunItemData.maxRange : GunItemData.attackRange;
         public float DamageMultiplier => BulletData.damageMultiplier;
-        public int DefPierceLevel =>BulletData.defPierceLevel;
+        public int DefPierceLevel => BulletData.defPierceLevel;
         public BulletDataSO BulletData => currentBulletItem.bulletDataSO;
 
-
+        private float FireInterval => GunItemData.fireRate * _entityGunStatInfo.FireRate;
         private int _currentBullet;
-        private float _lastAttackTime;
+        private float _fireTimer;
         private Inventory _inventory;
         private EntityGunStatInfo _entityGunStatInfo;
         private static int _reloadSpeedHash = Animator.StringToHash("ReloadSpeed");
@@ -40,6 +44,7 @@ namespace Scripts.Combat.Datas
         }
 
         #region attack region
+
         public override AttackableState CurrentAttackableState
         {
             get
@@ -48,20 +53,78 @@ namespace Scripts.Combat.Datas
                     return AttackableState.NotEquipped;
                 if (_currentBullet <= 0)
                     return AttackableState.NeedAmmo;
-                if (Time.time - _lastAttackTime < GunItemData.fireRate * _entityGunStatInfo.FireRate)
+                if (!CanFire())
                     return AttackableState.Delayed;
                 return AttackableState.CanAttack;
             }
         }
 
+        public override bool UsesAnimationAttackTrigger => false;
+
+        public override void EndAttack()
+        {
+            _owner.LocalEventBus.Raise(new AmmoUpdateEvent(CurrentBulletCnt, GunItemData.maxAmmoCapacity));
+        }
+
         public override void AttackTrigger()
+        {
+            if (!IsEquipped || _currentBullet <= 0)
+                return;
+
+            FireShot();
+            _fireTimer = 0f;
+        }
+
+        public override void UpdateAttack(AttackContext context)
+        {
+            if (!IsEquipped)
+                return;
+
+            IsAiming = context.IsAiming;
+            float fireInterval = FireInterval;
+
+            if (fireInterval <= 0f)
+            {
+                if (context.WantsAttack && _currentBullet > 0)
+                {
+                    FireShot();
+                    _owner.LocalEventBus.Raise(new AmmoUpdateEvent(CurrentBulletCnt, GunItemData.maxAmmoCapacity));
+                }
+                return;
+            }
+
+            _fireTimer += Time.deltaTime;
+            if (!context.WantsAttack)
+            {
+                _fireTimer = Mathf.Min(_fireTimer, fireInterval);
+                return;
+            }
+
+            bool fired = false;
+
+            while (_currentBullet > 0 && _fireTimer >= fireInterval)
+            {
+                FireShot();
+                _fireTimer -= fireInterval;
+                fired = true;
+            }
+
+            if (fired)
+                _owner.LocalEventBus.Raise(new AmmoUpdateEvent(CurrentBulletCnt, GunItemData.maxAmmoCapacity));
+        }
+
+        private bool CanFire()
+        {
+            return FireInterval <= 0f || _fireTimer >= FireInterval;
+        }
+
+        private void FireShot()
         {
             if (_entityGunStatInfo.BulletReduceRate > Random.value)
                 _currentBullet = Mathf.Max(_currentBullet - 1, 0);
             if (WeaponData.attackSoundID.IsValid())
                 BroAudio.Play(WeaponData.attackSoundID, Dealer.gameObject.transform.position);
-            
-            _lastAttackTime = Time.time;
+
             WeaponObj.Attack();
         }
 
@@ -82,7 +145,6 @@ namespace Scripts.Combat.Datas
                 return true;
             }
         }
-
 
 
         public void Reload()
@@ -114,9 +176,7 @@ namespace Scripts.Combat.Datas
         public override void OnEquip(Entity entity, Transform parent)
         {
             base.OnEquip(entity, parent);
-            entity.Get<EntityAnimator>().SetParam(_reloadSpeedHash, GunItemData.reloadTime);
             _owner = entity;
-            _lastAttackTime = Time.time;
             _inventory = entity.Get<Inventory>(true);
             _entityGunStatInfo = entity.Get<EntityGunStatInfo>(true);
         }
@@ -125,11 +185,25 @@ namespace Scripts.Combat.Datas
         {
             base.OnUnequip(entity);
             Debug.Assert(entity == _owner, $"entity is not owner entity: {entity} owner: {_owner}");
-            entity.Get<EntityAnimator>().SetParam(_reloadSpeedHash, 1);
             _owner = null;
         }
 
         #endregion
+        
+        public override void Handle(Entity entity, Transform parent)
+        {
+            base.Handle(entity, parent);
+            entity.Get<EntityAnimator>().SetParam(_reloadSpeedHash, GunItemData.reloadTime);
+            _fireTimer = 0f;
+        }
+
+        public override void UnHandle(Entity entity)
+        {
+            base.UnHandle(entity);
+            Debug.Assert(entity == _owner, $"entity is not owner entity: {entity} owner: {_owner}");
+            entity.Get<EntityAnimator>().SetParam(_reloadSpeedHash, 1);
+            IsAiming = false;
+        }
 
         public void ChangeBullet(BulletItem bulletItem)
         {

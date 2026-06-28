@@ -11,12 +11,12 @@ namespace Code.SHS.Entities.Enemies.Skills
         [SerializeField, Min(0f)] private float backAttackBonusMultiplier = 0.55f;
         [SerializeField, Min(0f)] private float stealthBonusMultiplier = 0.35f;
 
-        private RogueStealthSkill _stealthSkill;
+        private FindableRenderer _findableRenderer;
 
         public override void Init(ComponentContainer container)
         {
             base.Init(container);
-            _stealthSkill = _owner.GetComponentInChildren<RogueStealthSkill>(true);
+            _findableRenderer = _owner.GetComponentInChildren<FindableRenderer>(true);
         }
 
         public override void EnableSkill()
@@ -50,7 +50,7 @@ namespace Code.SHS.Entities.Enemies.Skills
                 return 0f;
 
             float bonus = backAttackBonusMultiplier;
-            if (_stealthSkill != null && _stealthSkill.IsStealthed)
+            if (_findableRenderer != null && !_findableRenderer.IsVisible)
                 bonus += stealthBonusMultiplier;
 
             return bonus;

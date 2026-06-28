@@ -32,7 +32,6 @@ namespace InGame.InventorySystem
         protected override void OnDestroy()
         {
             EventBus<UpdateEquipUIEvent>.OnEvent -= HandleUpdateUI;
-            
             base.OnDestroy();
         }
 

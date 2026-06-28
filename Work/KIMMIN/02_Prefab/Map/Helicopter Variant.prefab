@@ -383,6 +383,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   helicopterCutscene: {fileID: 0}
+  sceneTransitionSignal: {fileID: 0}
+  skipKey: 32
+  skipHoldDuration: 1
   <Outlinable>k__BackingField: {fileID: 4546140178084329652}
 --- !u!114 &4546140178084329652
 MonoBehaviour:

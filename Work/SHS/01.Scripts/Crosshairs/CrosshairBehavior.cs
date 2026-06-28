@@ -7,6 +7,7 @@ using Scripts.Combat.ItemObjects;
 using Scripts.Players;
 using InGame.PlayerUI;
 using Code.ETC;
+using Code.GameEvents;
 using Code.Players;
 using Code.Items;
 using Chipmunk.GameEvents;
@@ -16,8 +17,6 @@ using DewmoLib.Dependencies;
 using Scripts.Players.States;
 using SHS.Scripts.Combats.Events;
 using UnityEngine.Serialization;
-using Work.SHS.Items.Events;
-using Random = UnityEngine.Random;
 
 namespace SHS.Scripts.Crosshairs
 {
@@ -25,20 +24,21 @@ namespace SHS.Scripts.Crosshairs
     public class CrosshairBehavior : MonoBehaviour, IContainerComponent, IAfterInitialze, IAimProvider,
         IDependencyProvider
     {
+        [Header("Crosshair Assets")] [SerializeField]
+        private CrosshairSO defaultCrosshair;
+
         [Header("Input")] [SerializeField] private float baseSensitivity = 18f;
         [SerializeField] private float clampMargin = 8f;
 
         [Header("Aim Sampling")] [SerializeField]
         private LayerMask whatIsGround;
 
-        [SerializeField] private float minAimDistance = 1f;
         [SerializeField] private float fallbackAimDistance = 100f;
-
-        [Header("Spread")] [SerializeField] private float defaultSpreadTargetDistance = 20f;
 
         public ComponentContainer ComponentContainer { get; set; }
         public bool IsCursorLocked => Cursor.lockState == CursorLockMode.Locked;
         public float CurrentSpreadRadiusPixels { get; private set; }
+        public CrosshairSO CurrentCrosshairData { get; private set; }
 
         private Player _player;
         private PlayerEquipment _equipment;
@@ -50,9 +50,11 @@ namespace SHS.Scripts.Crosshairs
         private Vector2 _userCursorPixel;
         private Vector2 _recoilTargetPixel;
         private Vector2 _recoilOffsetPixel;
+        private Vector2 _recoilRecoveryVelocity;
         private Vector3 _aimPosition;
         private Vector3 _worldAimPosition;
         private float _lastShotTime = -999f;
+        public float Sensitivity => _sensitivity * CurrentCrosshairData.sensitivity;
         private float _sensitivity;
 
         public void OnInitialize(ComponentContainer componentContainer)
@@ -64,8 +66,7 @@ namespace SHS.Scripts.Crosshairs
             _localEventBus = componentContainer.Get<LocalEventBus>();
 
             _player.PlayerInput.OnCursorMoved += HandleCursorMove;
-            _localEventBus.Subscribe<ItemEquippedEvent>(HandleItemEquipped);
-            _localEventBus.Subscribe<ItemUnEquippedEvent>(HandleItemUnEquipped);
+            _localEventBus.Subscribe<ChangeHandlingEvent>(HandleChangeHandling);
             _localEventBus.Subscribe<GunAttackEvent>(HandleGunAttack);
 
             _userCursorPixel = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
@@ -83,8 +84,7 @@ namespace SHS.Scripts.Crosshairs
         {
             _player.PlayerInput.OnCursorMoved -= HandleCursorMove;
 
-            _localEventBus.Unsubscribe<ItemEquippedEvent>(HandleItemEquipped);
-            _localEventBus.Unsubscribe<ItemUnEquippedEvent>(HandleItemUnEquipped);
+            _localEventBus.Unsubscribe<ChangeHandlingEvent>(HandleChangeHandling);
             _localEventBus.Unsubscribe<GunAttackEvent>(HandleGunAttack);
         }
 
@@ -101,6 +101,7 @@ namespace SHS.Scripts.Crosshairs
             }
 
             UpdateSpreadRadiusPixels();
+            UpdateCurrentCrosshairData();
         }
 
         private void LateUpdate()
@@ -111,8 +112,8 @@ namespace SHS.Scripts.Crosshairs
             Vector3 planarOffset = nextAimPosition - transform.position;
             planarOffset.y = 0f;
 
-            if (planarOffset.sqrMagnitude < minAimDistance * minAimDistance)
-                return;
+            // if (planarOffset.sqrMagnitude < minAimDistance * minAimDistance)
+            // return;
 
             _aimPosition = nextAimPosition;
         }
@@ -166,36 +167,24 @@ namespace SHS.Scripts.Crosshairs
             if (!IsCursorLocked)
                 return;
 
-            Vector2 cursorDelta = delta * _sensitivity;
+            Vector2 cursorDelta = delta * Sensitivity;
             ConsumeRecoilFromCursorDelta(ref cursorDelta);
 
             _userCursorPixel += cursorDelta;
             ClampToScreen(ref _userCursorPixel);
         }
 
-        private void HandleItemEquipped(ItemEquippedEvent eventData)
+        private void HandleChangeHandling(ChangeHandlingEvent eventData)
         {
-            if (eventData.EquipableItem?.EquipItemData is GunDataSO)
-            {
-                RefreshEquippedGunContext();
-                UpdateSpreadRadiusPixels();
-            }
-        }
-
-        private void HandleItemUnEquipped(ItemUnEquippedEvent eventData)
-        {
-            if (eventData.EquipableItem?.EquipItemData is GunDataSO)
-            {
-                RefreshEquippedGunContext();
-                UpdateSpreadRadiusPixels();
-            }
+            RefreshEquippedGunContext();
+            UpdateSpreadRadiusPixels();
         }
 
 
         private void HandleGunAttack(GunAttackEvent eventData)
         {
             _currentGunData = eventData.GunData;
-            ApplyShotRecoil(eventData.GunData);
+            ApplyShotRecoil(eventData);
             UpdateSpreadRadiusPixels();
         }
 
@@ -213,6 +202,7 @@ namespace SHS.Scripts.Crosshairs
 
             _recoilTargetPixel = Vector2.zero;
             _recoilOffsetPixel = Vector2.zero;
+            _recoilRecoveryVelocity = Vector2.zero;
         }
 
         private void RefreshEquippedGunContext()
@@ -227,20 +217,44 @@ namespace SHS.Scripts.Crosshairs
                 _currentGunObject = gunItem.WeaponObj as GunObject;
             }
 
-            _localEventBus.Raise(new CrosshairChangeEvent(_currentGunData));
+            UpdateCurrentCrosshairData(true);
         }
 
-        private void ApplyShotRecoil(GunDataSO recoilData)
+        private void UpdateCurrentCrosshairData(bool force = false)
+        {
+            CrosshairSO nextCrosshairData = ResolveCurrentCrosshairData();
+
+            if (!force && CurrentCrosshairData == nextCrosshairData)
+                return;
+
+            CurrentCrosshairData = nextCrosshairData;
+            _localEventBus.Raise(new CrosshairChangeEvent(_currentGunData, CurrentCrosshairData));
+            Bus.Raise(new ChangeCameraZoom(CurrentCrosshairData != null
+                ? CurrentCrosshairData.cameraFovReduction
+                : 0f));
+        }
+
+        private CrosshairSO ResolveCurrentCrosshairData()
+        {
+            if (_currentGunData == null)
+                return defaultCrosshair;
+
+            if (_player.PlayerInput.AimKey && _currentGunData.aimCrosshairData != null)
+                return _currentGunData.aimCrosshairData;
+
+            return _currentGunData.crosshairData != null
+                ? _currentGunData.crosshairData
+                : defaultCrosshair;
+        }
+
+        private void ApplyShotRecoil(GunAttackEvent eventData)
         {
             _lastShotTime = Time.time;
+            _recoilRecoveryVelocity = Vector2.zero;
 
-            float verticalMultiplier =
-                Random.Range(recoilData.minVerticalMultiplier, recoilData.maxVerticalMultiplier);
-            float horizontalMultiplier =
-                Random.Range(recoilData.minHorizontalMultiplier, recoilData.maxHorizontalMultiplier);
-
-            float kickY = recoilData.verticalRecoil * verticalMultiplier * recoilData.pixelsPerRecoilUnit;
-            float kickX = recoilData.horizontalRecoil * horizontalMultiplier * recoilData.pixelsPerRecoilUnit;
+            GunDataSO recoilData = eventData.GunData;
+            float kickY = eventData.VerticalRecoil * recoilData.pixelsPerRecoilUnit;
+            float kickX = eventData.HorizontalRecoil * recoilData.pixelsPerRecoilUnit;
 
             GetPlayerScreenAxes(out Vector2 rightAxis, out Vector2 forwardAxis);
             _recoilTargetPixel += rightAxis * kickX + forwardAxis * kickY;
@@ -251,17 +265,26 @@ namespace SHS.Scripts.Crosshairs
             if (_currentGunData == null)
                 return;
 
+            if (_player.PlayerInput.AttackKey)
+                return;
+
             if (Time.time - _lastShotTime < _currentGunData.recoilRecoveryStartTime)
                 return;
 
             float recoveryTime = Mathf.Max(0.001f, _currentGunData.recoilRecoveryTime);
-            float rate = _currentGunData.recoilRecovery / recoveryTime;
-            float alpha = 1f - Mathf.Exp(-rate * Time.deltaTime);
-
-            _recoilTargetPixel = Vector2.Lerp(_recoilTargetPixel, Vector2.zero, alpha);
+            _recoilTargetPixel = Vector2.SmoothDamp(
+                _recoilTargetPixel,
+                Vector2.zero,
+                ref _recoilRecoveryVelocity,
+                recoveryTime,
+                _currentGunData.recoilRecovery,
+                Time.deltaTime);
 
             if (_recoilTargetPixel.sqrMagnitude < 0.01f)
+            {
                 _recoilTargetPixel = Vector2.zero;
+                _recoilRecoveryVelocity = Vector2.zero;
+            }
         }
 
         private void UpdateRecoilOffset()
@@ -336,45 +359,43 @@ namespace SHS.Scripts.Crosshairs
 
         private void UpdateSpreadRadiusPixels()
         {
-            float spreadAngleDeg = 0f;
-            float spreadTargetDistance = defaultSpreadTargetDistance;
+            CurrentSpreadRadiusPixels = 0f;
 
             PlayerStateEnum currentState = _player.StateMachine.CurrentStateEnum;
-            if ((currentState == PlayerStateEnum.Aim || currentState == PlayerStateEnum.Attack ||
-                 currentState == PlayerStateEnum.Reload) && _currentGunObject != null)
-            {
-                spreadAngleDeg = _currentGunObject.CurrentSpreadAngleDeg;
+            if ((currentState != PlayerStateEnum.Idle && currentState != PlayerStateEnum.Walk &&
+                 currentState != PlayerStateEnum.Aim && currentState != PlayerStateEnum.Attack &&
+                 currentState != PlayerStateEnum.Reload) || _currentGunObject == null)
+                return;
 
-                Vector3 firePosition = _currentGunObject.FirePosition;
-                Vector3 aimPointOnFirePlane = GetCrosshairPlanePosition(firePosition.y);
-                Vector3 planarOffset = aimPointOnFirePlane - firePosition;
-                planarOffset.y = 0f;
-                spreadTargetDistance = planarOffset.magnitude;
-            }
+            Vector3 firePosition = _currentGunObject.FirePosition;
+            Vector3 aimPointOnFirePlane = GetCrosshairPlanePosition(firePosition.y);
+            Vector3 planarOffset = aimPointOnFirePlane - firePosition;
+            planarOffset.y = 0f;
 
-            CurrentSpreadRadiusPixels = CalculateSpreadRadiusPixels(spreadAngleDeg, spreadTargetDistance);
-        }
+            float trajectoryDistance = planarOffset.magnitude;
+            Vector3 fireDirection = _currentGunObject.FireDirection;
+            float spreadAngleDeg = _currentGunObject.CurrentSpreadAngleDeg;
 
-        private float CalculateSpreadRadiusPixels(float spreadAngleDeg, float targetDistance)
-        {
+            Vector3 centerWorld = firePosition + fireDirection * trajectoryDistance;
+            Vector3 leftWorld = firePosition +
+                                Quaternion.AngleAxis(-spreadAngleDeg, Vector3.up) * fireDirection *
+                                trajectoryDistance;
+            Vector3 rightWorld = firePosition +
+                                 Quaternion.AngleAxis(spreadAngleDeg, Vector3.up) * fireDirection *
+                                 trajectoryDistance;
+
             Camera mainCamera = Camera.main;
-
-            float distance = Mathf.Max(0.01f, targetDistance);
-            float clampedAngle = Mathf.Clamp(spreadAngleDeg, 0f, 89f);
-            float worldRadius = Mathf.Tan(clampedAngle * Mathf.Deg2Rad) * distance;
-
-            Vector3 centerWorld = GetCrosshairWorldPosition();
-            Vector3 edgeWorld = centerWorld + mainCamera.transform.right * worldRadius;
-
             Vector3 centerScreen = mainCamera.WorldToScreenPoint(centerWorld);
-            Vector3 edgeScreen = mainCamera.WorldToScreenPoint(edgeWorld);
+            Vector3 leftScreen = mainCamera.WorldToScreenPoint(leftWorld);
+            Vector3 rightScreen = mainCamera.WorldToScreenPoint(rightWorld);
 
-            if (centerScreen.z <= 0f || edgeScreen.z <= 0f)
-                return 0f;
+            if (centerScreen.z <= 0f || leftScreen.z <= 0f || rightScreen.z <= 0f)
+                return;
 
-            return Vector2.Distance(
-                new Vector2(centerScreen.x, centerScreen.y),
-                new Vector2(edgeScreen.x, edgeScreen.y));
+            Vector2 centerPixel = new Vector2(centerScreen.x, centerScreen.y);
+            CurrentSpreadRadiusPixels = Mathf.Max(
+                Vector2.Distance(centerPixel, new Vector2(leftScreen.x, leftScreen.y)),
+                Vector2.Distance(centerPixel, new Vector2(rightScreen.x, rightScreen.y)));
         }
 
         private Ray GetAimRay()

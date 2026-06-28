@@ -44,11 +44,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a0f43c3a4a0463e98353bdbef628a6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <SkillData>k__BackingField: {fileID: 0}
-  <animName>k__BackingField: 
-  cooldown: 10
-  canUse: 1
-  animHash: 0
-  upgradedList: []
-  stealthDuration: 4
-  stealthMoveSpeedMultiplier: 1.2
+  <SkillData>k__BackingField: {fileID: 11400000, guid: c2635818622e48842b931113a3b124dd, type: 2}
+  isWalkable: 0
+  cooldown: 20
+  <AnimType>k__BackingField: 0
+  <MoveType>k__BackingField: 1
+  <TargetState>k__BackingField: {fileID: 0}
+  stealthSound:
+    _entity: {fileID: 11400000, guid: ccb0533636604e64abbdecfd02796f29, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 3326814168894275818}
+  stealthDuration: 10
+  stealthMaterial: {fileID: 2100000, guid: 37a9e5ce1365de248acbbbfd3627f207, type: 2}

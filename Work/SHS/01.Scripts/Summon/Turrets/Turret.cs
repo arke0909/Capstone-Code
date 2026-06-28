@@ -1,6 +1,8 @@
-﻿using Chipmunk.ComponentContainers;
+﻿using Ami.BroAudio;
+using Chipmunk.ComponentContainers;
+using Chipmunk.GameEvents;
+using Code.GameEvents;
 using DewmoLib.ObjectPool.RunTime;
-using Scripts.Combat;
 using Scripts.Combat.Datas;
 using Scripts.Combat.Projectiles;
 using Scripts.Entities;
@@ -13,6 +15,10 @@ namespace SHS.Scripts.Summon.Turrets
 {
     public class Turret : Entity, ISummonable, IProjectileShooter
     {
+        [SerializeField] private SoundID turretFireSound;
+        [SerializeField] private SoundID turretReloadSound;
+        [SerializeField] private PoolItemSO onDeadParticle;
+        
         [Header("Detection")] [SerializeField] private LayerMask targetLayer;
         [SerializeField] private LayerMask wallLayer;
 
@@ -62,6 +68,7 @@ namespace SHS.Scripts.Summon.Turrets
             _stateMachine = new StateMachine<TurretStateEnum>(componentContainer, stateDatas);
             _currentAmmo = maxAmmo;
             SetAnimatorSpeeds();
+            OnDeadEvent.AddListener(HandleTurretDead);
 
             // 디스폰 날먹 코드
             Destroy(gameObject, 30f);
@@ -111,11 +118,30 @@ namespace SHS.Scripts.Summon.Turrets
             Debug.Assert(bullet != null, $"Projectile Pool is empty : Pool Item ({bulletPrefab.name})");
             bullet.InitProjectile(this, this, CurrentFirePoint.position, direction, 1 << gameObject.layer);
             fireEffects[_currentAmmo % fireEffects.Length].Play();
+            BroAudio.Play(turretFireSound, transform.position);
         }
 
         public void ReloadComplete()
         {
             _currentAmmo = maxAmmo;
+        }
+
+        public void PlayReloadSound()
+        {
+            if (turretReloadSound.IsValid())
+                BroAudio.Play(turretReloadSound, transform.position);
+        }
+
+        private void HandleTurretDead()
+        {
+            IsDead = true;
+            gameObject.layer = LayerMask.NameToLayer("AvoidEntity");
+
+            if (myCollider != null)
+                myCollider.enabled = false;
+
+            DestroyThis();
+            Bus.Raise(new PlayEffectEvent(onDeadParticle, transform.position, Quaternion.identity));
         }
 
         public bool WallExistsBetweenTarget(Vector3 targetPosition)

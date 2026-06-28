@@ -23,7 +23,6 @@ MonoBehaviour:
   value: 0
   maxStack: 0
   addStats: []
-  modelOffset: {x: 0, y: 0, z: 0}
   equipmentPrefab: {fileID: 7197752949421457413, guid: a528aa994340c954bac89a86b3a2a7af, type: 3}
   skillDB: {fileID: 0}
   maxDurability: 0

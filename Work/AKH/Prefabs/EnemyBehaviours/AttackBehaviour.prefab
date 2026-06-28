@@ -52,6 +52,7 @@ MonoBehaviour:
   - rid: 2466404181872738748
   - rid: 1504945668886364282
   - rid: 1504945841587355853
+  attackCount: 1
   references:
     version: 2
     RefIds:

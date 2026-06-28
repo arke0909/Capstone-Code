@@ -1112,6 +1112,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChangeBulletHelp
       objectReference: {fileID: 0}
+    - target: {fileID: 1024609658471116328, guid: 23374328ad8459f44bdcc9d06e26a524, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2446165794735908308, guid: 23374328ad8459f44bdcc9d06e26a524, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 40

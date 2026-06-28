@@ -95,15 +95,15 @@ namespace Code.Players
                 }
             }
 
-            EventBus.Subscribe<OffReplaceBulletUI>(HandleOffReplaceBulletUI);
+            _player.LocalEventBus.Subscribe<OffReplaceBulletUI>(HandleOffReplaceBulletUI);
             _player.PlayerInput.OnBulletShowPressed -= HandleShowBullet;
             _player.PlayerInput.OnBulletShowPressed += HandleCloseReplaceBulletUI;
-            EventBus<ReplaceBulletListEvent>.Raise(new ReplaceBulletListEvent(data, idx));
+            _player.LocalEventBus.Raise(new ReplaceBulletListEvent(data, idx));
         }
 
         private void HandleCloseReplaceBulletUI()
         {
-            EventBus.Unsubscribe<OffReplaceBulletUI>(HandleOffReplaceBulletUI);
+            _player.LocalEventBus.Unsubscribe<OffReplaceBulletUI>(HandleOffReplaceBulletUI);
             _player.PlayerInput.OnBulletShowPressed += HandleShowBullet;
             _player.PlayerInput.OnBulletShowPressed -= HandleCloseReplaceBulletUI;
         }

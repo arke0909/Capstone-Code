@@ -32,7 +32,7 @@ namespace Scripts.Players.States
             _myMoveType = MoveType.Walk;
             _equipment = container.Get<PlayerEquipment>();
             _entityGunStatInfo = container.Get<EntityGunStatInfo>();
-            _itemGrabBehavior = container.Get<ItemGrabRiggingController>();
+            _itemGrabBehavior = container.Get<ItemGrabRiggingController>(true);
         }
 
         public override void Enter()
@@ -47,7 +47,7 @@ namespace Scripts.Players.States
                 float reloadSpeedMultiplier = Mathf.Max(_entityGunStatInfo.ReloadSpeedMultiplier, 0.01f);
                 _reloadTime = _gun.GunItemData.reloadTime / reloadSpeedMultiplier;
                 BroAudio.Play(_gun.GunItemData.reloadSound, _gun.ItemObject.transform.position);
-                EventBus.Raise(new OffReplaceBulletUI());
+                _player.LocalEventBus.Raise(new OffReplaceBulletUI());
                 EventBus.Raise(new PlayerGageEvent(_reloadText, _reloadTime, HandleCompleteReload));
             }
             else
@@ -61,7 +61,7 @@ namespace Scripts.Players.States
         {
             if (_gun == null || !_gun.CanReload)
             {
-                EventBus.Raise(new AmmoUpdateEvent(_gun?.CurrentBulletCnt ?? 0, _gun?.GunItemData.maxAmmoCapacity ?? 0));
+                _player.LocalEventBus.Raise(new AmmoUpdateEvent(_gun?.CurrentBulletCnt ?? 0, _gun?.GunItemData.maxAmmoCapacity ?? 0));
                 _player.ChangeState(PlayerStateEnum.Idle);
                 return;
             }
@@ -83,7 +83,7 @@ namespace Scripts.Players.States
             if (_isReloadCompleted)
             {
                 _gun.Reload();
-                EventBus.Raise(new AmmoUpdateEvent(_gun.CurrentBulletCnt, _gun.GunItemData.maxAmmoCapacity));
+                _player.LocalEventBus.Raise(new AmmoUpdateEvent(_gun.CurrentBulletCnt, _gun.GunItemData.maxAmmoCapacity));
             }
             else
             {

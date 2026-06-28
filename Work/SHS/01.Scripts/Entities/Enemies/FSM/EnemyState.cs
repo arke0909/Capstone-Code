@@ -3,6 +3,7 @@ using Chipmunk.Library.Utility.GameEvents.Local;
 using Code.SHS.Entities.Enemies.Targetings.Events;
 using Code.SHS.Targetings.Enemies;
 using Scripts.Combat;
+using Scripts.Combat.Datas;
 using Scripts.Enemies.EnemyBehaviours;
 using Scripts.Entities;
 using Scripts.FSM;
@@ -22,6 +23,7 @@ namespace Code.SHS.Entities.Enemies.FSM
         Reload,
         Skill,
         AimSkill,
+        MovingSkill,
         Reposition,
         MoveTo,
         SprintTo,
@@ -66,9 +68,14 @@ namespace Code.SHS.Entities.Enemies.FSM
             base.Exit();
             _localEventBus.Unsubscribe<TargetLostEvent>(HandleTargetLost);
         }
-        private void HandleTargetLost(TargetLostEvent @event)
+        protected virtual void HandleTargetLost(TargetLostEvent @event)
         {
             _enemy.ChangeState(EnemyStateEnum.Idle);
+        }
+
+        protected void UpdateCurrentWeaponAttack(bool isAiming)
+        {
+            _attackCompo.CurrentAttackable?.UpdateAttack(new AttackContext(false, false, isAiming));
         }
 
         protected void UpdateMovementAnimation()

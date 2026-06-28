@@ -1,19 +1,17 @@
 using System.Collections.Generic;
+using Ami.BroAudio;
 using Chipmunk.ComponentContainers;
 using Chipmunk.GameEvents;
 using Code.GameEvents;
 using Code.InventorySystems.Items;
-using Code.Players;
-using InGame.InventorySystem;
-using Scripts.Combat.Datas;
 using UnityEngine;
 using Code.InventorySystems.SwapRules;
-using Code.Items;
 
 namespace Code.InventorySystems
 {
     public class InventorySwapInteract : MonoBehaviour, IContainerComponent
     {
+        [SerializeField] private SoundID dragEndSound;
         public ComponentContainer ComponentContainer { get; set; }
         private Inventory _inventory;
         private List<ISlotSwapInteractRule> _rules;
@@ -61,6 +59,7 @@ namespace Code.InventorySystems
                     continue;
 
                 rule.Interact(context);
+                BroAudio.Play(dragEndSound);
                 UpdateRelatedInventories(startSlot, targetSlot);
                 break;
             }

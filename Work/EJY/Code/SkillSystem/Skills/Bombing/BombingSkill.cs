@@ -1,4 +1,5 @@
-﻿using Chipmunk.ComponentContainers;
+﻿using Ami.BroAudio;
+using Chipmunk.ComponentContainers;
 using Chipmunk.Modules.StatSystem;
 using Code.ETC;
 using DewmoLib.ObjectPool.RunTime;
@@ -13,11 +14,11 @@ namespace Code.SkillSystem.Skills.Bombing
 {
     public class BombingSkill : ActiveSkill, IAimSkill
     {
-        [SerializeField] private StateDataSO targetState;
         [SerializeField] private DecalObject decalObject;
         [SerializeField] private PoolItemSO bombingItemSO;
         [SerializeField] private StatSO attackStat;
         [SerializeField] private StatSO damageModifier;
+        [SerializeField] private SoundID targetOnSound;
         [SerializeField] private float defaultDamageMultiplier = 1.25f;
         [SerializeField] private bool createFloor;
         [SerializeField] private bool slowAndAdditionalDamage;
@@ -28,9 +29,6 @@ namespace Code.SkillSystem.Skills.Bombing
         private IAimProvider _aimProvider;
         private bool _isAiming;
 
-        public StateDataSO TargetState { get => targetState; set => targetState = value; }
-        public SkillAnimType AnimType => SkillAnimType.Default;
-
         public override void Init(ComponentContainer container)
         {
             base.Init(container);
@@ -39,16 +37,18 @@ namespace Code.SkillSystem.Skills.Bombing
             _aimProvider = container.GetSubclassComponent<IAimProvider>();
         }
 
-        public override void StartAndUseSkill()
+        public override void StartSkill()
         {
             _isAiming = false;
             decalObject.SetParent(null);
 
             BombingMissile bombingMissile = _poolManager.Pop(bombingItemSO) as BombingMissile;
+            Vector3 targetPoint = decalObject.transform.position;
+
             bombingMissile.SetOwner(_owner);
             bombingMissile.CreateFloor = createFloor;
             bombingMissile.SlowAndAdditionalDamage = slowAndAdditionalDamage;
-            bombingMissile.transform.position = new Vector3(decalObject.transform.position.x, 15, decalObject.transform.position.z);
+            bombingMissile.transform.position = new Vector3(targetPoint.x, 15f, targetPoint.z);
 
             void HandleMissilePush()
             {
@@ -62,10 +62,13 @@ namespace Code.SkillSystem.Skills.Bombing
             DamageData damageData = _damageCalcCompo.CalculateDamage(_statCompo.GetStat(attackStat).Value, defaultDamageMultiplier + _statCompo.GetStat(damageModifier).Value
                 , 0, DamageType.MELEE);
             bombingMissile.SetDamageData(damageData);
+            bombingMissile.BeginFall(targetPoint);
+            StopTargetOnSound();
         }
 
         public void StartAiming()
         {
+            BroAudio.Play(targetOnSound);
             decalObject.SetActive(true);
             _isAiming = true;
         }
@@ -74,8 +77,14 @@ namespace Code.SkillSystem.Skills.Bombing
         {
             _isAiming = false;
             decalObject.SetActive(false);
+            StopTargetOnSound();
         }
 
+        private void StopTargetOnSound()
+        {
+            BroAudio.Stop(targetOnSound);
+        }
+        
         private void Update()
         {
             if (_isAiming)
@@ -85,7 +94,7 @@ namespace Code.SkillSystem.Skills.Bombing
             }
         }
 
-        public void OnSkillTrigger()
+        public override void OnSkillTrigger()
         {
         }
     }

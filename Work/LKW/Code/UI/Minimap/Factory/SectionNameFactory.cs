@@ -12,7 +12,7 @@ namespace Code.UI.Minimap.Factory
         public override MinimapElement CreateUIElement(MinimapElementData data)
         {
             SectionNameText sectionNameText = _poolManager.Pop<SectionNameText>(_minimapSectionNameItem);
-            sectionNameText.NormalizedPos = data.NormalizedPos;
+            sectionNameText.Initialize(data);
 
             if (data.Owner is SectionNameSpot spot)
             {

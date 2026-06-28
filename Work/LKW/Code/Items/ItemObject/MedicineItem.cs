@@ -18,7 +18,7 @@ namespace Code.Items
         public override void Use(Entity user)
         {
             if (user.TryGet<HealthCompo>(out var healthCompo))
-                healthCompo.CurrentValue += HealAmount;
+                healthCompo.Heal(HealAmount);
             
             base.Use(user);
         }

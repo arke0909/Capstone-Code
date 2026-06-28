@@ -50,7 +50,9 @@ namespace Code.SHS.Entities.Enemies.FSM
 
         public void OnTargetLost(TargetLostEvent evt)
         {
-            _enemy.ChangeState(EnemyStateEnum.Chase);
+            Debug.Log("TargetLost");
+            _movement.SetDestinationForce(evt.LastKnownPosition);
+            _enemy.ChangeState(EnemyStateEnum.SprintTo);
         }
     }
 }

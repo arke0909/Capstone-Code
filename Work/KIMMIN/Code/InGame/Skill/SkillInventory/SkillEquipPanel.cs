@@ -7,6 +7,7 @@ using DewmoLib.Dependencies;
 using Scripts.Players;
 using Scripts.SkillSystem;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Work.Code.SkillInventory.GameEvents;
 using Work.Code.UI.Interaction;
 
@@ -21,7 +22,9 @@ namespace Work.Code.SkillInventory
         
         [Inject] private Player _player;
         private SkillSlot[] _skillUis;
+        private SkillSlot[] _inventoryUis;
         private SkillSlot _selectedSkill;
+        private SkillSlot _hoveredInventorySlot;
         private SkillEquipModel _model;
 
         public event Action<Skill[]> OnSkillChanged;
@@ -34,6 +37,7 @@ namespace Work.Code.SkillInventory
             var passives = passiveSkillRoot.GetComponentsInChildren<SkillSlot>(true);
             var inventories = skillInventory.GetComponentsInChildren<SkillSlot>(true);
             _skillUis = actives.Concat(passives).ToArray();
+            _inventoryUis = inventories;
 
             SetupUI(actives, SkillType.Active);
             SetupUI(passives, SkillType.Passive);
@@ -69,6 +73,8 @@ namespace Work.Code.SkillInventory
             ui.OnDragEndEvent += HandleDragEnd;
             ui.OnDropSkill += HandleDropSkill;
             ui.OnEquipped += HandleEquip;
+            ui.OnHoverEntered += HandleHoverEntered;
+            ui.OnHoverExited += HandleHoverExited;
             ui.ClearUI();
         }
 
@@ -78,11 +84,28 @@ namespace Work.Code.SkillInventory
             ui.OnDragEndEvent -= HandleDragEnd;
             ui.OnDropSkill -= HandleDropSkill;
             ui.OnEquipped -= HandleEquip;
+            ui.OnHoverEntered -= HandleHoverEntered;
+            ui.OnHoverExited -= HandleHoverExited;
         }
         
         private void HandleEquip(Skill skill, int index)
         {
             _player.LocalEventBus.Raise(new EquipSkillEvent(skill, index));
+        }
+
+        private void Update()
+        {
+            if (!IsActive || _hoveredInventorySlot == null || _hoveredInventorySlot.CurrentSkill == null)
+                return;
+
+            if (Keyboard.current.qKey.wasPressedThisFrame)
+                EquipActiveSkill(_hoveredInventorySlot, ActiveSlotType.Q);
+            else if (Keyboard.current.eKey.wasPressedThisFrame)
+                EquipActiveSkill(_hoveredInventorySlot, ActiveSlotType.E);
+            else if (Keyboard.current.cKey.wasPressedThisFrame)
+                EquipActiveSkill(_hoveredInventorySlot, ActiveSlotType.C);
+            else if (Keyboard.current.fKey.wasPressedThisFrame)
+                EquipToFirstSlot(_hoveredInventorySlot);
         }
 
         private void HandleSkillUpdated()
@@ -111,6 +134,11 @@ namespace Work.Code.SkillInventory
             {
                 UnbindUI(ui);
             }
+
+            foreach (var ui in _inventoryUis)
+            {
+                UnbindUI(ui);
+            }
         }
 
         private void HandleDragSkill(DraggableUI draggable)
@@ -132,6 +160,62 @@ namespace Work.Code.SkillInventory
             
             _model.Equip(send.CurrentSkill, target.CurrentSkill, 
                 target.Index, target.SkillType, send.IsInventorySlot);
+        }
+
+        private void HandleHoverEntered(SkillSlot slot)
+        {
+            if (slot.IsInventorySlot)
+                _hoveredInventorySlot = slot;
+        }
+
+        private void HandleHoverExited(SkillSlot slot)
+        {
+            if (_hoveredInventorySlot == slot)
+                _hoveredInventorySlot = null;
+        }
+
+        private void EquipActiveSkill(SkillSlot send, ActiveSlotType slotType)
+        {
+            if (send.CurrentSkill.SkillType != SkillType.Active)
+                return;
+
+            int index = (int)slotType;
+            Skill targetSkill = _model.GetSkill(index, SkillType.Active);
+            _model.Equip(send.CurrentSkill, targetSkill, index, SkillType.Active, true);
+        }
+
+        private void EquipToFirstSlot(SkillSlot send)
+        {
+            SkillType skillType = send.CurrentSkill.SkillType;
+
+            if (IsEquipped(send.CurrentSkill, skillType))
+                return;
+
+            int index = GetFirstEmptySlotIndex(skillType);
+            Skill targetSkill = _model.GetSkill(index, skillType);
+            _model.Equip(send.CurrentSkill, targetSkill, index, skillType, true);
+        }
+
+        private bool IsEquipped(Skill skill, SkillType skillType)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                if (_model.GetSkill(i, skillType) == skill)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private int GetFirstEmptySlotIndex(SkillType skillType)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                if (_model.GetSkill(i, skillType) == null)
+                    return i;
+            }
+
+            return 0;
         }
 
         private void HighlightSkillUIs(SkillSlot skill, bool isOn)

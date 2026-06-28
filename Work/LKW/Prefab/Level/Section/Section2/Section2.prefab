@@ -15256,6 +15256,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
+    - target: {fileID: 4911954646953347081, guid: 4207335445c3b254a9bc99329b2510b7, type: 3}
+      propertyPath: policeData
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5592638869257298027, guid: 4207335445c3b254a9bc99329b2510b7, type: 3}
       propertyPath: m_Name
       value: Police

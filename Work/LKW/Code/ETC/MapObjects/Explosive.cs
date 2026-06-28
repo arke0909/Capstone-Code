@@ -13,7 +13,7 @@ namespace Code.ETC.MapObjects
 {
     public class Explosive : HittableObject
     {
-        private const float SmokeEffectHpThreshold = 0.4f;
+        private const float SmokeEffectHpThreshold = 0.6f;
         private const float DestroyDelay = 0.04f;
 
         [Header("Reference")]

@@ -2,6 +2,7 @@ using Chipmunk.GameEvents;
 using Code.GameEvents;
 using Scripts.Combat.Datas;
 using Scripts.Combat.ItemObjects;
+using Scripts.Entities;
 using UnityEngine;
 using Work.EJY.Code.Guns;
 using Work.EJY.Code.Guns.HeatReceiver;
@@ -13,16 +14,18 @@ namespace Code.SkillSystem.Skills.FireRate
         [SerializeField] private ParticleByHeatRatio particleByHeatRatio;
 
         private GunObject _gunObject;
-        private GunOverheatVisual _gunOverheatVisual;
+        private GunHeatFeedback _gunHeatFeedback;
+        private Entity _entity;
 
-        private void Awake()
+        public void InitVFXCompo(Entity entity)
         {
-            Bus.Subscribe<ChangeHandlingEvent>(HandleChangeHandlingEvent);
+            _entity = entity;
+            entity.LocalEventBus.Subscribe<ChangeHandlingEvent>(HandleChangeHandlingEvent);
         }
 
         private void OnDestroy()
         {
-            Bus.Unsubscribe<ChangeHandlingEvent>(HandleChangeHandlingEvent);
+            _entity.LocalEventBus.Unsubscribe<ChangeHandlingEvent>(HandleChangeHandlingEvent);
         }
 
         private void HandleChangeHandlingEvent(ChangeHandlingEvent evt)
@@ -32,22 +35,22 @@ namespace Code.SkillSystem.Skills.FireRate
             if (evt.EquipableItem is not GunItem gun)
             {
                 _gunObject = null;
-                _gunOverheatVisual = null;
+                _gunHeatFeedback = null;
                 return;
             }
 
             _gunObject = gun.GunObj;
-            _gunOverheatVisual = _gunObject.GetComponentInChildren<GunOverheatVisual>();
+            _gunHeatFeedback = _gunObject.GetComponentInChildren<GunHeatFeedback>();
         }
 
         public void PlayMuzzleSmog()
         {
-            _gunOverheatVisual?.PlayMuzzleSmog();
+            _gunHeatFeedback?.PlayMuzzleSmog();
         }
 
         public void StopMuzzleSmog()
         {
-            _gunOverheatVisual?.StopMuzzleSmog();
+            _gunHeatFeedback?.StopMuzzleSmog();
         }
         
         public void SetHeatRatio(float ratio)
@@ -55,7 +58,7 @@ namespace Code.SkillSystem.Skills.FireRate
             if (_gunObject == null) return;
             
             particleByHeatRatio.SetHeatRatio(ratio);
-            _gunOverheatVisual.SetHeatRatio(ratio);
+            _gunHeatFeedback.SetHeatRatio(ratio);
         }
 
         public void ResetHeatRatio()
@@ -63,7 +66,7 @@ namespace Code.SkillSystem.Skills.FireRate
             if (_gunObject == null) return;
             
             particleByHeatRatio.ResetRatio();
-            _gunOverheatVisual.ResetRatio();
+            _gunHeatFeedback.ResetRatio();
         }
     }
 }

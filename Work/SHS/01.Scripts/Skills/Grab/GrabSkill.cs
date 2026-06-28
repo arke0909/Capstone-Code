@@ -1,4 +1,5 @@
-﻿using Scripts.SkillSystem.Skills;
+﻿using Ami.BroAudio;
+using Scripts.SkillSystem.Skills;
 using Chipmunk.ComponentContainers;
 using Code.ETC;
 using Code.SHS.Entities.Enemies;
@@ -10,8 +11,10 @@ using UnityEngine;
 
 namespace Scripts.SkillSystem.Skills.Grab
 {
-    public class GrabSkill : ActiveSkill,IUseStateSkill
+    public class GrabSkill : ActiveSkill
     {
+        [SerializeField] private SoundID grabFireSound;
+        
         [Header("Projectile")]
         [Tooltip("Optional projectile prefab. If empty, a runtime projectile object is created.")]
         [SerializeField]
@@ -28,9 +31,6 @@ namespace Scripts.SkillSystem.Skills.Grab
 
         [Tooltip("Maximum travel distance before the projectile expires.")] [SerializeField]
         private float projectileRange = 20f;
-
-        [Tooltip("Maximum lifetime in seconds before auto-destroy.")] [SerializeField]
-        private float projectileLifeTime = 2f;
 
         [Tooltip("How far in front of the origin the projectile starts.")] [SerializeField]
         private float spawnForwardOffset = 0.6f;
@@ -63,10 +63,6 @@ namespace Scripts.SkillSystem.Skills.Grab
         private IAimProvider _aimProvider;
         private DamageCalcCompo _damageCalcCompo;
         private MovementDataSO _fallbackPullMovementData;
-
-        public SkillAnimType AnimType => SkillAnimType.Grab;
-
-        [field:SerializeField]public StateDataSO TargetState { get; private set; }
 
         public override void Init(ComponentContainer container)
         {
@@ -132,38 +128,46 @@ namespace Scripts.SkillSystem.Skills.Grab
             return direction.normalized;
         }
 
-        public void OnSkillTrigger()
+        private void Reset()
         {
-            MovementDataSO movementData = GetPullMovementData();
+            AnimType = SkillAnimType.Grab;
+        }
+
+        private void OnValidate()
+        {
+            AnimType = SkillAnimType.Grab;
+        }
+
+        public override void OnSkillTrigger()
+        {
+            if (hookProjectilePrefab == null)
+                return;
+
             Vector3 origin = firePoint != null ? firePoint.position : _owner.transform.position;
             Vector3 direction = GetFireDirection(origin);
             Vector3 spawnPos = origin + direction * spawnForwardOffset;
-            Transform targetAnchor = pullAnchor != null ? pullAnchor : _owner.transform;
-            DamageData damageData = BuildDamageData();
 
-            GrabHookProjectile projectile;
-            if (hookProjectilePrefab != null)
-            {
-                projectile = Instantiate(
-                    hookProjectilePrefab,
-                    spawnPos,
-                    Quaternion.LookRotation(direction));
-            }
-            else
-            {
-                GameObject runtimeProjectile = new GameObject("GrabHookProjectile_Runtime");
-                runtimeProjectile.transform.SetPositionAndRotation(spawnPos, Quaternion.LookRotation(direction));
-                projectile = runtimeProjectile.AddComponent<GrabHookProjectile>();
-            }
+            GrabHookProjectile projectile = Instantiate(
+                hookProjectilePrefab,
+                spawnPos,
+                Quaternion.LookRotation(direction));
 
-            projectile.HitMask = hitMask;
-            projectile.Speed = projectileSpeed;
-            projectile.MaxDistance = projectileRange;
-            projectile.LifeTime = projectileLifeTime;
-            projectile.PullMovementData = movementData;
-            projectile.PullStopDistance = pullStopDistance;
-            projectile.ControlLockDuration = controlLockDuration;
-            projectile.Launch(_owner, targetAnchor, direction, damageData);
+            projectile.Launch(
+                _owner,
+                pullAnchor != null ? pullAnchor : _owner.transform,
+                direction,
+                BuildDamageData(),
+                new GrabHookProjectile.Config
+                {
+                    HitMask = hitMask,
+                    Speed = projectileSpeed,
+                    Range = projectileRange,
+                    PullData = GetPullMovementData(),
+                    PullStopDistance = pullStopDistance,
+                    ControlLockDuration = controlLockDuration
+                });
+
+            BroAudio.Play(grabFireSound, _owner.transform.position);
         }
     }
 }

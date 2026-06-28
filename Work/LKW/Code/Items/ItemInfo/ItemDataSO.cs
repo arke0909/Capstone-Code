@@ -37,9 +37,10 @@ namespace Code.Items.ItemInfo
 
     public enum Rarity
     {
-        Common,
+        Common = 0,
         Rare,
         Epic,
+        None
     }
 
     

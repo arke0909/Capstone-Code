@@ -3,7 +3,7 @@ using System.Linq;
 using Chipmunk.GameEvents;
 using Code.Events;
 using Code.UI.Minimap.Core;
-using Code.UI.Minimap.Minimaps;
+using Code.UI.Minimap;
 using DewmoLib.Dependencies;
 using DewmoLib.ObjectPool.RunTime;
 using UnityEngine;
@@ -33,8 +33,8 @@ namespace Code.UI.Minimap.Markers
         [SerializeField] private MinimapSystem minimapSystem;
         [SerializeField] private MinimapUI minimapUI;
 
-        private Dictionary<Button, markerData> _markerDataDictByButton = new Dictionary<Button, markerData>();
-        private markerData _selectedMarker = null;
+        private Dictionary<Button, MarkerData> _markerDataDictByButton = new Dictionary<Button, MarkerData>();
+        private MarkerData _selectedMarker = null;
         private int _currentCount = 0;
 
         private void Start()
@@ -107,7 +107,9 @@ namespace Code.UI.Minimap.Markers
             {
                 if (child.TryGetComponent(out Marker marker))
                 {
-                    if (RectTransformUtility.RectangleContainsScreenPoint(marker.Rect, mousePos) && marker.gameObject.activeInHierarchy)
+                    if (RectTransformUtility.RectangleContainsScreenPoint(marker.Rect, mousePos) 
+                        && marker.gameObject.activeInHierarchy
+                        && marker.CanRemove)
                     {
                         marker.RemoveSelf();
                         _currentCount = Mathf.Max(0, _currentCount - 1);

@@ -1,15 +1,14 @@
-﻿using Chipmunk.ComponentContainers;
-using Chipmunk.GameEvents;
+using Chipmunk.ComponentContainers;
 using Cysharp.Threading.Tasks;
 using DewmoLib.ObjectPool.RunTime;
 using Scripts.Combat.Datas;
-using Scripts.Effects;
 using Scripts.Entities;
-using UnityEngine;
-using Work.Code.GameEvents;
 using SHS.Scripts;
+using SHS.Scripts.Combats.Events;
 using SHS.Scripts.Effects;
+using UnityEngine;
 using Work.Code.Entities;
+using Work.Code.GameEvents;
 using Work.Code.Misc;
 
 namespace Scripts.Combat.Projectiles
@@ -18,160 +17,104 @@ namespace Scripts.Combat.Projectiles
     {
         [SerializeField] private float despawnTime = 1f;
         [SerializeField] private float hitOffset = 0f;
-        [SerializeField] private bool UseFirePointRotation;
-        [SerializeField] private Vector3 rotationOffset = new Vector3(0, 0, 0);
-        [SerializeField] private ParticleSystem hitEffect;
-        [SerializeField] private ParticleSystem flashEffect;
-        [SerializeField] private PoolItemSO bulletDespawnEffect;
         [SerializeField] private Rigidbody rb;
-        [SerializeField] private GameObject[] Detached;
         [SerializeField] private TrailRenderer trail;
         [SerializeField] private BulletImpactEffect _bulletImpactEffect;
         [SerializeField] private PoolItemSO bulletHole;
         [SerializeField] private PoolManagerSO poolManager;
-        [SerializeField] private LayerMask hitMask;
-
-        [Header("Hit Detection (Swept Cast)")]
-        [SerializeField] private float castRadius = 0.1f;
-        // 적의 실제 hitbox는 IsTrigger=0 이므로 트리거(감지 범위 등)는 무시
-        [SerializeField] private QueryTriggerInteraction triggerInteraction = QueryTriggerInteraction.Ignore;
 
         [field: SerializeField] public PoolItemSO PoolItem { get; private set; }
         public GameObject GameObject => gameObject;
         public GameObject Dealer => gameObject;
         public Entity Owner => _owner;
         public Vector3 Velocity => rb.linearVelocity;
-        public IProjectileShooter ProjectileShooter { get; private set; }
+        public IProjectileShooter ProjectileShooter => _projectileShooterSnapshot;
 
         private Pool _myPool;
         private Entity _owner;
         private Collider _collider;
-        private Vector3 _previousPosition;
         private Vector3 _spawnPosition;
         private Vector3 _onInitVelocity;
+        private ProjectileShooterSnapshot _projectileShooterSnapshot;
         private float _maxTravelDistance;
         private bool _isReturningToPool;
 
         private void Awake()
         {
             _collider = GetComponent<Collider>();
+            Debug.Assert(rb != null, "Bullet: Rigidbody is not assigned.");
+            Debug.Assert(_collider != null, "Bullet: Collider is not assigned.");
+            Debug.Assert(trail != null, "Bullet: TrailRenderer is not assigned.");
+            Debug.Assert(_bulletImpactEffect != null, "Bullet: BulletImpactEffect is not assigned.");
+            Debug.Assert(bulletHole != null, "Bullet: BulletHole pool item is not assigned.");
+            Debug.Assert(poolManager != null, "Bullet: PoolManager is not assigned.");
         }
 
         private void FixedUpdate()
         {
             if (_isReturningToPool)
-            {
-                _previousPosition = transform.position;
                 return;
-            }
 
             CheckMaxTravelDistance();
-            if (_isReturningToPool)
-                return;
-
-            // Swept SphereCast: 이번 물리스텝에서 이동하게 될 경로를 쓸어 검사
-            Vector3 currentPos = transform.position;
-            Vector3 vel = rb.linearVelocity;
-            float dt = Time.fixedDeltaTime;
-            Vector3 moveDelta = vel * dt;
-            float distance = moveDelta.magnitude;
-
-            if (distance > 0.0001f)
-            {
-                Vector3 dir = moveDelta / distance;
-                if (Physics.SphereCast(currentPos, castRadius, dir,
-                        out RaycastHit hit, distance, hitMask, triggerInteraction))
-                {
-                    Entity hitEntity = hit.collider.GetComponentInParent<Entity>();
-                    bool isOwner = (hitEntity != null && hitEntity == _owner);
-                    if (!isOwner)
-                    {
-                        rb.linearVelocity = Vector3.zero;
-                        // hit.point에 정확히 박아두고 처리 (이 다음 물리스텝은 velocity 0이라 정지)
-                        transform.position = hit.point;
-                        HandleHit(hit.collider, hit.point, hit.normal);
-                        return;
-                    }
-                }
-            }
-
-            _previousPosition = currentPos;
         }
 
         public void InitProjectile(Entity owner, IProjectileShooter projectileShooter, Vector3 initPos,
             Vector3 direction,
             LayerMask excludeLayer)
         {
-            //hitMask = ~excludeLayer;
-            if (_collider != null)
-                _collider.excludeLayers = excludeLayer;
-            InitBullet(owner, projectileShooter, initPos, direction);
-        }
-
-        public void InitBullet(Entity owner, IProjectileShooter projectileShooter, Vector3 initPos, Vector3 direction)
-        {
+            Debug.Assert(projectileShooter != null, "Bullet: ProjectileShooter is null.");
             _owner = owner;
-            ProjectileShooter = projectileShooter;
+            _projectileShooterSnapshot = new ProjectileShooterSnapshot(projectileShooter);
             _isReturningToPool = false;
-            _previousPosition = initPos;
             _spawnPosition = initPos;
 
+            _collider.excludeLayers = excludeLayer;
             transform.position = initPos;
 
             if (direction.sqrMagnitude > 0.0001f)
                 transform.forward = direction.normalized;
-            float speed = ProjectileShooter.ProjectileSpeed;
-            rb.linearVelocity = direction.normalized * speed;
+
+            rb.linearVelocity = direction.normalized * _projectileShooterSnapshot.ProjectileSpeed;
             _onInitVelocity = rb.linearVelocity;
-            _maxTravelDistance = ProjectileShooter?.ProjectileMaxRange ?? 0f;
+            _maxTravelDistance = _projectileShooterSnapshot.ProjectileMaxRange;
 
             trail.Clear();
-
-            if (flashEffect != null)
-            {
-                PlayMuzzleFlash().Forget();
-            }
         }
 
         public void ResetItem()
         {
             _isReturningToPool = false;
-            _previousPosition = transform.position;
             _spawnPosition = transform.position;
             _onInitVelocity = Vector3.zero;
+            _projectileShooterSnapshot = default;
             _maxTravelDistance = 0f;
 
-            if (rb != null)
-            {
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-            }
-
-            if (hitEffect != null)
-            {
-                hitEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-                hitEffect.gameObject.SetActive(false);
-                hitEffect.transform.SetParent(transform);
-                hitEffect.transform.localPosition = Vector3.zero;
-                hitEffect.transform.localRotation = Quaternion.identity;
-            }
-
-            if (flashEffect != null)
-            {
-                flashEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-                flashEffect.gameObject.SetActive(false);
-                flashEffect.transform.SetParent(transform);
-                flashEffect.transform.localPosition = Vector3.zero;
-                flashEffect.transform.localRotation = Quaternion.identity;
-            }
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
 
             _owner = null;
-            ProjectileShooter = null;
         }
 
         public void SetUpPool(Pool pool)
         {
             _myPool = pool;
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (_isReturningToPool)
+                return;
+
+            ContactPoint contact = collision.GetContact(0);
+            transform.position = contact.point;
+            HandleHit(collision.collider, contact.point, contact.normal);
+        }
+
+        public void HitImmediately(Collider other, Vector3 hitPoint, Vector3 hitNormal)
+        {
+            Debug.Assert(other != null, "Bullet: Immediate hit target is null.");
+            transform.position = hitPoint;
+            HandleHit(other, hitPoint, hitNormal);
         }
 
         private void CheckMaxTravelDistance()
@@ -184,12 +127,14 @@ namespace Scripts.Combat.Projectiles
                 return;
 
             _isReturningToPool = true;
-            ReturnToPoolAfterDelay(true).Forget();
+            ReturnToPoolAfterDelay().Forget();
         }
 
         private void HandleHit(Collider other, Vector3 hitPoint, Vector3 hitNormal)
         {
-            if (_myPool == null || _isReturningToPool || other == null)
+            Debug.Assert(_myPool != null, "Bullet: Pool is not assigned.");
+
+            if (_isReturningToPool)
                 return;
 
             TryResolveDamageable(other, out Transform hitTransform, out IDamageable damageable);
@@ -199,12 +144,11 @@ namespace Scripts.Combat.Projectiles
 
             Vector3 pos = hitPoint + hitNormal * hitOffset;
 
-            // 1) 데미지/구멍 처리를 await보다 먼저 (지연/소실 방지)
-            if (damageable != null && ProjectileShooter != null && _owner != null)
+            if (damageable != null)
             {
                 DamageCalcCompo calcCompo = _owner.Get<DamageCalcCompo>();
 
-                float finalDamageMultiply = ProjectileShooter.DamageMultiplier;
+                float finalDamageMultiply = _projectileShooterSnapshot.DamageMultiplier;
 
                 if (_owner.OnDamageCalc != null)
                 {
@@ -214,8 +158,8 @@ namespace Scripts.Combat.Projectiles
                     }
                 }
 
-                DamageData damageData = calcCompo.CalculateDamage(ProjectileShooter.DefaultDamage, finalDamageMultiply,
-                    ProjectileShooter.DefPierceLevel, DamageType.RANGE);
+                DamageData damageData = calcCompo.CalculateDamage(_projectileShooterSnapshot.DefaultDamage,
+                    finalDamageMultiply, _projectileShooterSnapshot.DefPierceLevel, DamageType.RANGE);
 
                 DamageContext context = new DamageContext
                 {
@@ -227,35 +171,28 @@ namespace Scripts.Combat.Projectiles
                 };
 
                 damageable.ApplyDamage(context);
+                _owner.LocalEventBus.Raise(new AttackHitEvent(damageable, context));
                 _owner.OnAttack?.Invoke(_owner, damageable);
             }
             else
             {
                 BulletHole hole = poolManager.Pop(bulletHole) as BulletHole;
-                hole?.InitHole(pos, hitNormal);
+                Debug.Assert(hole != null, "Bullet: BulletHole pool item could not be popped.");
+                hole.InitHole(pos, hitNormal);
             }
 
-            _bulletImpactEffect?.PlayEffect(pos, hitNormal);
+            _bulletImpactEffect.PlayEffect(pos, hitNormal);
 
-            // 2) VFX는 fire-and-forget (데미지 경로 지연시키지 않음)
-            if (hitEffect != null)
-            {
-                PlayHitEffect(pos, hitNormal).Forget();
-            }
-
-            ReturnToPoolAfterDelay(false).Forget();
+            ReturnToPoolAfterDelay().Forget();
         }
 
         private void PrepareForDespawn()
         {
-            if (rb != null)
-            {
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-            }
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
 
-        private async UniTaskVoid ReturnToPoolAfterDelay(bool playDespawnEffect)
+        private async UniTaskVoid ReturnToPoolAfterDelay()
         {
             PrepareForDespawn();
 
@@ -263,19 +200,7 @@ namespace Scripts.Combat.Projectiles
             if (delay > 0f)
                 await UniTask.WaitForSeconds(delay);
 
-            if (playDespawnEffect && poolManager != null && bulletDespawnEffect != null)
-            {
-                PoolingEffect despawnEffect = poolManager.Pop(bulletDespawnEffect) as PoolingEffect;
-                if (despawnEffect != null)
-                {
-                    despawnEffect.PlayVFX(transform.position, transform.rotation);
-                }
-            }
-
-            if (_myPool != null)
-                _myPool.Push(this);
-            else
-                gameObject.SetActive(false);
+            _myPool.Push(this);
         }
 
         private bool TryResolveDamageable(Collider other, out Transform hitTransform, out IDamageable damageable)
@@ -284,8 +209,6 @@ namespace Scripts.Combat.Projectiles
             damageable = null;
 
             Entity hitEntity = other.GetComponentInParent<Entity>();
-            if (hitEntity != null && hitEntity == _owner)
-                return false;
 
             if (other.TryGetComponent(out damageable))
                 return true;
@@ -297,62 +220,6 @@ namespace Scripts.Combat.Projectiles
             }
 
             return false;
-        }
-
-        private async UniTask PlayMuzzleFlash()
-        {
-            GameObject flashGo = flashEffect.gameObject;
-
-            flashGo.SetActive(true);
-            flashEffect.transform.SetParent(null);
-
-            flashEffect.transform.position = transform.position;
-            flashEffect.transform.forward = transform.forward;
-
-            flashEffect.Play(true);
-
-            float duration = flashEffect.main.duration;
-            await UniTask.WaitForSeconds(duration);
-
-            flashEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            flashGo.SetActive(false);
-
-            flashEffect.transform.SetParent(transform);
-            flashEffect.transform.localPosition = Vector3.zero;
-            flashEffect.transform.localRotation = Quaternion.identity;
-        }
-
-        private async UniTask PlayHitEffect(Vector3 position, Vector3 normal)
-        {
-            Transform t = hitEffect.transform;
-            t.SetParent(null);
-            t.position = position - normal * 0.1f;
-
-            if (UseFirePointRotation)
-            {
-                t.rotation = transform.rotation * Quaternion.Euler(0, 180f, 0);
-            }
-            else if (rotationOffset != Vector3.zero)
-            {
-                t.rotation = Quaternion.Euler(rotationOffset);
-            }
-            else
-            {
-                t.rotation = Quaternion.LookRotation(normal);
-            }
-
-            hitEffect.gameObject.SetActive(true);
-            hitEffect.Play(true);
-
-            float duration = hitEffect.main.duration;
-            await UniTask.WaitForSeconds(duration);
-
-            hitEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            hitEffect.gameObject.SetActive(false);
-
-            t.SetParent(transform);
-            t.localPosition = Vector3.zero;
-            t.localRotation = Quaternion.identity;
         }
 
         public void SetVelocity(float percent)
@@ -368,7 +235,25 @@ namespace Scripts.Combat.Projectiles
                 return;
 
             _isReturningToPool = true;
-            ReturnToPoolAfterDelay(false).Forget();
+            ReturnToPoolAfterDelay().Forget();
+        }
+
+        private readonly struct ProjectileShooterSnapshot : IProjectileShooter
+        {
+            public float DefaultDamage { get; }
+            public float ProjectileSpeed { get; }
+            public float ProjectileMaxRange { get; }
+            public float DamageMultiplier { get; }
+            public int DefPierceLevel { get; }
+
+            public ProjectileShooterSnapshot(IProjectileShooter projectileShooter)
+            {
+                DefaultDamage = projectileShooter.DefaultDamage;
+                ProjectileSpeed = projectileShooter.ProjectileSpeed;
+                ProjectileMaxRange = projectileShooter.ProjectileMaxRange;
+                DamageMultiplier = projectileShooter.DamageMultiplier;
+                DefPierceLevel = projectileShooter.DefPierceLevel;
+            }
         }
     }
 }

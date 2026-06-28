@@ -316,7 +316,7 @@ Transform:
   m_GameObject: {fileID: 5640389525089971645}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -77.49599, y: 13.954004, z: -74.10205}
+  m_LocalPosition: {x: 0, y: -0.1, z: 0.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -342,6 +342,7 @@ MonoBehaviour:
   fireTrm: {fileID: 8805519442203363069}
   poolManager: {fileID: 11400000, guid: c413011c9deace64aa106d229c06e489, type: 2}
   bulletItem: {fileID: 11400000, guid: 09e3f30c6feb3d545b688838c743bedc, type: 2}
+  muzzleEffectItem: {fileID: 11400000, guid: 2f828d6fb76c376459fa3d74bd84160d, type: 2}
   shellEjectEffect: {fileID: 7013796085096397984}
 --- !u!114 &1825504984115221166
 MonoBehaviour:
@@ -842,8 +843,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8913368623215791197}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 78.84331, y: -10.684004, z: 72.27229}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

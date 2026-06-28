@@ -20,6 +20,8 @@ namespace Scripts.Enemies.EnemyBehaviours
         [SerializeField] private ConditionType conditionType;
         [SerializeReference]
         private List<EnemyBehaviourCondition> conditions = new();
+        [SerializeReference]
+        private List<EnemyBehaviourPriorityCondition> priorityConditions = new();
         protected float _cooldownTimer;
         protected Enemy _enemy;
         public virtual void Init(Enemy enemy)
@@ -27,6 +29,9 @@ namespace Scripts.Enemies.EnemyBehaviours
             _enemy = enemy;
             conditions = conditions.Where(item => item != null).ToList();
             foreach (var condition in conditions)
+                condition.Init(enemy);
+            priorityConditions = priorityConditions.Where(item => item != null).ToList();
+            foreach (var condition in priorityConditions)
                 condition.Init(enemy);
         }
         protected virtual void Update()
@@ -58,11 +63,23 @@ namespace Scripts.Enemies.EnemyBehaviours
             }
             return success;
         }
+        public int GetCurrentPriority()
+        {
+            int priority = Priority;
+            if (priorityConditions.Count == 0)
+                return priority;
+
+            foreach (EnemyBehaviourPriorityCondition condition in priorityConditions)
+                priority += condition.GetPriorityOffset();
+
+            return priority;
+        }
         public abstract void Execute();
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {
             conditions.ForEach(condition => condition.DrawGizmos(transform));
+            priorityConditions.ForEach(condition => condition.DrawGizmos(transform));
         }
 #endif
     }

@@ -3,6 +3,7 @@ using Code.GameEvents;
 using Code.InGame.Hotbar;
 using UnityEngine;
 using Code.Items;
+using Code.UI.Core;
 
 namespace Code.Hotbar
 {
@@ -40,7 +41,7 @@ namespace Code.Hotbar
                     _hotbars[i].ClearUI();
                 
                 if(item is EquipableItem { IsEquipped: true })
-                    _hotbars[i].SetOutlineColor(Color.green);
+                    _hotbars[i].SetOutlineColor(UIDefine.GreenColor);
                 else
                     _hotbars[i].SetOutlineColor(Color.white);
             }

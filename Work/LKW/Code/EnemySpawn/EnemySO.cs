@@ -27,10 +27,18 @@ namespace Code.EnemySpawn
         public EquipItemDataSO itemData;
     }
 
+    public enum EnemyType
+    {
+        Boss,
+        Shadow,
+        Common
+    }
+
     [CreateAssetMenu(fileName = "Enemy Data", menuName = "SO/EnemySpawn/EnemySO", order = 0)]
     public class EnemySO : ScriptableObject
     {
-        [Header("Spawn Settings")] public GameObject enemyPrefab;
+        [Header("Spawn Settings")] public EnemyType enemyType = EnemyType.Common;
+        public GameObject enemyPrefab;
         public PoolItemSO enemyPoolItem;
         public int spawnRarityWeight;
         public GrowthTableSO growthTable;
@@ -49,20 +57,6 @@ namespace Code.EnemySpawn
         public SerializedDictionary<PassiveSlotType, FieldPatch<PassiveSkill>> passiveSkill = new();
 
         [SerializeField] public SerializedDictionary<ActiveSlotType, FieldPatch<ActiveSkill>> activeSkill = new();
-
-
-        private void OnEnable()
-        {
-            foreach (var behaviourPatch in behaviourPrefabs)
-                if (behaviourPatch != null)
-                    behaviourPatch.GenerateSetter();
-            foreach (var skillPatch in passiveSkill.Values)
-                if (skillPatch != null)
-                    skillPatch.GenerateSetter();
-            foreach (var skillPatch in activeSkill.Values)
-                if (skillPatch != null)
-                    skillPatch.GenerateSetter();
-        }
 
         private void LoadStatsFromPrefab()
         {
@@ -107,15 +101,21 @@ namespace Code.EnemySpawn
                     return null;
                 }
 
-                enemy = UnityEngine.Object.Instantiate(enemyData.enemyPrefab, position, rotation).GetComponent<Enemy>();
+                GameObject enemyObject = UnityEngine.Object.Instantiate(enemyData.enemyPrefab, position, rotation);
+                enemy = GetEnemyComponent(enemyData, enemyObject);
                 if (enemy == null)
                 {
                     Debug.LogError($"Enemy prefab {enemyData.enemyPrefab.name} does not have an Enemy component.");
+                    UnityEngine.Object.Destroy(enemyObject);
                     return null;
                 }
             }
             else
             {
+                enemy = GetEnemyComponent(enemyData, enemy.gameObject);
+                if (enemy == null)
+                    return null;
+
                 enemy.transform.SetPositionAndRotation(position, rotation);
             }
 
@@ -145,6 +145,64 @@ namespace Code.EnemySpawn
             }
 
             return enemy;
+        }
+
+        private static Enemy GetEnemyComponent(EnemySO enemyData, GameObject enemyObject)
+        {
+            if (enemyObject == null)
+                return null;
+
+            if (TryGetExpectedEnemyComponent(enemyData.enemyType, enemyObject, out Enemy typedEnemy))
+                return typedEnemy;
+
+            Enemy enemy = enemyObject.GetComponent<Enemy>();
+            if (enemy == null)
+                return null;
+
+            if (enemyData.enemyType == EnemyType.Boss && enemy is not Boss)
+            {
+                Debug.LogWarning(
+                    $"EnemySO {enemyData.name} is marked as Boss, but prefab {enemyObject.name} does not have a Boss component. Using {enemy.GetType().Name} instead.",
+                    enemyObject);
+            }
+
+            return enemy;
+        }
+
+        private static bool TryGetExpectedEnemyComponent(EnemyType enemyType, GameObject enemyObject, out Enemy enemy)
+        {
+            switch (enemyType)
+            {
+                case EnemyType.Boss:
+                    if (enemyObject.TryGetComponent(out Boss boss))
+                    {
+                        enemy = boss;
+                        return true;
+                    }
+
+                    break;
+                case EnemyType.Shadow:
+                    if (enemyObject.TryGetComponent(out Shadow shadow))
+                    {
+                        enemy = shadow;
+                        return true;
+                    }
+
+                    break;
+                case EnemyType.Common:
+                    if (enemyObject.TryGetComponent(out Enemy commonEnemy))
+                    {
+                        enemy = commonEnemy;
+                        return true;
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(enemyType), enemyType, null);
+            }
+
+            enemy = null;
+            return false;
         }
     }
 }

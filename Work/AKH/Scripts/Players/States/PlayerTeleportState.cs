@@ -12,6 +12,7 @@ namespace Scripts.Players.States
     {
         public float duration;
         public Vector3 targetPosition;
+        public Action onComplete;
 
         public void Deconstruct(out float duration, out Vector3 targetPosition)
         {
@@ -21,22 +22,25 @@ namespace Scripts.Players.States
     }
     public class PlayerTeleportState : PlayerState
     {
-        private float _duration;
-        private Vector3 _targetPosition;
+        private TeleportContext _context;
+        
         public PlayerTeleportState(ComponentContainer container, int animationHash) : base(container, animationHash)
         {
         }
         public override void Enter()
         {
             base.Enter();
-            (_duration, _targetPosition) = _blackboard.GetOrDefault<TeleportContext>("TeleportContext");
-            EventBus.Raise(new PlayerGageEvent("텔포중", _duration, HandleCompleteCraft));
+            _movement.StopImmediately();
+            _context = _blackboard.GetOrDefault<TeleportContext>("TeleportContext");
+            EventBus.Raise(new PlayerGageEvent("이동중", _context.duration, HandleCompleteCraft));
 
         }
 
         private void HandleCompleteCraft()
         {
-            _movement.SetPosition(_targetPosition);
+            _movement.SetPositionImmediately(_context.targetPosition);
+            _context.onComplete?.Invoke();
+            _context.onComplete = null;
             _player.ChangeState(PlayerStateEnum.Idle);
         }
     }

@@ -49,7 +49,7 @@ namespace Work.Code.UI.ContextMenu
             gameObject.SetActive(true);
         }
 
-        public void Init(T data)
+        public virtual void Init(T data)
         {
             _data = data;
 

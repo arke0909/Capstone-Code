@@ -6,10 +6,12 @@ namespace SHS.Scripts.Crosshairs
     public struct CrosshairChangeEvent : ILocalEvent
     {
         public GunDataSO GunData { get; }
+        public CrosshairSO CrosshairData { get; }
 
-        public CrosshairChangeEvent(GunDataSO gunData)
+        public CrosshairChangeEvent(GunDataSO gunData, CrosshairSO crosshairData)
         {
             GunData = gunData;
+            CrosshairData = crosshairData;
         }
     }
 }

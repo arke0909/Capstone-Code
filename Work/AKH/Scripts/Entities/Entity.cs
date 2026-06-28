@@ -1,4 +1,5 @@
 ﻿using System;
+using Ami.BroAudio;
 using Chipmunk.ComponentContainers;
 using Chipmunk.Library.Utility.GameEvents.Local;
 using Code.SHS.Entities.Enemies.Combat;
@@ -17,9 +18,10 @@ namespace Scripts.Entities
         public delegate float OnDamageCalcDelegate(Entity dealer, Transform target);
 
         [SerializeField] private Transform hitBodyTrm;
+        [SerializeField] private SoundID killSound;
         public bool IsDead { get; set; }
         public ComponentContainer ComponentContainer { get; set; }
-        public Transform HitTransform => hitBodyTrm;
+        public Transform HitTransform => hitBodyTrm == null ? transform : hitBodyTrm;
 
         public OnDamageCalcDelegate OnDamageCalc;
         public OnAttackDelegate OnAttack; // 내가 맞출 때
@@ -34,6 +36,8 @@ namespace Scripts.Entities
         {
             Blackboard = new Blackboard();
             LocalEventBus = componentContainer.GetComponent<LocalEventBus>();
+            
+            OnDeadEvent.AddListener(() => BroAudio.Play(killSound));
         }
 
         public void RotateToTarget(Vector3 targetPosition, bool isSmooth = false)
@@ -58,6 +62,7 @@ namespace Scripts.Entities
         {
             if (IsDead)
                 return;
+            
             OnDeadEvent?.Invoke();
         }
 

@@ -5,12 +5,14 @@ using System;
 
 namespace Scripts.Players.States
 {
+    [Flags]
     public enum PlayerStateEnum
     {
         Idle,
         Walk,
         Aim,
         Skill,
+        MovingSkill,
         Sprint,
         Reload,
         Attack,
@@ -18,7 +20,8 @@ namespace Scripts.Players.States
         AimSkill,
         Stun,
         CraftItem,
-        Teleport
+        Teleport,
+        BurrowSkillState
     }
     public abstract class PlayerState : State
     {

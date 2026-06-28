@@ -20,6 +20,7 @@ namespace Code.SkillSystem.Skills.TrackingBlade
         [SerializeField] private Transform firePosTrm;
         [SerializeField] private float delayToFire = 1.5f;
         [SerializeField] private float detectRange = 8f;
+        [SerializeField] private float damage = 14f;
         [SerializeField] private int trackingBladeCnt = 1;
         [SerializeField] private int additionalTrackingBladeCnt = 1;
         [SerializeField] private bool applySlow;
@@ -53,7 +54,7 @@ namespace Code.SkillSystem.Skills.TrackingBlade
             return base.CanUseSkill() && _target != null;
         }
 
-        public override void StartAndUseSkill()
+        public override void OnSkillTrigger()
         {
             if (_target != null)
             {
@@ -83,7 +84,7 @@ namespace Code.SkillSystem.Skills.TrackingBlade
                     TrackingBlade tb = _poolManager.Pop<TrackingBlade>(trackingBladeItemSO);
                     
                     Quaternion rotate = Quaternion.Euler(0, Random.Range(-80f, 80f), 0);
-                    tb.Initialize(_owner,_target ,firePos, rotate * firePosTrm.forward);
+                    tb.Initialize(_owner,_target ,firePos, rotate * firePosTrm.forward, damage);
                     tb.SetApplySlow(applySlow);
                 }
             }
@@ -102,11 +103,13 @@ namespace Code.SkillSystem.Skills.TrackingBlade
 
             try
             {
+                trackingTargetMark.SetTarget(_target.transform, delayToFire);
                 await UniTask.WaitForSeconds(delayToFire, cancellationToken:linkedCts.Token);
                 return true;
             }
             catch (Exception)
             {
+                Debug.Log("Mark charge canceled");
                 trackingTargetMark.CancelCharge();
                 return false;
             }

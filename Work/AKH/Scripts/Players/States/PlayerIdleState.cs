@@ -1,18 +1,17 @@
 ﻿using Chipmunk.ComponentContainers;
-using UnityEngine;
 
 namespace Scripts.Players.States
 {
-    public class PlayerIdleState : PlayerLocomotionCombatState
+    public class PlayerIdleState : PlayerStationaryTurnLocomotionCombatState
     {
         public PlayerIdleState(ComponentContainer container, int animationHash) : base(container, animationHash)
         {
+            _myMoveType = MoveType.Idle;
         }
         public override void Enter()
         {
             base.Enter();
             _movement.StopImmediately();
-            _movement.MoveType = MoveType.Idle;
         }
         public override void Update()
         {

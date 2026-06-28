@@ -65,17 +65,5 @@ namespace Work.Code.SkillInventory
             
             OnChangeInventory?.Invoke(skills);
         }
-
-        public void RemoveSkill(Skill skill)
-        {
-            foreach (var skillUI in _skillUIs)
-            {
-                if (skillUI.CurrentSkill.SkillData == skill.SkillData)
-                {
-                    skillUI.DisableUI();
-                    return;
-                }
-            }
-        }
     }
 }

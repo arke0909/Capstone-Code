@@ -9,12 +9,11 @@ namespace Work.Code.UI.Core.Interaction
     [RequireComponent(typeof(UIEventHandler))]
     public class InteractableUI : UIBase
     {
-        public UIEventHandler EventHandler { get; private set; }
+        public UIEventHandler EventHandler => GetComponent<UIEventHandler>();
 
         protected override void Awake()
         {
             base.Awake();
-            EventHandler = GetComponent<UIEventHandler>();
         }
 
         protected override void OnDestroy()

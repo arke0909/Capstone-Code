@@ -18,7 +18,7 @@ namespace Scripts.GameSystem.Structures
         public GameObject GameObject => gameObject;
         protected Action<Entity> _callback;
         protected Action _despawnCallback;
-        public void Init(Action<Entity> interactCallback,Action despawnCallback)
+        public virtual void Init(Action<Entity> interactCallback,Action despawnCallback)
         {
             _callback = interactCallback;
             _despawnCallback = despawnCallback;
@@ -35,7 +35,7 @@ namespace Scripts.GameSystem.Structures
             transform.position = targetPos - Vector3.one * 2;
             transform.DOMove(targetPos, 1f);
         }
-        public void Despawn()
+        public virtual void Despawn()
         {
             _despawnCallback?.Invoke();
             Vector3 targetPos = transform.position - Vector3.up * 2;

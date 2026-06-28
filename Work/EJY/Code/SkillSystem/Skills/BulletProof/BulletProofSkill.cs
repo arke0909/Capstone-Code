@@ -34,7 +34,7 @@ namespace Code.SkillSystem.Skills.BulletProof
         private void RollbackDmgIncreaseByShield() => isDmgIncreaseByShield = false;
 
         
-        public override void StartAndUseSkill()
+        public override void StartSkill()
         {
             BroAudio.Play(soundID, _owner.transform.position);
 

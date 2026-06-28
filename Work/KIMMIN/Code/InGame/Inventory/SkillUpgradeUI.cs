@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Chipmunk.ComponentContainers;
 using Code.UI.Core;
 using DewmoLib.Dependencies;
@@ -7,7 +7,6 @@ using Scripts.SkillSystem;
 using Scripts.SkillSystem.Manage;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using Work.Code.SkillInventory;
 using Code.Items;
 
@@ -18,7 +17,6 @@ namespace InGame.InventorySystem
         [SerializeField] private SkillSlot skillSlot;
         [SerializeField] private TextMeshProUGUI description;
         [SerializeField] private TextMeshProUGUI levelText;
-        [SerializeField] private Button upgradeButton;
 
         [Inject] private Player _player;
         private EquipableItem _equipableItem;
@@ -27,24 +25,10 @@ namespace InGame.InventorySystem
         private void Start()
         {
             _skillManager = _player.Get<SkillManager>();
-            upgradeButton.onClick.AddListener(HandleUpgradeClick);
             DisableUI();
         }
 
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-            upgradeButton.onClick.RemoveListener(HandleUpgradeClick);
-        }
-
-        private void HandleUpgradeClick()
-        {
-            if (_equipableItem == null) return;
-            _equipableItem.LevelUpSkill();
-            RefreshUI(_equipableItem);
-        }
-
-        public void EnableFor(EquipableItem item)//Skill이 아니라 EquipableItem으로 바꿔야함
+        public void EnableFor(EquipableItem item)
         {
             _equipableItem = item;
             RefreshUI(item);
@@ -55,8 +39,10 @@ namespace InGame.InventorySystem
         {
             if (!_skillManager.TryGetSkill(item.Skill, out var skill)) return;
             skillSlot.EnableFor(skill);
+
+            // 스킬 레벨은 장비 등급(Rarity)에서 자동 결정됨: Common=1, Rare=2, Epic=3
             levelText.text = $"레벨 {item.SkillLevel}";
-            
+
             description.text = item.Skill.upgradeList.Count > item.SkillLevel
                 ? item.Skill.upgradeList[item.SkillLevel].upgradeDescription
                 : string.Empty;

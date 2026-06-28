@@ -18,6 +18,7 @@ namespace Code.SHS.Entities.Enemies
         Aim
     }
 
+
     /// <summary>
     /// NavMovement를 상속하여 이동 타입에 따라 속도가 달라지는 네비게이션 이동 컴포넌트
     /// </summary>

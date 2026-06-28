@@ -3,43 +3,58 @@ using Assets.Work.AKH.Scripts.Entities.Vitals;
 using Chipmunk.ComponentContainers;
 using Chipmunk.Library.Utility.GameEvents.Local;
 using Chipmunk.Modules.StatSystem;
+using Code.SHS.Entities.Enemies.Events.Local;
 using DG.Tweening;
+using Scripts.Combat.Fovs;
+using Scripts.Entities;
 using Scripts.Entities.Vitals;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Code.UI.Bar
 {
-    public class EntityHealthBar : BarComponent, IContainerComponent
+    public struct VisibleStateChangeEvent : ILocalEvent
     {
-        [SerializeField] private float fillDuration = 0.05f;
-        [SerializeField] private float trailDelay = 0.2f;
-        [SerializeField] private float trailDuration = 0.3f;
-        
+        public VisibleState VisibleState { get; }
+        public bool IsVisible { get; } //현재 보이는 상태인지 ex)InFov
+        public bool IsFound { get; } //현재 Fov내에 노출된 상태인지 ex) Stealth but SightCount > 0
+        public VisibleStateChangeEvent(VisibleState visibleState,bool isVisible,bool isFound)
+        {
+            VisibleState = visibleState;
+            IsVisible = isVisible;
+            IsFound = isFound;
+        }
+    }
+    public class EntityHealthBar : BarComponent, IContainerComponent,ILocalEventSubscriber<VisibleStateChangeEvent>,ILocalEventSubscriber<HealthChangeEvent>, ILocalEventSubscriber<EnemySpawnEvent>
+    {
         private Camera _cam;
-        private LocalEventBus _localEventBus;
         public ComponentContainer ComponentContainer { get; set; }
         public void OnInitialize(ComponentContainer componentContainer)
         {
             _cam = Camera.main;
-            _localEventBus = componentContainer.Get<LocalEventBus>();
-            _localEventBus.Subscribe<HealthChangeEvent>(HandleHealthChanged);
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            _localEventBus.Unsubscribe<HealthChangeEvent>(HandleHealthChanged);
         }
-        
-        private void HandleHealthChanged(HealthChangeEvent @event)
+        public void OnLocalEvent(VisibleStateChangeEvent @event)
+        {
+            gameObject.SetActive(@event.IsVisible);
+        }
+        public void OnLocalEvent(HealthChangeEvent @event)
         {
             SetBar(@event.CurrentHealth, @event.MaxHealth, HandleAfterEffect);
         }
 
+        public void OnLocalEvent(EnemySpawnEvent eventData)
+        {
+            EnableUI(true);
+        }
+
         private void HandleAfterEffect(float current)
         {
-            if (current <= 0)
+            if (current <= 0f)
                 DisableUI(true);
         }
 
@@ -51,7 +66,7 @@ namespace Code.UI.Bar
 
         public override void SetBar(float current, float max, Action<float> callback = null)
         {
-            float target = current / max;
+            float target = max <= 0f ? 0f : Mathf.Clamp01(current / max);
 
             fill.DOKill();
             trailFill.DOKill();

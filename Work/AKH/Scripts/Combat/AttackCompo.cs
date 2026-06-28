@@ -1,13 +1,12 @@
 ﻿using Chipmunk.ComponentContainers;
 using Code.InventorySystems.Equipments;
-using Code.Players;
 using Code.SHS.Entities.Enemies;
 using Scripts.Combat.Datas;
-using Scripts.Entities;
 using UnityEngine;
 using Code.Items;
 using Chipmunk.Library.Utility.GameEvents.Local;
 using Code.SHS.Entities.Enemies.Events.Local;
+using SHS.Scripts.Combats;
 
 namespace Scripts.Combat
 {
@@ -15,6 +14,19 @@ namespace Scripts.Combat
     {
         public ComponentContainer ComponentContainer { get; set; }
         public bool IsAim { get; set; }
+        public IAttackable CurrentAttackable
+        {
+            get
+            {
+                if (_enemyEquipment != null &&
+                    _enemyEquipment.TryGetEquippedItem(EquipPartType.Hand, out var item) &&
+                    item is IAttackable attackable)
+                    return attackable;
+
+                return _defaultAttack;
+            }
+        }
+
         public float AttackRange
         {
             get
@@ -27,7 +39,7 @@ namespace Scripts.Combat
                     }
                 }
 
-                return 0f;
+                return _defaultAttack != null ? _defaultAttack.AttackRange : 0f;
             }
             set { }
         }
@@ -40,10 +52,11 @@ namespace Scripts.Combat
         }
         
         private EnemyEquipment _enemyEquipment;
-        private Entity _entity;
+        private DefaultAttack _defaultAttack;
         public virtual void OnInitialize(ComponentContainer componentContainer)
         {
             _enemyEquipment = componentContainer.Get<EnemyEquipment>();
+            componentContainer.TryGetComponent(out _defaultAttack);
         }
 
         public void OnLocalEvent(EnemySpawnEvent eventData)

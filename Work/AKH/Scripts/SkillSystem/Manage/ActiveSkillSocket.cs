@@ -25,8 +25,16 @@ namespace Scripts.SkillSystem.Manage
         }
         public bool CanUseSkill()
             => _cooldownTimer <= 0f && CurrentActiveSkill != null && CurrentActiveSkill.CanUseSkill();
+        public bool IsCoolingDown
+            => _cooldownTimer > 0f;
         public void SetCooldown()
             => _cooldownTimer = CurrentActiveSkill.cooldown;
+        public void SetCooldown(float cooldown)
+        {
+            _cooldownTimer = Mathf.Max(cooldown, 0f);
+            if (CurrentActiveSkill != null)
+                OnCoolDown?.Invoke(CurrentActiveSkill.SkillData, _cooldownTimer, CurrentActiveSkill.cooldown);
+        }
 
         public void ReduceCooldown(float reduceCooldown)
         {

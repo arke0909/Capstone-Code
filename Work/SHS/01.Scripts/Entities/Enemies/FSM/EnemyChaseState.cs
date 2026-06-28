@@ -25,7 +25,7 @@ namespace Code.SHS.Entities.Enemies.FSM
 
         public override void Update()
         {
-            if (RemainTarget == null && _movement.IsArrived && _targetProvider.CanMissTarget)
+            if (RemainTarget == null && _targetProvider.CanMissTarget &&_movement.IsArrived)
             {
                 _enemy.ChangeState(EnemyStateEnum.Idle);
                 return;

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7461126041698152997}
   - component: {fileID: 7375324726019326211}
   - component: {fileID: 2542303733544048912}
-  - component: {fileID: 5445324620151331340}
   m_Layer: 5
   m_Name: FixedMinimapCanvas
   m_TagString: Untagged
@@ -105,22 +104,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 2096887
---- !u!114 &5445324620151331340
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 118724090541695692}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6928fa2301b40359c58746433b354e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  miniMapRect: {fileID: 2819992452371516636}
-  playerDot: {fileID: 3254485627474155272}
-  miniMapRect: {fileID: 2819992452371516636}
-  playerDot: {fileID: 3254485627474155272}
 --- !u!1 &1167473544253389212
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,7 +206,6 @@ GameObject:
   - component: {fileID: 2819992452371516636}
   - component: {fileID: 3505293635981472218}
   - component: {fileID: 4903843852602348977}
-  - component: {fileID: 1011313626617436760}
   m_Layer: 5
   m_Name: MapImage
   m_TagString: Untagged
@@ -286,19 +268,6 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
---- !u!114 &1011313626617436760
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2147300421496006118}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 439b5a5d7346444392a99c971d0c3210, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parentRect: {fileID: 0}
 --- !u!1 &3786700788414869104
 GameObject:
   m_ObjectHideFlags: 0

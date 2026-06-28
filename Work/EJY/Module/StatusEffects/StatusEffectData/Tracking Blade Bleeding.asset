@@ -19,7 +19,7 @@ MonoBehaviour:
     isPercent: 1
     priority: 0
     effectValue:
-    - 10
+    - 40
     isOverrideApplyTime: 0
     overrideTime: 0
     useCustomBehaviorSettings: 1

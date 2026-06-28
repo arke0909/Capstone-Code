@@ -318,7 +318,7 @@ Transform:
   m_GameObject: {fileID: 1261765937388412537}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.560051, y: 0.20463765, z: -2.5494103}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -338,6 +338,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statOverrides:
+  - stat: {fileID: 11400000, guid: 2b986259c8826d0449de3733d1cea9bb, type: 2}
+    isUseOverride: 1
+    overrideValue: 5
   - stat: {fileID: 11400000, guid: ec44098c01bc4824594094bd514e6e91, type: 2}
     isUseOverride: 1
     overrideValue: 30
@@ -371,9 +374,6 @@ MonoBehaviour:
   - stat: {fileID: 11400000, guid: 2533ba903b1e19348a60525a7a2e465e, type: 2}
     isUseOverride: 1
     overrideValue: 1
-  - stat: {fileID: 11400000, guid: 2b986259c8826d0449de3733d1cea9bb, type: 2}
-    isUseOverride: 1
-    overrideValue: 15
   - stat: {fileID: 11400000, guid: a53115f89bf4eec40aa365a073976a2e, type: 2}
     isUseOverride: 0
     overrideValue: 0
@@ -1113,6 +1113,7 @@ GameObject:
   - component: {fileID: 3899777623214923479}
   - component: {fileID: 253694809184322524}
   - component: {fileID: 1579724770406141911}
+  - component: {fileID: 7318550939236291464}
   m_Layer: 12
   m_Name: Enemy
   m_TagString: Untagged
@@ -1185,6 +1186,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitBodyTrm: {fileID: 2530976334066617246}
+  killSound:
+    _entity: {fileID: 11400000, guid: 069e04e7ae5cd644ba4c45a3a50720f8, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 6850015562613220499}
   OnHitEvent:
     m_PersistentCalls:
       m_Calls:
@@ -1208,21 +1213,6 @@ MonoBehaviour:
     m_Bits: 64
   test: {fileID: 11400000, guid: 5e91c25d0e57a714c9cbc08abdba53d1, type: 2}
   movingRange: 5
-  <OnFound>k__BackingField:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 47520634380747060}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   <SpawnPos>k__BackingField: {x: 0, y: 0, z: 0}
 --- !u!143 &1703177117332979371
 CharacterController:
@@ -1319,6 +1309,10 @@ MonoBehaviour:
     _entity: {fileID: 11400000, guid: 599ff70c689d0c64194f922037562d1c, type: 2}
     ID: 0
     <DebugObject>k__BackingField: {fileID: 6850015562613220499}
+  healSound:
+    _entity: {fileID: 0}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 6850015562613220499}
 --- !u!114 &253694809184322524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1344,6 +1338,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7be1b849c0a318747996ad9c578747b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7318550939236291464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6850015562613220499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1496af452709eed4b9af81e7757b8a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6963841758665578848
@@ -1390,6 +1396,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f30d150d39cb48a496fda49744406d79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemMoveSound:
+    _entity: {fileID: 0}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 0}
   _currentInventorySize: 4
   itemSlots: []
   references:
@@ -2066,11 +2076,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b82670c25822804cbbcb21a06af68a5, type: 3}
---- !u!1 &47520634380747060 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4903039535244365519, guid: 8b82670c25822804cbbcb21a06af68a5, type: 3}
-  m_PrefabInstance: {fileID: 4946020812188274683}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &4644069986576895212 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 346995652532880151, guid: 8b82670c25822804cbbcb21a06af68a5, type: 3}

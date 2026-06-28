@@ -16,5 +16,6 @@ MonoBehaviour:
   eventIcon: {fileID: 21300000, guid: 31bf3efef46db4243b3cbac7ece55550, type: 3}
   eventColor: {r: 0.67295593, g: 0.20381622, b: 0.20104024, a: 1}
   interval: 720
-  duration: 10
+  duration: 720
   isRepeat: 1
+  callOnStart: 0

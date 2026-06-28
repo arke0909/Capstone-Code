@@ -23,7 +23,7 @@ namespace Code.SHS.Entities.Enemies.Skills
             _enemy = container.Get<Enemy>();
         }
 
-        public override void StartAndUseSkill()
+        public override void StartSkill()
         {
             // 네비게이션 멈추고 대시 실행
             _movement.SetStop(true);

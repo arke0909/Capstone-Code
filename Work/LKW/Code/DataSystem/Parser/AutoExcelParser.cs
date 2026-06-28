@@ -9,7 +9,6 @@ namespace Code.DataSystem
     public static class AutoExcelParser
     {
         private static readonly Dictionary<Type, List<FieldInfo>> FieldCache = new Dictionary<Type, List<FieldInfo>>();
-        private static readonly Dictionary<Type, List<PropertyInfo>> PropertyCache = new Dictionary<Type, List<PropertyInfo>>();
 
         public static void ParseRow(DataRow dataRow, int rowIndex, object instance)
         {
@@ -17,12 +16,33 @@ namespace Code.DataSystem
 
             foreach (var field in GetCacheFields(type))
             {
+                var groupAttribute = field.GetCustomAttribute<ExcelColumnGroupAttribute>();
+                if (groupAttribute != null)
+                {
+                    object group = field.GetValue(instance);
+                    foreach (var groupField in field.FieldType.GetFields(BindingFlags.Public | BindingFlags.Instance))
+                    {
+                        string columnName = groupAttribute.Prefix +
+                                            char.ToUpperInvariant(groupField.Name[0]) +
+                                            groupField.Name.Substring(1);
+                        object groupValue = GetColumnValue(
+                            dataRow,
+                            rowIndex,
+                            columnName,
+                            groupField.FieldType,
+                            groupAttribute.IsRequired);
+                        groupField.SetValue(group, groupValue);
+                    }
+                    field.SetValue(instance, group);
+                    continue;
+                }
+
                 var attribute = field.GetCustomAttribute<ExcelColumnAttribute>();
                 if (attribute == null)
                     continue;
                 Debug.Log(attribute.ColumnName);
 
-                object value = GetColumnValue(dataRow, rowIndex, attribute.ColumnName, field.FieldType, false);
+                object value = GetColumnValue(dataRow, rowIndex, attribute.ColumnName, field.FieldType, attribute.IsRequired);
                 field.SetValue(instance, value);
             }
         }
@@ -137,7 +157,8 @@ namespace Code.DataSystem
                 var fields = new List<FieldInfo>();
                 foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
                 {
-                    if (field.GetCustomAttributes<ExcelColumnAttribute>() != null)
+                    if (field.GetCustomAttribute<ExcelColumnAttribute>() != null ||
+                        field.GetCustomAttribute<ExcelColumnGroupAttribute>() != null)
                         fields.Add(field);
                 }
                 FieldCache[type] = fields;
@@ -145,23 +166,5 @@ namespace Code.DataSystem
 
             return FieldCache[type];
         }
-
-        // private static List<PropertyInfo> GetCacheProperties(Type type)
-        // {
-        //     if (!PropertyCache.ContainsKey(type))
-        //     {
-        //         var properties = new List<PropertyInfo>();
-        //         foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
-        //         {
-        //             if (property.GetCustomAttributes<ExcelColumnAttribute>() != null)
-        //             {
-        //                 properties.Add(property);
-        //             }
-        //         }
-        //
-        //         PropertyCache[type] = properties;
-        //     }
-        //     return PropertyCache[type];
-        // }
     }
 }

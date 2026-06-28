@@ -15,7 +15,8 @@ namespace Code.SHS.Entities.Enemies
 
         private void Start()
         {
-            enemy.SpawnEnemy(enemy.transform.position,enemyData);
+            if (enemy.EnemyData == null)
+                enemy.SpawnEnemy(enemy.transform.position, enemyData);
         }
     }
 }

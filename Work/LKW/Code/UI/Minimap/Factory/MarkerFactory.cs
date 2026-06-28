@@ -14,8 +14,12 @@ namespace Code.UI.Minimap.Factory
         {
             Marker marker = _poolManager.Pop<Marker>(markerItem);
             marker.GetComponent<Image>().sprite = data.IconSprite;
-            marker.NormalizedPos = data.NormalizedPos;
-            marker.ID = data.Id;
+            marker.Initialize(data);
+
+            if (Type == ElementType.LockedMarker)
+            {
+                marker.CanRemove = false;
+            }
 
             return marker;
         }

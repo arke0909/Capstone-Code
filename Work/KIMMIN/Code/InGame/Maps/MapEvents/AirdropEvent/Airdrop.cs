@@ -1,6 +1,7 @@
 ﻿using Chipmunk.GameEvents;
+using Code.AirDrop;
 using Code.ItemContainers;
-using Code.Items.ItemInfo;
+using Code.TimeSystem;
 using Code.UI.Minimap.Core;
 using DewmoLib.ObjectPool.RunTime;
 using DG.Tweening;
@@ -20,27 +21,29 @@ namespace Work.Code.MapEvents.Elements
         [SerializeField] private GameObject parachute;
         [SerializeField] private ParticleSystem fogEffect;
         [SerializeField] private LayerMask whatIsGround; 
-        [SerializeField] private List<ItemDataSO> airDropItems;
+        [SerializeField] private SupplyRewardTableSO supplyRewardTable;
+        [SerializeField] private bool logRewardGeneration = true;
         
         private bool _isDropping = false;
-        private ItemContainerInventory _Inventory;
+        private readonly SupplyRewardGenerator _rewardGenerator = new();
 
         private Pool _pool;
         
         [field: SerializeField] public PoolItemSO PoolItem { get; private set; }
+        public ItemContainerInventory Inventory { get; private set; }
         public GameObject GameObject => gameObject;
         
         private event Action<Vector3> LandingCallback;
         private string _iconId;
         private void Awake()
         {
-            _Inventory = GetComponent<ItemContainerInventory>();
+            Inventory = GetComponent<ItemContainerInventory>();
         }
 
         public void StartDrop(Vector3 position, Action<Vector3> landingCallback = null)
         {
-            Spawn(position);
             SetUpContainer();
+            Spawn(position);
             
             LandingCallback = landingCallback;
             _isDropping = true;
@@ -64,8 +67,33 @@ namespace Work.Code.MapEvents.Elements
         }
         private void SetUpContainer()
         {
-            int index = UnityEngine.Random.Range(0, airDropItems.Count);
-            _Inventory.SetUpItem(airDropItems[index]);
+            if (supplyRewardTable == null)
+            {
+                Debug.LogWarning($"[{nameof(Airdrop)}] SupplyRewardTableSO is missing.", this);
+                Inventory.ClearInventory();
+                return;
+            }
+
+            int currentDay = TimeController.Instance != null ? Mathf.Max(1, TimeController.Instance.CurrentDay) : 1;
+            List<SupplyReward> rewards = _rewardGenerator.Generate(currentDay, supplyRewardTable);
+
+            if (rewards.Count == 0)
+            {
+                Debug.LogWarning($"[{nameof(Airdrop)}] No supply rewards generated for day {currentDay}.", this);
+                Inventory.ClearInventory();
+                return;
+            }
+
+            if (logRewardGeneration)
+            {
+                foreach (SupplyReward reward in rewards)
+                {
+                    string itemName = reward.ItemData != null ? reward.ItemData.itemName : "null";
+                    Debug.Log($"[{nameof(Airdrop)}] Reward generated: {itemName} x{reward.Stack}", this);
+                }
+            }
+
+            Inventory.SetUpRewards(rewards);
         }
 
         private void Update()

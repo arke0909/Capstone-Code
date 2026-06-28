@@ -49366,7 +49366,14 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 1.3111111
+  - time: 0.7111111
+    functionName: DamageCast
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 1.3333334
     functionName: AnimationEnd
     data: 
     objectReferenceParameter: {fileID: 0}

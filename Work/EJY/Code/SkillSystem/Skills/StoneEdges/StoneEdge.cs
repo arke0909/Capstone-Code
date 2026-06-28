@@ -32,6 +32,7 @@ namespace Code.SkillSystem.Skills.StoneEdges
         private Vector3 _originSize;
         private float _impactStartTime;
         private float _impactEndTime;
+        private float _damage;
 
         private void Awake()
         {
@@ -67,13 +68,14 @@ namespace Code.SkillSystem.Skills.StoneEdges
                 _triggerCollider.enabled = false;
         }
 
-        public async Task Init(Entity owner, Vector3 position, Vector3 forward, float size)
+        public async Task Init(Entity owner, Vector3 position, Vector3 forward, float size, float damage)
         {
             _owner = owner;
             _damageCalcCompo = owner.Get<DamageCalcCompo>();
             transform.localScale = _originSize * size;
             transform.position = position;
             transform.forward = forward;
+            _damage = damage;
             _hitEntities.Clear();
             _impactStartTime = Time.time + impactDelay;
             _impactEndTime = _impactStartTime + impactDuration;
@@ -119,7 +121,7 @@ namespace Code.SkillSystem.Skills.StoneEdges
 
             entity.Stun(stunTime);
 
-            DamageData damageData = _damageCalcCompo.CalculateDamage(10, 1, 1, DamageType.MAGIC);
+            DamageData damageData = _damageCalcCompo.CalculateDamage(_damage, 1, 1, DamageType.MAGIC);
             damageable.ApplyDamage(damageData, _owner);
 
             Bus.Raise(new PlayEffectEvent(hitEffectItem, entity.HitTransform.position, Quaternion.identity));

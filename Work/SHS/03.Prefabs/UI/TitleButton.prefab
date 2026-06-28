@@ -298,6 +298,7 @@ GameObject:
   - component: {fileID: 2015759778651598357}
   - component: {fileID: 2663561075405623981}
   - component: {fileID: 5288198491805042557}
+  - component: {fileID: 6686202558477892188}
   m_Layer: 5
   m_Name: TitleButton
   m_TagString: Untagged
@@ -409,3 +410,23 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6686202558477892188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8054319880057278178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebfb7c19244d4ae88c9439b9e9a44c1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickSoundID:
+    _entity: {fileID: 11400000, guid: f2f397ed1b145e5488afa963ae80be1c, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 8054319880057278178}
+  hoveringSoundID:
+    _entity: {fileID: 11400000, guid: 252b65c9e662ea44eba93fbc824848a7, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 8054319880057278178}

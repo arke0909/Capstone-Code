@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad4c8cd4f2b04ff1986253edf2bb8917, type: 3}
   m_Name: DefaultCrosshairSO
   m_EditorClassIdentifier: 
-  crosshairPrefab: {fileID: 7502743045187616434, guid: 3ddcc6017c9daf84693eeb8213691d05, type: 3}
+  crosshairPrefab: {fileID: 4810956293931996625, guid: a728ba77b437a1b40ba546aa04f32a44, type: 3}
+  cameraFocusDistance: 1.25
+  cameraFovReduction: 0

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Work.Code.MapEvents
 {
@@ -11,5 +11,6 @@ namespace Work.Code.MapEvents
         public float interval;
         public float duration;
         public bool isRepeat;
+        public bool callOnStart;
     }
 }

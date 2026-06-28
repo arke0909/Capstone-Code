@@ -78,9 +78,9 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -38236363
+  m_SortingLayer: 1
+  m_SortingOrder: 999
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &4517493025411653053
 MonoBehaviour:
@@ -107,7 +107,7 @@ MonoBehaviour:
 '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8ef357664b84f3d4a95a9c5f88b0130d, type: 2}
-  m_sharedMaterial: {fileID: 5250647230353606110, guid: 8ef357664b84f3d4a95a9c5f88b0130d, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 49b30b37b7bb4e188955cb7ae6de1123, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -173,8 +173,8 @@ MonoBehaviour:
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
-  _SortingLayerID: 0
-  _SortingOrder: 0
+  _SortingLayerID: -38236363
+  _SortingOrder: 999
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 4057534572677157394}
   m_maskType: 0
@@ -236,7 +236,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 20120af86df33244e933dc1c8e0f6e27, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -332,9 +332,9 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -38236363
+  m_SortingLayer: 1
+  m_SortingOrder: 999
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &5028866463363989708
 MonoBehaviour:
@@ -359,7 +359,7 @@ MonoBehaviour:
   m_text: "\uC5F4\uAE30"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8ef357664b84f3d4a95a9c5f88b0130d, type: 2}
-  m_sharedMaterial: {fileID: 5250647230353606110, guid: 8ef357664b84f3d4a95a9c5f88b0130d, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 49b30b37b7bb4e188955cb7ae6de1123, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -425,8 +425,8 @@ MonoBehaviour:
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
-  _SortingLayerID: 0
-  _SortingOrder: 0
+  _SortingLayerID: -38236363
+  _SortingOrder: 999
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6521705892206731196}
   m_maskType: 0
@@ -483,14 +483,14 @@ Canvas:
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
-  m_OverrideSorting: 0
+  m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -38236363
+  m_SortingOrder: 999
   m_TargetDisplay: 0
 --- !u!114 &4755702341681008554
 MonoBehaviour:

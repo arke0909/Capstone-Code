@@ -222,6 +222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemType: 0
+  additionalItemTypes: 
   sprite: {fileID: 0}
   itemName: 
   backgroundColor: {r: 0, g: 0, b: 0, a: 0}

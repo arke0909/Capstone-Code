@@ -48,6 +48,12 @@ namespace Code.UI.Inventory
             }
         }
 
+        public override void EnableUI(bool isFade = false)
+        {
+            base.EnableUI(isFade);
+            UpdateSlotUI();
+        }
+
         protected virtual void HandleClick(ItemSlot item) { }
 
         protected override void OnDestroy()
@@ -87,6 +93,9 @@ namespace Code.UI.Inventory
         {
             foreach (var slot in _slotUIs)
             {
+                if(slot.ItemSlot?.Item == null)
+                    continue;
+                
                 if (slot.ItemSlot.Item.ItemData.itemType == itemType)
                 {
                     slot.PlayBackgroundEffect(color);

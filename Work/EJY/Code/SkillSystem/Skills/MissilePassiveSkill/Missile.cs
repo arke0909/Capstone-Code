@@ -36,28 +36,23 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
 
         private Pool _myPool;
         private Entity _owner;
-        private Transform _targetTrm;
-        private Transform _curveTargetTrm;
         private DamageCalcCompo _dmgCalcCompo;
         private Rigidbody _rigidbody;
 
-        private bool _isInduction;
         private bool _isDead;
         private bool _hasFixedTargetPoint;
         private bool _isCurveActive;
         private bool _isInitialized;
 
         private Vector3 _lastMoveDir;
-        private Vector3 _launchOffset;
-        private Vector3 _initialCurveControlPoint;
         private Vector3 _fixedTargetPoint;
         private Vector3 _curveStartPoint;
         private Vector3 _curveControlPoint;
         private Vector3 _curveEndPoint;
         private float _curveProgress;
         private float _curveLength;
-        private float _searchTimer;
         private float _impactArmTimer;
+        private float _damage;
 
         private void Awake()
         {
@@ -78,28 +73,24 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
             }
         }
 
-        public void InitMissile(Entity owner, Transform target, Vector3 position, bool isInduction, Vector3 launchOffset, Vector3 initialCurveControlPoint)
+        public void InitMissile(Entity owner, Transform target, Vector3 position, Vector3 launchOffset, Vector3 initialCurveControlPoint, float damage)
         {
             _owner = owner;
-            _targetTrm = target;
-            _curveTargetTrm = target;
-            _isInduction = isInduction;
             _isDead = false;
             _isInitialized = false;
-            _searchTimer = 0f;
             _impactArmTimer = impactArmDelay;
-            _launchOffset = launchOffset;
-            _initialCurveControlPoint = initialCurveControlPoint;
-            _hasFixedTargetPoint = target != null;
             _fixedTargetPoint = target != null
                 ? target.position
                 : position + ((_owner != null ? _owner.transform.forward : transform.forward) * searchRadius);
+            _hasFixedTargetPoint = true;
 
             transform.position = position;
             _rigidbody.position = position;
             _rigidbody.rotation = Quaternion.identity;
             _rigidbody.linearVelocity = Vector3.zero;
             _rigidbody.angularVelocity = Vector3.zero;
+            
+            _damage = damage;
 
             particle.Clear();
             particle.gameObject.SetActive(true);
@@ -107,15 +98,18 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
             _dmgCalcCompo = _owner.Get<DamageCalcCompo>();
             overlapDamageCaster.InitCaster(owner);
 
-            _lastMoveDir = _owner != null ? _owner.transform.forward : transform.forward;
+            Vector3 launchDir = _fixedTargetPoint - position;
+            if (launchDir.sqrMagnitude < 0.0001f)
+                launchDir = _owner != null ? _owner.transform.forward : transform.forward;
+
+            _lastMoveDir = launchDir.normalized;
             _rigidbody.rotation = Quaternion.LookRotation(_lastMoveDir);
 
-            if (TryGetTargetPoint(out Vector3 targetPoint))
-            {
-                BuildBezierDynamic(position, targetPoint);
-            }
-            else
-                _isCurveActive = false;
+            Vector3 controlPoint = initialCurveControlPoint;
+            if ((controlPoint - position).sqrMagnitude < 0.0001f)
+                controlPoint = position + launchOffset;
+
+            BuildBezier(position, _fixedTargetPoint, controlPoint);
 
             if (jetSoundID.IsValid())
                 BroAudio.Play(jetSoundID, transform.position);
@@ -137,17 +131,8 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
             if (_impactArmTimer > 0f)
                 _impactArmTimer -= Time.fixedDeltaTime;
 
-            HandleTarget();
-
             if (TryImpactTrackedTarget())
                 return;
-
-            if (_isInduction && IsTargetValid())
-            {
-                BuildBezierDynamic(_rigidbody.position, _targetTrm.position);
-                MoveAlongBezier();
-                return;
-            }
 
             if (_isCurveActive)
             {
@@ -155,96 +140,17 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
                 return;
             }
 
+            if (TryGetTargetPoint(out Vector3 targetPoint))
+            {
+                MoveTowardPoint(targetPoint);
+                return;
+            }
+
             MoveForward();
-        }
-        
-        private void BuildBezierDynamic(Vector3 start, Vector3 end)
-        {
-            _curveStartPoint = start;
-            _curveEndPoint = end;
-            _curveProgress = 0f;
-            _isCurveActive = true;
-        
-            Vector3 dir = (end - start).normalized;
-        
-            float distance = Vector3.Distance(start, end);
-        
-            float forwardDist = Mathf.Clamp(distance * 0.3f, 1f, 5f);
-            float height = Mathf.Max(2f, distance * 0.2f);
-        
-            Vector3 randomOffset =
-                transform.right * Random.Range(-2f, 2f) +
-                Vector3.up * Random.Range(height * 0.5f, height);
-        
-            _curveControlPoint = start + dir * forwardDist + randomOffset;
-        
-            _curveLength = EstimateQuadraticBezierLength(
-                _curveStartPoint,
-                _curveControlPoint,
-                _curveEndPoint
-            );
-        }
-
-        private void HandleTarget()
-        {
-            if (_isInduction == false)
-                return;
-
-            if (IsTargetValid())
-            {
-                _searchTimer = 0f;
-                return;
-            }
-
-            _searchTimer += Time.fixedDeltaTime;
-
-            if (_searchTimer >= 0.2f)
-            {
-                _targetTrm = FindNewTarget();
-                _searchTimer = 0f;
-            }
-        }
-
-        private Transform FindNewTarget()
-        {
-            Collider[] hits = Physics.OverlapSphere(_rigidbody.position, searchRadius, targetLayer);
-
-            float closestDist = float.MaxValue;
-            Transform closest = null;
-
-            foreach (var hit in hits)
-            {
-                Entity entity = hit.GetComponentInParent<Entity>();
-                if (entity == null || entity == _owner || entity.IsDead)
-                    continue;
-
-                Transform hitTransform = entity.HitTransform != null ? entity.HitTransform : entity.transform;
-                float dist = Vector3.Distance(_rigidbody.position, hitTransform.position);
-
-                if (dist < closestDist)
-                {
-                    closestDist = dist;
-                    closest = hitTransform;
-                }
-            }
-
-            return closest;
         }
 
         private bool TryGetTargetPoint(out Vector3 targetPoint)
         {
-            if (_isInduction)
-            {
-                if (IsTargetValid())
-                {
-                    targetPoint = _targetTrm.position;
-                    return true;
-                }
-
-                targetPoint = Vector3.zero;
-                return false;
-            }
-
             if (_hasFixedTargetPoint)
             {
                 targetPoint = _fixedTargetPoint;
@@ -255,11 +161,10 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
             return false;
         }
 
-        private void BuildBezier(Vector3 startPoint, Vector3 endPoint, Transform targetTransform, Vector3 controlPoint)
+        private void BuildBezier(Vector3 startPoint, Vector3 endPoint, Vector3 controlPoint)
         {
             _curveStartPoint = startPoint;
             _curveEndPoint = endPoint;
-            _curveTargetTrm = targetTransform;
             _curveProgress = 0f;
             _isCurveActive = true;
             _curveControlPoint = controlPoint;
@@ -269,7 +174,10 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
        private void MoveAlongBezier()
        {
            if (_curveLength < 0.0001f)
+           {
+               _isCurveActive = false;
                return;
+           }
        
            _curveProgress += (missileSpeed * Time.fixedDeltaTime) / _curveLength;
            _curveProgress = Mathf.Clamp01(_curveProgress);
@@ -300,6 +208,9 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
            _rigidbody.MoveRotation(rot);
        
            _lastMoveDir = tangent;
+
+           if (_curveProgress >= 1f)
+               _isCurveActive = false;
        }
 
         private void MoveTowardPoint(Vector3 point)
@@ -348,18 +259,6 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
                 return _owner.transform.forward;
 
             return transform.forward;
-        }
-
-        private bool IsTargetValid()
-        {
-            if (_targetTrm == null || _targetTrm.gameObject.activeInHierarchy == false)
-                return false;
-
-            Entity targetEntity = _targetTrm.GetComponentInParent<Entity>();
-            if (targetEntity != null && targetEntity.IsDead)
-                return false;
-
-            return true;
         }
 
         private bool TryImpactTrackedTarget()
@@ -450,8 +349,6 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
             _isCurveActive = false;
             _rigidbody.linearVelocity = Vector3.zero;
             _rigidbody.angularVelocity = Vector3.zero;
-            _targetTrm = null;
-            _curveTargetTrm = null;
             HandleImpactAsync().Forget();
         }
 
@@ -479,7 +376,7 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
                 }
             }
 
-            var data = _dmgCalcCompo.CalculateDamage(20, 1, 1, DamageType.RANGE);
+            var data = _dmgCalcCompo.CalculateDamage(_damage, 1, 1, DamageType.RANGE);
             overlapDamageCaster.CastDamage(data, _rigidbody.position, _lastMoveDir, null);
 
             if (missileExplosionPoolItem != null)
@@ -502,18 +399,12 @@ namespace Code.SkillSystem.Skills.MissilePassiveSkill
             meshRenderer.enabled = true;
 
             _isDead = false;
-            _isInduction = false;
             _hasFixedTargetPoint = false;
             _isCurveActive = false;
             _isInitialized = false;
             _owner = null;
-            _targetTrm = null;
-            _curveTargetTrm = null;
             _dmgCalcCompo = null;
-            _searchTimer = 0f;
             _impactArmTimer = 0f;
-            _launchOffset = Vector3.zero;
-            _initialCurveControlPoint = Vector3.zero;
             _fixedTargetPoint = Vector3.zero;
             _curveStartPoint = Vector3.zero;
             _curveControlPoint = Vector3.zero;

@@ -1,4 +1,4 @@
-﻿using Code.SHS.Entities.Enemies.Combat;
+using Code.SHS.Entities.Enemies.Combat;
 using Cysharp.Threading.Tasks;
 using Scripts.Combat;
 using Scripts.Combat.Datas;
@@ -10,314 +10,136 @@ namespace Scripts.SkillSystem.Skills.Grab
     [RequireComponent(typeof(SphereCollider), typeof(Rigidbody))]
     public class GrabHookProjectile : MonoBehaviour
     {
-        [SerializeField] private QueryTriggerInteraction triggerInteraction = QueryTriggerInteraction.Ignore;
-        [SerializeField] private Rigidbody rb;
-        [SerializeField] private SphereCollider triggerCollider;
-        [SerializeField] private TrailRenderer trail;
-        [SerializeField] private LayerMask hitMask = ~0;
-        [SerializeField] private float speed = 35f;
-        [SerializeField] private float maxDistance = 20f;
-        [SerializeField] private float lifeTime = 2f;
-        [SerializeField] private MovementDataSO pullMovementData;
-        [SerializeField] private float pullStopDistance = 1.2f;
-        [SerializeField] private float controlLockDuration = 1f;
+        public struct Config
+        {
+            public LayerMask HitMask;
+            public float Speed;
+            public float Range;
+            public MovementDataSO PullData;
+            public float PullStopDistance;
+            public float ControlLockDuration;
+        }
 
-        private const float DefaultColliderRadius = 0.25f;
+        [SerializeField] private Rigidbody rb;
+        [SerializeField] private TrailRenderer trail;
 
         private Entity _owner;
-        private Transform _pullAnchor;
-        private Vector3 _direction;
-        private float _traveledDistance;
-        private Vector3 _previousPosition;
-        private bool _initialized;
-        private bool _resolved;
-        private int _launchId;
+        private Transform _anchor;
+        private DamageData _damage;
+        private Config _config;
+        private Vector3 _spawnPosition;
+        private bool _active;
 
-        private MovementDataSO _fallbackPullMovementData;
-        private DamageData _damageData;
+        // 풀에 쓰일 maxSpeed/곡선은 그대로 두고 거리에 맞춰 duration만 늘리기 위한 런타임 복사본
+        private MovementDataSO _pullData;
 
-        public LayerMask HitMask
+        public void Launch(Entity owner, Transform anchor, Vector3 direction, DamageData damage, Config config)
         {
-            get => hitMask;
-            set => hitMask = value;
-        }
+            _owner = owner;
+            _anchor = anchor;
+            _damage = damage;
+            _config = config;
+            _spawnPosition = transform.position;
+            _active = true;
 
-        public float Speed
-        {
-            get => speed;
-            set => speed = Mathf.Max(0.01f, value);
-        }
+            direction.y = 0f;
+            direction = direction.sqrMagnitude > 0.0001f ? direction.normalized : transform.forward;
+            transform.forward = direction;
 
-        public float MaxDistance
-        {
-            get => maxDistance;
-            set => maxDistance = Mathf.Max(0.1f, value);
-        }
-
-        public float LifeTime
-        {
-            get => lifeTime;
-            set => lifeTime = Mathf.Max(0.05f, value);
-        }
-
-        public MovementDataSO PullMovementData
-        {
-            get => pullMovementData;
-            set => pullMovementData = value;
-        }
-
-        public float PullStopDistance
-        {
-            get => pullStopDistance;
-            set => pullStopDistance = Mathf.Max(0f, value);
-        }
-
-        public float ControlLockDuration
-        {
-            get => controlLockDuration;
-            set => controlLockDuration = Mathf.Max(0f, value);
+            rb.linearVelocity = direction * config.Speed;
+            trail?.Clear();
         }
 
         private void FixedUpdate()
         {
-            if (!_initialized || _resolved)
-                return;
-
-            Vector3 currentPosition = transform.position;
-            _traveledDistance += Vector3.Distance(_previousPosition, currentPosition);
-            _previousPosition = currentPosition;
-
-            if (_traveledDistance >= maxDistance)
-            {
-                DestroyProjectile();
-            }
-        }
-
-        public void Launch(
-            Entity owner,
-            Transform pullAnchor,
-            Vector3 direction,
-            DamageData damageData)
-        {
-            _owner = owner;
-            _pullAnchor = pullAnchor;
-            _direction = direction.normalized;
-            _damageData = damageData;
-            _traveledDistance = 0f;
-            _previousPosition = transform.position;
-            _initialized = true;
-            _resolved = false;
-            _launchId++;
-
-            if (_direction.sqrMagnitude < 0.0001f)
-                _direction = transform.forward;
-
-            transform.forward = _direction;
-
-            if (rb != null)
-            {
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-                rb.linearVelocity = _direction * speed;
-            }
-
-            trail?.Clear();
-
-            ExpireAfterLifetimeAsync(_launchId).Forget();
+            if (_active && (transform.position - _spawnPosition).sqrMagnitude >= _config.Range * _config.Range)
+                Destroy(gameObject);
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!_initialized || _resolved || other == null)
+            if (!_active || other.isTrigger)
                 return;
 
-            if (triggerInteraction == QueryTriggerInteraction.Ignore && other.isTrigger)
+            if ((_config.HitMask.value & (1 << other.gameObject.layer)) == 0)
                 return;
 
-            if (!IsLayerIncluded(other.gameObject.layer))
+            Entity target = other.GetComponentInParent<Entity>();
+            if (target == null || target == _owner)
                 return;
 
-            if (!TryResolveHit(other, out Entity targetEntity, out Vector3 hitPoint, out Vector3 hitNormal))
-                return;
+            _active = false;
+            rb.linearVelocity = Vector3.zero;
 
-            _resolved = true;
-
-            if (rb != null)
+            if (other.TryGetComponent(out IDamageable damageable) || target.TryGetComponent(out damageable))
             {
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-            }
-
-            if (targetEntity != null)
-            {
-                HandleEntityHit(other, targetEntity, hitPoint, hitNormal);
-            }
-
-            DestroyProjectile();
-        }
-
-        private bool TryResolveHit(Collider other, out Entity targetEntity, out Vector3 hitPoint, out Vector3 hitNormal)
-        {
-            targetEntity = other.GetComponentInParent<Entity>();
-            hitPoint = Vector3.zero;
-            hitNormal = -transform.forward;
-
-            if (_owner != null && targetEntity == _owner)
-                return false;
-
-            ResolveHitInfo(other, out hitPoint, out hitNormal);
-            return true;
-        }
-
-        private void HandleEntityHit(Collider other, Entity targetEntity, Vector3 hitPoint, Vector3 hitNormal)
-        {
-            if (TryResolveDamageable(other, targetEntity, out IDamageable damageable))
-            {
-                DamageContext context = new DamageContext
+                damageable.ApplyDamage(new DamageContext
                 {
-                    DamageData = _damageData,
-                    HitPoint = hitPoint,
-                    HitNormal = hitNormal,
+                    DamageData = _damage,
+                    HitPoint = other.ClosestPoint(transform.position),
+                    HitNormal = -transform.forward,
                     Source = gameObject,
                     Attacker = _owner
-                };
-
-                damageable.ApplyDamage(context);
+                });
                 _owner?.OnAttack?.Invoke(_owner, damageable);
             }
 
-            PullTargetAsync(targetEntity).Forget();
+            PullAsync(target).Forget();
         }
 
-        private bool TryResolveDamageable(Collider other, Entity targetEntity, out IDamageable damageable)
+        private async UniTaskVoid PullAsync(Entity target)
         {
-            damageable = null;
+            ISkillMovement movement = target.GetComponentInChildren<ISkillMovement>();
+            Vector3 anchorPos = _anchor != null ? _anchor.position : transform.position;
+            Vector3 toAnchor = anchorPos - target.transform.position;
+            toAnchor.y = 0f;
 
-            if (other.TryGetComponent(out damageable))
-                return true;
-
-            return targetEntity != null && targetEntity.TryGetComponent(out damageable);
-        }
-
-        private void ResolveHitInfo(Collider other, out Vector3 point, out Vector3 normal)
-        {
-            Vector3 referencePoint = _previousPosition;
-            point = other.ClosestPoint(referencePoint);
-
-            if ((point - referencePoint).sqrMagnitude < 0.0001f)
-                point = other.ClosestPoint(transform.position);
-
-            normal = referencePoint - point;
-            if (normal.sqrMagnitude < 0.0001f)
-                normal = -transform.forward;
-            else
-                normal.Normalize();
-        }
-
-        private async UniTaskVoid ExpireAfterLifetimeAsync(int launchId)
-        {
-            try
+            float distance = toAnchor.magnitude - _config.PullStopDistance;
+            if (_config.PullData == null || movement == null || distance <= 0f)
             {
-                await UniTask.WaitForSeconds(lifeTime, cancellationToken: this.GetCancellationTokenOnDestroy());
-            }
-            catch
-            {
+                Destroy(gameObject);
                 return;
             }
 
-            if (this == null || !_initialized || _resolved || launchId != _launchId)
-                return;
+            Vector3 direction = toAnchor.normalized;
+            float duration = distance / Mathf.Max(0.01f, _config.PullData.maxSpeed * AverageCurve(_config.PullData.moveCurve));
 
-            DestroyProjectile();
-        }
+            _pullData = _pullData != null ? _pullData : ScriptableObject.CreateInstance<MovementDataSO>();
+            _pullData.maxSpeed = _config.PullData.maxSpeed;
+            _pullData.moveCurve = _config.PullData.moveCurve;
+            _pullData.duration = duration;
 
-        private async UniTaskVoid PullTargetAsync(Entity targetEntity)
-        {
-            MovementDataSO movementData = GetPullMovementData();
-            if (movementData == null || targetEntity == null)
-                return;
+            if (target is IStunable stunable)
+                stunable.Stun(Mathf.Max(_config.ControlLockDuration, duration));
 
-            ISkillMovement skillMovement = targetEntity.GetComponent<ISkillMovement>();
-            skillMovement ??= targetEntity.GetComponentInChildren<ISkillMovement>();
+            bool canMove = movement.CanMove;
+            movement.CanMove = false;
+            movement.SetRotation(direction);
+            movement.ApplyMovementData(direction, _pullData);
 
-            if (skillMovement == null)
-                return;
+            await UniTask.WaitForSeconds(duration, cancellationToken: this.GetCancellationTokenOnDestroy());
 
-            float lockDuration = Mathf.Max(controlLockDuration, movementData.duration);
-            ApplyControlLock(targetEntity, lockDuration);
-
-            Vector3 anchorPos = _pullAnchor != null
-                ? _pullAnchor.position
-                : _owner != null
-                    ? _owner.transform.position
-                    : targetEntity.transform.position;
-
-            Vector3 pullDirection = anchorPos - targetEntity.transform.position;
-            pullDirection.y = 0f;
-
-            if (pullDirection.sqrMagnitude < 0.0001f)
-                return;
-
-            float distanceToAnchor = pullDirection.magnitude;
-            if (distanceToAnchor <= pullStopDistance)
-                return;
-
-            pullDirection /= distanceToAnchor;
-
-            bool prevCanMove = skillMovement.CanMove;
-            skillMovement.CanMove = false;
-            skillMovement.SetRotation(pullDirection);
-            skillMovement.ApplyMovementData(pullDirection, movementData);
-
-            await UniTask.WaitForSeconds(movementData.duration);
-
-            if (skillMovement is Component movementComponent && movementComponent != null)
-            {
-                skillMovement.CanMove = prevCanMove;
-            }
-        }
-
-        private static void ApplyControlLock(Entity targetEntity, float duration)
-        {
-            if (targetEntity is IStunable stunable)
-            {
-                stunable.Stun(duration);
-            }
-        }
-
-        private void DestroyProjectile()
-        {
-            _resolved = true;
-            _initialized = false;
-
-            if (rb != null)
-            {
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-            }
-
+            movement.CanMove = canMove;
             Destroy(gameObject);
         }
 
-        private bool IsLayerIncluded(int layer)
+        // duration을 거리에 맞춰 선형으로 환산하기 위한 곡선 평균값(이동거리 = maxSpeed * duration * 평균)
+        private static float AverageCurve(AnimationCurve curve)
         {
-            return (hitMask.value & (1 << layer)) != 0;
+            if (curve == null || curve.length == 0)
+                return 1f;
+
+            const int samples = 16;
+            float sum = 0f;
+            for (int i = 0; i < samples; i++)
+                sum += curve.Evaluate((i + 0.5f) / samples);
+            return Mathf.Max(0.01f, sum / samples);
         }
 
-        private MovementDataSO GetPullMovementData()
+        private void OnDestroy()
         {
-            if (pullMovementData != null)
-                return pullMovementData;
-
-            if (_fallbackPullMovementData == null)
-            {
-                _fallbackPullMovementData = ScriptableObject.CreateInstance<MovementDataSO>();
-                _fallbackPullMovementData.maxSpeed = 22f;
-                _fallbackPullMovementData.duration = 0.45f;
-                _fallbackPullMovementData.moveCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0.2f);
-            }
-
-            return _fallbackPullMovementData;
+            if (_pullData != null)
+                Destroy(_pullData);
         }
     }
 }

@@ -28,6 +28,7 @@ namespace Work.Code.UI.ContextMenu.InventoryItemActions
                     _owner.Blackboard.Set("ItemUseContext", context);
                 }
                 context.TargetItem = usable;
+                context.ShouldRestoreHandledItem = false;
                 
                 _owner.ChangeState(PlayerStateEnum.ItemUse);
             }

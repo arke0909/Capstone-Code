@@ -457,14 +457,19 @@ namespace Code.SHS.Utility.DynamicFieldBinding
 
             if (_generatedSetter == null || _generatedRuntimeType == null)
             {
-                throw new InvalidOperationException("Setter is not generated. Run Generate Setter first.");
+                GenerateSetter();
             }
 
             Type targetRuntimeType = target.GetType();
             if (targetRuntimeType != _generatedRuntimeType)
             {
-                throw new InvalidOperationException(
-                    $"Generated setter type is '{_generatedRuntimeType.Name}', but target type is '{targetRuntimeType.Name}'. Generate again with matching type.");
+                GenerateSetter();
+
+                if (targetRuntimeType != _generatedRuntimeType)
+                {
+                    throw new InvalidOperationException(
+                        $"Generated setter type is '{_generatedRuntimeType.Name}', but target type is '{targetRuntimeType.Name}'. Generate again with matching type.");
+                }
             }
 
             _generatedSetter.Invoke(target);

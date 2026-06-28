@@ -1615,7 +1615,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   root: {fileID: 4366367172038209033}
-  skillUpgradeUI: {fileID: 0}
   bagTitleText: {fileID: 2532795509564404882}
   scrollRect: {fileID: 5040928773161311724}
 --- !u!1001 &26036132376728017

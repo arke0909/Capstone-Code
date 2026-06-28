@@ -1,126 +1,51 @@
-﻿using System.Collections.Generic;
+﻿using Ami.BroAudio;
 using Chipmunk.ComponentContainers;
-using Code.SHS.Entities.Enemies.FSM;
+using Cysharp.Threading.Tasks;
 using Scripts.Entities;
 using Scripts.SkillSystem;
 using UnityEngine;
+using ChangeMaterialState = Scripts.Entities.VisibleStates.ChangeMaterial;
 
 namespace Code.SHS.Entities.Enemies.Skills
 {
     public class RogueStealthSkill : ActiveSkill
     {
-        [SerializeField, Min(0f)] private float stealthDuration = 4f;
-        [SerializeField, Min(0f)] private float stealthMoveSpeedMultiplier = 1.2f;
+        [SerializeField] private SoundID stealthSound;
+        [SerializeField, Min(0f)] private float stealthDuration = 5f;
+        [SerializeField] private Material stealthMaterial;
 
-        public bool IsStealthed => _isStealthed;
+        private FindableRenderer _findableRenderer;
+        private ChangeMaterialState _changeMaterialState;
 
-        private CharacterNavMovement _movement;
-        private EnemyStateMachineBehavior _stateMachine;
-        private readonly Dictionary<Renderer, bool> _rendererState = new();
-
-        private bool _isStealthed;
-        private float _remainTime;
+        public bool IsStealthed { get; private set; }
 
         public override void Init(ComponentContainer container)
         {
             base.Init(container);
-            _movement = container.Get<CharacterNavMovement>(true);
-            _stateMachine = container.Get<EnemyStateMachineBehavior>(true);
-
-            Renderer[] renderers = _owner.GetComponentsInChildren<Renderer>(true);
-            _rendererState.Clear();
-            for (int i = 0; i < renderers.Length; i++)
-            {
-                Renderer renderer = renderers[i];
-                if (renderer != null && !_rendererState.ContainsKey(renderer))
-                    _rendererState.Add(renderer, renderer.enabled);
-            }
-
-            _owner.OnHitEvent?.AddListener(BreakStealth);
-            _owner.OnDeadEvent?.AddListener(BreakStealth);
+            _findableRenderer = container.Get<FindableRenderer>();
+            _changeMaterialState = new ChangeMaterialState(stealthMaterial,false);
         }
 
-        private void OnDestroy()
+        public override async void StartSkill()
         {
-            if (_owner != null)
-            {
-                _owner.OnHitEvent?.RemoveListener(BreakStealth);
-                _owner.OnDeadEvent?.RemoveListener(BreakStealth);
-            }
-        }
-
-        public override void StartAndUseSkill()
-        {
-            if (_isStealthed)
-            {
-                BreakStealth();
+            if (IsStealthed || _findableRenderer == null)
                 return;
-            }
 
-            _isStealthed = true;
-            _remainTime = stealthDuration;
-            SetRenderVisible(false);
-            ApplyMoveMultiplier();
+            IsStealthed = true;
+            _findableRenderer.SetRenderState(VisibleState.InFOV, _changeMaterialState);
+            BroAudio.Play(stealthSound, _owner.transform.position);
+            
+            await UniTask.WaitForSeconds(stealthDuration);
+            EndSkill();
         }
 
         public override void EndSkill()
         {
-            // Enemy skill state에서 호출돼도 은신은 유지되어야 하므로 아무 것도 하지 않음.
-        }
-
-        private void Update()
-        {
-            if (!_isStealthed)
+            if (!IsStealthed)
                 return;
 
-            _remainTime -= Time.deltaTime;
-            if (_remainTime <= 0f)
-            {
-                BreakStealth();
-                return;
-            }
-
-            if (_stateMachine != null &&
-                _stateMachine.StateMachine != null &&
-                _stateMachine.StateMachine.CurrentStateEnum == EnemyStateEnum.Attack)
-            {
-                BreakStealth();
-            }
-        }
-
-        private void BreakStealth()
-        {
-            if (!_isStealthed)
-                return;
-
-            _isStealthed = false;
-            _remainTime = 0f;
-            SetRenderVisible(true);
-            ResetMoveMultiplier();
-        }
-
-        private void SetRenderVisible(bool visible)
-        {
-            foreach (var pair in _rendererState)
-            {
-                if (pair.Key == null)
-                    continue;
-
-                pair.Key.enabled = visible ? pair.Value : false;
-            }
-        }
-
-        private void ApplyMoveMultiplier()
-        {
-            if (_movement != null)
-                _movement.SpeedMultiplier = stealthMoveSpeedMultiplier;
-        }
-
-        private void ResetMoveMultiplier()
-        {
-            if (_movement != null)
-                _movement.SpeedMultiplier = 1f;
+            IsStealthed = false;
+            _findableRenderer?.ResetRenderState(VisibleState.InFOV);
         }
     }
 }
-

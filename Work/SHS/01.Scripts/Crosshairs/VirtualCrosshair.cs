@@ -1,4 +1,5 @@
 ﻿using Code.UI.Core;
+using System.Collections;
 using Scripts.Combat.Datas;
 using TMPro;
 using UnityEngine;
@@ -12,15 +13,21 @@ namespace SHS.Scripts.Crosshairs
         [SerializeField] private RectTransform crosshair;
         [SerializeField] private TextMeshProUGUI rangeText;
 
+        [Header("Hit Marker")]
+        [SerializeField] private CanvasGroup hitMarker;
+        [SerializeField] private float hitMarkerDuration = 0.12f;
+
         [Header("Spread Visual (Optional)")]
         [SerializeField] private RectTransform[] spreadPoints;
         [SerializeField] private RectTransform spreadScaleTarget;
         [SerializeField] private float spreadPointMultiplier = 1f;
         [SerializeField] private float spreadScalePerPixel = 0.002f;
+        [SerializeField] private float maxSpreadRadiusPixels;
 
         private Vector2[] _spreadBasePositions;
         private Vector2 _screenPosition;
         private GunDataSO _gunData;
+        private Coroutine _hitMarkerRoutine;
 
         // UI 기준 좌표/기준점 캐시를 준비한다.
         private void Awake()
@@ -28,9 +35,23 @@ namespace SHS.Scripts.Crosshairs
             if (!canvas)
                 canvas = GetComponentInParent<Canvas>();
 
+            Debug.Assert(hitMarker != null, $"{name}: HitMarker is not assigned.");
+            hitMarker.alpha = 0f;
+
             CacheSpreadBasePositions();
             SetScreenPosition(new Vector2(Screen.width * 0.5f, Screen.height * 0.5f));
             SetSpreadRadiusPixels(0f);
+        }
+
+        private void OnDisable()
+        {
+            if (_hitMarkerRoutine != null)
+            {
+                StopCoroutine(_hitMarkerRoutine);
+                _hitMarkerRoutine = null;
+            }
+
+            hitMarker.alpha = 0f;
         }
         
         public void SetRangeText(float distance)
@@ -66,7 +87,19 @@ namespace SHS.Scripts.Crosshairs
         // 전달받은 퍼짐 반경(픽셀)을 즉시 시각화한다.
         public void SetSpreadRadiusPixels(float spreadRadiusPixels)
         {
-            ApplySpreadVisual(Mathf.Max(0f, spreadRadiusPixels));
+            float visibleSpreadPixels = Mathf.Max(0f, spreadRadiusPixels);
+            if (maxSpreadRadiusPixels > 0f)
+                visibleSpreadPixels = Mathf.Min(visibleSpreadPixels, maxSpreadRadiusPixels);
+
+            ApplySpreadVisual(visibleSpreadPixels);
+        }
+
+        public void PlayHitMarker()
+        {
+            if (_hitMarkerRoutine != null)
+                StopCoroutine(_hitMarkerRoutine);
+
+            _hitMarkerRoutine = StartCoroutine(PlayHitMarkerRoutine());
         }
 
         // 캔버스 로컬 좌표로 루트 앵커 위치를 적용한다.
@@ -80,9 +113,10 @@ namespace SHS.Scripts.Crosshairs
         // 포인트 분리형/스케일형 퍼짐 UI를 함께 갱신한다.
         private void ApplySpreadVisual(float spreadPixels)
         {
-            float spreadOffset = spreadPixels * spreadPointMultiplier;
+            float spreadRadius = spreadPixels * spreadPointMultiplier;
+            bool usesSpreadPoints = spreadPoints != null && _spreadBasePositions != null;
 
-            if (spreadPoints != null && _spreadBasePositions != null)
+            if (usesSpreadPoints)
             {
                 int count = Mathf.Min(spreadPoints.Length, _spreadBasePositions.Length);
                 for (int i = 0; i < count; i++)
@@ -93,15 +127,31 @@ namespace SHS.Scripts.Crosshairs
 
                     Vector2 basePos = _spreadBasePositions[i];
                     Vector2 direction = basePos.sqrMagnitude > 0.0001f ? basePos.normalized : Vector2.up;
-                    point.anchoredPosition = basePos + direction * spreadOffset;
+                    point.anchoredPosition = direction * Mathf.Max(basePos.magnitude, spreadRadius);
                 }
             }
 
             if (spreadScaleTarget != null)
             {
-                float scale = 1f + (spreadPixels * spreadScalePerPixel);
+                float scale = usesSpreadPoints ? 1f : 1f + (spreadPixels * spreadScalePerPixel);
                 spreadScaleTarget.localScale = new Vector3(scale, scale, 1f);
             }
+        }
+
+        private IEnumerator PlayHitMarkerRoutine()
+        {
+            hitMarker.alpha = 1f;
+
+            float elapsed = 0f;
+            while (elapsed < hitMarkerDuration)
+            {
+                elapsed += Time.deltaTime;
+                hitMarker.alpha = 1f - Mathf.Clamp01(elapsed / hitMarkerDuration);
+                yield return null;
+            }
+
+            hitMarker.alpha = 0f;
+            _hitMarkerRoutine = null;
         }
 
         // 퍼짐 포인트의 초기 위치를 기준값으로 저장한다.

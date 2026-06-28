@@ -162,7 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b15783e4d974c01b94b865b1f8accde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 40
+  maxHp: 30
   whatIsBullet:
     serializedVersion: 2
     m_Bits: 1024

@@ -9,6 +9,12 @@ namespace SHS.Scripts.Summon.Turrets.FSM
         {
         }
 
+        public override void Enter()
+        {
+            base.Enter();
+            _turret.PlayReloadSound();
+        }
+
         public override void Update()
         {
             base.Update();

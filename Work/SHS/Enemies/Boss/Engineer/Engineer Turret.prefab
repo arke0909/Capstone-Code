@@ -152,6 +152,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitBodyTrm: {fileID: 0}
+  killSound:
+    _entity: {fileID: 11400000, guid: 264313eada7cc4a4ba8ab1d767d7b75e, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 357341424337504981}
   OnHitEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -170,6 +174,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  turretFireSound:
+    _entity: {fileID: 11400000, guid: 12f900a1da7cf624ea5732fcd55d2347, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 357341424337504981}
+  turretReloadSound:
+    _entity: {fileID: 11400000, guid: 7fc90f92d809e964ca37cbd4f9c7d244, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 357341424337504981}
+  onDeadParticle: {fileID: 0}
   targetLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -327,6 +340,10 @@ MonoBehaviour:
   damageDemodifyStat: {fileID: 11400000, guid: 7a0d6ceb21222d849ad9defa279caa41, type: 2}
   dropExpStat: {fileID: 0}
   hitSound:
+    _entity: {fileID: 0}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 357341424337504981}
+  healSound:
     _entity: {fileID: 0}
     ID: 0
     <DebugObject>k__BackingField: {fileID: 357341424337504981}
@@ -5322,7 +5339,7 @@ Transform:
   m_GameObject: {fileID: 2628418853446241811}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5542,7 +5559,7 @@ MonoBehaviour:
   statOverrides:
   - stat: {fileID: 11400000, guid: 15fc09ad501e2844986107c6459f339e, type: 2}
     isUseOverride: 1
-    overrideValue: 500
+    overrideValue: 80
   - stat: {fileID: 11400000, guid: 94058d7303615074cbb07bb31d3f8e48, type: 2}
     isUseOverride: 1
     overrideValue: 0.75

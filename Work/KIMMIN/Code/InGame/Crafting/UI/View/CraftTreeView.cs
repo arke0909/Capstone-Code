@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +29,7 @@ namespace Work.Code.Craft.View
 
         public event Action<CraftTreeSO> OnNodeSelected;
         public event Func<ItemDataSO, int> RequestItemCount;
+        public event Func<CraftTreeSO, bool> RequestCanCraftTree;
         
         public void InitTreeView(PlayerInventory inventory)
         {
@@ -39,6 +40,8 @@ namespace Work.Code.Craft.View
             {
                 TripleNodeTree tripleNodeTree = Instantiate(tripleTreePrefab, nodeRoot);
                 tripleNodeTree.SetInventory(inventory);
+                tripleNodeTree.SetCanCraftChecker(CanCraftTree);
+                tripleNodeTree.SetNodeSelectAction(SelectNode);
                 _tripleTreeList.Add(tripleNodeTree);
             }
 
@@ -71,7 +74,7 @@ namespace Work.Code.Craft.View
         
         private void RenderBinaryTreeImmediate(CraftTreeSO tree)
         {
-            HashSet<int> indices = new();
+            HashSet<int> renderedIndices = new();
 
             RenderRootNode(tree.Root, false);
 
@@ -79,23 +82,17 @@ namespace Work.Code.Craft.View
             {
                 NodeData node = tree.nodeList[i];
 
-                if (indices.Contains(i) || node.Item == null)
+                if (renderedIndices.Contains(i) || node.Item == null)
                     continue;
 
                 RenderNode(node, _nodeList[i], lineIndex: i - 1, false);
-
-                if (IsTripleTree(node))
-                {
-                    RenderTripleTree(tree, node, i, false);
-                    indices.Add(i * 2 + 1);
-                    indices.Add(i * 2 + 2);
-                }
+                RenderChildTreeIfNeeded(tree, node, i, false, renderedIndices);
             }
         }
         
         private IEnumerator RenderBinaryTreeAnimated(CraftTreeSO tree)
         {
-            HashSet<int> indices = new();
+            HashSet<int> renderedIndices = new();
 
             RenderRootNode(tree.Root, true);
 
@@ -103,17 +100,11 @@ namespace Work.Code.Craft.View
             {
                 NodeData node = tree.nodeList[i];
 
-                if (indices.Contains(i) || node.Item == null)
+                if (renderedIndices.Contains(i) || node.Item == null)
                     continue;
 
                 RenderNode(node, _nodeList[i], lineIndex: i - 1, true);
-
-                if (IsTripleTree(node))
-                {
-                    RenderTripleTree(tree, node, i, true);
-                    indices.Add(i * 2 + 1);
-                    indices.Add(i * 2 + 2);
-                }
+                RenderChildTreeIfNeeded(tree, node, i, true, renderedIndices);
 
                 yield return _showDelay;
             }
@@ -135,7 +126,9 @@ namespace Work.Code.Craft.View
 
             bool isRootNode = lineIndex != 0 && lineIndex != 1;
             int itemCount = RequestItemCount(node.Item);
-            CraftNodeData craftData = new(node, itemCount, isRootNode);
+            bool isCraftableBySubItems = !isRootNode && node.Tree != null
+                                                    && (itemCount >= node.Count || CanCraftTree(node.Tree));
+            CraftNodeData craftData = new(node, itemCount, isRootNode, isCraftableBySubItems);
 
             nodeUI.InitUI(craftData, hasAnim);
 
@@ -150,6 +143,43 @@ namespace Work.Code.Craft.View
                 _lineList[lineIndex].gameObject.SetActive(true);
             }
         }
+
+        private void RenderChildTreeIfNeeded(CraftTreeSO parentTree, NodeData node, int nodeIndex,
+            bool hasAnim, HashSet<int> renderedIndices)
+        {
+            if (IsTripleTree(node))
+            {
+                RenderTripleTree(parentTree, node, nodeIndex, hasAnim);
+                renderedIndices.Add(nodeIndex * 2 + 1);
+                renderedIndices.Add(nodeIndex * 2 + 2);
+                return;
+            }
+
+            if (node.Tree != null && node.Tree.isBinary)
+                RenderBinaryChildTree(node.Tree, nodeIndex, hasAnim, renderedIndices);
+        }
+
+        private void RenderBinaryChildTree(CraftTreeSO tree, int parentIndex, bool hasAnim, HashSet<int> renderedIndices)
+        {
+            int childCount = tree.isBinary ? 2 : 3;
+
+            for (int i = 1; i <= childCount && i < tree.nodeList.Count; i++)
+            {
+                int targetIndex = parentIndex * 2 + i;
+
+                if (targetIndex >= _nodeList.Count)
+                    continue;
+
+                NodeData childNode = tree.nodeList[i];
+
+                if (childNode?.Item == null)
+                    continue;
+
+                renderedIndices.Add(targetIndex);
+                RenderNode(childNode, _nodeList[targetIndex], lineIndex: targetIndex - 1, hasAnim);
+                RenderChildTreeIfNeeded(tree, childNode, targetIndex, hasAnim, renderedIndices);
+            }
+        }
         
         private void RenderTripleTree(CraftTreeSO tree, NodeData node, int idx, bool hasAnim)
         {
@@ -160,14 +190,22 @@ namespace Work.Code.Craft.View
             TripleNodeTree tripleTree  = _tripleTreeList[tripleIndex];
 
             tripleTree.InitTree(node.Tree, _nodeList[idx].Rect, hasAnim, false);
-            tripleTree.RootNode.SubscribeTooltip();
-            tripleTree.RootNode.SubscribeClick(() => OnNodeSelected?.Invoke(tree.nodeList[idx].Tree));
 
             _nodeList[idx].Clear();
         }
         
         private bool IsTripleTree(NodeData nodeData)
             => nodeData.Tree != null && !nodeData.Tree.isBinary;
+
+        private bool CanCraftTree(CraftTreeSO tree)
+        {
+            return RequestCanCraftTree?.Invoke(tree) ?? false;
+        }
+
+        private void SelectNode(CraftTreeSO tree)
+        {
+            OnNodeSelected?.Invoke(tree);
+        }
         
         private void StopAnimation()
         {

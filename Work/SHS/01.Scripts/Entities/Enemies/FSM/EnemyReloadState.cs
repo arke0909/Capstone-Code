@@ -25,7 +25,7 @@ namespace Code.SHS.Entities.Enemies.FSM
         {
             _equipment = container.Get<EnemyEquipment>();
             _entityGunStatInfo = container.Get<EntityGunStatInfo>();
-            _itemGrabRiggingController = container.Get<ItemGrabRiggingController>();
+            _itemGrabRiggingController = container.Get<ItemGrabRiggingController>(true);
         }
 
         public override void Enter()
@@ -51,6 +51,7 @@ namespace Code.SHS.Entities.Enemies.FSM
         public override void Update()
         {
             base.Update();
+            UpdateCurrentWeaponAttack(false);
 
             _currentTimer += Time.deltaTime * _entityGunStatInfo.ReloadSpeedMultiplier;
             if (_currentTimer >= _reloadTime)

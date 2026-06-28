@@ -4,7 +4,6 @@ using Code.SHS.Entities.Enemies.FSM;
 using Code.SHS.Entities.Enemies.FSM.BehaviourState;
 using Scripts.Combat;
 using Scripts.Combat.Datas;
-using Scripts.Entities;
 using UnityEngine;
 using Code.Items;
 
@@ -25,7 +24,7 @@ namespace Scripts.Enemies.EnemyBehaviours
 
         public override void Execute()
         {
-            Weapon weapon = _attackCompo.GetCurrentWeapon<Weapon>();
+            IAttackable attackable = _attackCompo.CurrentAttackable;
             if(_enemy.Blackboard.TryGet<EnemyAttackContext>("AttackContext", out var context))
             {
                 context.attackCount = attackCount;
@@ -35,7 +34,7 @@ namespace Scripts.Enemies.EnemyBehaviours
                 EnemyAttackContext newContext = new EnemyAttackContext() { attackCount = attackCount };
                 _enemy.Blackboard.Set("AttackContext", newContext);
             }
-            if (weapon is not IAttackable attackable)
+            if (attackable == null)
                 return;
             switch (attackable.CurrentAttackableState)
             {
@@ -47,7 +46,8 @@ namespace Scripts.Enemies.EnemyBehaviours
                         _enemy.ChangeState(EnemyStateEnum.Reload);
                     break;
                 case AttackableState.NeedStack:
-                    _inventory.TryAddItem(weapon);
+                    if (attackable is Weapon weapon)
+                        _inventory.TryAddItem(weapon);
                     break;
                 case AttackableState.NotEquipped:
                     break;

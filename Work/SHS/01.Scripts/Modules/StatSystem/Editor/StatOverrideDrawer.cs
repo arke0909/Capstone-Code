@@ -107,15 +107,12 @@ namespace Chipmunk.Modules.StatSystem.Editor
 
         private static Texture TryGetStatIconTexture(Object statObject)
         {
-            if (statObject == null)
+            if (statObject is not StatSO stat || stat.Icon == null)
             {
                 return null;
             }
 
-            SerializedObject statSerializedObject = new SerializedObject(statObject);
-            SerializedProperty iconProperty = statSerializedObject.FindProperty("icon");
-            Sprite iconSprite = iconProperty?.objectReferenceValue as Sprite;
-            return iconSprite != null ? iconSprite.texture : null;
+            return stat.Icon.texture;
         }
     }
 }

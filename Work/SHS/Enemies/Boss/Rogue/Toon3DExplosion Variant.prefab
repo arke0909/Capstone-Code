@@ -1,0 +1,131 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &3241253673944623251
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 86938725382422847, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 448162269932703216, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: m_Name
+      value: Toon3DExplosion Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 610289151637900105, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1332054343009906175, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1332054343009906175, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1510542076297736576, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1510542076297736576, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1510542076297736576, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1510542076297736576, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1510542076297736576, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1510542076297736576, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1510542076297736576, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1510542076297736576, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1510542076297736576, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1510542076297736576, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1625362724199418251, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1625362724199418251, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2555728658033373695, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2555728658033373695, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2555728658033373695, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2555728658033373695, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: InitialModule.startSpeed.minScalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2555728658033373695, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3975378436912298975, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113126369704716360, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5504417369959272191, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6840496880753974371, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7967837599506600101, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8034060605106235236, guid: 15cf42d21cf18304285222888173f570, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: 1830337694288970590, guid: 15cf42d21cf18304285222888173f570, type: 3}
+    - {fileID: 180932020181565564, guid: 15cf42d21cf18304285222888173f570, type: 3}
+    - {fileID: 2737067892519697052, guid: 15cf42d21cf18304285222888173f570, type: 3}
+    - {fileID: 5562371467733493668, guid: 15cf42d21cf18304285222888173f570, type: 3}
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 15cf42d21cf18304285222888173f570, type: 3}

@@ -66,7 +66,7 @@ namespace Scripts.SkillSystem.Manage
             }
             else
             {
-                CurrentSocket.CurrentActiveSkill.StartAndUseSkill();
+                CurrentSocket.CurrentActiveSkill.StartSkill();
             }
 
             CurrentSocket.SetCooldown();

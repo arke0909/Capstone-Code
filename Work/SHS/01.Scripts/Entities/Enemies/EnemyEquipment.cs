@@ -1,4 +1,4 @@
-using AYellowpaper.SerializedCollections;
+﻿using AYellowpaper.SerializedCollections;
 using Chipmunk.ComponentContainers;
 using Chipmunk.Library.Utility.GameEvents.Local;
 using Code.InventorySystems;
@@ -9,6 +9,7 @@ using Scripts.Entities;
 using System;
 using System.Collections.Generic;
 using Chipmunk.Modules.StatSystem;
+using Code.GameEvents;
 using Code.EnemySpawn;
 using Code.InventorySystems.Equipments;
 using Code.SHS.Entities.Enemies.Events.Local;
@@ -175,6 +176,7 @@ namespace Code.SHS.Entities.Enemies
             }
 
             equipable.Equip(_entity, parentTrm);
+            HandleEquippedItem(equipable, parentTrm);
 
             return true;
         }
@@ -187,6 +189,7 @@ namespace Code.SHS.Entities.Enemies
 
             if (_equips.TryGetValue(itemPartType, out EnemyEquipSlot slot))
             {
+                UnHandleEquippedItem(equipped);
                 equipped.Unequip(_entity);
                 StatRemoveModify(itemData);
                 slot.Clear();
@@ -194,6 +197,28 @@ namespace Code.SHS.Entities.Enemies
             }
 
             return false;
+        }
+
+        private void HandleEquippedItem(EquipableItem equipped, Transform parentTrm)
+        {
+            if (equipped is not HandItem handItem)
+                return;
+
+            if (handItem.ItemObject == null)
+                handItem.Handle(_entity, parentTrm);
+
+            _entity?.LocalEventBus.Raise(new ChangeHandlingEvent(equipped));
+        }
+
+        private void UnHandleEquippedItem(EquipableItem equipped)
+        {
+            if (equipped is not HandItem handItem)
+                return;
+
+            _entity?.LocalEventBus.Raise(new ChangeHandlingEvent(null));
+
+            if (handItem.ItemObject != null)
+                handItem.UnHandle(_entity);
         }
 
         private void AddStatModify(EquipItemDataSO itemData)

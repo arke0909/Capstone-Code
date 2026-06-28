@@ -1,7 +1,7 @@
-using System;
 using Code.UI.Core;
 using UnityEngine;
 using UnityEngine.UI;
+using Work.Code.PlayerUI.Menu;
 using Work.Code.UI.Core.Interaction;
 
 namespace Work.Code.UI
@@ -9,7 +9,7 @@ namespace Work.Code.UI
     [RequireComponent(typeof(Button))]
     public class PlayerMenuUIButton : InteractableUI
     {
-        [SerializeField] private GameObject alert;
+        [SerializeField] private AlertController alertController;
         
         private Image _icon;
         private readonly Color32 _highlightColor = new(50, 150, 200, 255);
@@ -26,12 +26,9 @@ namespace Work.Code.UI
         public void SetHighlight(bool isActive)
         {
             _icon.color = isActive ? _highlightColor : Color.white;
-            SetAlert(false);
-        }
 
-        public void SetAlert(bool isActive)
-        {
-            alert.SetActive(isActive);
+            if (isActive)
+                alertController.SetAlert(false);
         }
     }
 }

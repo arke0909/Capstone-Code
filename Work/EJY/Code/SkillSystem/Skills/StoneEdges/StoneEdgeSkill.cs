@@ -12,6 +12,7 @@ namespace Code.SkillSystem.Skills.StoneEdges
         [SerializeField] private PoolItemSO stoneEdgeItem;
         [SerializeField] private float skillUseRange = 15f;
         [SerializeField] private float additionalSize = 0.75f;
+        [SerializeField] private float damage = 18f;
 
         [Inject] private PoolManagerMono _poolManger;
         private IAimProvider _aimProvider;
@@ -44,14 +45,14 @@ namespace Code.SkillSystem.Skills.StoneEdges
             _skillSize -= additionalSize;
         }
 
-        public override void StartAndUseSkill()
+        public override void OnSkillTrigger()
         {
-            base.StartAndUseSkill();
+            base.StartSkill();
 
             Vector3 dir = _skillPos - _owner.transform.position;
 
             StoneEdge stoneEdge = _poolManger.Pop<StoneEdge>(stoneEdgeItem);
-            stoneEdge.Init(_owner, _skillPos, dir, _skillSize);
+            stoneEdge.Init(_owner, _skillPos, dir, _skillSize, damage);
         }
     }
 }

@@ -19,16 +19,18 @@ namespace Code.Items
             Debug.Assert(itemData is WeaponDataSO, "Invalid EquipItemData");
             WeaponData = itemData as WeaponDataSO;
         }
-        public override void OnEquip(Entity entity,Transform parent)
+
+        public override void Handle(Entity entity, Transform parent)
         {
-            base.OnEquip(entity, parent);
+            base.Handle(entity, parent);
             EntityAnimator animator = entity.Get<EntityAnimator>();
             animator.ChangeAnimatorController(WeaponData.controller);
             animator.SetParam(_attackSpeedHash, WeaponData.attackSpeed);
         }
-        public override void OnUnequip(Entity entity)
+
+        public override void UnHandle(Entity entity)
         {
-            base.OnUnequip(entity);
+            base.UnHandle(entity);
             EntityAnimator animator = entity.Get<EntityAnimator>();
             animator.SetDefaultController();
             animator.SetParam(_attackSpeedHash, 1);
@@ -37,6 +39,7 @@ namespace Code.Items
         public GameObject Dealer => WeaponObj.gameObject;
         public Entity Owner => _owner;
         public abstract AttackableState CurrentAttackableState { get; }
+        public virtual bool UsesAnimationAttackTrigger => true;
         
         public virtual void EnterAttack()
         {
@@ -46,7 +49,11 @@ namespace Code.Items
         {
         }
 
-        public virtual void EndAnimation()
+        public virtual void UpdateAttack(AttackContext context)
+        {
+        }
+
+        public virtual void EndAttack()
         {
         }
     }

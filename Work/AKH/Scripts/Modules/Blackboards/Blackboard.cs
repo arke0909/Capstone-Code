@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Scripts.Modules.Blackboards
 {
@@ -8,6 +9,10 @@ namespace Scripts.Modules.Blackboards
 
         public void Set<T>(string key, T value)
         {
+            if (_datas.ContainsKey(key))
+            {
+                Debug.LogError($"Already Exist Key :{key}");
+            }
             _datas[key] = value;
         }
 

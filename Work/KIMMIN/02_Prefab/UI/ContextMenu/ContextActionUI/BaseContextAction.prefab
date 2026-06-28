@@ -106,7 +106,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clickSoundID:
-    _entity: {fileID: 11400000, guid: 2212a1c634ea1254585e5c9b94a7ce17, type: 2}
+    _entity: {fileID: 11400000, guid: f2f397ed1b145e5488afa963ae80be1c, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 2239195088356095141}
+  hoveringSoundID:
+    _entity: {fileID: 11400000, guid: 252b65c9e662ea44eba93fbc824848a7, type: 2}
     ID: 0
     <DebugObject>k__BackingField: {fileID: 2239195088356095141}
 --- !u!114 &5355964599138893230

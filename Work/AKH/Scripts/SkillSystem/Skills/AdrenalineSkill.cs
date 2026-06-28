@@ -10,18 +10,13 @@ using UnityEngine;
 
 namespace Scripts.SkillSystem.Skills
 {
-    public class AdrenalineSkill : ActiveSkill, IUseStateSkill
+    public class AdrenalineSkill : ActiveSkill
     {
         [SerializeField] private BuffSO adrenalineData;
-        [SerializeField] private StateDataSO _targetState;
         [SerializeField] private float additionalTime = 0.3f;
         [SerializeField] private bool addReloadSpeed;
         [SerializeField] private bool getAdditionalTime;
         [SerializeField] private BuffSO reloadSpeedData;
-        
-        public StateDataSO TargetState { get => _targetState; set => _targetState = value; }
-
-        public SkillAnimType AnimType => SkillAnimType.Default;
 
         private EntityStatusEffect _buffCompo;
         private VFXComponent _vfxCompo;
@@ -81,7 +76,7 @@ namespace Scripts.SkillSystem.Skills
              _remainingBuffTime += additionalTime;
          }
 
-        public void OnSkillTrigger()
+        public override void OnSkillTrigger()
         {
             if (!_isBuffActive)
             {

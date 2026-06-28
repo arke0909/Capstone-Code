@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Chipmunk.GameEvents;
 using Code.SHS.Entities.Enemies;
 using Code.SHS.Entities.Enemies.Events;
@@ -30,6 +30,8 @@ namespace SHS.Scripts.Entities.Players
         {
             if (CurrentBoss != null &&
                 Vector3.Distance(currentBoss.transform.position, transform.position) > detectionRadius)
+                CurrentBoss = null;
+            if (CurrentBoss != null && CurrentBoss.IsDead)
                 CurrentBoss = null;
             DetectTargets();
         }

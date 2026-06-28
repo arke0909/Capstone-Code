@@ -24,7 +24,6 @@ namespace Work.Code.MapEvents
             Point = point;
         }
     }
-
     public abstract class DropStructureEvent : MapEvent
     {
         [SerializeField] private Transform[] roots;
@@ -50,7 +49,6 @@ namespace Work.Code.MapEvents
 
         private void ClearDropStructures()
         {
-            Debug.Log(_dropStructures.Count);
             while(_dropStructures.Count > 0)
             {
                 ISpawnableStructure dropStructure = _dropStructures.Pop();
@@ -89,6 +87,43 @@ namespace Work.Code.MapEvents
 
             Transform point = root.GetChild(Random.Range(0, root.childCount));
             areaPoint = new AreaPoint(areaIndex, root, point);
+            return true;
+        }
+
+        protected bool TryGetRandomAreaPoints(int count, out List<AreaPoint> areaPoints)
+        {
+            areaPoints = new List<AreaPoint>();
+
+            if (count <= 0)
+                return true;
+
+            if (roots == null || roots.Length <= 0)
+                return false;
+
+            List<AreaPoint> candidates = new();
+            for (int areaIndex = 0; areaIndex < roots.Length; areaIndex++)
+            {
+                Transform root = roots[areaIndex];
+                if (root == null)
+                    continue;
+
+                foreach (Transform point in root)
+                {
+                    if (point != null)
+                        candidates.Add(new AreaPoint(areaIndex, root, point));
+                }
+            }
+
+            if (candidates.Count < count)
+                return false;
+
+            for (int i = 0; i < count; i++)
+            {
+                int rand = Random.Range(i, candidates.Count);
+                (candidates[i], candidates[rand]) = (candidates[rand], candidates[i]);
+                areaPoints.Add(candidates[i]);
+            }
+
             return true;
         }
 

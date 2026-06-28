@@ -5104,9 +5104,8 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 128
-  airDropItems:
-  - {fileID: 11400000, guid: 61c9dcc2bc70cc043a1a671e5e36295b, type: 2}
-  - {fileID: 11400000, guid: ed9fb4609c16d664489b4f49f344be75, type: 2}
+  supplyRewardTable: {fileID: 11400000, guid: ead8871c1e03d3b4ab1e5dfe782e3009, type: 2}
+  airDropItems: []
   <PoolItem>k__BackingField: {fileID: 11400000, guid: c0b20ab22fae4d044b89a39ea60affaf, type: 2}
 --- !u!65 &5918989921295945545
 BoxCollider:

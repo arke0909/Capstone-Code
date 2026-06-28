@@ -15,6 +15,6 @@ MonoBehaviour:
   skillName: SummonTurret
   skillIcon: {fileID: 0}
   skillDescription: 
-  slot: 0
   upgradeList: []
-  skillPrefab: {fileID: 0}
+  skillPrefab: {fileID: 5856248982415862476, guid: e1a0940dae378374f8bfdd3a173e4920, type: 3}
+  defaultSkill: 0

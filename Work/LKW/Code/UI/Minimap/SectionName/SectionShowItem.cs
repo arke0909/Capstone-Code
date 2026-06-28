@@ -1,23 +1,23 @@
+using Code.Items.ItemInfo;
+using Code.UI.Core.Interaction;
 using Code.UI.Minimap.Core;
 using DewmoLib.ObjectPool.RunTime;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Work.Code.UI.Core.Interaction;
 
 namespace Code.UI.Minimap.SectionName
 {
-    public class SectionShowItem : MonoBehaviour, IPoolable
+    public class SectionShowItem : InteractableUI
     {
          [field:SerializeField] public Image Image { get; set; }
-         [field: SerializeField] public PoolItemSO PoolItem { get; private set; }
-         public GameObject GameObject => gameObject;
-         
-         public void SetUpPool(Pool pool)
-         {
-             
-         }
+         public ItemDataSO ItemData { get; set; }
 
-         public void ResetItem()
+         protected override void Awake()
          {
+             base.Awake();
+             BindTooltip(() => ItemData);
          }
     }
 }

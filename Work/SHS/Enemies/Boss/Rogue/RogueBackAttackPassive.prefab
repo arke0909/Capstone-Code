@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5decc7a40cbf426db1f72123226fdef1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <SkillData>k__BackingField: {fileID: 11400000, guid: bfc451ba671a39a45944dc5fc9d979e3, type: 2}
   backAttackDotThreshold: -0.15
   backAttackBonusMultiplier: 0.55
   stealthBonusMultiplier: 0.35

@@ -52,5 +52,7 @@ namespace Code.Hotbar
             _hotbarSlots = evt.EquipSlots.ToList();
             UpdateSlotUI();
         }
+        
+        public HotbarSlotUI[] GetHotbarSlots() => _slotUis.Values.ToArray();
     }
 }

@@ -29,7 +29,7 @@ namespace Code.SkillSystem.Skills.GravityFields
         private void RollbackStunEntity() => isStunEntity = false;
 
         
-        public override void StartAndUseSkill()
+        public override void OnSkillTrigger()
         {
             Vector3 gravityFieldPos = _aimProvider.GetWorldAimPosition();
 

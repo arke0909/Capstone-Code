@@ -1,4 +1,5 @@
 using Code.Items.ItemInfo;
+using Scripts.Entities;
 using UnityEngine;
 
 namespace Code.Items
@@ -7,6 +8,16 @@ namespace Code.Items
     {
         protected HandItem(ItemDataSO itemData) : base(itemData)
         {
+        }
+
+        public virtual void Handle(Entity entity, Transform parent)
+        {
+            InitItemObject(entity, parent);            
+        }
+
+        public virtual void UnHandle(Entity entity)
+        {
+            DestroyItemObject();
         }
     }
 }

@@ -7,11 +7,13 @@ using Scripts.Entities;
 using UnityEngine;
 using Code.Items;
 using Code.Items.ItemInfo;
+using Ami.BroAudio;
 
 namespace Code.InventorySystems
 {
     public class Inventory : MonoBehaviour, IContainerComponent
     {
+        [SerializeField] private SoundID itemMoveSound;
         public Entity Owner { get; private set; }
         public ComponentContainer ComponentContainer { get; set; }
         [SerializeField] private int _currentInventorySize = 4;
@@ -96,6 +98,20 @@ namespace Code.InventorySystems
                         yield return slot;
                 }
             }
+        }
+
+        public bool IsActiveSlot(ItemSlot slot)
+        {
+            if (slot == null || slot.OwnerInventory != this)
+                return false;
+
+            for (int i = 0; i < CurrentInventorySize; i++)
+            {
+                if (ReferenceEquals(itemSlots[i], slot))
+                    return true;
+            }
+
+            return false;
         }
 
         public List<T> GetItems<T>() where T : ItemBase
@@ -204,7 +220,7 @@ namespace Code.InventorySystems
             return cnt;
         }
 
-        public void UpdateInventory()
+        public virtual void UpdateInventory()
         {
             InventoryChanged?.Invoke();
         }
@@ -479,6 +495,7 @@ namespace Code.InventorySystems
 
             target.UpdateInventory();
             UpdateInventory();
+            BroAudio.Play(itemMoveSound);
             return moved;
         }
 

@@ -23,7 +23,7 @@ namespace Code.SHS.Entities.Enemies.Skills
             _movement = container.Get<CharacterNavMovement>(true);
         }
 
-        public override void StartAndUseSkill()
+        public override void StartSkill()
         {
             if (_enemy == null || _enemy.TargetProvider.CurrentTarget == null)
                 return;

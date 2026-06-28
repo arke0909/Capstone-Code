@@ -106,6 +106,13 @@ namespace Work.Code.UI.ContextMenu
             {
                 _currentMenu = menu;
                 _currentMenu.ShowMenu(data);
+
+                if (!_currentMenu.HasVisibleAction)
+                {
+                    _currentMenu = null;
+                    return;
+                }
+
                 _currentMenu.OnAction += HideCurrentMenu;
                 SetPosition(owner.Rect);
             }

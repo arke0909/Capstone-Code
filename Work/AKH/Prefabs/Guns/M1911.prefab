@@ -144,7 +144,7 @@ Transform:
   m_GameObject: {fileID: 1917922319423184702}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.3473219, y: 3.27, z: -1.829756}
+  m_LocalPosition: {x: 0, y: 0, z: 0.58}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -170,6 +170,7 @@ MonoBehaviour:
   fireTrm: {fileID: 7700096069148012048}
   poolManager: {fileID: 11400000, guid: c413011c9deace64aa106d229c06e489, type: 2}
   bulletItem: {fileID: 11400000, guid: 09e3f30c6feb3d545b688838c743bedc, type: 2}
+  muzzleEffectItem: {fileID: 11400000, guid: 2f828d6fb76c376459fa3d74bd84160d, type: 2}
   shellEjectEffect: {fileID: 6490343420208383795}
 --- !u!114 &9049372240402820119
 MonoBehaviour:
@@ -443,6 +444,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rateOverTime: 50
+  baseHeatRatio: 0
   particle: {fileID: 2308309846489973956}
 --- !u!1 &5247742093478845053
 GameObject:

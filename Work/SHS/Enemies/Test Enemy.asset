@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5a9e70a188f4e09930eb89a37d88e73, type: 3}
   m_Name: Test Enemy
   m_EditorClassIdentifier: 
+  enemyType: 2
   enemyPrefab: {fileID: 6850015562613220499, guid: c860746277aafea409ac52b43a9c6259, type: 3}
   enemyPoolItem: {fileID: 11400000, guid: 3696e2a82611451c83bf8c3561e2112a, type: 2}
   spawnRarityWeight: 500

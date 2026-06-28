@@ -34,6 +34,7 @@ namespace Code.SkillSystem.Skills.TrackingBlade
         private float _currentTime;
         private bool _applySlow;
         private float _additionalRotateSpeed = 0;
+        private float _damage;
 
         private void Awake()
         {
@@ -47,7 +48,7 @@ namespace Code.SkillSystem.Skills.TrackingBlade
         
         public void SetApplySlow(bool applySlow) => _applySlow = applySlow;
 
-        public void Initialize(Entity owner, Entity target ,Vector3 position, Vector3 direction)
+        public void Initialize(Entity owner, Entity target ,Vector3 position, Vector3 direction, float damage)
         {
             trailRenderer?.Clear();
             
@@ -55,6 +56,7 @@ namespace Code.SkillSystem.Skills.TrackingBlade
             _target = target;
             transform.position = position;
             transform.forward = direction;
+            _damage = damage;
         }
 
         private void FixedUpdate()
@@ -92,7 +94,7 @@ namespace Code.SkillSystem.Skills.TrackingBlade
                 if(entity.TryGetComponent(out IDamageable damageable))
                     damageable.ApplyDamage(new DamageData
                     {
-                        damage = 8,
+                        damage = _damage,
                         defPierceLevel = 1,
                         damageType = DamageType.DOT
                     },

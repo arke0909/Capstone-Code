@@ -2,6 +2,7 @@
 using Code.UI.Core;
 using DewmoLib.Dependencies;
 using Scripts.Players;
+using System.Collections.Generic;
 using UnityEngine;
 using Work.Code.Craft.Presenter;
 using Work.Code.Craft.View;
@@ -24,6 +25,7 @@ namespace Work.Code.Craft.Installer
         private CraftMenuPresenter _menuPresenter;
         private CraftTreePresenter _treePresenter;
         private CraftModel _model;
+        private readonly HashSet<ItemDataSO> _tutorialCraftItems = new();
         
         private void Start()
         {
@@ -48,6 +50,7 @@ namespace Work.Code.Craft.Installer
             };
 
             _menuPresenter = new CraftMenuPresenter(context);
+            RefreshTutorialCraftItems();
         }
         
         private void HandleStartCrafting(StartCraftingEvent evt)
@@ -79,6 +82,46 @@ namespace Work.Code.Craft.Installer
         public void HighlightCraftItem(ItemDataSO item, bool isPlay, Color effectColor = default)
         {
             menuView.HighlightCraftItem(item, isPlay, effectColor);
+        }
+
+        public void SetTutorialItemType(ItemType itemType, Rarity itemRarity, Color effectColor)
+        {
+            menuView.SetTutorialItemType(itemType, itemRarity, effectColor);
+        }
+
+        public void ClearTutorialItemType()
+        {
+            menuView.ClearTutorialItemType();
+            RefreshTutorialCraftItems();
+        }
+
+        public void RegisterTutorialCraftItem(ItemDataSO item)
+        {
+            if (item == null)
+                return;
+
+            _tutorialCraftItems.Add(item);
+            RefreshTutorialCraftItems();
+        }
+
+        public void UnregisterTutorialCraftItem(ItemDataSO item)
+        {
+            if (item == null)
+                return;
+
+            _tutorialCraftItems.Remove(item);
+            RefreshTutorialCraftItems();
+        }
+
+        private void RefreshTutorialCraftItems()
+        {
+            if (_tutorialCraftItems.Count == 0)
+            {
+                menuView.ClearInteractableItems();
+                return;
+            }
+
+            menuView.SetInteractableItems(_tutorialCraftItems);
         }
     }
 }

@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 383d9b3807a94a0085d9da1262851f04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <SyncChildScale>k__BackingField: 1
+  <SyncChildScale>k__BackingField: 0
   <NormalizedPos>k__BackingField: {x: 0, y: 0}
   <PoolItem>k__BackingField: {fileID: 11400000, guid: bb7d77470637983428d6a037e12f021a, type: 2}
   showItemPrefab: {fileID: 4097053168623412127, guid: d9519be1395fb7847bd681347bd0b840, type: 3}

@@ -20,7 +20,6 @@ namespace Code.SHS.Entities.Enemies.Behaviors
             base.Init(enemy);
             _skillComponent = enemy.ComponentContainer.Get<ActiveSkillComponent>(true);
         }
-
         public override void Execute()
         {
             _skillComponent.CurrentSkillIndex = slotType;

@@ -23,6 +23,7 @@ namespace Work.Code.Misc
 
         public void SetMark(string mark, Color color, float duration = 3f)
         {
+            StopAllCoroutines();
             EnableMark(mark, color);
     
             markText.transform.DOKill();
@@ -32,6 +33,15 @@ namespace Work.Code.Misc
             markText.transform.DOLocalMoveY(_originPos.y + 1f, 0.15f).SetEase(Ease.OutBack);
 
             StartCoroutine(QuestMarkRoutine(duration));
+        }
+
+        public void ClearMark()
+        {
+            StopAllCoroutines();
+            markText.transform.DOKill();
+            markText.text = string.Empty;
+            markText.transform.localScale = Vector3.zero;
+            markText.transform.localPosition = _originPos;
         }
         
         private void LateUpdate()

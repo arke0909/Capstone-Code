@@ -46,8 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   whatIsTarget:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 64
   castRadius: 4.4
+  castAngle: 360
   maxCollideCount: 10
 --- !u!1 &5567487045018821892
 GameObject:
@@ -96,13 +97,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d89115d9288738848b8d8326f2e04e87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
   damageTick: 0.5
   floorDuration: 5
   poolItem: {fileID: 11400000, guid: db70abaffe5b8dd4cb70602e67036d5a, type: 2}
+  particle: {fileID: 7844825243852949420}
+  damage: 1
   overlapDamageCaster: {fileID: 292341042952714171}
   damageModifyStat: {fileID: 11400000, guid: 7a0d6ceb21222d849ad9defa279caa41, type: 2}
-  particle: {fileID: 7844825243852949420}
+  areaSound:
+    _entity: {fileID: 11400000, guid: cae7b2e5b3e56b24a8e156dd981abe7a, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 5567487045018821892}
 --- !u!1 &6559299397014251658
 GameObject:
   m_ObjectHideFlags: 0

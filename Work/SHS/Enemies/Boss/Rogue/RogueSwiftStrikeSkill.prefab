@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8796910835044542211
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8698915027665070581}
+  - component: {fileID: 2791989774105378115}
+  m_Layer: 0
+  m_Name: RogueSwiftStrikeSkill
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8698915027665070581
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8796910835044542211}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.66933954, y: 3.2358503, z: -2.3910587}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2791989774105378115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8796910835044542211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5d8a8c6e0a34bb5bb45d8346b6db84f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <SkillData>k__BackingField: {fileID: 11400000, guid: 8fd77e1aeb912064f807968de10a987a, type: 2}
+  isWalkable: 0
+  cooldown: 10
+  <AnimType>k__BackingField: 7
+  <MoveType>k__BackingField: 2
+  <TargetState>k__BackingField: {fileID: 11400000, guid: 78221511401be5b488b6a8c7595827c5, type: 2}
+  slashSound:
+    _entity: {fileID: 11400000, guid: 647e1f81df9b6cb4ea717f1d986fa27c, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 8796910835044542211}
+  movementData: {fileID: 11400000, guid: 1b69119c42977944fbbd3bfe87ec33a9, type: 2}
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  triggerInteraction: 2
+  hitRadius: 1
+  maxHitCount: 24
+  damage: 25
+  damageMultiplier: 1
+  defPierceLevel: 1
+  damageType: 1
+  resetCooldownOnKill: 1
+  dashEffectPrefab: {fileID: 6466927237228658021, guid: 9e29a5dbd4c0d094b82c12eb12ab9a48, type: 3}
+  dashEffectOffset: {x: 0, y: 0.5, z: 0}
+  dashEffectEulerOffset: {x: 0, y: 0, z: 0}
+  dashEffectLifetime: 1
+  parentDashEffectToOwner: 0

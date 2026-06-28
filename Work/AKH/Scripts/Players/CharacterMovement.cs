@@ -157,6 +157,11 @@ namespace Scripts.Players
             SetRotationInfo(direction, 0f);
         }
 
+        public void StopRotation()
+        {
+            _rotationInfo = new RotationInfo(_entity.transform.rotation, 0f);
+        }
+
         private void ApplyGravity()
         {
             if (IsGround && _verticalVelocity < 0)
@@ -193,9 +198,16 @@ namespace Scripts.Players
 
         public void SetPosition(Vector3 position)
         {
+            Vector3 delta = position - _entity.transform.position;
+            controller.Move(delta);
+        }
+        
+        public void SetPositionImmediately(Vector3 position)
+        {
             controller.enabled = false;
             _entity.transform.position = position;
             controller.enabled = true;
         }
+        
     }
 }

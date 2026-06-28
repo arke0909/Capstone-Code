@@ -12,8 +12,7 @@ namespace Code.UI.Minimap.Core
                 owner,
                 type,
                 icon, 
-                syncChildScale, 
-                worldInitPos != default
+                syncChildScale
             );
             
             var evt = new AddMinimapElementEvent(

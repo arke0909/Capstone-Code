@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.70671415, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -89,5 +89,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <SyncChildScale>k__BackingField: 1
-  <InitPositionSelf>k__BackingField: 0
+  <NormalizedPos>k__BackingField: {x: 0, y: 0}
   <PoolItem>k__BackingField: {fileID: 11400000, guid: 121c7e48fd4344f45970c02dbcee1a0a, type: 2}

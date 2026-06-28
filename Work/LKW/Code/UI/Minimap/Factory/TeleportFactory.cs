@@ -15,7 +15,7 @@ namespace Code.UI.Minimap.Factory
         public override MinimapElement CreateUIElement(MinimapElementData data)
         {
             TeleportButton teleportButton = _poolManager.Pop<TeleportButton>(teleportButtonItem);
-            teleportButton.NormalizedPos = data.NormalizedPos;
+            teleportButton.Initialize(data);
 
             if (data.Owner is TeleportStructure structure)
             {

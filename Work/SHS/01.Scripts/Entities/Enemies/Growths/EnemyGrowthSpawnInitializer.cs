@@ -1,4 +1,4 @@
-using Chipmunk.ComponentContainers;
+﻿using Chipmunk.ComponentContainers;
 using Chipmunk.GameEvents;
 using Code.SHS.Entities.Enemies.Events.Local;
 using Code.SHS.Entities.Enemies.Spawns;

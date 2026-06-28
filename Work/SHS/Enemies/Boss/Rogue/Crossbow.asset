@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7004dd3430498a6438d5db89f3c6d29f, type: 3}
+  m_Name: Crossbow
+  m_EditorClassIdentifier: 
+  itemId: 123123123123123123
+  itemName: Crossbow
+  itemType: 4
+  spawnArea: 0
+  itemImage: {fileID: 21300000, guid: c706aea13e77b4e948369e3fa34bad3f, type: 3}
+  description: 
+  rarity: 1
+  rarityWeight: 1
+  value: 0
+  maxStack: 0
+  maxSpawnCount: 0
+  addStats: []
+  equipmentPrefab: {fileID: 7022546887162851902, guid: 157539af09e183f45bed1de43799ad48, type: 3}
+  skillDB: {fileID: 0}
+  controller: {fileID: 22100000, guid: f137525389913154e9e8e83852dd9ac0, type: 2}
+  maxDurability: 0
+  attackRange: 12
+  defaultDamage: 15
+  attackSpeed: 0.75
+  fireRate: 0.1
+  attackSoundID:
+    _entity: {fileID: 11400000, guid: 5a146143d30421e4d8d8ae64f1aa5f2e, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 0}
+  gunType: 3
+  bulletPerShot: 1
+  reloadTime: 0.3
+  bulletSpeed: 20
+  maxRange: 0
+  maxAmmoCapacity: 99
+  aimSpeedMultiplier: 0
+  noiseRadius: 10
+  hipFire:
+    defaultSpread: 0
+    maxSpread: 0
+    spreadGrow: 0
+    spreadRecover: 0
+    spreadFactor: 0
+  ads:
+    defaultSpread: 0
+    maxSpread: 0
+    spreadGrow: 0
+    spreadRecover: 0
+    spreadFactor: 0
+  adsTime: 0
+  crosshairData: {fileID: 0}
+  aimCrosshairData: {fileID: 0}
+  verticalRecoil: 0
+  horizontalRecoil: 0
+  minVerticalMultiplier: 0
+  maxVerticalMultiplier: 0
+  minHorizontalMultiplier: 0
+  maxHorizontalMultiplier: 0
+  recoilDuration: 0
+  recoilRecoveryStartTime: 0
+  recoilRecoveryTime: 0
+  recoilRecovery: 0
+  pixelsPerRecoilUnit: 0
+  reloadSound:
+    _entity: {fileID: 0}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 0}

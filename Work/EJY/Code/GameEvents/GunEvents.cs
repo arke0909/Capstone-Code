@@ -1,9 +1,10 @@
 ﻿using Chipmunk.GameEvents;
+using Chipmunk.Library.Utility.GameEvents.Local;
 using Code.Items;
 
 namespace Code.GameEvents
 {
-    public struct AmmoUpdateEvent : IEvent
+    public struct AmmoUpdateEvent : ILocalEvent
     {
         public int CurrentAmmo { get; private set; }
         public int TotalAmmo { get; private set; }
@@ -15,7 +16,7 @@ namespace Code.GameEvents
         }
     }
     
-    public struct ChangeHandlingEvent : IEvent
+    public struct ChangeHandlingEvent : ILocalEvent
     {
         public EquipableItem EquipableItem { get; private set; }
 

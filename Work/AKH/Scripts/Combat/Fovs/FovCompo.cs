@@ -1,4 +1,4 @@
-﻿using Chipmunk.ComponentContainers;
+using Chipmunk.ComponentContainers;
 using Code.ETC;
 using System;
 using System.Collections;
@@ -30,11 +30,16 @@ namespace Scripts.Combat.Fovs
         public LayerMask _enemyMask;
         public LayerMask _obstacleMask;
     }
+
     [DefaultExecutionOrder(10000)]
     public class FovCompo : MonoBehaviour, IContainerComponent
     {
         private const int MinEdgeResolveIterations = 7;
         private const float TransitionCapScale = 1.25f;
+
+        // [최적화] UV 상수를 static readonly로 캐싱 — AddVertex 호출마다 struct 생성 불필요
+        private static readonly Vector2 UvVisible = new Vector2(1f, 0f);
+        private static readonly Vector2 UvHidden  = new Vector2(0f, 0f);
 
         [Serializable]
         private struct BoundaryPoint
@@ -43,12 +48,10 @@ namespace Scripts.Combat.Fovs
             public bool isWallSide;
             public bool isTransition;
         }
+
         public Vector3 FovDirection
         {
-            get
-            {
-                return _fovDirection.sqrMagnitude > 0.0001f ? _fovDirection : GetFallbackDirection();
-            }
+            get => _fovDirection.sqrMagnitude > 0.0001f ? _fovDirection : GetFallbackDirection();
         }
 
         public ComponentContainer ComponentContainer { get; set; }
@@ -74,9 +77,24 @@ namespace Scripts.Combat.Fovs
         private Mesh[] _viewMesh;
         private Coroutine find;
         private readonly HashSet<Transform> before = new();
+        // [최적화] visibleTargets.Contains() O(n) → HashSet O(1) 중복 검사용
+        private readonly HashSet<Transform> _visibleTargetsSet = new();
+        private readonly List<BoundaryPoint> _boundaryPoints = new();
+        private readonly List<Vector3> _vertices = new();
+        private readonly List<Vector2> _uvs = new();
+        private readonly List<int> _triangles = new();
+        private readonly List<int> _boundaryIndices = new();
+        private readonly List<Vector3> _innerPoints = new();
+        private readonly List<float> _widthScales = new();
+        private readonly List<Vector3> _edgeOutwards = new();
+        private readonly List<int> _innerIndices = new();
+        private readonly List<int> _outerIndices = new();
         private bool _isInitialized;
         private bool _isCameraPreCullRegistered;
         private int _lastRenderPoseFrame = -1;
+
+        // [최적화] NonAlloc 배열 — readonly로 선언해 재할당 방지
+        private readonly Collider[] enemiesInView = new Collider[100];
 
         public Vector3 DirFromAngle(float degree, bool angleIsGlobal)
         {
@@ -86,6 +104,7 @@ namespace Scripts.Combat.Fovs
             float rad = degree * Mathf.Deg2Rad;
             return new Vector3(Mathf.Sin(rad), 0, Mathf.Cos(rad));
         }
+
         public void OnInitialize(ComponentContainer componentContainer)
         {
             if (_isInitialized)
@@ -148,15 +167,10 @@ namespace Scripts.Combat.Fovs
             _isCameraPreCullRegistered = false;
         }
 
-        private void HandleCameraPreCull(Camera camera)
-        {
-            HandleCameraPreRender(camera);
-        }
+        private void HandleCameraPreCull(Camera camera) => HandleCameraPreRender(camera);
 
         private void HandleBeginCameraRendering(ScriptableRenderContext context, Camera camera)
-        {
-            HandleCameraPreRender(camera);
-        }
+            => HandleCameraPreRender(camera);
 
         private void HandleCameraPreRender(Camera camera)
         {
@@ -202,9 +216,7 @@ namespace Scripts.Combat.Fovs
         }
 
         private Vector3 GetAimOrigin()
-        {
-            return _ownerTransform != null ? _ownerTransform.position : transform.position;
-        }
+            => _ownerTransform != null ? _ownerTransform.position : transform.position;
 
         private void RefreshFovDirection()
         {
@@ -238,17 +250,17 @@ namespace Scripts.Combat.Fovs
             return direction.sqrMagnitude > 0.0001f ? direction.normalized : GetFallbackDirection();
         }
 
-        private Vector3 GetCurrentAimPosition()
-            => aimProvider.GetAimPosition();
+        private Vector3 GetCurrentAimPosition() => aimProvider.GetAimPosition();
 
         private Vector3 GetFallbackDirection()
         {
             Vector3 direction = _ownerTransform != null ? _ownerTransform.forward : transform.forward;
-
             direction.y = 0f;
             return direction.sqrMagnitude > 0.0001f ? direction.normalized : Vector3.forward;
         }
-        private EdgeInfo FindEdge(FOVInfo fovInfo, ViewCastInfo minViewCast, ViewCastInfo maxViewCast)
+
+        // [최적화] origin 파라미터 추가 — 호출마다 transform.position native 접근 제거
+        private EdgeInfo FindEdge(FOVInfo fovInfo, ViewCastInfo minViewCast, ViewCastInfo maxViewCast, Vector3 origin)
         {
             float minAngle = minViewCast.angle;
             float maxAngle = maxViewCast.angle;
@@ -259,7 +271,7 @@ namespace Scripts.Combat.Fovs
             for (int i = 0; i < resolveIterations; i++)
             {
                 float angle = (minAngle + maxAngle) * 0.5f;
-                ViewCastInfo castInfo = ViewCast(fovInfo, angle);
+                ViewCastInfo castInfo = ViewCast(fovInfo, angle, origin);
                 bool edgeDistanceThresholdExceeded = Mathf.Abs(minViewCast.distance - castInfo.distance) > _edgeDistanceThreshold;
 
                 if (castInfo.hit == minViewCast.hit && !edgeDistanceThresholdExceeded)
@@ -281,14 +293,23 @@ namespace Scripts.Combat.Fovs
         {
             int stepCount = Mathf.Max(1, Mathf.RoundToInt(fovInfo.viewAngle * _meshResolution));
             float stepAngleSize = fovInfo.viewAngle / stepCount;
-            List<BoundaryPoint> boundaryPoints = new List<BoundaryPoint>();
-            ViewCastInfo oldViewCastInfo = new ViewCastInfo();
+
+            // [최적화] FovDirection 프로퍼티를 루프마다 호출하지 않고 1회 캐싱
+            // [최적화] Quaternion.LookRotation().eulerAngles.y → Mathf.Atan2으로 교체 (Quaternion 생성 제거)
+            Vector3 fovDir = FovDirection;
+            float baseAngle = Mathf.Atan2(fovDir.x, fovDir.z) * Mathf.Rad2Deg - fovInfo.viewAngle * 0.5f;
+
+            // [최적화] transform.position native 접근을 루프 밖으로 1회 캐싱
+            Vector3 origin = transform.position;
+
+            List<BoundaryPoint> boundaryPoints = _boundaryPoints;
+            boundaryPoints.Clear();
+            ViewCastInfo oldViewCastInfo = default;
 
             for (int i = 0; i <= stepCount; i++)
             {
-
-                float angle = Quaternion.LookRotation(FovDirection).eulerAngles.y - fovInfo.viewAngle * 0.5f + stepAngleSize * i;
-                ViewCastInfo info = ViewCast(fovInfo, angle);
+                float angle = baseAngle + stepAngleSize * i;
+                ViewCastInfo info = ViewCast(fovInfo, angle, origin);
 
                 if (i > 0)
                 {
@@ -297,7 +318,7 @@ namespace Scripts.Combat.Fovs
                     bool splitHitBoundary = oldViewCastInfo.hit && info.hit && edgeDistanceThresholdExceeded;
                     if (crossingHitState || splitHitBoundary)
                     {
-                        EdgeInfo edge = FindEdge(fovInfo, oldViewCastInfo, info);
+                        EdgeInfo edge = FindEdge(fovInfo, oldViewCastInfo, info, origin);
                         bool pointAWallSide = crossingHitState ? oldViewCastInfo.hit : true;
                         bool pointBWallSide = crossingHitState ? info.hit : true;
 
@@ -334,15 +355,19 @@ namespace Scripts.Combat.Fovs
                 };
             }
 
-            List<Vector3> vertices = new List<Vector3>();
-            List<Vector2> uvs = new List<Vector2>();
-            List<int> triangles = new List<int>();
+            List<Vector3> vertices = _vertices;
+            List<Vector2> uvs = _uvs;
+            List<int> triangles = _triangles;
+            vertices.Clear();
+            uvs.Clear();
+            triangles.Clear();
 
-            // uv.x stores visibility for the render texture mask: 1 inside FOV, 0 on the soft outer band.
-            int centerIndex = AddVertex(Vector3.zero, new Vector2(1f, 0f), vertices, uvs);
-            List<int> boundaryIndices = new List<int>(localBoundaryPoints.Length);
+            // [최적화] new Vector2(1f,0f) 반복 생성 → 캐싱된 UvVisible/UvHidden 사용
+            int centerIndex = AddVertex(Vector3.zero, UvVisible, vertices, uvs);
+            List<int> boundaryIndices = _boundaryIndices;
+            boundaryIndices.Clear();
             for (int i = 0; i < localBoundaryPoints.Length; i++)
-                boundaryIndices.Add(AddVertex(localBoundaryPoints[i].point, new Vector2(1f, 0f), vertices, uvs));
+                boundaryIndices.Add(AddVertex(localBoundaryPoints[i].point, UvVisible, vertices, uvs));
 
             for (int i = 0; i < localBoundaryPoints.Length - 1; i++)
             {
@@ -412,8 +437,10 @@ namespace Scripts.Combat.Fovs
             if (polygonPointCount < 3)
                 return;
 
-            List<Vector3> innerPoints = new List<Vector3>(polygonPointCount);
-            List<float> widthScales = new List<float>(polygonPointCount);
+            List<Vector3> innerPoints = _innerPoints;
+            List<float> widthScales = _widthScales;
+            innerPoints.Clear();
+            widthScales.Clear();
             if (!isFullCircle)
             {
                 innerPoints.Add(Vector3.zero);
@@ -430,20 +457,23 @@ namespace Scripts.Combat.Fovs
             if (Mathf.Abs(signedArea) <= 0.000001f)
                 return;
 
-            List<Vector3> edgeOutwards = BuildEdgeOutwards(innerPoints, signedArea);
+            List<Vector3> edgeOutwards = _edgeOutwards;
+            BuildEdgeOutwards(innerPoints, signedArea, edgeOutwards);
             if (edgeOutwards.Count != polygonPointCount)
                 return;
 
-            List<int> innerIndices = new List<int>(polygonPointCount);
-            List<int> outerIndices = new List<int>(polygonPointCount);
+            List<int> innerIndices = _innerIndices;
+            List<int> outerIndices = _outerIndices;
+            innerIndices.Clear();
+            outerIndices.Clear();
             for (int i = 0; i < polygonPointCount; i++)
             {
                 Vector3 outward = GetMiterOutward(edgeOutwards, i, out float miterScale);
                 float inset = Mathf.Max(_edgeSoftnessWorld * Mathf.Max(widthScales[i], 0.01f), 0.01f);
                 Vector3 outerPoint = innerPoints[i] + outward * inset * miterScale;
 
-                innerIndices.Add(AddVertex(innerPoints[i], new Vector2(1f, 0f), vertices, uvs));
-                outerIndices.Add(AddVertex(outerPoint, new Vector2(0f, 0f), vertices, uvs));
+                innerIndices.Add(AddVertex(innerPoints[i], UvVisible, vertices, uvs));
+                outerIndices.Add(AddVertex(outerPoint, UvHidden, vertices, uvs));
             }
 
             for (int i = 0; i < polygonPointCount; i++)
@@ -485,23 +515,27 @@ namespace Scripts.Combat.Fovs
         private static float CalculateSignedAreaXZ(List<Vector3> points)
         {
             float area = 0f;
-            for (int i = 0; i < points.Count; i++)
+            // [최적화] .Count 프로퍼티 접근을 루프 밖으로 캐싱
+            int count = points.Count;
+            for (int i = 0; i < count; i++)
             {
                 Vector3 current = points[i];
-                Vector3 next = points[(i + 1) % points.Count];
+                Vector3 next = points[(i + 1) % count];
                 area += current.x * next.z - next.x * current.z;
             }
 
             return area * 0.5f;
         }
 
-        private static List<Vector3> BuildEdgeOutwards(List<Vector3> points, float signedArea)
+        private static void BuildEdgeOutwards(List<Vector3> points, float signedArea, List<Vector3> outwards)
         {
-            List<Vector3> outwards = new List<Vector3>(points.Count);
+            outwards.Clear();
             float outwardSign = signedArea >= 0f ? 1f : -1f;
-            for (int i = 0; i < points.Count; i++)
+            // [최적화] .Count 캐싱
+            int count = points.Count;
+            for (int i = 0; i < count; i++)
             {
-                Vector3 edge = points[(i + 1) % points.Count] - points[i];
+                Vector3 edge = points[(i + 1) % count] - points[i];
                 if (edge.sqrMagnitude <= 0.000001f)
                 {
                     outwards.Add(Vector3.zero);
@@ -510,13 +544,13 @@ namespace Scripts.Combat.Fovs
 
                 outwards.Add(Vector3.Cross(Vector3.up, edge).normalized * outwardSign);
             }
-
-            return outwards;
         }
 
         private static Vector3 GetMiterOutward(List<Vector3> edgeOutwards, int index, out float miterScale)
         {
-            Vector3 previousOutward = edgeOutwards[(index - 1 + edgeOutwards.Count) % edgeOutwards.Count];
+            // [최적화] .Count 캐싱
+            int count = edgeOutwards.Count;
+            Vector3 previousOutward = edgeOutwards[(index - 1 + count) % count];
             Vector3 nextOutward = edgeOutwards[index];
             Vector3 miter = previousOutward + nextOutward;
 
@@ -551,7 +585,8 @@ namespace Scripts.Combat.Fovs
 
         private void AddTransitionCap(int pointIndex, List<Vector3> innerPoints, List<Vector3> edgeOutwards, List<float> widthScales, List<Vector3> vertices, List<Vector2> uvs, List<int> triangles)
         {
-            Vector3 previousOutward = edgeOutwards[(pointIndex - 1 + edgeOutwards.Count) % edgeOutwards.Count];
+            int edgeCount = edgeOutwards.Count;
+            Vector3 previousOutward = edgeOutwards[(pointIndex - 1 + edgeCount) % edgeCount];
             Vector3 nextOutward = edgeOutwards[pointIndex];
             if (previousOutward.sqrMagnitude <= 0.000001f || nextOutward.sqrMagnitude <= 0.000001f)
                 return;
@@ -566,10 +601,10 @@ namespace Scripts.Combat.Fovs
             Vector3 miterCapPoint = innerPoint + miterOutward.normalized * inset * Mathf.Min(miterScale, 2f) * TransitionCapScale;
             Vector3 nextCapPoint = innerPoint + nextOutward.normalized * inset * TransitionCapScale;
 
-            int inner = AddVertex(innerPoint, new Vector2(1f, 0f), vertices, uvs);
-            int previousCap = AddVertex(previousCapPoint, new Vector2(0f, 0f), vertices, uvs);
-            int miterCap = AddVertex(miterCapPoint, new Vector2(0f, 0f), vertices, uvs);
-            int nextCap = AddVertex(nextCapPoint, new Vector2(0f, 0f), vertices, uvs);
+            int inner       = AddVertex(innerPoint,        UvVisible, vertices, uvs);
+            int previousCap = AddVertex(previousCapPoint,  UvHidden,  vertices, uvs);
+            int miterCap    = AddVertex(miterCapPoint,     UvHidden,  vertices, uvs);
+            int nextCap     = AddVertex(nextCapPoint,      UvHidden,  vertices, uvs);
 
             triangles.Add(inner);
             triangles.Add(previousCap);
@@ -599,18 +634,17 @@ namespace Scripts.Combat.Fovs
             return index;
         }
 
-        private ViewCastInfo ViewCast(FOVInfo fovInfo, float globalAngle)
+        // [최적화] origin 파라미터로 transform.position 캐싱 전달 — 매 레이캐스트마다 native 접근 불필요
+        private ViewCastInfo ViewCast(FOVInfo fovInfo, float globalAngle, Vector3 origin)
         {
             Vector3 dir = DirFromAngle(globalAngle, true);
-            if (Physics.Raycast(transform.position, dir, out RaycastHit hit, fovInfo.viewRadius, fovInfo._obstacleMask))
-            {
+            if (Physics.Raycast(origin, dir, out RaycastHit hit, fovInfo.viewRadius, fovInfo._obstacleMask))
                 return new ViewCastInfo { hit = true, point = hit.point, distance = hit.distance, angle = globalAngle };
-            }
 
             return new ViewCastInfo
             {
                 hit = false,
-                point = transform.position + dir * fovInfo.viewRadius,
+                point = origin + dir * fovInfo.viewRadius,
                 distance = fovInfo.viewRadius,
                 angle = globalAngle
             };
@@ -622,8 +656,11 @@ namespace Scripts.Combat.Fovs
             while (true)
             {
                 yield return time;
-                visibleTargets.ForEach(item => before.Add(item));
+                // [최적화] .ForEach(lambda) → foreach — 매 틱마다 delegate 객체 할당 제거 (GC alloc 감소)
+                foreach (Transform item in visibleTargets)
+                    before.Add(item);
                 visibleTargets.Clear();
+                _visibleTargetsSet.Clear();
                 foreach (FOVInfo item in fovInfos)
                     FindVisibleEnemies(item);
                 ClearBefore();
@@ -634,8 +671,11 @@ namespace Scripts.Combat.Fovs
         {
             if (!val)
             {
-                visibleTargets.ForEach(item => before.Add(item));
+                // [최적화] .ForEach(lambda) → foreach (GC 감소)
+                foreach (Transform item in visibleTargets)
+                    before.Add(item);
                 visibleTargets.Clear();
+                _visibleTargetsSet.Clear();
                 ClearBefore();
                 if (find != null)
                     StopCoroutine(find);
@@ -661,40 +701,59 @@ namespace Scripts.Combat.Fovs
             before.Clear();
         }
 
-        private Collider[] enemiesInView = new Collider[100];
         private void FindVisibleEnemies(FOVInfo fovInfo)
         {
-            Array.Clear(enemiesInView, 0, enemiesInView.Length);
-            int cnt = Physics.OverlapSphereNonAlloc(transform.position, fovInfo.viewRadius, enemiesInView, fovInfo._enemyMask);
+            // [최적화] transform.position을 루프 전 1회 캐싱 (native 접근 최소화)
+            Vector3 selfPos = transform.position;
+
+            // [최적화] OverlapSphereNonAlloc은 [0, cnt)만 채우므로 Array.Clear 불필요
+            int cnt = Physics.OverlapSphereNonAlloc(selfPos, fovInfo.viewRadius, enemiesInView, fovInfo._enemyMask);
+
+            // [최적화] FovDirection 프로퍼티, halfAngle 루프 밖으로 캐싱
+            Vector3 fovDir = FovDirection;
+            float halfAngle = fovInfo.viewAngle * 0.5f;
+
             for (int i = 0; i < cnt; i++)
             {
                 Transform enemy = enemiesInView[i].transform;
-                if (visibleTargets.Contains(enemy))
+
+                // [최적화] O(n) List.Contains → O(1) HashSet.Contains
+                if (_visibleTargetsSet.Contains(enemy))
                     continue;
 
-                Vector3 enemyPos = enemy.position;
-                Vector3 dir = enemyPos - transform.position;
-                dir.y = 0;
-                Vector3 dirToEnemy = dir.normalized;
-                if (Vector3.Angle(FovDirection, dirToEnemy) < fovInfo.viewAngle * 0.5f)
+                Vector3 diff = enemy.position - selfPos;
+                diff.y = 0f;
+
+                float distSqr = diff.sqrMagnitude;
+                if (distSqr <= 0.0001f)
+                    continue;
+
+                // [최적화] magnitude를 1회만 계산해 normalized 방향 및 레이캐스트 거리 모두 재사용
+                float dist = Mathf.Sqrt(distSqr);
+                Vector3 dirToEnemy = diff / dist;
+
+                if (Vector3.Angle(fovDir, dirToEnemy) >= halfAngle)
+                    continue;
+
+                if (Physics.Raycast(selfPos, dirToEnemy, dist, fovInfo._obstacleMask))
+                    continue;
+
+                visibleTargets.Add(enemy);
+                _visibleTargetsSet.Add(enemy);
+
+                // [최적화] before.Contains() 이중 호출 제거 — 결과를 변수에 저장해 1회만 확인
+                // before는 HashSet이므로 Contains/Remove 모두 O(1)
+                if (!before.Contains(enemy))
                 {
-                    if (!Physics.Raycast(transform.position, dirToEnemy, dir.magnitude, fovInfo._obstacleMask))
-                    {
-                        visibleTargets.Add(enemy);
-                        if (!before.Contains(enemy) && enemy.TryGetComponent(out IFindable findable))
-                        {
-                            if (++findable.SightCount == 1)
-                                findable.Founded();
-                        }
-                        else if (before.Contains(enemy))
-                        {
-                            before.Remove(enemy);
-                        }
-                    }
+                    if (enemy.TryGetComponent(out IFindable findable) && ++findable.SightCount == 1)
+                        findable.Founded();
+                }
+                else
+                {
+                    // 직전 프레임에도 보였고 이번에도 보임 — escaped 집합에서 제거
+                    before.Remove(enemy);
                 }
             }
         }
-
-
     }
 }

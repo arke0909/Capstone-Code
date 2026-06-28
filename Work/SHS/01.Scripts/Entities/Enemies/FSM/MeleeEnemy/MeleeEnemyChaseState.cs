@@ -7,6 +7,7 @@ namespace Code.SHS.Entities.Enemies.FSM
 {
     public class MeleeEnemyChaseState : EnemyExecuteBehaviourState
     {
+        private bool _isFinalChase;
         public MeleeEnemyChaseState(ComponentContainer container, int animationHash) : base(container, animationHash)
         {
         }
@@ -25,12 +26,12 @@ namespace Code.SHS.Entities.Enemies.FSM
         {
             base.Update();
 
-            if (RemainTarget == null && _movement.IsArrived)
+            if (RemainTarget == null&& _movement.IsArrived)
             {
                 _enemy.ChangeState(EnemyStateEnum.Idle);
                 return;
             }
-            Vector3 destination = Target != null ? Target.transform.position : _targetProvider.LastTargetPosition;
+            Vector3 destination = RemainTarget != null ? RemainTarget.transform.position : _targetProvider.LastTargetPosition;
             _movement.SetDestination(destination);
             UpdateMovementAnimation();
         }

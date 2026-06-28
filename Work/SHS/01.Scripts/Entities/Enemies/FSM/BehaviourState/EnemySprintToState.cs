@@ -1,5 +1,7 @@
 ﻿using Chipmunk.ComponentContainers;
+using Code.SHS.Entities.Enemies.Targetings.Events;
 using Code.SHS.Targetings.Enemies;
+using Scripts.FSM;
 
 namespace Code.SHS.Entities.Enemies.FSM.BehaviourState
 {
@@ -16,13 +18,16 @@ namespace Code.SHS.Entities.Enemies.FSM.BehaviourState
             _movement.MoveType = NavMoveType.Sprint;
             _movement.SetLookAtTarget(null);
         }
+        protected override void HandleTargetLost(TargetLostEvent @event)
+        {
 
+        }
         public override void Update()
         {
             base.Update();
 
-            if (_enemy.TargetProvider.CurrentTarget == null)
-                return;
+            //if (_enemy.TargetProvider.CurrentTarget == null)
+            //    return;
 
             if (_movement.IsArrived)
             {

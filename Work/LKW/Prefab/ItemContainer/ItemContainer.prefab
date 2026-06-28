@@ -40,6 +40,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2846337727896608682}
     m_Modifications:
+    - target: {fileID: 4240355379353284912, guid: be812277035d30947987e0cf12709d5e, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10000
+      objectReference: {fileID: 0}
     - target: {fileID: 6950383978548714853, guid: be812277035d30947987e0cf12709d5e, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -425,15 +429,16 @@ MonoBehaviour:
   helpText: {fileID: 8041857984508983291}
   interactVisualUI: {fileID: 6283647071711799554}
   <Outlinable>k__BackingField: {fileID: 3231430584070405538}
+  openContainerAudio:
+    _entity: {fileID: 11400000, guid: 28faa9283daa2e645a33388d714435fa, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 4796466273003805841}
   allowedTypes: 
-  whatIsPlayer:
-    serializedVersion: 2
-    m_Bits: 64
   minItems: 1
   maxItems: 4
   <AllowedSpawnArea>k__BackingField: 0
   <IsSelfInitialized>k__BackingField: 0
-  initItemList: []
+  infoList: []
 --- !u!114 &6369120137120980249
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -510,6 +515,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce4d7f566fd641b4d8fed1a8e3509a6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemMoveSound:
+    _entity: {fileID: 11400000, guid: 65a41622cd5acaf4484818b928781540, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 4796466273003805841}
   _currentInventorySize: 4
   itemSlots: []
   references:

@@ -28,14 +28,14 @@ namespace Code.UI.Minimap.SectionName
             NameText = GetComponent<TextMeshProUGUI>();
         }
 
-        private void Start()
+        private void OnEnable()
         {
             Bus.Subscribe<ShowItemsOnMap>(HandleShowItemsOnMap);
             Bus.Subscribe<ChangePinCountEvent>(HandleChangePinCount);
         }
 
        
-        private void OnDestroy()
+        private void OnDisable()
         {
             Bus.Unsubscribe<ShowItemsOnMap>(HandleShowItemsOnMap);
             Bus.Unsubscribe<ChangePinCountEvent>(HandleChangePinCount);
@@ -64,6 +64,7 @@ namespace Code.UI.Minimap.SectionName
             for (int i = 0; i < _targetItems.Count; i++)
             {
                 SectionShowItem item = Instantiate(showItemPrefab, parentTrm);
+                item.ItemData = _targetItems[i];
                 item.Image.sprite = _targetItems[i].itemImage;
                 _showItems.Add(item);
             }

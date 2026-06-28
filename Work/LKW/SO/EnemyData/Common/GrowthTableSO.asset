@@ -1,5 +1,93 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &2000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9332c13cb0b849fa8d810e44c52f877c, type: 3}
+  m_Name: StatGrowth_Lv2
+  m_EditorClassIdentifier: 
+  _statGrowthDatas:
+  - targetStat: {fileID: 11400000, guid: 15fc09ad501e2844986107c6459f339e, type: 2}
+    additiveValue: 30
+    multiplierValue: 1
+  - targetStat: {fileID: 11400000, guid: 7a0d6ceb21222d849ad9defa279caa41, type: 2}
+    additiveValue: 0
+    multiplierValue: 1.25
+  - targetStat: {fileID: 11400000, guid: 458b46c63a1c40d4ab9a6d39717dde19, type: 2}
+    additiveValue: 0
+    multiplierValue: 1
+--- !u!114 &2000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9332c13cb0b849fa8d810e44c52f877c, type: 3}
+  m_Name: StatGrowth_Lv3
+  m_EditorClassIdentifier: 
+  _statGrowthDatas:
+  - targetStat: {fileID: 11400000, guid: 15fc09ad501e2844986107c6459f339e, type: 2}
+    additiveValue: 35
+    multiplierValue: 1.2
+  - targetStat: {fileID: 11400000, guid: 7a0d6ceb21222d849ad9defa279caa41, type: 2}
+    additiveValue: 0
+    multiplierValue: 1.25
+  - targetStat: {fileID: 11400000, guid: 458b46c63a1c40d4ab9a6d39717dde19, type: 2}
+    additiveValue: 0
+    multiplierValue: 1
+--- !u!114 &2000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9332c13cb0b849fa8d810e44c52f877c, type: 3}
+  m_Name: StatGrowth_Lv4
+  m_EditorClassIdentifier: 
+  _statGrowthDatas:
+  - targetStat: {fileID: 11400000, guid: 15fc09ad501e2844986107c6459f339e, type: 2}
+    additiveValue: 0
+    multiplierValue: 1.5
+  - targetStat: {fileID: 11400000, guid: 7a0d6ceb21222d849ad9defa279caa41, type: 2}
+    additiveValue: 0
+    multiplierValue: 1.25
+  - targetStat: {fileID: 11400000, guid: 458b46c63a1c40d4ab9a6d39717dde19, type: 2}
+    additiveValue: 1
+    multiplierValue: 1
+--- !u!114 &2000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9332c13cb0b849fa8d810e44c52f877c, type: 3}
+  m_Name: StatGrowth_Lv5
+  m_EditorClassIdentifier: 
+  _statGrowthDatas:
+  - targetStat: {fileID: 11400000, guid: 15fc09ad501e2844986107c6459f339e, type: 2}
+    additiveValue: 0
+    multiplierValue: 1.5
+  - targetStat: {fileID: 11400000, guid: 7a0d6ceb21222d849ad9defa279caa41, type: 2}
+    additiveValue: 0
+    multiplierValue: 1.25
+  - targetStat: {fileID: 11400000, guid: 458b46c63a1c40d4ab9a6d39717dde19, type: 2}
+    additiveValue: 1
+    multiplierValue: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12,4 +100,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f56a4e0d2d2a4a1c8e0c316ad8206954, type: 3}
   m_Name: GrowthTableSO
   m_EditorClassIdentifier: 
-  growthTable: []
+  growthTable:
+  - growthByLevel: []
+  - growthByLevel:
+    - {fileID: 2000002}
+  - growthByLevel:
+    - {fileID: 2000003}
+  - growthByLevel:
+    - {fileID: 2000004}
+  - growthByLevel:
+    - {fileID: 2000005}

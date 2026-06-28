@@ -1,4 +1,5 @@
 ﻿using Chipmunk.GameEvents;
+using Chipmunk.Library.Utility.GameEvents.Local;
 using Scripts.Combat.Datas;
 
 namespace Code.GameEvents
@@ -13,6 +14,6 @@ namespace Code.GameEvents
         }
     }
 
-    public struct OffReplaceBulletUI : IEvent
+    public struct OffReplaceBulletUI : ILocalEvent
     { }
 }

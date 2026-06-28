@@ -16,32 +16,49 @@ MonoBehaviour:
   itemName: Rogue Gun
   itemType: 4
   spawnArea: 0
-  itemImage: {fileID: 21300000, guid: 981a0f144030bd34faec0664d1cafb3c, type: 3}
+  itemImage: {fileID: 0}
   description: Fast and precise SMG for Rogue boss
   rarity: 1
   rarityWeight: 1
   value: 0
   maxStack: 0
+  maxSpawnCount: 0
   addStats: []
-  modelOffset: {x: 0.012, y: 0.141, z: 0.368}
   equipmentPrefab: {fileID: 7187024952327147829, guid: bbf8f75bf0db37b4ebf4bc48187256bc, type: 3}
+  skillDB: {fileID: 0}
+  controller: {fileID: 22100000, guid: f137525389913154e9e8e83852dd9ac0, type: 2}
   maxDurability: 0
   attackRange: 10
   defaultDamage: 2.2
   attackSpeed: 1.4
-  controller: {fileID: 22100000, guid: f137525389913154e9e8e83852dd9ac0, type: 2}
-  fireRate: 0
+  fireRate: 0.2
+  attackSoundID:
+    _entity: {fileID: 0}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 0}
   gunType: 1
   bulletPerShot: 1
   reloadTime: 1.15
   bulletSpeed: 90
+  maxRange: 0
   maxAmmoCapacity: 24
   aimSpeedMultiplier: 0
-  defaultSpread: 0.22
-  maxSpread: 0.85
-  spreadGrow: 0.16
-  spreadRecover: 0.48
-  spreadFactor: 10
+  noiseRadius: 10
+  hipFire:
+    defaultSpread: 0.22
+    maxSpread: 0.85
+    spreadGrow: 0.16
+    spreadRecover: 0.48
+    spreadFactor: 40
+  ads:
+    defaultSpread: 0.22
+    maxSpread: 0.85
+    spreadGrow: 0.16
+    spreadRecover: 0.48
+    spreadFactor: 10
+  adsTime: 0.5
+  crosshairData: {fileID: 11400000, guid: 3249233a8e65db344ab6db6794ce16fc, type: 2}
+  aimCrosshairData: {fileID: 0}
   verticalRecoil: 50
   horizontalRecoil: 50
   minVerticalMultiplier: 0.95
@@ -53,3 +70,7 @@ MonoBehaviour:
   recoilRecoveryTime: 0.12
   recoilRecovery: 550
   pixelsPerRecoilUnit: 0.45
+  reloadSound:
+    _entity: {fileID: 0}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 0}

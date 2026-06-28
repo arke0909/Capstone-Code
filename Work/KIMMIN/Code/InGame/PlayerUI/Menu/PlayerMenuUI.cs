@@ -65,10 +65,20 @@ namespace InGame.PlayerUI
 
         private void ChangeUI(PlayerMenuUIButton playerMenuUI)
         {
-            _currentPanel?.DisableUI();
-            _currentPanel = playerMenuUI.Panel;
-            _currentPanel.EnableUI(true);
+            bool changed;
+            if (UIManager.HasInstance)
+                changed = UIManager.Instance.ReplaceStackUI(_currentPanel, playerMenuUI.Panel, true);
+            else
+            {
+                _currentPanel?.DisableUI();
+                playerMenuUI.Panel.EnableUI(true);
+                changed = true;
+            }
 
+            if (!changed)
+                return;
+
+            _currentPanel = playerMenuUI.Panel;
             SetMenuUI(playerMenuUI, true);
         }
 

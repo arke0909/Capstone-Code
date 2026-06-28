@@ -30,12 +30,10 @@ namespace Code.UI.Core
         private IDraggable _draggable;
         private IDroppable _droppable;
         
-        public Dictionary<EUIEvent, Action<PointerEventData>> EventHandler { get; private set; }
+        public Dictionary<EUIEvent, Action<PointerEventData>> EventHandler { get; private set; } = new();
         
         private void Awake()
         {
-            EventHandler = new();
-            
             _clickable = GetComponent<IClickable>();
             _hoverable = GetComponent<IHoverable>();
             _draggable = GetComponent<IDraggable>();

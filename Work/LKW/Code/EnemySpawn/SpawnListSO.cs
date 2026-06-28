@@ -16,7 +16,6 @@ namespace Code.EnemySpawn
     [CreateAssetMenu(fileName = "Spawn List", menuName = "SO/EnemySpawn/SpawnList", order = 0)]
     public class SpawnListSO : ScriptableObject
     {
-        public List<EnemySO> spawnEnemyList;
         public SpawnListElement[] daySpawnLists;
 
         public List<EnemySO> GetSpawnEnemies(int count, int day)

@@ -258,6 +258,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4271372475350872722}
   - component: {fileID: 501248811286884760}
+  - component: {fileID: 901100000000000001}
   m_Layer: 5
   m_Name: CraftNode
   m_TagString: Untagged
@@ -306,6 +307,18 @@ MonoBehaviour:
   <LineStartRect>k__BackingField: {fileID: 6964648091368709346}
   <LineEndRect>k__BackingField: {fileID: 1004341581435314769}
   <NodeButton>k__BackingField: {fileID: 4521969830611980956}
+--- !u!114 &901100000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5646977282966090662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cf5600644794508a566217083b87b18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5812017666423302179
 GameObject:
   m_ObjectHideFlags: 0

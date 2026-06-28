@@ -122,7 +122,7 @@ namespace Scripts.SkillSystem.Manage
 
         public bool HasAnySkill()
         {
-            return _skills.Count(skill => !skill.Key.defaultSkill) > 1;
+            return Sockets.Values.Any(socket => socket.CurrentSkill != null && !socket.CurrentSkill.SkillData.defaultSkill);
         }
     }
 }

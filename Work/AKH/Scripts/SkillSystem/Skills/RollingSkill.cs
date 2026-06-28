@@ -4,13 +4,12 @@ using Scripts.Combat;
 using Scripts.Combat.Datas;
 using Scripts.Entities;
 using Scripts.Entities.Vitals;
-using Scripts.FSM;
 using Scripts.Players;
 using UnityEngine;
 
 namespace Scripts.SkillSystem.Skills
 {
-    public class RollingSkill : ActiveSkill, IUseStateSkill
+    public class RollingSkill : ActiveSkill
     {
         [SerializeField] private MovementDataSO movementData;
         [SerializeField] private float staminaUsage = -10f;
@@ -21,9 +20,6 @@ namespace Scripts.SkillSystem.Skills
         private int _avoidLayer;
         private StaminaCompo _staminaCompo;
         private EntityAnimator _animator;
-
-        [field: SerializeField] public StateDataSO TargetState { get; set; }
-        public SkillAnimType AnimType => SkillAnimType.Rolling;
 
         public override void Init(ComponentContainer container)
         {
@@ -40,9 +36,9 @@ namespace Scripts.SkillSystem.Skills
             return base.CanUseSkill() && (_staminaCompo?.CurrentValue ?? 0f) >= -staminaUsage;
         }
 
-        public override void StartAndUseSkill()
+        public override void StartSkill()
         {
-            base.StartAndUseSkill();
+            base.StartSkill();
             BroAudio.Play(rollingID, transform.position);
             
             _movement.CanMove = false;
@@ -69,10 +65,6 @@ namespace Scripts.SkillSystem.Skills
         private void HandleAnimatorMove(Vector3 arg0, Quaternion arg1)
         {
             _movement.SetPosition(transform.position + arg0);
-        }
-
-        public void OnSkillTrigger()
-        {
         }
     }
 }

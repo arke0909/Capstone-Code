@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Chipmunk.ComponentContainers;
+using Chipmunk.Library.Utility.GameEvents.Local;
 using Scripts.Entities;
+using Scripts.FSM.Events;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -16,8 +18,13 @@ namespace Scripts.FSM
         [SerializeField, ReadOnly] public TEnum CurrentStateEnum;
 
         private Dictionary<TEnum, State> _states;
+
+        private LocalEventBus _localEventBus;
+
         public StateMachine(ComponentContainer container, StateDataSO[] stateList)
         {
+            _localEventBus = container.GetComponent<LocalEventBus>();
+
             _states = new Dictionary<TEnum, State>();
             foreach (StateDataSO state in stateList)
             {
@@ -42,18 +49,20 @@ namespace Scripts.FSM
             return null;
         }
 
-        public void ChangeState(TEnum newStateName, bool forced = false)
+        public void ChangeState(TEnum newStateEnum, bool forced = false)
         {
-            State newState = _states.GetValueOrDefault(newStateName);
-            Debug.Assert(newState != null, $"State is null {newStateName}");
+            State newState = _states.GetValueOrDefault(newStateEnum);
+            Debug.Assert(newState != null, $"State is null {newStateEnum}");
 
             if (!forced && CurrentState == newState)
                 return;
 
+            TEnum previousStateEnum = CurrentStateEnum;
             CurrentState?.Exit();
             CurrentState = newState;
-            CurrentStateEnum = newStateName;
+            CurrentStateEnum = newStateEnum;
             CurrentState.Enter();
+            _localEventBus?.Raise(new StateChangedEvent<TEnum>(previousStateEnum, newStateEnum));
         }
 
         public void UpdateStateMachine()

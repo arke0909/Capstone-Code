@@ -18,6 +18,8 @@ namespace Scripts.Players.States
     {
         private PlayerInventory _targetInventory;
         private CraftTreeSO _targetCraftTree;
+        private Dictionary<ItemDataSO, int> _consumeItems;
+        private ItemDataSO[] _autoCraftedItems;
         private CraftEffect _craftEffect;
 
         public PlayerCraftItemState(ComponentContainer container, int animationHash) : base(container, animationHash)
@@ -28,10 +30,13 @@ namespace Scripts.Players.States
         public override void Enter()
         {
             base.Enter();
-            (_targetInventory, _targetCraftTree) = _blackboard.GetOrDefault<CraftContext>("SelectedCraftSO");
+            CraftContext context = _blackboard.GetOrDefault<CraftContext>("SelectedCraftSO");
+            (_targetInventory, _targetCraftTree) = context;
+            _consumeItems = context?.ConsumeItems ?? _targetCraftTree?.ConsumeItems;
+            _autoCraftedItems = context?.AutoCraftedItems;
             Debug.Assert(_targetInventory != null || _targetCraftTree != null,
                 $"{_targetInventory}, {_targetCraftTree}");
-            if (!_targetInventory.CanConsume(_targetCraftTree.ConsumeItems))
+            if (_consumeItems == null || !_targetInventory.CanConsume(_consumeItems))
             {
                 Debug.Log("Need More materials");
                 _player.ChangeState(PlayerStateEnum.Idle);
@@ -39,8 +44,7 @@ namespace Scripts.Players.States
             }
             _craftEffect.StartCrafting();
 
-            if (_targetInventory.GetAddableItemCount(_targetCraftTree.Item, _targetCraftTree.Count) <
-                _targetCraftTree.Count)
+            if (!CanAddCraftResult())
             {
                 Debug.Log("Not enough inventory space");
                 _player.ChangeState(PlayerStateEnum.Idle);
@@ -55,7 +59,6 @@ namespace Scripts.Players.States
         public override void Update()
         {
             base.Update();
-                Debug.Log("asdASDDASffff");
             if (_player.PlayerInput.MovementKey.sqrMagnitude > 0f || _player.PlayerInput.AimKey)
             {
                 EventBus.Raise(new StopPlayerGageEvent());
@@ -77,11 +80,16 @@ namespace Scripts.Players.States
             if (result.Item is EquipableItem resultEquipable && skillSource != null)
                 resultEquipable.CopySkillFrom(skillSource);
 
-            _targetInventory.TryConsume(_targetCraftTree.ConsumeItems);
+            _targetInventory.TryConsume(_consumeItems);
             _targetInventory.TryAddItem(result.Item, _targetCraftTree.Count);
-            _player.LocalEventBus.Raise(new CompleteCraftingEvent(result.Item.ItemData));
-            _blackboard.Set<CraftContext>("SelectedCraftSO", null);
+            _player.LocalEventBus.Raise(new CompleteCraftingEvent(result.Item.ItemData, _autoCraftedItems));
+            _blackboard.Remove("SelectedCraftSO");
             _player.ChangeState(PlayerStateEnum.Idle);
+        }
+
+        private bool CanAddCraftResult()
+        {
+            return _targetInventory.CanAddItemAfterConsume(_targetCraftTree.Item, _targetCraftTree.Count, _consumeItems);
         }
 
         private EquipableItem FindSkillSourceItem()

@@ -1,4 +1,6 @@
 ﻿using Chipmunk.ComponentContainers;
+using Chipmunk.GameEvents;
+using Work.Code.GameEvents;
 
 namespace Code.SHS.Entities.Enemies
 {
@@ -8,6 +10,12 @@ namespace Code.SHS.Entities.Enemies
         public override void OnInitialize(ComponentContainer componentContainer)
         {
             base.OnInitialize(componentContainer);
+        }
+
+        public override void Dead()
+        {
+            base.Dead();
+            EventBus.Raise(new DefeatBossEvent());
         }
     }
 }

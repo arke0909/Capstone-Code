@@ -2,30 +2,20 @@
 using Chipmunk.ComponentContainers;
 using Chipmunk.GameEvents;
 using Code.GameEvents;
-using Code.InventorySystems;
 using EPOOutline;
 using Scripts.Entities;
 using Scripts.GameSystem;
 using System.Collections.Generic;
+using Ami.BroAudio;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Work.Code.UI;
 using Work.LKW.Code.Events;
 using Code.Items.ItemInfo;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Code.ItemContainers
 {
-    public interface IInteractable
-    {
-        public void Select();
-        public void DeSelect();
-        public void Interact(Entity interactor);
-
-        public Outlinable Outlinable { get; }
-    }
-
     [Serializable]
     public struct SelfInitInfo
     {
@@ -35,6 +25,8 @@ namespace Code.ItemContainers
     
     public class ItemContainer : InteractableStructure,IContainerComponent
     {
+        [SerializeField] private SoundID openContainerAudio;
+         
         [Header("Item Spawn Setting")]
         [SerializeField] private List<ItemType> allowedTypes;
         [SerializeField] private int minItems = 1;
@@ -51,7 +43,6 @@ namespace Code.ItemContainers
         protected override void Start()
         {
             base.Start();
-
             InitializeSelf();
         }
     
@@ -84,7 +75,7 @@ namespace Code.ItemContainers
             EventBus.Raise(new OpenPlayerUIEvent(true));
             Bus.Raise(new OpenRightInventoryEvent(Inventory));
             Inventory.OpenLootUI();
+            BroAudio.Play(openContainerAudio);
         }
-
     }
 }

@@ -12,7 +12,6 @@ namespace Code.UI.Inventory
             base.HandleClick(slot);
             if (slot.Item is EquipableItem item)
             {
-                skillUpgradeUI.EnableFor(item);
             }
         }
     }

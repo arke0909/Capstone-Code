@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: af6684e99ee42a537970fed13479117f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 5017
+  packageName: Mesh Baker
+  packageVersion: 3.40.1
+  assetPath: Assets/Work/LKW/Material/ground_1_41_1.mat
+  uploadId: 797172

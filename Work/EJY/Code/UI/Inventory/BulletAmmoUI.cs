@@ -4,7 +4,9 @@ using Chipmunk.GameEvents;
 using Code.GameEvents;
 using Code.Players;
 using Code.UI.Core;
+using DewmoLib.Dependencies;
 using Scripts.Combat.Datas;
+using Scripts.Players;
 using Scripts.Players.States;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,7 +22,8 @@ namespace Code.UI.Inventory
         [SerializeField] private PlayerInputSO playerInput;
         [SerializeField] private DynamicText ammoText;
         [SerializeField] private SoundID emptySoundID;
-        
+
+        [Inject] private Player _player;
         private RectTransform BulletImageRect => selectedImage.transform as RectTransform;
         private InfoUI[] _infoUIs;
         private List<ReplaceBulletData> _replaceBulletDatas;
@@ -31,7 +34,7 @@ namespace Code.UI.Inventory
         protected override void Awake()
         {
             _infoUIs = GetComponentsInChildren<InfoUI>();
-            EventBus.Subscribe<ChangeHandlingEvent>(HandleChangeWeapon);
+            _player.LocalEventBus.Subscribe<ChangeHandlingEvent>(HandleChangeWeapon);
             EventBus.Subscribe<NoAmmoSoundEvent>(HandleNoAmmo);
             
             UIUtility.FadeUI(gameObject, 0, true);
@@ -47,15 +50,15 @@ namespace Code.UI.Inventory
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            EventBus.Unsubscribe<ChangeHandlingEvent>(HandleChangeWeapon);
+            _player.LocalEventBus.Unsubscribe<ChangeHandlingEvent>(HandleChangeWeapon);
             EventBus.Unsubscribe<NoAmmoSoundEvent>(HandleNoAmmo);
             if (_isActive)
             {
                 _isActive = false;
 
-                EventBus.Unsubscribe<OffReplaceBulletUI>(HandleOffReplaceBulletUI);
-                EventBus.Unsubscribe<AmmoUpdateEvent>(HandleGunFire);
-                EventBus.Unsubscribe<ReplaceBulletListEvent>(HandleReplaceBulletList);
+                _player.LocalEventBus.Unsubscribe<OffReplaceBulletUI>(HandleOffReplaceBulletUI);
+                _player.LocalEventBus.Unsubscribe<AmmoUpdateEvent>(HandleGunFire);
+                _player.LocalEventBus.Unsubscribe<ReplaceBulletListEvent>(HandleReplaceBulletList);
             }
         }
 
@@ -89,7 +92,7 @@ namespace Code.UI.Inventory
         private void OffReplaceBulletUI()
         {
             InputClear();
-            EventBus.Unsubscribe<OffReplaceBulletUI>(HandleOffReplaceBulletUI);
+            _player.LocalEventBus.Unsubscribe<OffReplaceBulletUI>(HandleOffReplaceBulletUI);
             UIUtility.FadeUI(replaceBulletParentGO, fadeDuration, true);
         }
 
@@ -126,7 +129,7 @@ namespace Code.UI.Inventory
             
             SetSelectedImagePos(evt.Idx);
             
-            EventBus.Subscribe<OffReplaceBulletUI>(HandleOffReplaceBulletUI);
+            _player.LocalEventBus.Subscribe<OffReplaceBulletUI>(HandleOffReplaceBulletUI);
 
             UIUtility.FadeUI(replaceBulletParentGO, fadeDuration, false);
         }
@@ -150,9 +153,9 @@ namespace Code.UI.Inventory
                 {
                     _isActive = true;
                     
-                    EventBus.Subscribe<OffReplaceBulletUI>(HandleOffReplaceBulletUI);
-                    EventBus.Subscribe<AmmoUpdateEvent>(HandleGunFire);
-                    EventBus.Subscribe<ReplaceBulletListEvent>(HandleReplaceBulletList);
+                    _player.LocalEventBus.Subscribe<OffReplaceBulletUI>(HandleOffReplaceBulletUI);
+                    _player.LocalEventBus.Subscribe<AmmoUpdateEvent>(HandleGunFire);
+                    _player.LocalEventBus.Subscribe<ReplaceBulletListEvent>(HandleReplaceBulletList);
 
                     UIUtility.FadeUI(gameObject, fadeDuration, false);
                 }
@@ -165,9 +168,9 @@ namespace Code.UI.Inventory
                 {
                     _isActive = false;
                     
-                    EventBus.Unsubscribe<OffReplaceBulletUI>(HandleOffReplaceBulletUI);
-                    EventBus.Unsubscribe<AmmoUpdateEvent>(HandleGunFire);
-                    EventBus.Unsubscribe<ReplaceBulletListEvent>(HandleReplaceBulletList);
+                    _player.LocalEventBus.Unsubscribe<OffReplaceBulletUI>(HandleOffReplaceBulletUI);
+                    _player.LocalEventBus.Unsubscribe<AmmoUpdateEvent>(HandleGunFire);
+                    _player.LocalEventBus.Unsubscribe<ReplaceBulletListEvent>(HandleReplaceBulletList);
                     
                     UIUtility.FadeUI(gameObject, fadeDuration, true);
                 }

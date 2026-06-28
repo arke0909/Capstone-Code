@@ -7,7 +7,7 @@ namespace Work.Code.Tutorials
 {
     public class PinTutorialTotem : InteractableStructure
     {
-        [SerializeField] private PinTutorialUI pinTutorialUI;
+        [SerializeField] private UIBase pinTutorialUI;
         
         public override void Interact(Entity interactor)
         {

@@ -6,6 +6,7 @@ using Chipmunk.Library.Utility.GameEvents.Local;
 using DewmoLib.Dependencies;
 using InGame.PlayerUI;
 using Scripts.Combat.Datas;
+using SHS.Scripts.Combats.Events;
 
 namespace SHS.Scripts.Crosshairs
 {
@@ -27,6 +28,7 @@ namespace SHS.Scripts.Crosshairs
         {
             _localEventBus = _crosshairBehavior.Get<LocalEventBus>();
             _localEventBus.Subscribe<CrosshairChangeEvent>(HandleCrosshairChange);
+            _localEventBus.Subscribe<AttackHitEvent>(HandleAttackHit);
             EventBus.Subscribe<ChangeCursorEvent>(HandleCursorStateChange);
 
             RegisterCrosshair(defaultCrosshair);
@@ -41,6 +43,7 @@ namespace SHS.Scripts.Crosshairs
         private void OnDestroy()
         {
             _localEventBus.Unsubscribe<CrosshairChangeEvent>(HandleCrosshairChange);
+            _localEventBus.Unsubscribe<AttackHitEvent>(HandleAttackHit);
             EventBus.Unsubscribe<ChangeCursorEvent>(HandleCursorStateChange);
         }
 
@@ -63,11 +66,15 @@ namespace SHS.Scripts.Crosshairs
 
         private void HandleCrosshairChange(CrosshairChangeEvent eventData)
         {
-            GunDataSO gunData = eventData.GunData;
-            CrosshairSO targetData = gunData != null && gunData.crosshairData != null
-                ? gunData.crosshairData
+            CrosshairSO targetData = eventData.CrosshairData != null
+                ? eventData.CrosshairData
                 : defaultCrosshair;
             SetCurrentCrosshair(targetData, eventData.GunData);
+        }
+
+        private void HandleAttackHit(AttackHitEvent eventData)
+        {
+            CurrentCrosshair.PlayHitMarker();
         }
 
         private void SetCurrentCrosshair(CrosshairSO crosshairData, GunDataSO gunData = null)

@@ -27,19 +27,15 @@ namespace Scripts.GameSystem.GameEvents
                 return;
 
             var item = RegisterDropStructure(_poolManager.Pop<InvokeCallbackStructureWithPool>(structureItem));
+            item.Spawn(spawnPoint.Position);
             string iconId = MinimapUtil.AddToMinimap(item, ElementType.Marker, portalIcon, true, item.transform.position);
             item.Init((entity) =>
             {
                 targetSpawner.Enter(entity);
                 item.Despawn();
-            }, ()=>MinimapUtil.RemoveFromMinimap(iconId));
-            item.Spawn(spawnPoint.Position);
+            }, () => MinimapUtil.RemoveFromMinimap(iconId));
 
             EventName = $"{spawnPoint.AreaIndex + 1} 지역 텔레포트 활성화";
-            EventBus.Raise(new Work.Code.GameEvents.TeleportToMapEvent(
-                spawnPoint.AreaIndex,
-                spawnPoint.Position,
-                targetSpawner.transform.position));
         }
     }
 }

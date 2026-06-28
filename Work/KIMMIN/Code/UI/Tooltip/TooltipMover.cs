@@ -88,7 +88,9 @@ namespace Code.UI.Tooltip
             localPos += new Vector2(offset.x * dir.x, offset.y * dir.y);
             _parent.anchoredPosition = localPos;
 
-            Bounds bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(_canvasRect, _tooltipRoot);
+            if (!TryGetVisibleTooltipBounds(out Bounds bounds))
+                return;
+            
             Vector3 pos = _parent.anchoredPosition;
 
             float minX = -_canvasRect.rect.width * _canvasRect.pivot.x;
@@ -106,6 +108,50 @@ namespace Code.UI.Tooltip
                 pos.y -= (bounds.max.y - maxY);
 
             _parent.anchoredPosition = pos;
+        }
+
+        private bool TryGetVisibleTooltipBounds(out Bounds bounds)
+        {
+            bounds = default;
+            bool hasBounds = false;
+
+            for (int i = 0; i < _tooltipRoot.childCount; i++)
+            {
+                Transform child = _tooltipRoot.GetChild(i);
+
+                if (!IsVisibleTooltip(child, out RectTransform rect))
+                    continue;
+
+                Bounds childBounds = RectTransformUtility.CalculateRelativeRectTransformBounds(_canvasRect, rect);
+
+                if (!hasBounds)
+                {
+                    bounds = childBounds;
+                    hasBounds = true;
+                }
+                else
+                {
+                    bounds.Encapsulate(childBounds);
+                }
+            }
+
+            return hasBounds;
+        }
+
+        private bool IsVisibleTooltip(Transform child, out RectTransform rect)
+        {
+            rect = child as RectTransform;
+
+            if (rect == null || !child.gameObject.activeInHierarchy)
+                return false;
+
+            if (child.TryGetComponent(out LayoutElement layoutElement) && layoutElement.ignoreLayout)
+                return false;
+
+            if (child.TryGetComponent(out CanvasGroup canvasGroup) && canvasGroup.alpha <= 0f)
+                return false;
+
+            return true;
         }
     }
 }

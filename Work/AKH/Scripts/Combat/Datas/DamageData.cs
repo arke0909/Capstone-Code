@@ -1,4 +1,5 @@
 ﻿using System;
+using DewmoLib.ObjectPool.RunTime;
 
 namespace Scripts.Combat.Datas
 {
@@ -16,5 +17,6 @@ namespace Scripts.Combat.Datas
         public float damage;
         public int defPierceLevel;
         public DamageType damageType;
+        public PoolItemSO hitEffectPoolItem;
     }
 }

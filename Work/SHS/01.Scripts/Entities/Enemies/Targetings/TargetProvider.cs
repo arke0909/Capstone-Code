@@ -65,10 +65,8 @@ namespace Code.SHS.Targetings.Enemies
 
         public float GetTargetDistance()
         {
-            if (CurrentTarget == null)
-                return float.MaxValue;
             if (Target == null)
-                return Vector3.Distance(transform.position, _lastPosition);
+                return float.MaxValue;
             return Vector3.Distance(transform.position, Target.transform.position);
         }
 

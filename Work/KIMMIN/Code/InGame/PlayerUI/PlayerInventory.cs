@@ -1,4 +1,4 @@
-﻿using Chipmunk.GameEvents;
+using Chipmunk.GameEvents;
 using Code.GameEvents;
 using Code.UI.Core;
 using UnityEngine;
@@ -70,7 +70,6 @@ namespace InGame.PlayerUI
         {
             ForceHideLootUI();
             base.DisableUI(isFade);
-            playerInput.SetPlayerInput(true);
         }
 
         private void OpenInventoryPanel()

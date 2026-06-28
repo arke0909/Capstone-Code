@@ -21,9 +21,17 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1022736281155661325, guid: c860746277aafea409ac52b43a9c6259, type: 3}
+      propertyPath: killSound._entity
+      value: 
+      objectReference: {fileID: 11400000, guid: 069e04e7ae5cd644ba4c45a3a50720f8, type: 2}
+    - target: {fileID: 1022736281155661325, guid: c860746277aafea409ac52b43a9c6259, type: 3}
       propertyPath: 'stateDatas.Array.data[0]'
       value: 
       objectReference: {fileID: 11400000, guid: 0eafbdf5e132e3c479cd6e37300ceafb, type: 2}
+    - target: {fileID: 1022736281155661325, guid: c860746277aafea409ac52b43a9c6259, type: 3}
+      propertyPath: killSound.<DebugObject>k__BackingField
+      value: 
+      objectReference: {fileID: 8744048729638733587}
     - target: {fileID: 2377263104692288182, guid: c860746277aafea409ac52b43a9c6259, type: 3}
       propertyPath: maxAttack
       value: 1
@@ -40,6 +48,10 @@ PrefabInstance:
       propertyPath: chaseOffset
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 3899777623214923479, guid: c860746277aafea409ac52b43a9c6259, type: 3}
+      propertyPath: healSound.<DebugObject>k__BackingField
+      value: 
+      objectReference: {fileID: 8744048729638733587}
     - target: {fileID: 4492062723960988510, guid: c860746277aafea409ac52b43a9c6259, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -118,3 +130,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c860746277aafea409ac52b43a9c6259, type: 3}
+--- !u!1 &8744048729638733587 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6850015562613220499, guid: c860746277aafea409ac52b43a9c6259, type: 3}
+  m_PrefabInstance: {fileID: 2758803461497152384}
+  m_PrefabAsset: {fileID: 0}

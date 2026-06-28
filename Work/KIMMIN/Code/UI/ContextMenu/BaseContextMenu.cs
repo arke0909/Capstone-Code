@@ -14,6 +14,7 @@ namespace Work.Code.UI.ContextMenu
         [field: SerializeField] public ContextActionSO[] ContextActions { get; private set; }
         public override EUILayer Layer => EUILayer.ContextMenu;
         public Action OnAction;
+        public bool HasVisibleAction { get; protected set; }
 
         public abstract void ShowMenu(object data);
         public virtual void CloseMenu() => DisableUI(true);
@@ -27,8 +28,10 @@ namespace Work.Code.UI.ContextMenu
         
         public sealed override void ShowMenu(object data)
         {
-            EnableUI(true);
             ShowMenu((T)data);
+
+            if (HasVisibleAction)
+                EnableUI(true);
         }
 
         protected virtual void ShowMenu(T data)
@@ -45,6 +48,7 @@ namespace Work.Code.UI.ContextMenu
                 }
                 
                 InitAction(action, data);
+                HasVisibleAction = true;
             }
         }
 
@@ -75,6 +79,8 @@ namespace Work.Code.UI.ContextMenu
 
         private void Clear()
         {
+            HasVisibleAction = false;
+
             foreach (var action in _cache.Values)
             {
                 action.OnCallbackInvoked -= HandleActionCalled;

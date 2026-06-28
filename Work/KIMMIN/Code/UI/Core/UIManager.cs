@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using Chipmunk.GameEvents;
 using Code.GameEvents;
 using DG.Tweening;
@@ -26,9 +25,11 @@ namespace Code.UI.Core
         [SerializeField] private PlayerInputSO playerInput;
 
         private bool _isLocked;
+        private bool _isPlayerUIOpen;
+        private int _stackMutationDepth;
         private readonly HashSet<UIBase> _registeredUI = new();
         private readonly Dictionary<string, UIPanel> _registeredPanels = new();
-        private readonly Stack<UIBase> _uiStack = new();
+        private readonly List<UIBase> _uiStack = new();
         
         public OverlayUIManager OverlayManager => OverlayUIManager.Instance;
         public event Action OnUIStackChanged;
@@ -68,6 +69,9 @@ namespace Code.UI.Core
             
             if (ui is UIPanel panel)
                 _registeredPanels.Remove(panel.PanelID);
+
+            if (RemoveStackEntry(ui))
+                RefreshPlayerUIState();
             
             ui.OnToggleUI -= HandleChangeUIState;
         }
@@ -121,14 +125,20 @@ namespace Code.UI.Core
             if (OverlayManager.HasActiveOverlay())
                 OverlayManager.CloseAllOverlays();
 
-            if (isActive)
-                PushStack(ui);
-            else
-                PopStack();
-            
-            OnUIStackChanged?.Invoke();
-            playerInput.SetPlayerInput(_uiStack.Count == 0);
+            BeginStackMutation();
+            try
+            {
+                if (isActive)
+                    PushStack(ui);
+                else
+                    RemoveStackEntry(ui);
+            }
+            finally
+            {
+                EndStackMutation();
+            }
         }
+
         private bool CanStack(UIBase ui)
         {
             return ui.Layer == EUILayer.Panel || ui.Layer == EUILayer.Popup;
@@ -144,26 +154,35 @@ namespace Code.UI.Core
                 return;
             }
             
-            EventBus.Raise(new PlayerUIEvent(false));
             PopStack();
         }
 
         public void PushStack(UIBase ui)
         {
-            if (_uiStack.Contains(ui)) return;
+            if (ui == null)
+                return;
+
+            RemoveStackEntry(ui);
 
             if (ui.Layer == EUILayer.Panel)
-                ClearStack();
+                ClearStackEntries();
 
-            _uiStack.Push(ui);
+            _uiStack.Add(ui);
         }
 
         public void ClearStack()
         {
-            while (_uiStack.Count > 0)
+            if (_uiStack.Count == 0)
+                return;
+
+            BeginStackMutation();
+            try
             {
-                var top = _uiStack.Pop();
-                top.DisableUI();
+                ClearStackEntries();
+            }
+            finally
+            {
+                EndStackMutation();
             }
         }
         
@@ -172,16 +191,43 @@ namespace Code.UI.Core
             if (_uiStack.Count == 0 || _isLocked)
                 return;
             
-            var top = _uiStack.Pop();
+            var top = _uiStack[_uiStack.Count - 1];
             top.DisableUI();
+        }
+
+        public bool ReplaceStackUI(UIBase current, UIBase next, bool useFade = false)
+        {
+            if (_isLocked)
+                return false;
+
+            if (current == next)
+            {
+                if (next != null && !next.IsActive)
+                    next.EnableUI(useFade);
+
+                return true;
+            }
+
+            BeginStackMutation();
+            try
+            {
+                current?.DisableUI(useFade);
+                next?.EnableUI(useFade);
+                return true;
+            }
+            finally
+            {
+                EndStackMutation();
+            }
         }
 
         public bool TryGetCurrentPanel(out UIPanel panel)
         {
             panel = null;
             
-            foreach (var ui in _uiStack)
+            for (int i = _uiStack.Count - 1; i >= 0; i--)
             {
+                UIBase ui = _uiStack[i];
                 if (ui.Layer == EUILayer.Panel)
                 {
                     panel = ui as UIPanel;
@@ -225,6 +271,77 @@ namespace Code.UI.Core
         public bool HasStackUI()
         {
             return _uiStack.Count > 0;
+        }
+
+        private void BeginStackMutation()
+        {
+            _stackMutationDepth++;
+        }
+
+        private void EndStackMutation()
+        {
+            _stackMutationDepth--;
+
+            if (_stackMutationDepth == 0)
+                RefreshPlayerUIState();
+        }
+
+        private void RefreshPlayerUIState()
+        {
+            OnUIStackChanged?.Invoke();
+
+            bool hasStackUI = _uiStack.Count > 0;
+            playerInput.SetPlayerInput(!hasStackUI);
+
+            bool hasOpenPanel = HasOpenPanelInStack();
+            if (_isPlayerUIOpen == hasOpenPanel)
+                return;
+
+            _isPlayerUIOpen = hasOpenPanel;
+            EventBus.Raise(new PlayerUIEvent(hasOpenPanel));
+        }
+
+        private bool HasOpenPanelInStack()
+        {
+            for (int i = _uiStack.Count - 1; i >= 0; i--)
+            {
+                if (_uiStack[i].Layer == EUILayer.Panel)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private void ClearStackEntries()
+        {
+            if (_uiStack.Count == 0)
+                return;
+
+            UIBase[] stackedUIs = _uiStack.ToArray();
+            for (int i = stackedUIs.Length - 1; i >= 0; i--)
+            {
+                stackedUIs[i]?.DisableUI();
+            }
+
+            _uiStack.RemoveAll(ui => ui == null || !ui.IsActive);
+        }
+
+        private bool RemoveStackEntry(UIBase ui)
+        {
+            if (ui == null)
+                return false;
+
+            bool removed = false;
+            for (int i = _uiStack.Count - 1; i >= 0; i--)
+            {
+                if (_uiStack[i] != ui)
+                    continue;
+
+                _uiStack.RemoveAt(i);
+                removed = true;
+            }
+
+            return removed;
         }
         
         public void SetLockState(bool isLocked) => _isLocked = isLocked;
