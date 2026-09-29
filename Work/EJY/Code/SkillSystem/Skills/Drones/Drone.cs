@@ -1,4 +1,4 @@
-﻿using Chipmunk.ComponentContainers;
+using Chipmunk.ComponentContainers;
 using Chipmunk.Modules.StatSystem;
 using Code.StatusEffectSystem;
 using DewmoLib.ObjectPool.RunTime;
@@ -111,7 +111,7 @@ namespace Code.SkillSystem.Skills.Drones
             Vector3 overlapPos = _targetPos;
             overlapPos.y = GetGroundPos(transform.position).point.y;
 
-            buffCaster.CastBuff(overlapPos, damageDemodifyDecrease.GetStatusEffectInfo(_level));
+            buffCaster.CastBuff(overlapPos, damageDemodifyDecrease, _level);
 
             PoolingEffect poolingEffect = poolManagerSO.Pop(scanEffectItem) as PoolingEffect;
             poolingEffect.PlayVFX(transform.position, Quaternion.identity);

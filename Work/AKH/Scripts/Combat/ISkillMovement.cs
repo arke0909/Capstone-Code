@@ -14,6 +14,7 @@ namespace Scripts.Combat
         bool CanMove { get; set; }
         void SetRotation(Vector3 direction);
         void ApplyMovementData(Vector3 direction, MovementDataSO movementData);
+        void CancelMovementData();
         void SetPosition(Vector3 position);
     }
 }

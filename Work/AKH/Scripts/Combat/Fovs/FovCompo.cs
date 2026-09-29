@@ -726,7 +726,22 @@ namespace Scripts.Combat.Fovs
 
                 float distSqr = diff.sqrMagnitude;
                 if (distSqr <= 0.0001f)
+                {
+                    visibleTargets.Add(enemy);
+                    _visibleTargetsSet.Add(enemy);
+
+                    if (!before.Contains(enemy))
+                    {
+                        if (enemy.TryGetComponent(out IFindable findable) && ++findable.SightCount == 1)
+                            findable.Founded();
+                    }
+                    else
+                    {
+                        before.Remove(enemy);
+                    }
+
                     continue;
+                }
 
                 // [최적화] magnitude를 1회만 계산해 normalized 방향 및 레이캐스트 거리 모두 재사용
                 float dist = Mathf.Sqrt(distSqr);

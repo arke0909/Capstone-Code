@@ -2,6 +2,7 @@ using Chipmunk.GameEvents;
 using Code.InventorySystems.Items;
 using Work.Code.GameEvents;
 using Code.Items;
+using InGame.InventorySystem;
 
 namespace Work.Code.UI.ContextMenu.InventoryItemActions
 {
@@ -14,8 +15,9 @@ namespace Work.Code.UI.ContextMenu.InventoryItemActions
 
         public override bool CanShow(ItemSlot data)
         {
-            return data.Item is EquipableItem equipable && equipable.IsEquipped 
-                                                   && data.Item is not IUsable;
+            return data is EquipSlot &&
+                   data.Item is EquipableItem &&
+                   data.Item is not IUsable;
         }
 
         public override void OnAction(ItemSlot data)

@@ -8,7 +8,6 @@ using Scripts.Players;
 using InGame.PlayerUI;
 using Code.ETC;
 using Code.GameEvents;
-using Code.Players;
 using Code.Items;
 using Chipmunk.GameEvents;
 using Chipmunk.Library.Utility.GameEvents.Local;
@@ -41,7 +40,7 @@ namespace SHS.Scripts.Crosshairs
         public CrosshairSO CurrentCrosshairData { get; private set; }
 
         private Player _player;
-        private PlayerEquipment _equipment;
+        private EntityEquipment _equipment;
         private LocalEventBus _localEventBus;
 
         private GunDataSO _currentGunData;
@@ -62,7 +61,7 @@ namespace SHS.Scripts.Crosshairs
             ComponentContainer = componentContainer;
 
             _player = componentContainer.Get<Player>(true);
-            _equipment = componentContainer.Get<PlayerEquipment>();
+            _equipment = componentContainer.GetSubclassComponent<EntityEquipment>();
             _localEventBus = componentContainer.Get<LocalEventBus>();
 
             _player.PlayerInput.OnCursorMoved += HandleCursorMove;

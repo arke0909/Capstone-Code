@@ -20,14 +20,21 @@ namespace Code.UI.Minimap.Core
         public Vector2 NormalizedPos { get; set; }
         public Sprite IconSprite { get; }
         public bool SyncChildScale { get; }
+        public bool IsHighlighted { get; }
         public object Owner { get; set; }
 
-        public MinimapElementData(object owner, ElementType type, Sprite iconSprite, bool syncChildScale)
+        public MinimapElementData(
+            object owner,
+            ElementType type,
+            Sprite iconSprite,
+            bool syncChildScale,
+            bool isHighlighted)
         {
             Owner = owner;
             Type = type;
             IconSprite = iconSprite;
             SyncChildScale = syncChildScale;
+            IsHighlighted = isHighlighted;
         }
     }
 }

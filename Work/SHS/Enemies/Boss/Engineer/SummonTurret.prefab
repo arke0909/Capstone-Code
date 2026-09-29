@@ -112,14 +112,19 @@ MonoBehaviour:
   isWalkable: 0
   cooldown: 10
   <AnimType>k__BackingField: 0
-  <MoveType>k__BackingField: 1
+  <MoveType>k__BackingField: 0
   <TargetState>k__BackingField: {fileID: 11400000, guid: 78221511401be5b488b6a8c7595827c5, type: 2}
   turretThrowSound:
     _entity: {fileID: 11400000, guid: bab79f4714ae0404fb66f618359e7b1a, type: 2}
     ID: 0
     <DebugObject>k__BackingField: {fileID: 5856248982415862476}
-  summonPrefab: {fileID: 6806456118798731702, guid: 5e769371ccdd6194b87ad3e5dd21c0e2, type: 3}
+  poolManager: {fileID: 11400000, guid: c413011c9deace64aa106d229c06e489, type: 2}
+  summonPoolItem: {fileID: 11400000, guid: d3a1f8c5b7204e67a9c2d14f6b8e9031, type: 2}
   summonTransform: {fileID: 4619107303810860611}
+  throwInterval: 3
+  throwCount: 3
+  shieldHealthRatio: 0.15
+  shieldVfxLocalYOffset: 0.77
   spawnTrm: {fileID: 3482451088434704980}
   spawnRadius: 5
   minSpawnRadius: 2

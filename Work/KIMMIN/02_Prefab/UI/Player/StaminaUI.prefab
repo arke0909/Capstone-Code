@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7753987067424153155}
   - component: {fileID: 495481743432203641}
-  - component: {fileID: 2964870594171154196}
+  - component: {fileID: 4868956430880205561}
   m_Layer: 6
   m_Name: StaminaUI
   m_TagString: Untagged
@@ -61,7 +61,7 @@ Canvas:
   m_SortingLayerID: -38236363
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &2964870594171154196
+--- !u!114 &4868956430880205561
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -70,10 +70,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 979182399827173052}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ff5e9c6048e4e158ec1e72ba7458049, type: 3}
+  m_Script: {fileID: 11500000, guid: a8df3dadc0aace54f8da1d2223ec0b88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  staminaUI: {fileID: 2698857047676207593}
+  resourceUI: {fileID: 2698857047676207593}
   canvas: {fileID: 495481743432203641}
   offset: {x: 1.5, y: 0.5, z: -0.5}
 --- !u!1001 &4177044003379691012

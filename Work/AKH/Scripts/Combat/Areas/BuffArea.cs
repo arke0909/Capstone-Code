@@ -1,4 +1,4 @@
-﻿using Code.StatusEffectSystem;
+using Code.StatusEffectSystem;
 using UnityEngine;
 
 namespace Scripts.Combat.Areas
@@ -7,16 +7,10 @@ namespace Scripts.Combat.Areas
     {
         [SerializeField] private BuffCaster buffCaster;
         [SerializeField] private BuffSO targetBuff;
-        [SerializeField] private float buffDuration;
         protected override void TickElapsed()
         {
-            buffCaster.CastBuff(transform.position, targetBuff.GetStatusEffectInfo());
+            buffCaster.CastBuff(transform.position, targetBuff);
         }
 
-        public void SetBuffDuration(float buffDuration)
-        { 
-            floorDuration = buffDuration;
-            this.buffDuration = buffDuration;
-        }
     }
 }

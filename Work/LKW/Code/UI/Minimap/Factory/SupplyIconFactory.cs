@@ -15,7 +15,7 @@ namespace Code.UI.Minimap.Factory
         {
             SupplyIcon supplyIcon = _poolManager.Pop<SupplyIcon>(markerItem);
             
-            supplyIcon.GetComponent<Image>().sprite = supplySprite;
+            supplyIcon.GetComponent<Image>().sprite = data.IconSprite != null ? data.IconSprite : supplySprite;
             supplyIcon.Initialize(data);
             
             supplyIcon.SetLifeTimer();

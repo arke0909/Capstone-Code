@@ -43,6 +43,10 @@ PrefabInstance:
       propertyPath: hitBodyTrm
       value: 
       objectReference: {fileID: 4543606523034759275}
+    - target: {fileID: 4185195263435679105, guid: b6b6dfa6ef44e6445a416dd429513a25, type: 3}
+      propertyPath: killSound.<DebugObject>k__BackingField
+      value: 
+      objectReference: {fileID: 8519560555770879461}
     - target: {fileID: 6650670013197815698, guid: b6b6dfa6ef44e6445a416dd429513a25, type: 3}
       propertyPath: equipTrms._serializedList.Array.data[0].Value
       value: 
@@ -95,19 +99,53 @@ PrefabInstance:
     - {fileID: 7863636160003518393, guid: b6b6dfa6ef44e6445a416dd429513a25, type: 3}
     - {fileID: 7400578229078340552, guid: b6b6dfa6ef44e6445a416dd429513a25, type: 3}
     - {fileID: 1768429683225189666, guid: b6b6dfa6ef44e6445a416dd429513a25, type: 3}
+    - {fileID: 8369809032592392149, guid: b6b6dfa6ef44e6445a416dd429513a25, type: 3}
     m_RemovedGameObjects:
     - {fileID: 4676514733684940120, guid: b6b6dfa6ef44e6445a416dd429513a25, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 7761585967204712924, guid: b6b6dfa6ef44e6445a416dd429513a25, type: 3}
       insertIndex: 0
       addedObject: {fileID: 1749281826714864466}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6703029438314579469, guid: b6b6dfa6ef44e6445a416dd429513a25, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5389917696896685364}
   m_SourcePrefab: {fileID: 100100000, guid: b6b6dfa6ef44e6445a416dd429513a25, type: 3}
+--- !u!114 &1236996787917962857 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4185195263435679105, guid: b6b6dfa6ef44e6445a416dd429513a25, type: 3}
+  m_PrefabInstance: {fileID: 3116067549978893288}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8519560555770879461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 853fc5ea43cc4978bf53dfa332372bbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &4650195029413452340 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7761585967204712924, guid: b6b6dfa6ef44e6445a416dd429513a25, type: 3}
   m_PrefabInstance: {fileID: 3116067549978893288}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8519560555770879461 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6703029438314579469, guid: b6b6dfa6ef44e6445a416dd429513a25, type: 3}
+  m_PrefabInstance: {fileID: 3116067549978893288}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5389917696896685364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8519560555770879461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51c5743e41dc4db4973db18876d93953, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemy: {fileID: 1236996787917962857}
+  enemyData: {fileID: 11400000, guid: bde84fc71dc2a6f488910fc9ebd34e46, type: 2}
 --- !u!1001 &5949186239563047494
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -164,6 +202,13 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 22100000, guid: 5bba424f1363f5c4f913c55b5b2507de, type: 2}
+    - target: {fileID: 8763510174838885534, guid: 618df13b60146a945a82f990ab911027, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'Armature'\n\tTransform 'Armature'\n\tTransform
+        'Armature'\n\tFrom animation clip 'Attack'"
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -180,6 +225,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5938624104057318658, guid: 618df13b60146a945a82f990ab911027, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6745708195864189657}
+    - targetCorrespondingSourceObject: {fileID: 5938624104057318658, guid: 618df13b60146a945a82f990ab911027, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7745708195864189657}
   m_SourcePrefab: {fileID: 100100000, guid: 618df13b60146a945a82f990ab911027, type: 3}
 --- !u!1 &64733153560137540 stripped
 GameObject:
@@ -233,6 +281,18 @@ MonoBehaviour:
     _entity: {fileID: 11400000, guid: 294d84c460a9aef4b8de302b8a3658a9, type: 2}
     ID: 0
     <DebugObject>k__BackingField: {fileID: 64733153560137540}
+--- !u!114 &7745708195864189657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 64733153560137540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eb76126beaf4e06a993944bc20b0e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1749281826714864466 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5388965770521667860, guid: 618df13b60146a945a82f990ab911027, type: 3}

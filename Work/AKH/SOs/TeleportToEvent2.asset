@@ -15,7 +15,7 @@ MonoBehaviour:
   eventName: "\uBCF4\uC2A4\uD3EC\uD0C8"
   eventIcon: {fileID: 21300000, guid: 5da6c29d2a6d74d2ca8ff11f0b1fd84d, type: 3}
   eventColor: {r: 0.19900322, g: 0.6004252, b: 0.9811321, a: 1}
-  interval: 720
-  duration: 720
+  interval: 1440
+  duration: 30
   isRepeat: 1
   callOnStart: 0

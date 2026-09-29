@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using EPOOutline;
 using Scripts.GameSystem.Structures;
 using UnityEngine;
@@ -11,7 +12,9 @@ namespace Code.NPC
         [SerializeField] private Transform visualRoot;
 
         private Dictionary<NPCDataSO, NPCVisual> _npcVisualDict = new();
+        private readonly List<OutlineTarget> _outlineTargets = new();
         private NPCVisual _currentVisual;
+        private bool _isDespawning;
 
         protected override void Awake()
         {
@@ -22,35 +25,62 @@ namespace Code.NPC
             {
                 npcVisual.SetVisual(false);
             }
+
+            DeSelect();
+            gameObject.SetActive(false);
         }
 
         public void SetData(NPCDataSO npcData)
         {
+            ClearOutlineTargets();
             _currentVisual?.SetVisual(false);
-            
-            if (npcData == null || !_npcVisualDict.ContainsKey(npcData))
+            _currentVisual = null;
+
+            if (npcData == null || !_npcVisualDict.TryGetValue(npcData, out NPCVisual npcVisual))
             {
-                Debug.Log("data is not valid");
+                Debug.LogWarning("NPC data is not valid.", this);
                 return;
             }
 
-            _currentVisual = _npcVisualDict[npcData];
+            _currentVisual = npcVisual;
             _currentVisual.SetVisual(true);
-            
-            // 생성된 NPC 외형 아웃라인 동기화 해주기
-            var renderers = _currentVisual.transform.GetComponentsInChildren<Renderer>();
 
-            foreach (var renderer in renderers)
+            Renderer[] renderers = _currentVisual.transform.GetComponentsInChildren<Renderer>();
+            foreach (Renderer renderer in renderers)
             {
-                Outlinable.AddTarget(new OutlineTarget(renderer));
+                OutlineTarget target = new OutlineTarget(renderer);
+                Outlinable.AddTarget(target);
+                _outlineTargets.Add(target);
             }
+        }
+
+        public new void Spawn(Vector3 targetPos)
+        {
+            transform.DOKill();
+            _isDespawning = false;
+            base.Spawn(targetPos);
         }
 
         public override void Despawn()
         {
-            // despawn effect play
+            if (_isDespawning || !gameObject.activeSelf)
+                return;
+
+            _isDespawning = true;
+            transform.DOKill();
             base.Despawn();
-            _currentVisual.SetVisual(false);
+            _currentVisual?.SetVisual(false);
+            ClearOutlineTargets();
+        }
+
+        private void ClearOutlineTargets()
+        {
+            foreach (OutlineTarget target in _outlineTargets)
+            {
+                Outlinable.RemoveTarget(target);
+            }
+
+            _outlineTargets.Clear();
         }
     }
 }

@@ -26,6 +26,8 @@ namespace Work.Code.MapEvents.Elements
         
         private bool _isDropping = false;
         private readonly SupplyRewardGenerator _rewardGenerator = new();
+        private SupplyRewardTableSO _activeSupplyRewardTable;
+        private Sprite _activeMinimapIcon;
 
         private Pool _pool;
         
@@ -42,12 +44,28 @@ namespace Work.Code.MapEvents.Elements
 
         public void StartDrop(Vector3 position, Action<Vector3> landingCallback = null)
         {
+            StartDrop(position, null, null, landingCallback);
+        }
+
+        public void StartDrop(Vector3 position, SupplyRewardTableSO rewardTable, Action<Vector3> landingCallback = null)
+        {
+            StartDrop(position, rewardTable, null, landingCallback);
+        }
+
+        public void StartDrop(
+            Vector3 position,
+            SupplyRewardTableSO rewardTable,
+            Sprite minimapIcon,
+            Action<Vector3> landingCallback = null)
+        {
+            _activeSupplyRewardTable = rewardTable;
+            _activeMinimapIcon = minimapIcon;
             SetUpContainer();
             Spawn(position);
             
             LandingCallback = landingCallback;
             _isDropping = true;
-            _iconId = MinimapUtil.AddToMinimap(this, ElementType.SupplyIcon, null, false, position);
+            _iconId = MinimapUtil.AddToMinimap(this, ElementType.SupplyIcon, _activeMinimapIcon, false, position);
         }
 
         public void Spawn(Vector3 targetPos)
@@ -62,12 +80,16 @@ namespace Work.Code.MapEvents.Elements
             fogEffect?.Clear();
             LandingCallback = null;
             _isDropping = false;
+            _activeSupplyRewardTable = null;
+            _activeMinimapIcon = null;
             MinimapUtil.RemoveFromMinimap(_iconId);
             _pool.Push(this);
         }
         private void SetUpContainer()
         {
-            if (supplyRewardTable == null)
+            SupplyRewardTableSO rewardTable = _activeSupplyRewardTable != null ? _activeSupplyRewardTable : supplyRewardTable;
+
+            if (rewardTable == null)
             {
                 Debug.LogWarning($"[{nameof(Airdrop)}] SupplyRewardTableSO is missing.", this);
                 Inventory.ClearInventory();
@@ -75,7 +97,7 @@ namespace Work.Code.MapEvents.Elements
             }
 
             int currentDay = TimeController.Instance != null ? Mathf.Max(1, TimeController.Instance.CurrentDay) : 1;
-            List<SupplyReward> rewards = _rewardGenerator.Generate(currentDay, supplyRewardTable);
+            List<SupplyReward> rewards = _rewardGenerator.Generate(currentDay, rewardTable);
 
             if (rewards.Count == 0)
             {

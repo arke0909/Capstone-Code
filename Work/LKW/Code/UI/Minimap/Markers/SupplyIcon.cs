@@ -5,6 +5,12 @@ namespace Code.UI.Minimap.Markers
 {
     public class SupplyIcon : MinimapElement
     {
+        public override void Initialize(MinimapElementData data)
+        {
+            base.Initialize(data);
+            SyncChildScale = false;
+        }
+
         public void SetLifeTimer()
         {
             string targetId = ID;

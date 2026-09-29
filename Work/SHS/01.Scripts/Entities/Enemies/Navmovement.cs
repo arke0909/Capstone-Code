@@ -34,6 +34,7 @@ namespace Code.SHS.Entities.Enemies
         private NavMeshPath _pendingPath;
         private Vector3 _pendingDestination;
         private bool _isCalculatingPath;
+        private int _knockbackVersion;
 
         public bool IsArrived
         {
@@ -80,7 +81,14 @@ namespace Code.SHS.Entities.Enemies
         public virtual void AfterInitialize()
         {
             moveSpeedStat = this.GetContainerComponent<StatOverrideBehavior>().GetStat(moveSpeedStat);
+            moveSpeedStat.OnValueChanged += HandleMoveSpeedChange;
             UpdateAgentSpeed();
+        }
+
+        protected virtual void OnDestroy()
+        {
+            if (moveSpeedStat != null)
+                moveSpeedStat.OnValueChanged -= HandleMoveSpeedChange;
         }
 
         protected virtual void UpdateAgentSpeed()
@@ -232,6 +240,7 @@ namespace Code.SHS.Entities.Enemies
 
         public virtual void ResetMovementState(Vector3 position, Quaternion rotation)
         {
+            CancelKnockBack();
             transform.SetPositionAndRotation(position, rotation);
             SetLookAtTarget(null);
             ResetPathUpdate();
@@ -263,10 +272,22 @@ namespace Code.SHS.Entities.Enemies
 
         public void WarpToPosition(Vector3 position) => agent.Warp(position);
 
+        public void CancelKnockBack()
+        {
+            _knockbackVersion++;
+
+            if (agent == null || !agent.isActiveAndEnabled)
+                return;
+
+            agent.Warp(agent.transform.position);
+        }
+
         public async void KnockBack(Vector3 direction, MovementDataSO kbMovement)
         {
-            if (!isActiveAndEnabled)
+            if (!isActiveAndEnabled || kbMovement == null)
                 return;
+
+            int knockbackVersion = ++_knockbackVersion;
 
             //여기서 넉백 저항력이 있다면 반영해서 저항해줘야 한다.
             SetStop(true); //네비게이션은 정지시켜주고
@@ -284,12 +305,12 @@ namespace Code.SHS.Entities.Enemies
                 agent.transform.Translate(currentMovement * Time.fixedDeltaTime, Space.World);
                 currentTime += Time.fixedDeltaTime;
                 await Awaitable.FixedUpdateAsync();
-                if (!isActiveAndEnabled)
+                if (!isActiveAndEnabled || knockbackVersion != _knockbackVersion)
                     return;
             }
 
             //여기서 추가 작업을 안해주면 넉백이 이상해진다. 일단 이상하게 해서 봅시다.
-            if (!isActiveAndEnabled)
+            if (!isActiveAndEnabled || knockbackVersion != _knockbackVersion)
                 return;
 
             WarpToPosition(agent.transform.position);

@@ -1,4 +1,4 @@
-﻿using Chipmunk.ComponentContainers;
+using Chipmunk.ComponentContainers;
 using Chipmunk.Modules.StatSystem;
 using Scripts.Entities;
 using UnityEngine;
@@ -10,22 +10,38 @@ namespace Code.StatusEffectSystem
     public class StatStatusEffectDataSO : AbstractStatusEffectDataSO
     {
         public StatSO targetStat;
-        public bool isMultiplicationOperation;
 
-        public override AbstractStatusEffect CreateStatusEffect(Entity target, StatusEffectInfo info)
+        protected override AbstractStatusEffect CreateStatusEffectInstance(Entity target, StatusEffectInfo info)
         {
-            StatStatusEffect statusEffect = new StatStatusEffect(target, info, targetStat);
+            return new StatStatusEffect(target, info, targetStat, true);
+        }
 
-            float value = info.Value;
-            if (info.IsPercent)
+        public override bool CanApplyTo(Entity target, out string reason)
+        {
+            if (!base.CanApplyTo(target, out reason))
+                return false;
+
+            if (targetStat == null)
             {
-                var stat = target.Get<StatOverrideBehavior>().GetStat(targetStat);
-                float statValue = isMultiplicationOperation ? stat.Value : stat.BaseValue;
-                value *= statValue;
+                reason = $"{name} has no target stat.";
+                return false;
             }
 
-            statusEffect.SetValue(value);
-            return statusEffect;
+            StatOverrideBehavior statBehavior = target.Get<StatOverrideBehavior>();
+            if (statBehavior == null)
+            {
+                reason = $"{target.name} has no StatOverrideBehavior.";
+                return false;
+            }
+
+            if (!statBehavior.TryGetStat(targetStat, out _))
+            {
+                reason = $"{target.name} does not have {targetStat.name} registered.";
+                return false;
+            }
+
+            reason = null;
+            return true;
         }
     }
 }

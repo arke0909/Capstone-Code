@@ -6,8 +6,10 @@ namespace Code.StatusEffectSystem.StatusEffects
     public abstract class AbstractStatusEffect
     {
         public int CreateDataIndex { get; protected set; }
-        public BuffSO KeySO { get; protected set; }
-        public StatusEffectEnum StatusEffectEnum { get; protected set; }
+        public BuffSO KeySO => OwnerLayer?.Buff;
+        public AbstractStatusEffectDataSO StatusEffectData { get; private set; }
+        public StatusEffectLayer OwnerLayer { get; private set; }
+
         public int Priority { get; protected set; }
         public float CurrentTime { get; protected set; }
         public float RemainingTime =>
@@ -33,8 +35,7 @@ namespace Code.StatusEffectSystem.StatusEffects
         {
             _target = target;
             CreateDataIndex = statusEffectInfo.CreateDataIndex;
-            KeySO = statusEffectInfo.KeySO;
-            StatusEffectEnum = statusEffectInfo.StatusEffect;
+
             Priority = statusEffectInfo.Priority;
             _applyTime = statusEffectInfo.ApplyTime;
             _value = statusEffectInfo.Value;
@@ -49,7 +50,17 @@ namespace Code.StatusEffectSystem.StatusEffects
             _refreshTimerOnReapply = statusEffectInfo.RefreshTimerOnReapply;
             _stackTimer = 0f;
         }
-        
+
+        internal void SetStatusEffectData(AbstractStatusEffectDataSO statusEffectData)
+        {
+            StatusEffectData = statusEffectData;
+        }
+
+        internal void SetOwnerLayer(StatusEffectLayer ownerLayer)
+        {
+            OwnerLayer = ownerLayer;
+        }
+
         public void SetValue(float value)
         {
             _baseValue = value;
@@ -139,8 +150,13 @@ namespace Code.StatusEffectSystem.StatusEffects
             _stackTimer = 0f;
             _isApplying = true;
         }
-        
+
         public abstract void ReleaseStatusEffect(Entity entity);
+
+        public virtual void ExtendDuration(float additionalTime)
+        {
+            _applyTime += Mathf.Max(0f, additionalTime);
+        }
 
         public void SetRemainingTime(float applyTime)
         {
@@ -150,7 +166,7 @@ namespace Code.StatusEffectSystem.StatusEffects
             ResetStatusEffect();
         }
 
-        public void SetStrongerValue(StatusEffectInfo info)
+        public virtual void SetStrongerValue(StatusEffectInfo info)
         {
             Priority = info.Priority;
             _baseValue = info.Value;

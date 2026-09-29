@@ -11,11 +11,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5aafaebd814478d84755322022c151a, type: 3}
   m_Name: BackDash Slow
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   buffName: BackDash Slow
   buffIcon: {fileID: 0}
   statusEffectCreateData:
-  - statusEffect: 4
+  - statusEffectData: {fileID: 11400000, guid: 93d291985762c194485d622ee90191dd, type: 2}
     isPercent: 1
     priority: 0
     effectValue:

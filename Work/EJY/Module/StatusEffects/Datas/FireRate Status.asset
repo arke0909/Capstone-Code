@@ -12,8 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 159cf38f15dc46ba8ad0a7bc0616908f, type: 3}
   m_Name: FireRate Status
   m_EditorClassIdentifier: 
-  idx: 12
-  StatusEffectName: FireRate Status
   canOverlap: 1
   targetStat: {fileID: 11400000, guid: a53115f89bf4eec40aa365a073976a2e, type: 2}
-  isMultiplicationOperation: 0

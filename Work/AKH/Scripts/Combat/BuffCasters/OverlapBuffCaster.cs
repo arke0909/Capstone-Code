@@ -1,5 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
 using Code.StatusEffectSystem;
 using UnityEngine;
 
@@ -12,17 +10,21 @@ namespace Scripts.Combat
         [SerializeField] private int maxCollideCount = 1;
 
         private Collider[] _colliders;
-        
+
         public float CastRadius => castRadius;
 
         private void Awake()
         {
             _colliders = new Collider[maxCollideCount];
         }
-        public override bool CastBuff(Vector3 position, IEnumerable<StatusEffectInfo> infos)
+        public override bool CastBuff(
+            Vector3 position,
+            BuffSO buff,
+            int level = 0,
+            float additionalTime = 0f)
         {
             int count = Physics.OverlapSphereNonAlloc(position, castRadius, _colliders, whatIsTarget);
-           
+
             if (count <= 0) return false;
 
             float halfAngle = castAngle * 0.5f;
@@ -32,11 +34,11 @@ namespace Scripts.Combat
             for (int i = 0; i < count; i++)
             {
                 Transform target = _colliders[i].transform;
-                
+
                 if (!IsPointInArc(position, startDir, endDir, target.position, castRadius, castAngle))
                     continue;
-                
-                ApplyBuff(target, infos);
+
+                ApplyBuff(target, buff, level, additionalTime);
             }
             return count > 0;
         }
@@ -85,6 +87,6 @@ namespace Scripts.Combat
             castRadius = radius;
         }
 
-       
+
     }
 }

@@ -1,38 +1,39 @@
 using System;
 using Chipmunk.GameEvents;
 using Code.GameEvents;
+using Code.Guns.HeatReceiver;
 using Scripts.Combat.Datas;
 using Scripts.Combat.ItemObjects;
 using UnityEngine;
-using Work.EJY.Code.Guns.HeatReceiver;
+using UnityEngine.Serialization;
 
-namespace Work.EJY.Code.Guns
+namespace Code.Guns
 {
     public class GunHeatFeedback : MonoBehaviour
     {
-        [SerializeField] private ParticleByHeatRatio particleByHeatRatio;
-        [SerializeField] private MaterialByHeatRatio materialByHeatRatio;
+        [FormerlySerializedAs("particleByHeatRatio")] [SerializeField] private ParticleByRatio particleByRatio;
+        [FormerlySerializedAs("materialByHeatRatio")] [SerializeField] private MaterialByRatio materialByRatio;
 
         public void PlayMuzzleSmog()
         {
-            particleByHeatRatio.Particle.Play();
+            particleByRatio.Particle.Play();
         }
 
         public void StopMuzzleSmog()
         {
-            particleByHeatRatio.Particle.Stop(); 
+            particleByRatio.Particle.Stop(); 
         }
 
         public void SetHeatRatio(float ratio)
         {
-            particleByHeatRatio.SetHeatRatio(ratio);
-            materialByHeatRatio.SetHeatRatio(ratio);
+            particleByRatio.SetRatio(ratio);
+            materialByRatio.SetRatio(ratio);
         }
 
         public void ResetRatio()
         {
-            particleByHeatRatio.ResetRatio();
-            materialByHeatRatio.ResetRatio();
+            particleByRatio.ResetRatio();
+            materialByRatio.ResetRatio();
         }
     }
 }

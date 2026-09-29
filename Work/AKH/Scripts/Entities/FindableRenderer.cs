@@ -110,23 +110,20 @@ namespace Scripts.Entities
             if (renderers == null)
                 return;
 
+            bool isChanged = false;
             foreach (Renderer targetRenderer in renderers)
             {
-                AddRenderer(targetRenderer);
+                isChanged |= AddRendererInternal(targetRenderer);
             }
+
+            if (isChanged)
+                ApplyCurrentState();
         }
 
         public void AddRenderer(Renderer targetRenderer)
         {
-            if (targetRenderer == null)
-                return;
-
-            _targetRenderers ??= new List<Renderer>();
-            if (_targetRenderers.Contains(targetRenderer))
-                return;
-
-            _targetRenderers.Add(targetRenderer);
-            ApplyCurrentState();
+            if (AddRendererInternal(targetRenderer))
+                ApplyCurrentState();
         }
 
         public void RemoveRenderers(IEnumerable<Renderer> renderers)
@@ -146,7 +143,21 @@ namespace Scripts.Entities
                 return;
 
             RestorePreviousMaterials(targetRenderer);
+            targetRenderer.forceRenderingOff = false;
             _targetRenderers.Remove(targetRenderer);
+        }
+
+        private bool AddRendererInternal(Renderer targetRenderer)
+        {
+            if (targetRenderer == null)
+                return false;
+
+            _targetRenderers ??= new List<Renderer>();
+            if (_targetRenderers.Contains(targetRenderer))
+                return false;
+
+            _targetRenderers.Add(targetRenderer);
+            return true;
         }
         #endregion
 

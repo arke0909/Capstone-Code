@@ -54,7 +54,7 @@ namespace Scripts.Combat.Datas
         public override void AttackTrigger()
         {
             base.AttackTrigger();
-            if(!_inventory.RemoveItem(this, 1, false)) return;
+            if(!_inventory.RemoveItem(this, 1)) return;
             WeaponObj?.Attack();
         }
     }

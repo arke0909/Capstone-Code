@@ -19,7 +19,7 @@ namespace Code.Items
 
         private void Initialize()
         {
-            Debug.Log($"[ItemDB] Initialize - allItems count: {allItems?.Count ?? -1}");
+            Debug.Log($"<color=green>[ItemDB] </color> Initialize - allItems count: {allItems?.Count ?? -1}");
             _itemDataByType = allItems.GroupBy(item => item.itemType)
                 .ToDictionary(group => group.Key, group => group.ToList());
 
@@ -84,6 +84,7 @@ namespace Code.Items
                 var item = GetRandomItem(targetItems);
                 if (item != null) result.Add(item);
             }
+
             return result;
         }
 
@@ -104,6 +105,7 @@ namespace Code.Items
                 Debug.LogError($"[ItemDB] GetRandomItems - Type:{type}, Rarity:{rarity} 조합의 아이템 없음. DB 등록 확인 필요.");
                 return new List<ItemDataSO>();
             }
+
             return PickRandomItems(filtered, count);
         }
 
@@ -112,9 +114,11 @@ namespace Code.Items
             var filtered = targetItems.Where(i => (i.spawnArea & area) != 0).ToList();
             if (filtered.Count == 0)
             {
-                Debug.LogError($"[ItemDB] SpawnArea {area} 에 해당하는 아이템 없음");
+                if (area != SpawnArea.None)
+                    Debug.LogError($"[ItemDB] SpawnArea {area} 에 해당하는 아이템 없음");
                 return new List<ItemDataSO>();
             }
+
             return PickRandomItems(filtered, count);
         }
     }

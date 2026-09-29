@@ -40,6 +40,14 @@ namespace Code.SHS.Entities.Enemies.FSM
         public override void Update()
         {
             base.Update();
+
+            if (_stateSkill is IStateExitControlledSkill exitControlledSkill)
+            {
+                if (exitControlledSkill.IsSkillComplete)
+                    _enemy.ChangeState(EnemyStateEnum.Aim);
+                return;
+            }
+
             if (_isTriggerCall)
                 _enemy.ChangeState(EnemyStateEnum.Aim);
         }

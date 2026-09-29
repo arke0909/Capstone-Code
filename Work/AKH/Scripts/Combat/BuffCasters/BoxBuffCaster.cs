@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Code.StatusEffectSystem;
 using UnityEngine;
 
@@ -18,17 +16,21 @@ namespace Scripts.Combat
             _colliders = new Collider[maxColliderCount];
         }
 
-        public override bool CastBuff(Vector3 position, IEnumerable<StatusEffectInfo> infos)
+        public override bool CastBuff(
+            Vector3 position,
+            BuffSO buff,
+            int level = 0,
+            float additionalTime = 0f)
         {
             Vector3 center = position + castOffset;
-            int count = Physics.OverlapBoxNonAlloc(center, castSize, _colliders, 
+            int count = Physics.OverlapBoxNonAlloc(center, castSize, _colliders,
                 Quaternion.identity, whatIsTarget);
 
             if (count <= 0) return false;
 
             for (int i = 0; i < count; i++)
             {
-                ApplyBuff(_colliders[i].transform, infos);
+                ApplyBuff(_colliders[i].transform, buff, level, additionalTime);
             }
             return count > 0;
         }

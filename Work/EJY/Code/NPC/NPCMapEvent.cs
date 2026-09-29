@@ -24,10 +24,16 @@ namespace Code.NPC
         [SerializeField] private Sprite mapMarker;
         
         private NPCInteractUIPanel _interactUI;
+        private int _despawnEventId = -1;
 
         protected void Start()
         {
             _interactUI = UIManager.Instance.GetPanel<NPCInteractUIPanel>("NPC_Panel");
+        }
+
+        private void OnDestroy()
+        {
+            CancelDespawnEvent();
         }
 
         private NPCDataSO GetNPCData()
@@ -77,6 +83,8 @@ namespace Code.NPC
 
         protected override void StartDropStructureEvent()
         {
+            CancelDespawnEvent();
+
             if (!TryGetRandomAreaPoint(out AreaPoint spawnPoint))
                 return;
 
@@ -88,20 +96,20 @@ namespace Code.NPC
 
             RegisterDropStructure(npc);
             string iconId = MinimapUtil.AddToMinimap(npc, ElementType.Marker, mapMarker, true, spawnPoint.Position);
-            
 
+            Action<UIBase, bool> endInteract = null;
             if (npcData.isOneTime)
             {
-                void EndInteract(UIBase ui, bool isOn)
+                endInteract = (ui, isOn) =>
                 {
-                    if (!isOn)
-                    {
-                        _interactUI.OnToggleUI -= EndInteract;
-                        npc.Despawn();
-                    }
-                }
+                    if (isOn)
+                        return;
 
-                _interactUI.OnToggleUI += EndInteract;
+                    _interactUI.OnToggleUI -= endInteract;
+                    npc.Despawn();
+                };
+
+                _interactUI.OnToggleUI += endInteract;
             }
             
             npc.Init((entity) =>
@@ -109,14 +117,28 @@ namespace Code.NPC
                 _interactUI.ChangeContent(npcData);
                 _interactUI.EnableUI(true);
             },
-                ()=>
-                {
-                    _interactUI.DisableUI();
-                    MinimapUtil.RemoveFromMinimap(iconId);
-                });
+            () =>
+            {
+                CancelDespawnEvent();
+                if (endInteract != null)
+                    _interactUI.OnToggleUI -= endInteract;
+
+                _interactUI.DisableUI();
+                MinimapUtil.RemoveFromMinimap(iconId);
+            });
             npc.Spawn(spawnPoint.Position);
 
-            EventName = $"{spawnPoint.AreaIndex + 1} 지역 {npcData.npcName} 출현";
+            _despawnEventId = _timeController.AddEvent(Mathf.Max(0f, MapEventSO.duration), npc.Despawn);
+            EventName = $"{spawnPoint.AreaIndex + 1} \uC9C0\uC5ED {npcData.npcName} \uCD9C\uD604";
+        }
+
+        private void CancelDespawnEvent()
+        {
+            if (_despawnEventId < 0)
+                return;
+
+            _timeController.CancelEvent(_despawnEventId);
+            _despawnEventId = -1;
         }
     }
 }

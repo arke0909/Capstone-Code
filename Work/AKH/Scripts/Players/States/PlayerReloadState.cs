@@ -2,7 +2,6 @@
 using Chipmunk.ComponentContainers;
 using Chipmunk.GameEvents;
 using Code.GameEvents;
-using Code.Players;
 using Scripts.Combat;
 using Scripts.Combat.Datas;
 using Scripts.Entities;
@@ -19,7 +18,7 @@ namespace Scripts.Players.States
     public class PlayerReloadState : PlayerMoveState
     {
         private GunItem _gun;
-        private PlayerEquipment _equipment;
+        private EntityEquipment _equipment;
         private EntityGunStatInfo _entityGunStatInfo;
         private ItemGrabRiggingController _itemGrabBehavior;
 
@@ -30,7 +29,7 @@ namespace Scripts.Players.States
         public PlayerReloadState(ComponentContainer container, int animationHash) : base(container, animationHash)
         {
             _myMoveType = MoveType.Walk;
-            _equipment = container.Get<PlayerEquipment>();
+            _equipment = container.GetSubclassComponent<EntityEquipment>();
             _entityGunStatInfo = container.Get<EntityGunStatInfo>();
             _itemGrabBehavior = container.Get<ItemGrabRiggingController>(true);
         }

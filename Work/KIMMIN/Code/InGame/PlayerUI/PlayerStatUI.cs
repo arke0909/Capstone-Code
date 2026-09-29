@@ -16,6 +16,7 @@ namespace InGame.PlayerUI
     {
         [SerializeField] private BarComponent thirstBar;
         [SerializeField] private BarComponent healthBar;
+        [SerializeField] private HealthShieldBarUI healthShieldBar;
         
         [Inject] private Player _player;
         private LocalEventBus _localEventBus;
@@ -24,17 +25,20 @@ namespace InGame.PlayerUI
         {
             _localEventBus = _player.Get<LocalEventBus>();
             _localEventBus.Subscribe<WaterChangeEvent>(HandleChangeWater);
-            _localEventBus.Subscribe<HealthChangeEvent>(HandleChangeHealth);
+            _localEventBus.Subscribe<HealthShieldChangeEvent>(HandleChangeHealth);
+            _localEventBus.Raise(new HealthShieldStateRequestEvent());
         }
+
         private void OnDestroy()
         {
             _localEventBus.Subscribe<WaterChangeEvent>(HandleChangeWater);
-            _localEventBus.Subscribe<HealthChangeEvent>(HandleChangeHealth);
+            _localEventBus.Unsubscribe<HealthShieldChangeEvent>(HandleChangeHealth);
         }
         
-        private void HandleChangeHealth(HealthChangeEvent evt)
+        private void HandleChangeHealth(HealthShieldChangeEvent evt)
         {
             healthBar.SetBar(evt.CurrentHealth, evt.MaxHealth);
+            healthShieldBar.SetBar(evt.CurrentHealth, evt.MaxHealth, evt.CurrentShield);
         }
 
         private void HandleChangeWater(WaterChangeEvent evt)

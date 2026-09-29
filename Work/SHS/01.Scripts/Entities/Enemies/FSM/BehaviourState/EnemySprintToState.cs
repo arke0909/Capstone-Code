@@ -2,11 +2,15 @@
 using Code.SHS.Entities.Enemies.Targetings.Events;
 using Code.SHS.Targetings.Enemies;
 using Scripts.FSM;
+using UnityEngine;
 
 namespace Code.SHS.Entities.Enemies.FSM.BehaviourState
 {
     public class EnemySprintToState : EnemyState
     {
+        private static readonly int _walkHash = Animator.StringToHash("Walk");
+        private static readonly int _sprintHash = Animator.StringToHash("Sprint");
+
         public EnemySprintToState(ComponentContainer container, int animationHash) : base(container, animationHash)
         {
         }
@@ -15,7 +19,10 @@ namespace Code.SHS.Entities.Enemies.FSM.BehaviourState
         {
             base.Enter();
             _movement.SetStop(false);
-            _movement.MoveType = NavMoveType.Sprint;
+            NavMoveType moveType = _sprintStamina != null ? _sprintStamina.GetSprintMoveType() : NavMoveType.Sprint;
+            _movement.MoveType = moveType;
+            _animator.SetParam(_walkHash, moveType == NavMoveType.Walk);
+            _animator.SetParam(_sprintHash, moveType == NavMoveType.Sprint);
             _movement.SetLookAtTarget(null);
         }
         protected override void HandleTargetLost(TargetLostEvent @event)
@@ -40,7 +47,18 @@ namespace Code.SHS.Entities.Enemies.FSM.BehaviourState
                 return;
             }
 
+            NavMoveType moveType = _sprintStamina != null ? _sprintStamina.GetSprintMoveType() : NavMoveType.Sprint;
+            _movement.MoveType = moveType;
+            _animator.SetParam(_walkHash, moveType == NavMoveType.Walk);
+            _animator.SetParam(_sprintHash, moveType == NavMoveType.Sprint);
             UpdateMovementAnimation();
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            _animator.SetParam(_walkHash, false);
+            _animator.SetParam(_sprintHash, false);
         }
     }
 }

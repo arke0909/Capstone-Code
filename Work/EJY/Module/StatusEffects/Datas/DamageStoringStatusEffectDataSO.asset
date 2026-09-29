@@ -12,6 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236481ba040a427cae3e2e6607eacf61, type: 3}
   m_Name: DamageStoringStatusEffectDataSO
   m_EditorClassIdentifier: 
-  idx: 8
-  StatusEffectName: Damage Storing
   canOverlap: 0

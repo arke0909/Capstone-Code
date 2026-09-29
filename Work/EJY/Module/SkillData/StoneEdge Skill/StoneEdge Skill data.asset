@@ -19,5 +19,6 @@ MonoBehaviour:
   upgradeList:
   - {fileID: 0}
   - {fileID: 11400000, guid: 534aebe55e394ee4d84276a3f83f688c, type: 2}
+  - {fileID: 11400000, guid: eb67f61dd3a90a64a8c9de20b60784e6, type: 2}
   skillPrefab: {fileID: 0}
   defaultSkill: 0

@@ -103,7 +103,7 @@ namespace Work.Code.Craft
             List<ItemDataSO> autoCraftedItems)
         {
             consumeItems.TryGetValue(node.Item, out int plannedCount);
-            int ownedCount = Mathf.Max(0, Inventory.GetItemCount(node.Item) - plannedCount);
+            int ownedCount = Mathf.Max(0, Inventory.GetCraftAvailableItemCount(node.Item) - plannedCount);
             int consumeCount = Mathf.Min(ownedCount, needCount);
 
             if (consumeCount > 0)

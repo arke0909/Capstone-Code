@@ -552,7 +552,7 @@ namespace Code.SHS.Utility.DynamicFieldBinding.Editor
 
             if (value is UnityEngine.Object unityObject)
             {
-                return unityObject.name;
+                return unityObject != null ? unityObject.name : "None";
             }
 
             return fieldType != null && fieldType.IsEnum ? value.ToString() : value.ToString();

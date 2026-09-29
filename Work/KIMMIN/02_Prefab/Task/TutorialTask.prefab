@@ -1146,6 +1146,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5589494638341546491, guid: 39ea86e154b6c6c4d8c14faea4e9d9bb, type: 3}
+      propertyPath: infoList.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5589494638341546491, guid: 39ea86e154b6c6c4d8c14faea4e9d9bb, type: 3}
+      propertyPath: infoList.Array.data[2].itemData
+      value: 
+      objectReference: {fileID: 11400000, guid: 2b7e4b3455524b047ac7a490b3e99621, type: 2}
+    - target: {fileID: 5589494638341546491, guid: 39ea86e154b6c6c4d8c14faea4e9d9bb, type: 3}
+      propertyPath: infoList.Array.data[1].spawnCount
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7100926078222173228, guid: 39ea86e154b6c6c4d8c14faea4e9d9bb, type: 3}
       propertyPath: m_Name
       value: FarmingTaskGroup

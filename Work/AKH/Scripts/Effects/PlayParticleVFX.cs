@@ -16,7 +16,6 @@ namespace Scripts.Effects
         {
             if(isOnPosition == false)
                 transform.SetPositionAndRotation(position, rotation);
-            
             particle.Play(true); //트루는 안해줘도 되긴 해
         }
 

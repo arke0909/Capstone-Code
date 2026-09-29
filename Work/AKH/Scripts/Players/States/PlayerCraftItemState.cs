@@ -3,6 +3,7 @@ using Chipmunk.GameEvents;
 using Code.InventorySystems;
 using Code.InventorySystems.Items;
 using Code.Players;
+using InGame.InventorySystem;
 using System.Collections.Generic;
 using System.Linq;
 using SHS.Scripts.Effects;
@@ -21,10 +22,14 @@ namespace Scripts.Players.States
         private Dictionary<ItemDataSO, int> _consumeItems;
         private ItemDataSO[] _autoCraftedItems;
         private CraftEffect _craftEffect;
+        private PlayerEquipment _playerEquipment;
+        private HandlingComponent _handlingComponent;
 
         public PlayerCraftItemState(ComponentContainer container, int animationHash) : base(container, animationHash)
         {
             _craftEffect = container.Get<CraftEffect>();
+            _playerEquipment = container.Get<PlayerEquipment>();
+            _handlingComponent = container.Get<HandlingComponent>();
         }
 
         public override void Enter()
@@ -36,7 +41,7 @@ namespace Scripts.Players.States
             _autoCraftedItems = context?.AutoCraftedItems;
             Debug.Assert(_targetInventory != null || _targetCraftTree != null,
                 $"{_targetInventory}, {_targetCraftTree}");
-            if (_consumeItems == null || !_targetInventory.CanConsume(_consumeItems))
+            if (_consumeItems == null || !_targetInventory.CanConsumeCraftMaterials(_consumeItems))
             {
                 Debug.Log("Need More materials");
                 _player.ChangeState(PlayerStateEnum.Idle);
@@ -76,12 +81,31 @@ namespace Scripts.Players.States
         {
             EquipableItem skillSource = FindSkillSourceItem();
             ItemCreateData result = _targetCraftTree.Item.CreateItem();
+            EquipableItem craftedEquipable = result.Item as EquipableItem;
+            EquipSlot restoreSlot = FindRestoreEquipSlot(craftedEquipable);
+            bool shouldRestoreHandling = restoreSlot?.Equipable != null &&
+                                         restoreSlot.Equipable == _handlingComponent?.CurrentHandItem;
 
-            if (result.Item is EquipableItem resultEquipable && skillSource != null)
-                resultEquipable.CopySkillFrom(skillSource);
+            if (craftedEquipable != null && skillSource != null)
+                craftedEquipable.CopySkillFrom(skillSource);
 
-            _targetInventory.TryConsume(_consumeItems);
-            _targetInventory.TryAddItem(result.Item, _targetCraftTree.Count);
+            _targetInventory.TryConsumeCraftMaterials(_consumeItems);
+
+            bool restoredToEquipSlot = restoreSlot != null &&
+                                       craftedEquipable != null &&
+                                       _playerEquipment.EquipCraftedItemToSlot(restoreSlot, craftedEquipable);
+
+            if (!restoredToEquipSlot)
+                _targetInventory.TryAddItem(result.Item, _targetCraftTree.Count);
+
+            if (shouldRestoreHandling &&
+                restoredToEquipSlot &&
+                craftedEquipable is HandItem craftedHandItem &&
+                _handlingComponent.CurrentHandItem != craftedHandItem)
+            {
+                _handlingComponent.ChangeHandlingHotbarItem(craftedHandItem);
+            }
+
             _player.LocalEventBus.Raise(new CompleteCraftingEvent(result.Item.ItemData, _autoCraftedItems));
             _blackboard.Remove("SelectedCraftSO");
             _player.ChangeState(PlayerStateEnum.Idle);
@@ -109,12 +133,37 @@ namespace Scripts.Players.States
         {
             foreach (NodeData node in nodes)
             {
-                ItemSlot sourceSlot = _targetInventory
-                    .GetItemSlots(node.Item)
-                    .FirstOrDefault(slot => slot.Item is EquipableItem equipableItem && equipableItem.Skill != null);
-
-                if (sourceSlot?.Item is EquipableItem sourceItem)
+                EquipableItem sourceItem = _targetInventory.FindCraftSkillSourceItem(node.Item);
+                if (sourceItem != null)
                     return sourceItem;
+            }
+
+            return null;
+        }
+
+        private EquipSlot FindRestoreEquipSlot(EquipableItem craftedEquipable)
+        {
+            if (craftedEquipable == null || _targetCraftTree == null || _consumeItems == null || _targetCraftTree.Count != 1)
+                return null;
+
+            List<NodeData> consumeNodes = _targetCraftTree.nodeList.ToList();
+            consumeNodes.Remove(_targetCraftTree.Root);
+
+            IEnumerable<NodeData> orderedNodes = consumeNodes
+                .Where(node => node.InheritSkillToCraftResult)
+                .Concat(consumeNodes.Where(node => !node.InheritSkillToCraftResult));
+
+            foreach (NodeData node in orderedNodes)
+            {
+                if (node?.Item == null || !_consumeItems.TryGetValue(node.Item, out int requiredCount) || requiredCount <= 0)
+                    continue;
+
+                if (_targetInventory.GetItemCount(node.Item) >= requiredCount)
+                    continue;
+
+                EquipSlot equipSlot = _playerEquipment.FindEquippedSlot(node.Item);
+                if (equipSlot != null && equipSlot.CanEquip(craftedEquipable))
+                    return equipSlot;
             }
 
             return null;

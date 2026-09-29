@@ -6,8 +6,11 @@ using Code.UI.Core;
 using DewmoLib.Dependencies;
 using Scripts.Players;
 using Scripts.SkillSystem;
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using Work.Code.Setting.KeySetting;
 using Work.Code.SkillInventory.GameEvents;
 using Work.Code.UI.Interaction;
 
@@ -51,6 +54,11 @@ namespace Work.Code.SkillInventory
 
         private void HandleSkillTreePressed()
         {
+            foreach (var keyText in GetComponentsInChildren<MappedKeyTextUI>(true))
+            {
+                keyText.RefreshKeyText();
+            }
+
             ToggleUI(true);
         }
 
@@ -59,16 +67,33 @@ namespace Work.Code.SkillInventory
             int idx = 0;
             foreach (var ui in skillUI)
             {
+                int currentIndex = idx++;
+
                 if (type != SkillType.None)
                     ui.SkillType = type;
                 
-                ui.Index = idx++;
+                ui.Index = currentIndex;
+                
+                if (type == SkillType.Active)
+                {
+                    Key key = currentIndex switch
+                    {
+                        0 => Key.Q,
+                        1 => Key.E,
+                        2 => Key.C,
+                        _ => Key.None,
+                    };
+                    
+                    ui.transform.parent.GetComponentInChildren<MappedKeyTextUI>().SetTargetKey(key);
+                }
+                
                 BindUI(ui);
             }
         }
         
         private void BindUI(SkillSlot ui)
         {
+            ui.SetPlayerInput(playerInput);
             ui.OnDragStartEvent += HandleDragSkill;
             ui.OnDragEndEvent += HandleDragEnd;
             ui.OnDropSkill += HandleDropSkill;
@@ -98,13 +123,17 @@ namespace Work.Code.SkillInventory
             if (!IsActive || _hoveredInventorySlot == null || _hoveredInventorySlot.CurrentSkill == null)
                 return;
 
-            if (Keyboard.current.qKey.wasPressedThisFrame)
+            if (EventSystem.current.currentSelectedGameObject != null &&
+                EventSystem.current.currentSelectedGameObject.GetComponentInParent<TMP_InputField>() != null)
+                return;
+
+            if (Keyboard.current[playerInput.GetMappedKey(Key.Q)].wasPressedThisFrame)
                 EquipActiveSkill(_hoveredInventorySlot, ActiveSlotType.Q);
-            else if (Keyboard.current.eKey.wasPressedThisFrame)
+            else if (Keyboard.current[playerInput.GetMappedKey(Key.E)].wasPressedThisFrame)
                 EquipActiveSkill(_hoveredInventorySlot, ActiveSlotType.E);
-            else if (Keyboard.current.cKey.wasPressedThisFrame)
+            else if (Keyboard.current[playerInput.GetMappedKey(Key.C)].wasPressedThisFrame)
                 EquipActiveSkill(_hoveredInventorySlot, ActiveSlotType.C);
-            else if (Keyboard.current.fKey.wasPressedThisFrame)
+            else if (Keyboard.current[playerInput.GetMappedKey(Key.F)].wasPressedThisFrame)
                 EquipToFirstSlot(_hoveredInventorySlot);
         }
 

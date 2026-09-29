@@ -1,6 +1,5 @@
 using Chipmunk.ComponentContainers;
 using Code.InventorySystems.Equipments;
-using Code.Players;
 using Scripts.Combat.Datas;
 using UnityEngine;
 using Code.Items;
@@ -11,13 +10,13 @@ namespace Scripts.Players.States
     public class PlayerAttackState : PlayerMoveState
     {
         private IAttackable _attackable;
-        private PlayerEquipment _equipment;
+        private EntityEquipment _equipment;
         private DefaultAttack _defaultAttack;
 
         public PlayerAttackState(ComponentContainer container, int animationHash) : base(container, animationHash)
         {
             _myMoveType = MoveType.Aim;
-            _equipment = container.Get<PlayerEquipment>();
+            _equipment = container.GetSubclassComponent<EntityEquipment>();
             _defaultAttack = container.Get<DefaultAttack>();
             Debug.Assert(_defaultAttack != null, "Player requires DefaultAttack for unarmed attacks.");
         }

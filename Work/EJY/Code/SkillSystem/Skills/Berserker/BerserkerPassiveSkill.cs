@@ -1,7 +1,9 @@
+using System;
 using Assets.Work.AKH.Scripts.Entities.Vitals;
 using Chipmunk.ComponentContainers;
 using Chipmunk.Library.Utility.GameEvents.Local;
 using Chipmunk.Modules.StatSystem;
+using Code.Guns.HeatReceiver;
 using Scripts.Combat;
 using Scripts.Combat.Datas;
 using Scripts.Entities.Vitals;
@@ -12,6 +14,8 @@ namespace Code.SkillSystem.Skills.Berserker
 {
     public class BerserkerPassiveSkill : PassiveSkill
     {
+        [SerializeField] private ParticleByRatio particle;
+        [SerializeField] private ParticleSystem immortalityParticle;
         [SerializeField] private StatSO damageModify ,damageDemodefy, defStat;
         [SerializeField, Range(0f, 0.9f)] private float calcHealthRatio = 0.7f;
         [SerializeField] private float damageDecrease = 0.7f;
@@ -42,6 +46,7 @@ namespace Code.SkillSystem.Skills.Berserker
 
             _runtimeDamageDemodifyStat = _statOverrideBehavior.GetStat(damageDemodefy);
             _runtimeDefStat = _statOverrideBehavior.GetStat(defStat);
+            
             _nextImmortalAvailableTime = 0f;
         }
 
@@ -119,8 +124,10 @@ namespace Code.SkillSystem.Skills.Berserker
             if (_isDamageDecrease)
             {
                 _statOverrideBehavior.RemoveModifier(damageDemodefy, this);
-                _statOverrideBehavior.AddModifier(damageDemodefy, this, applyBuffRatio * damageDecrease);
+                _statOverrideBehavior.AddModifier(damageDemodefy, this, applyBuffRatio * -damageDecrease);
             }
+            
+            particle.SetRatio(applyBuffRatio);
         }
 
         private float CalculateFinalDamage(DamageData damageData)
@@ -155,6 +162,7 @@ namespace Code.SkillSystem.Skills.Berserker
         public override void EnableSkill()
         {
             base.EnableSkill();
+            particle.Particle.Play();
             _localEventBus.Subscribe<HealthChangeEvent>(HandleHealthChange);
             RefreshBeforeHitSubscription();
         }
@@ -162,6 +170,7 @@ namespace Code.SkillSystem.Skills.Berserker
         public override void DisableSkill()
         {
             _localEventBus.Unsubscribe<HealthChangeEvent>(HandleHealthChange);
+            particle.Particle.Stop();
             _isImmortalActive = false;
             RefreshBeforeHitSubscription();
             _statOverrideBehavior.RemoveModifier(damageModify, this);

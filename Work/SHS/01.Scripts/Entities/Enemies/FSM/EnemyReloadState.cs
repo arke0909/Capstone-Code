@@ -8,22 +8,25 @@ using Code.InventorySystems.Equipments;
 using SHS.Scripts.Entities.Players;
 using SHS.Scripts.Entities.Rigings;
 using Code.Items;
+using Scripts.Enemies.States;
 
 namespace Code.SHS.Entities.Enemies.FSM
 {
-    public class EnemyReloadState : EnemyState
+    public class EnemyReloadState : EnemyExecuteBehaviourState
     {
         private GunItem _gun;
-        private EnemyEquipment _equipment;
+        private EntityEquipment _equipment;
         private EntityGunStatInfo _entityGunStatInfo;
         private ItemGrabRiggingController _itemGrabRiggingController;
 
         private float _reloadTime;
-        private float _currentTimer = 0;
+        private float _currentReloadTimer = 0;
+
+        public override float ExecuteTimer => 0.1f;
 
         public EnemyReloadState(ComponentContainer container, int animationHash) : base(container, animationHash)
         {
-            _equipment = container.Get<EnemyEquipment>();
+            _equipment = container.GetSubclassComponent<EntityEquipment>();
             _entityGunStatInfo = container.Get<EntityGunStatInfo>();
             _itemGrabRiggingController = container.Get<ItemGrabRiggingController>(true);
         }
@@ -32,7 +35,7 @@ namespace Code.SHS.Entities.Enemies.FSM
         {
             base.Enter();
             _itemGrabRiggingController?.SetWeight(0);
-            _currentTimer = 0;
+            _currentReloadTimer = 0;
             _gun = null;
 
             if (_equipment.TryGetEquippedItem(EquipPartType.Hand, out EquipableItem item) && item is GunItem gun)
@@ -53,8 +56,8 @@ namespace Code.SHS.Entities.Enemies.FSM
             base.Update();
             UpdateCurrentWeaponAttack(false);
 
-            _currentTimer += Time.deltaTime * _entityGunStatInfo.ReloadSpeedMultiplier;
-            if (_currentTimer >= _reloadTime)
+            _currentReloadTimer += Time.deltaTime * _entityGunStatInfo.ReloadSpeedMultiplier;
+            if (_currentReloadTimer >= _reloadTime)
             {
                 _enemy.ChangeState(Target ? EnemyStateEnum.Aim : EnemyStateEnum.Chase);
             }
@@ -66,8 +69,13 @@ namespace Code.SHS.Entities.Enemies.FSM
         {
             if (_gun != null)
             {
-                _enemyInventory.TryAddItem(_enemy.EnemyData.bulletData.CreateItem().Item,
-                    _gun.GunItemData.maxAmmoCapacity);
+                BulletDataSO bulletData = _enemy.CurrentBulletData;
+                if (bulletData != null)
+                {
+                    _enemyInventory.TryAddItem(bulletData.CreateItem().Item,
+                        _gun.GunItemData.maxAmmoCapacity);
+                }
+
                 _gun.Reload();
             }
             _itemGrabRiggingController?.SetWeight(1);

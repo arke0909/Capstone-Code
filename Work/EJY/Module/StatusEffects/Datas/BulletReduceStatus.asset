@@ -12,8 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 159cf38f15dc46ba8ad0a7bc0616908f, type: 3}
   m_Name: BulletReduceStatus
   m_EditorClassIdentifier: 
-  idx: 13
-  StatusEffectName: Bullet Reduce Status
   canOverlap: 1
   targetStat: {fileID: 11400000, guid: 270de5447b3a0614b94709bb54819fa7, type: 2}
-  isMultiplicationOperation: 1

@@ -13,14 +13,9 @@ MonoBehaviour:
   m_Name: 조합법_스코프
   m_EditorClassIdentifier: 
   treeName: 조합법_스코프
-  isBinary: 0
+  isBinary: 1
   nodeList:
   - <Item>k__BackingField: {fileID: 11400000, guid: 6882b42e696d557419b8b3ca605942d6, type: 2}
-    <Tree>k__BackingField: {fileID: 0}
-    <Count>k__BackingField: 1
-    <IsChild>k__BackingField: 0
-    <InheritSkillToCraftResult>k__BackingField: 0
-  - <Item>k__BackingField: {fileID: 11400000, guid: 2b7e4b3455524b047ac7a490b3e99621, type: 2}
     <Tree>k__BackingField: {fileID: 0}
     <Count>k__BackingField: 1
     <IsChild>k__BackingField: 0
@@ -30,7 +25,7 @@ MonoBehaviour:
     <Count>k__BackingField: 1
     <IsChild>k__BackingField: 0
     <InheritSkillToCraftResult>k__BackingField: 0
-  - <Item>k__BackingField: {fileID: 11400000, guid: 0ea64a81322978f47b522f8843ff791a, type: 2}
+  - <Item>k__BackingField: {fileID: 11400000, guid: e9cdcb58c33d6bb48bcace427fbb41ac, type: 2}
     <Tree>k__BackingField: {fileID: 0}
     <Count>k__BackingField: 1
     <IsChild>k__BackingField: 0

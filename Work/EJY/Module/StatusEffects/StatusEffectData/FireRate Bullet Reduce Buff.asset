@@ -11,15 +11,14 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5aafaebd814478d84755322022c151a, type: 3}
   m_Name: FireRate Bullet Reduce Buff
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   buffName: FireRate Bullet Reduce Buff
   buffIcon: {fileID: 0}
   statusEffectCreateData:
-  - statusEffect: 8192
+  - statusEffectData: {fileID: 11400000, guid: 419de782ab0aa25488bdfd0e390f0d70, type: 2}
     isPercent: 0
-    level: 1
     effectValue:
-    - -0.6
+    - -0.4
     isOverrideApplyTime: 0
     overrideTime: 0
   applyTime: 10

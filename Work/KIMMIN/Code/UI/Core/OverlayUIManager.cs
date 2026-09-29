@@ -13,6 +13,7 @@ namespace Code.UI.Core
         [SerializeField] private TooltipController tooltipController;
         [SerializeField] private PopupController popupController;
         [SerializeField] private ContextMenuController contextMenuController;
+        protected override bool PersistAcrossScenes => false;
 
         public void BindTooltip<T>(InteractableUI owner, Func<T> data, float delay = 0f)
         {
@@ -24,14 +25,14 @@ namespace Code.UI.Core
             tooltipController.UnbindTooltip(owner);
         }
         
-        public void BindPopup(IPopupProvider popupProvider)
+        public void ShowPopup<T>(T data, ICallbackData callback = null)
         {
-            popupController.BindPopup(popupProvider);
+            popupController.ShowPopup(data, callback);
         }
-        
-        public void UnbindPopup(IPopupProvider popupProvider)
+
+        public void HidePopup()
         {
-            popupController.UnbindPopup(popupProvider);
+            popupController.HidePopup();
         }
         
         public void BindContextMenu<T>(InteractableUI owner, ContextMenuSO menu, Func<T> data)

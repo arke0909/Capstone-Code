@@ -1,4 +1,4 @@
-using Chipmunk.ComponentContainers;
+﻿using Chipmunk.ComponentContainers;
 using Chipmunk.Library.Utility.GameEvents.Local;
 using Scripts.Entities;
 using UnityEngine;
@@ -21,7 +21,13 @@ namespace SHS.Scripts.Entities.Levels.Growths
 
         public void OnLocalEvent(LevelUpEvent eventData)
         {
-            _growthTableSO?.ApplyGrowths(_entity, eventData.CurrentLevel);
+            if (_growthTableSO == null)
+                return;
+
+            for (int level = eventData.PreviousLevel + 1; level <= eventData.CurrentLevel; level++)
+            {
+                _growthTableSO.ApplyGrowths(_entity, level);
+            }
         }
     }
 }

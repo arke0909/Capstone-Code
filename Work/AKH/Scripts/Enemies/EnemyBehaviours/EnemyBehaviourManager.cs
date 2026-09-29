@@ -88,9 +88,9 @@ namespace Scripts.Enemies.EnemyBehaviours
 
             foreach (EnemyBehaviour behaviour in _behaviours[state])
             {
+                Debug.Log(behaviour.Condition());
                 if (behaviour == null || !behaviour.Condition())
                     continue;
-
                 int currentPriority = behaviour.GetCurrentPriority();
                 if (selectedBehaviour != null && currentPriority >= selectedPriority)
                     continue;

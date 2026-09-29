@@ -53,7 +53,6 @@ namespace Code.ItemContainers
                 List<ItemDataSO> resultItems = new List<ItemDataSO>();
                 
                 resultItems.AddRange(itemDB.GetRandomItems(targetItems, container.AllowedSpawnArea, count));
-
                 var inventory = container.Inventory;
                 
                 if(resultItems.Count > 0)

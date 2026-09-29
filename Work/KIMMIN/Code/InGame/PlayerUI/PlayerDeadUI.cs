@@ -2,6 +2,8 @@
 using Assets.Work.AKH.Scripts.Entities.Vitals;
 using Chipmunk.ComponentContainers;
 using Chipmunk.Modules.StatSystem;
+using Code.TimeSystem;
+using Code.UI.Core;
 using Code.UI.Popup;
 using DewmoLib.Dependencies;
 using DG.Tweening;
@@ -17,7 +19,7 @@ using Work.Code.UI.Core.Interaction;
 
 namespace InGame.PlayerUI
 {
-    public class PlayerDeadUI : InteractableUI, IPopupProvider
+    public class PlayerDeadUI : InteractableUI
     {
         [SerializeField] private TransitionSettings transition;
         [SerializeField] private Image fadeImage;
@@ -27,8 +29,6 @@ namespace InGame.PlayerUI
         private HealthCompo _healthCompo;
         private ChoiceCallback _choiceCallback = new();
         
-        public event Action<Func<object>, ICallbackData> OnShowPopup;
-        
         private void Start()
         {
             _healthCompo = _player.GetCompo<HealthCompo>();
@@ -36,7 +36,6 @@ namespace InGame.PlayerUI
 
             _choiceCallback.OnAccept += HandleRespawn;
             _choiceCallback.OnReject += HandleToTitle;
-            BindPopup(this);
         }
 
         private void HandleHealthChanged(StatSO vitalstat, float before, float after)
@@ -52,22 +51,29 @@ namespace InGame.PlayerUI
         {
             playerInput.SetActive(false);
             fadeImage.DOFade(1f, 1f).OnComplete(AfterFaded);
+            UIManager.Instance.SetLockState(true);
         }
 
         private void AfterFaded()
         {
             Cursor.lockState = CursorLockMode.None;
-            OnShowPopup?.Invoke(() => _player, _choiceCallback);
+            OverlayUIManager.Instance.ShowPopup(_player, _choiceCallback);
+            TimeController.Instance.SetPause(true);
+            Time.timeScale = 0f;
         }
         
         private void HandleRespawn()
         {
+            TimeController.Instance.SetPause(false);
+            Time.timeScale = 1f;
             string currentScene = SceneManager.GetActiveScene().name;
             TransitionManager.Instance().Transition(currentScene, transition, 0f);
         }
 
         private void HandleToTitle()
         {
+            TimeController.Instance.SetPause(false);
+            Time.timeScale = 1f;
             TransitionManager.Instance().Transition(SceneDefine.TITLE_SCENE, transition, 0f);
         }
     }

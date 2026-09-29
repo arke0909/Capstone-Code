@@ -25,8 +25,8 @@ MonoBehaviour:
     <Count>k__BackingField: 1
     <IsChild>k__BackingField: 0
     <InheritSkillToCraftResult>k__BackingField: 0
-  - <Item>k__BackingField: {fileID: 11400000, guid: f1c426e8d0454c6439477f40d429725c, type: 2}
-    <Tree>k__BackingField: {fileID: 11400000, guid: 4a081bf6a48b465fb9d11c05b380dfdd, type: 2}
+  - <Item>k__BackingField: {fileID: 11400000, guid: ed9fb4609c16d664489b4f49f344be75, type: 2}
+    <Tree>k__BackingField: {fileID: 0}
     <Count>k__BackingField: 1
     <IsChild>k__BackingField: 0
     <InheritSkillToCraftResult>k__BackingField: 0

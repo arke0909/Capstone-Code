@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Code.UI.Core;
 using DG.Tweening;
 using TMPro;
@@ -64,7 +64,7 @@ namespace Work.Code.Craft
             _backgroundColor = UIDefine.RarityColors[(int)item.rarity];
             icon.color = _iconColor;
             background.color = _backgroundColor;
-            title.text = item.itemName;
+            title?.SetText(item.itemName);
             star.gameObject.SetActive(IsFavorite);
             RefreshInteractableColor();
         }
@@ -82,6 +82,12 @@ namespace Work.Code.Craft
         }
 
         public void SetTree(CraftTreeSO tree) => Tree = tree;
+
+        public void SetIconPadding(float padding)
+        {
+            float clampedPadding = Mathf.Max(0f, padding);
+            icon.rectTransform.sizeDelta = Vector2.one * -(clampedPadding * 2f);
+        }
 
         public void SetPin(bool isPinned)
         {

@@ -1,17 +1,20 @@
-using System;
 using Ami.BroAudio;
+using DewmoLib.ObjectPool.RunTime;
 using Scripts.Entities;
-using SHS.Scripts.Summon;
 using UnityEngine;
 
 namespace SHS.Scripts.Summon.Turrets
 {
-    public class TurretDummy : Entity, ISummonable
+    public class TurretDummy : Entity, ISummonable, IPoolable
     {
         [SerializeField] private SoundID turretInstallSound;
-        
+
+        [Header("Pool Settings")]
+        [SerializeField] private PoolManagerSO poolManager;
+        [SerializeField] private PoolItemSO poolItem;
+        [SerializeField] private PoolItemSO turretPoolItem;
+
         [Header("Throw Settings")]
-        [SerializeField] private GameObject turretPrefab;
         [SerializeField] private float throwHeight = 3f;
         [SerializeField] private float throwDuration = 1.2f;
         [SerializeField] private Animator animator;
@@ -26,12 +29,34 @@ namespace SHS.Scripts.Summon.Turrets
         private float _elapsedTime;
         private bool _isFlying;
         private EngineerTurretTracker _turretTracker;
+        private Pool _myPool;
 
-        private void Start()
+        public PoolItemSO PoolItem => poolItem;
+        public GameObject GameObject => gameObject;
+
+        private void OnEnable()
             => animatorTrigger.OnAnimationEndTrigger += SpawnTurret;
 
-        private void OnDestroy()
+        private void OnDisable()
             => animatorTrigger.OnAnimationEndTrigger -= SpawnTurret;
+
+        public void SetUpPool(Pool pool)
+            => _myPool = pool;
+
+        public void ResetItem()
+        {
+            _elapsedTime = 0f;
+            _isFlying = false;
+            _turretTracker = null;
+
+            if (animator == null)
+                return;
+
+            animator.enabled = true;
+            animator.Rebind();
+            animator.Update(0f);
+            animator.enabled = false;
+        }
 
         public void Throw(Vector3 targetPoint)
         {
@@ -80,12 +105,36 @@ namespace SHS.Scripts.Summon.Turrets
 
         private void SpawnTurret()
         {
-            GameObject turret = Instantiate(turretPrefab, transform.position, transform.rotation);
+            Turret turret = poolManager?.Pop(turretPoolItem) as Turret;
+            if (turret == null)
+            {
+                Debug.LogError($"Failed to pop {nameof(Turret)} from the pool.", this);
+                ReturnToPool();
+                return;
+            }
+
+            turret.transform.SetPositionAndRotation(transform.position, transform.rotation);
             BroAudio.Play(turretInstallSound, transform.position);
+
             if (_turretTracker != null)
             {
                 _turretTracker.Unregister(gameObject);
-                _turretTracker.Register(turret);
+                _turretTracker.Register(turret.gameObject);
+                turret.SetTracker(_turretTracker);
+            }
+
+            ReturnToPool();
+        }
+
+        private void ReturnToPool()
+        {
+            _turretTracker?.Unregister(gameObject);
+            _turretTracker = null;
+
+            if (_myPool != null)
+            {
+                _myPool.Push(this);
+                return;
             }
 
             Destroy(gameObject);

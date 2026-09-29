@@ -70,8 +70,7 @@ namespace Work.Code.Craft
             
             if (nodeData.isNeedItem)
             {
-                countText.text = $"{data.Count}개";
-                countText.color = Color.white;
+                ApplyOwnedCountText(nodeData.count, data.Count);
             }
             else if (nodeData.isCraftableBySubItems)
             {
@@ -80,9 +79,14 @@ namespace Work.Code.Craft
             }
             else
             {
-                countText.text = $"{nodeData.count}/{data.Count}";
-                countText.color = nodeData.count >= data.Count ? Color.white : Color.red;
+                ApplyOwnedCountText(nodeData.count, data.Count);
             }
+        }
+
+        private void ApplyOwnedCountText(int ownedCount, int requiredCount)
+        {
+            countText.text = $"{ownedCount}/{requiredCount}";
+            countText.color = ownedCount >= requiredCount ? Color.white : Color.red;
         }
 
         private void SubscribeEvents()

@@ -12,6 +12,8 @@ namespace Code.ETC.Sound
         [SerializeField] private float fadeTime = 2f;
         [SerializeField] private bool playOnStart = true;
 
+        public bool IsValid => bgmID.IsValid();
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void ResetTracking()
         {

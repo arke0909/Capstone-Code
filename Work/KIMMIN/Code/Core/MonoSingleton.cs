@@ -2,12 +2,14 @@ using UnityEngine;
 
 namespace Work.Code.Core
 {
-    public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour 
+    public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         private static T _instance;
         private static readonly object _lock = new();
 
         public static bool HasInstance => _instance != null;
+        protected virtual bool PersistAcrossScenes => true;
+        protected bool IsPrimaryInstance => _instance == this;
 
         public static T Instance
         {
@@ -36,11 +38,17 @@ namespace Work.Code.Core
             if (_instance == null)
             {
                 _instance = this as T;
-                DontDestroyOnLoad(gameObject);
+
+                if (PersistAcrossScenes)
+                {
+                    transform.SetParent(null);
+                    DontDestroyOnLoad(gameObject);
+                }
             }
             else if (_instance != this)
             {
-                Debug.LogWarning($"[MonoSingleton] Duplicate instance of {typeof(T)} detected. Destroying {gameObject.name}.");
+                Debug.LogWarning(
+                    $"[MonoSingleton] Duplicate instance of {typeof(T)} detected. Destroying {gameObject.name}.");
                 Destroy(gameObject);
             }
         }

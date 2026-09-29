@@ -25,6 +25,7 @@ namespace Work.Code.Craft.Installer
         private CraftMenuPresenter _menuPresenter;
         private CraftTreePresenter _treePresenter;
         private CraftModel _model;
+        private bool _ownsCraftingUILock;
         private readonly HashSet<ItemDataSO> _tutorialCraftItems = new();
         
         private void Start()
@@ -55,12 +56,20 @@ namespace Work.Code.Craft.Installer
         
         private void HandleStartCrafting(StartCraftingEvent evt)
         {
+            if (!IsActive)
+                return;
+
+            _ownsCraftingUILock = true;
             UIManager.Instance.SetLockState(true);
             DisableUI();
         }
 
         private void HandleCompleteCrafting(CompleteCraftingEvent evt)
         {
+            if (!_ownsCraftingUILock)
+                return;
+
+            _ownsCraftingUILock = false;
             UIManager.Instance.SetLockState(false);
             EnableUI();
         }
@@ -75,6 +84,8 @@ namespace Work.Code.Craft.Installer
             base.OnDestroy();
 
             playerInput.OnCraftTreePressed -= HandleToggleUI;
+            _player.LocalEventBus.Unsubscribe<StartCraftingEvent>(HandleStartCrafting);
+            _player.LocalEventBus.Unsubscribe<CompleteCraftingEvent>(HandleCompleteCrafting);
             _menuPresenter.DisposePresenter();
             _treePresenter.DisposePresenter();
         }

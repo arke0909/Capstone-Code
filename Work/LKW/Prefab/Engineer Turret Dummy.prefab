@@ -5575,7 +5575,9 @@ MonoBehaviour:
     _entity: {fileID: 11400000, guid: 176a1510dd59e244aa13add3b1b8bb3a, type: 2}
     ID: 0
     <DebugObject>k__BackingField: {fileID: 6990407896999855116}
-  turretPrefab: {fileID: 357341424337504981, guid: 89dacf10a3a723445b4870c5f9b5adc0, type: 3}
+  poolManager: {fileID: 11400000, guid: c413011c9deace64aa106d229c06e489, type: 2}
+  poolItem: {fileID: 11400000, guid: d3a1f8c5b7204e67a9c2d14f6b8e9031, type: 2}
+  turretPoolItem: {fileID: 11400000, guid: e4b2c9d607314f8aa5d1e72c9b60384f, type: 2}
   throwHeight: 2.5
   throwDuration: 0.8
   animator: {fileID: 758842309218247296}

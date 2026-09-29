@@ -41,7 +41,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 711670875849777472}
   serializedVersion: 8
-  lengthInSec: 4
+  lengthInSec: 8
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -4692,7 +4692,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 835850819567316900}
   serializedVersion: 8
-  lengthInSec: 4
+  lengthInSec: 8
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -9334,7 +9334,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 944153891594112425}
   serializedVersion: 8
-  lengthInSec: 4
+  lengthInSec: 8
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -14246,7 +14246,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 995576509092707957}
   serializedVersion: 8
-  lengthInSec: 4
+  lengthInSec: 8
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -18897,7 +18897,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1637595132178224332}
   serializedVersion: 8
-  lengthInSec: 4
+  lengthInSec: 8
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -18972,8 +18972,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 4
-      minScalar: 0.5
+      scalar: 8
+      minScalar: 6
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -23539,7 +23539,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1721655566036749911}
   serializedVersion: 8
-  lengthInSec: 4
+  lengthInSec: 8
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -28190,7 +28190,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2025679472625612714}
   serializedVersion: 8
-  lengthInSec: 4
+  lengthInSec: 8
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -33105,7 +33105,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3188012093476077883}
   serializedVersion: 8
-  lengthInSec: 4
+  lengthInSec: 8
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -33180,8 +33180,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
-      minScalar: 2.8
+      scalar: 8
+      minScalar: 8
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -38054,7 +38054,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5419357349215516531}
   serializedVersion: 8
-  lengthInSec: 4
+  lengthInSec: 8
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -42696,7 +42696,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6930828844525384168}
   serializedVersion: 8
-  lengthInSec: 4
+  lengthInSec: 8
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -47627,7 +47627,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!135 &6502000000000000102
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -47638,16 +47638,16 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1.41
+  m_Radius: 1.5
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!198 &271420930359985768
 ParticleSystem:
@@ -47657,7 +47657,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8462786273743614527}
   serializedVersion: 8
-  lengthInSec: 4
+  lengthInSec: 8
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -47732,8 +47732,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
-      minScalar: 3
+      scalar: 8
+      minScalar: 8
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -52577,9 +52577,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a348540616834c949ad591b9d8750792, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHp: 10
   hitEffectItem: {fileID: 11400000, guid: 0ff6e09d117761f4a9538ac921bfa29f, type: 2}
+  explosionEffectItem: {fileID: 11400000, guid: 0aeece51da53c4449a4ec76deaee3bf7, type: 2}
   effect: {fileID: 271420930359985768}
+  whatIsTarget:
+    serializedVersion: 2
+    m_Bits: 4096
   impactDelay: 0.015
-  impactDuration: 0.2
   stunTime: 3
+  explosionRadius: 3
+  explosionDamageMultiplier: 1
+  cameraShakeForce: 5
   <PoolItem>k__BackingField: {fileID: 11400000, guid: 0cfc04f1a8bc2db4a8ddb7b2d2e3157b, type: 2}

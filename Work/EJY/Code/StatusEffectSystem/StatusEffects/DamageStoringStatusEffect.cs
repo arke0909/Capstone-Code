@@ -1,4 +1,4 @@
-﻿using Assets.Work.AKH.Scripts.Entities.Vitals;
+using Assets.Work.AKH.Scripts.Entities.Vitals;
 using Chipmunk.ComponentContainers;
 using Scripts.Entities;
 using UnityEngine;
@@ -9,7 +9,7 @@ namespace Code.StatusEffectSystem.StatusEffects
     {
         private float _storedDamage = 0;
         private HealthCompo _healthCompo;
-        
+
         public DamageStoringStatusEffect(Entity target, StatusEffectInfo statusEffectInfo) : base(target, statusEffectInfo)
         {
             _healthCompo = target.Get<HealthCompo>();
@@ -25,9 +25,16 @@ namespace Code.StatusEffectSystem.StatusEffects
 
         public override void ReleaseStatusEffect(Entity entity)
         {
-            
-            _healthCompo.CurrentValue+=Mathf.RoundToInt(_storedDamage);
+            _isApplying = false;
+            _healthCompo.CurrentValue += Mathf.RoundToInt(_storedDamage);
             _healthCompo.OnTakeDamage -= HandleStoringDamage;
+        }
+
+        public override void SetStrongerValue(StatusEffectInfo info)
+        {
+            Priority = info.Priority;
+            SetValue(info.Value);
+            SetRemainingTime(info.ApplyTime);
         }
 
         private void HandleStoringDamage(float damage)

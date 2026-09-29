@@ -29,12 +29,12 @@ namespace Assets.Work.AKH.Scripts.Entities.Vitals
         {
             base.OnInitialize(componentContainer);
             _shieldCompo = componentContainer.Get<ShieldCompo>();
-        }
-        protected override void Update()
-        {
-            base.Update();
-            if (Input.GetKeyDown(KeyCode.End) && _entity is Enemy)
-                ApplyDamage(new DamageData() { damage = 100 });
+            OnValueChanged += HandleHealthChanged;
+
+            if (_shieldCompo != null)
+                _shieldCompo.OnShieldAmountChanged += HandleShieldChanged;
+
+            _localEventBus.Subscribe<HealthShieldStateRequestEvent>(HandleHealthShieldStateRequested);
         }
 
         public override void AfterInitialize()
@@ -43,6 +43,38 @@ namespace Assets.Work.AKH.Scripts.Entities.Vitals
             defStat = _statCompo.GetStat(defStat);
             dropExpStat = _statCompo.GetStat(dropExpStat);
             damageDemodifyStat = _statCompo.GetStat(damageDemodifyStat);
+        }
+
+        public override void OnDestroy()
+        {
+            OnValueChanged -= HandleHealthChanged;
+
+            if (_shieldCompo != null)
+                _shieldCompo.OnShieldAmountChanged -= HandleShieldChanged;
+
+            _localEventBus.Unsubscribe<HealthShieldStateRequestEvent>(HandleHealthShieldStateRequested);
+            base.OnDestroy();
+        }
+
+        private void HandleHealthChanged(StatSO stat, float before, float after)
+        {
+            RaiseHealthShieldChangeEvent();
+        }
+
+        private void HandleShieldChanged(float shieldAmount)
+        {
+            RaiseHealthShieldChangeEvent();
+        }
+
+        private void HandleHealthShieldStateRequested(HealthShieldStateRequestEvent evt)
+        {
+            RaiseHealthShieldChangeEvent();
+        }
+
+        private void RaiseHealthShieldChangeEvent()
+        {
+            float shieldAmount = _shieldCompo != null ? _shieldCompo.CurrentShieldAmount : 0f;
+            _localEventBus.Raise(new HealthShieldChangeEvent(CurrentValue, MaxValue, shieldAmount));
         }
 
         public bool Heal(float amount, bool playSfx = true)

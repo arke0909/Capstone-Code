@@ -39,7 +39,7 @@ namespace Work.Code.MapEvents
             _timeController.AddRepeatEvent(MapEventSO.interval, OnEventCalled);
         }
 
-        private void OnEventCalled()
+        protected virtual void OnEventCalled()
         {
             StartEvent();
             EventBus.Raise(new MapEventStartEvent(this, MapEventSO.duration));

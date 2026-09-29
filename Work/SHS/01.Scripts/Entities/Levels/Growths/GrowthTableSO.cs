@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Scripts.Entities;
 using UnityEngine;
@@ -18,10 +18,12 @@ namespace SHS.Scripts.Entities.Levels.Growths
 
         public void ApplyGrowths(Entity entity, int level)
         {
+            if (level <= 0) return;
             if (level > growthTable.Count) return;
             GrowthByLevel growthByLevel = growthTable[level - 1];
             foreach (var growth in growthByLevel.growthByLevel)
             {
+                if (growth == null) continue;
                 growth.ApplyGrowth(entity);
             }
         }

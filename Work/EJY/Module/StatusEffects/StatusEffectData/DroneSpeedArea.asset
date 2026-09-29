@@ -12,12 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5aafaebd814478d84755322022c151a, type: 3}
   m_Name: DroneSpeedArea
   m_EditorClassIdentifier: 
-  buffName: Dron Speed Area
+  buffName: DroneSpeedArea
   buffIcon: {fileID: 0}
   statusEffectCreateData:
-  - statusEffect: 4
+  - statusEffectData: {fileID: 11400000, guid: 93d291985762c194485d622ee90191dd, type: 2}
     isPercent: 1
-    level: 1
+    priority: 0
     effectValue:
     - 0.3
+    isOverrideApplyTime: 0
+    overrideTime: 0
+    useCustomBehaviorSettings: 0
+    canOverlap: 0
+    isOverWrite: 0
+    useSharedStack: 0
+    maxStack: 1
+    stackValueMode: 0
+    stackDecayMode: 0
+    stackDecayInterval: 0
+    refreshTimerOnReapply: 1
   applyTime: 0.2
+  vfxName: 

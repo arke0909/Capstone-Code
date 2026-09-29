@@ -1,22 +1,22 @@
 using AYellowpaper.SerializedCollections;
+using Chipmunk.ComponentContainers;
 using Chipmunk.Modules.StatSystem;
 using Code.InventorySystems.Equipments;
-using Code.Players;
+using Code.Items.ItemInfo;
 using Code.SHS.Entities.Enemies;
 using Code.SHS.Utility.DynamicFieldBinding;
+using Code.StatusEffectSystem;
 using DewmoLib.ObjectPool.RunTime;
 using Scripts.Combat.Datas;
 using Scripts.Enemies.EnemyBehaviours;
 using Scripts.FSM;
 using Scripts.SkillSystem;
 using Scripts.SkillSystem.Manage;
+using SHS.Scripts.Entities.Levels.Growths;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
-using SHS.Scripts.Entities.Levels.Growths;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Code.Items.ItemInfo;
 
 namespace Code.EnemySpawn
 {
@@ -38,6 +38,7 @@ namespace Code.EnemySpawn
     public class EnemySO : ScriptableObject
     {
         [Header("Spawn Settings")] public EnemyType enemyType = EnemyType.Common;
+        public bool isElite;
         public GameObject enemyPrefab;
         public PoolItemSO enemyPoolItem;
         public int spawnRarityWeight;
@@ -53,7 +54,8 @@ namespace Code.EnemySpawn
         public StateDataSO[] stateDatas;
         [Header("Behavior Settings")] public FieldPatch<EnemyBehaviour>[] behaviourPrefabs;
 
-        [Header("Skill Settings")] [SerializeField]
+        [Header("Skill Settings")]
+        [SerializeField]
         public SerializedDictionary<PassiveSlotType, FieldPatch<PassiveSkill>> passiveSkill = new();
 
         [SerializeField] public SerializedDictionary<ActiveSlotType, FieldPatch<ActiveSkill>> activeSkill = new();
@@ -84,7 +86,7 @@ namespace Code.EnemySpawn
     public static class EnemySpawnUtility
     {
         public static Enemy SpawnEnemy(EnemySO enemyData, Vector3 position, Quaternion rotation,
-            PoolManagerMono poolManager = null)
+            PoolManagerMono poolManager = null, BuffSO initBuff = null)
         {
             if (enemyData == null)
             {
@@ -118,9 +120,10 @@ namespace Code.EnemySpawn
 
                 enemy.transform.SetPositionAndRotation(position, rotation);
             }
-
             enemy.SetRuntimePoolItem(enemyData.enemyPoolItem);
             enemy.SpawnEnemy(position, enemyData);
+            if (initBuff != null)
+                enemy.Get<EntityStatusEffect>().AddStatusEffect(initBuff, enemy);
             return enemy;
         }
 

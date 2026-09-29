@@ -197,10 +197,10 @@ namespace Code.SkillSystem.Skills.Bombing
                 DealingArea floor = poolManagerSO.Pop(floorItemSO) as DealingArea;
                 floor.Init(_owner, damageCaster.transform.position);
             }
-            
+
             Bus.Raise(new CameraShakeEvent(damageCaster.transform.position, Vector3.down, impactShakeForce));
             BroAudio.Play(bombSound, transform.position);
-            
+
             OnPush?.Invoke();
             _myPool.Push(this);
         }
@@ -222,7 +222,7 @@ namespace Code.SkillSystem.Skills.Bombing
                 ComponentContainer compoContainer = targets[i].gameObject.GetComponent<ComponentContainer>();
                 EntityStatusEffect entityStatusEffect = compoContainer.Get<EntityStatusEffect>();
 
-                entityStatusEffect.AddStatusEffect(slowAndAdditionalDamageData.GetStatusEffectInfo());
+                entityStatusEffect.AddStatusEffect(slowAndAdditionalDamageData, this);
             }
         }
 

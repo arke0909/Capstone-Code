@@ -51,12 +51,5 @@ MonoBehaviour:
   animHash: 0
   shieldBuff: {fileID: 11400000, guid: 957e3ecacfdb97f49b5f433d19972e37, type: 2}
   dmgIncreaseByShieldBuff: {fileID: 11400000, guid: 4a6c379643949ff47b6eb3c9481d7fce, type: 2}
-  damageMultyIncreaseData:
-    statusEffect: 16
-    isPercent: 1
-    level: 1
-    effectValue:
-    - 0.25
-    isOverrideApplyTime: 0
-    overrideTime: 0
+  damageMultiIncreaseData: {fileID: 11400000, guid: 7a57e804c8bd3f14b876f53e93f7e5e7, type: 2}
   isDmgIncreaseByShield: 0

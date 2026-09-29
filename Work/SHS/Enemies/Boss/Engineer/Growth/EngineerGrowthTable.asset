@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f56a4e0d2d2a4a1c8e0c316ad8206954, type: 3}
+  m_Name: EngineerGrowthTable
+  m_EditorClassIdentifier: 
+  growthTable:
+  - growthByLevel:
+    - {fileID: 11400000, guid: a3b65b8262cfde24c836a20bbb423d3f, type: 2}
+  - growthByLevel:
+    - {fileID: 11400000, guid: 6ad30a06f896ae340b6f30ec522e271d, type: 2}
+  - growthByLevel:
+    - {fileID: 11400000, guid: a8b4ae2df7825e74dbd87870514b2d49, type: 2}
+  - growthByLevel:
+    - {fileID: 11400000, guid: fc1170ac222d2e642948106f92f0c20f, type: 2}
+  - growthByLevel:
+    - {fileID: 11400000, guid: 0bb727ec42630cc4b909ec06794f9e1a, type: 2}

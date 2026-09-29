@@ -12,6 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00a4b73a94584bc5a2616aefe96269b8, type: 3}
   m_Name: Additional Damage Status Effect
   m_EditorClassIdentifier: 
-  idx: 7
-  StatusEffectName: Additional Damage
   canOverlap: 1

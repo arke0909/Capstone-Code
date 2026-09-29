@@ -11,13 +11,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5aafaebd814478d84755322022c151a, type: 3}
   m_Name: DroneDamageDemodifyDecrease
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   buffName: Catch Weakness
   buffIcon: {fileID: 0}
   statusEffectCreateData:
-  - statusEffect: 32
+  - statusEffectData: {fileID: 11400000, guid: 8e568b25c85f3a6409ce6381eb742b73, type: 2}
     isPercent: 1
-    level: 1
     effectValue:
     - -0.15
     - -0.25

@@ -4,14 +4,15 @@ using Scripts.Combat.Datas;
 using Scripts.Combat.ItemObjects;
 using Scripts.Entities;
 using UnityEngine;
-using Work.EJY.Code.Guns;
-using Work.EJY.Code.Guns.HeatReceiver;
+using UnityEngine.Serialization;
+using Code.Guns;
+using Code.Guns.HeatReceiver;
 
 namespace Code.SkillSystem.Skills.FireRate
 {
     public class FireRateSkillVFX : MonoBehaviour
     {
-        [SerializeField] private ParticleByHeatRatio particleByHeatRatio;
+        [FormerlySerializedAs("particleByHeatRatio")] [SerializeField] private ParticleByRatio particleByRatio;
 
         private GunObject _gunObject;
         private GunHeatFeedback _gunHeatFeedback;
@@ -25,7 +26,7 @@ namespace Code.SkillSystem.Skills.FireRate
 
         private void OnDestroy()
         {
-            _entity.LocalEventBus.Unsubscribe<ChangeHandlingEvent>(HandleChangeHandlingEvent);
+            _entity?.LocalEventBus.Unsubscribe<ChangeHandlingEvent>(HandleChangeHandlingEvent);
         }
 
         private void HandleChangeHandlingEvent(ChangeHandlingEvent evt)
@@ -41,6 +42,7 @@ namespace Code.SkillSystem.Skills.FireRate
 
             _gunObject = gun.GunObj;
             _gunHeatFeedback = _gunObject.GetComponentInChildren<GunHeatFeedback>();
+            Debug.Assert(_gunHeatFeedback != null, $"{gun} has not heat feedback");
         }
 
         public void PlayMuzzleSmog()
@@ -57,7 +59,7 @@ namespace Code.SkillSystem.Skills.FireRate
         {
             if (_gunObject == null) return;
             
-            particleByHeatRatio.SetHeatRatio(ratio);
+            particleByRatio.SetRatio(ratio);
             _gunHeatFeedback.SetHeatRatio(ratio);
         }
 
@@ -65,7 +67,7 @@ namespace Code.SkillSystem.Skills.FireRate
         {
             if (_gunObject == null) return;
             
-            particleByHeatRatio.ResetRatio();
+            particleByRatio.ResetRatio();
             _gunHeatFeedback.ResetRatio();
         }
     }

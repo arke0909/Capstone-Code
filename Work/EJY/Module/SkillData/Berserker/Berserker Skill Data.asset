@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d81627f3950548adb6e84e5dad988e78, type: 3}
+  m_Name: Berserker Skill Data
+  m_EditorClassIdentifier: 
+  skillName: "\uAD11\uC804?\uC0AC"
+  skillIcon: {fileID: 21300000, guid: 5b2270e3fe6c383439e58920e20e36b9, type: 3}
+  skillDescription: "\uCCB4\uB825\uC774 \uC801\uC744\uC218\uB85D \uAC00\uD558\uB294
+    \uD53C\uD574\uAC00 \uC99D\uAC00\uD569\uB2C8\uB2E4.\n"
+  upgradeList:
+  - {fileID: 0}
+  - {fileID: 11400000, guid: 367a1971dcd012642a41303b36151412, type: 2}
+  - {fileID: 11400000, guid: 318e97fab508af843823d770faa4f610, type: 2}
+  skillPrefab: {fileID: 0}
+  defaultSkill: 0

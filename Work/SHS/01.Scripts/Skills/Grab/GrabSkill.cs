@@ -13,6 +13,7 @@ namespace Scripts.SkillSystem.Skills.Grab
 {
     public class GrabSkill : ActiveSkill
     {
+        [SerializeField] private SoundID grabWarningSound;
         [SerializeField] private SoundID grabFireSound;
         
         [Header("Projectile")]
@@ -136,6 +137,14 @@ namespace Scripts.SkillSystem.Skills.Grab
         private void OnValidate()
         {
             AnimType = SkillAnimType.Grab;
+        }
+
+        public override void StartSkill()
+        {
+            base.StartSkill();
+
+            if (hookProjectilePrefab != null && grabWarningSound.IsValid())
+                BroAudio.Play(grabWarningSound, _owner.transform.position);
         }
 
         public override void OnSkillTrigger()

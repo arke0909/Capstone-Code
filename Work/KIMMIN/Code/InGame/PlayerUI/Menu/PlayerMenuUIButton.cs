@@ -1,4 +1,4 @@
-using Code.UI.Core;
+﻿using Code.UI.Core;
 using UnityEngine;
 using UnityEngine.UI;
 using Work.Code.PlayerUI.Menu;
@@ -17,14 +17,9 @@ namespace Work.Code.UI
         [field: SerializeField] public UIPanel Panel { get; private set; }
         [field: SerializeField] public Button MenuButton { get; private set; }
 
-        protected override void Awake()
-        {
-            base.Awake();
-            _icon = GetComponent<Image>();
-        }
-
         public void SetHighlight(bool isActive)
         {
+            _icon ??= GetComponent<Image>();
             _icon.color = isActive ? _highlightColor : Color.white;
 
             if (isActive)

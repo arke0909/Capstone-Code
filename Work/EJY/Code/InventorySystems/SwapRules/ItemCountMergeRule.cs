@@ -6,9 +6,7 @@ namespace Code.InventorySystems.SwapRules
         {
             return context.IsStartStorage &&
                    context.IsTargetStorage &&
-                   !context.IsSameSlot &&
-                   context.StartItem != null &&
-                   context.TargetItem != null &&
+                   !context.IsTargetBlank &&
                    !context.TargetSlot.IsFull &&
                    context.StartItem.ItemData == context.TargetItem.ItemData;
         }

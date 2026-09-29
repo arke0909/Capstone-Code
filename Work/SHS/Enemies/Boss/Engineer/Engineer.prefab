@@ -268,6 +268,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6850015562613220499, guid: c860746277aafea409ac52b43a9c6259, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8383105035341638493}
+    - targetCorrespondingSourceObject: {fileID: 6850015562613220499, guid: c860746277aafea409ac52b43a9c6259, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9223372036854775807}
   m_SourcePrefab: {fileID: 100100000, guid: c860746277aafea409ac52b43a9c6259, type: 3}
 --- !u!114 &2620235449831694254 stripped
 MonoBehaviour:
@@ -338,6 +341,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48c3d061ce044dce877b940ceac86e91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &9223372036854775807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5828945573837349811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 822134b201d84b2a869f434103d62927, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shields: []
 --- !u!4 &7374595529448612962 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7612038083271959362, guid: c860746277aafea409ac52b43a9c6259, type: 3}
@@ -446,6 +462,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6836de3d369291043832cd011ae12520, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8564108945998390512}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6836de3d369291043832cd011ae12520, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7564108945998390512}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6836de3d369291043832cd011ae12520, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7118893540109110089}
@@ -1270,6 +1289,18 @@ MonoBehaviour:
     _entity: {fileID: 11400000, guid: 294d84c460a9aef4b8de302b8a3658a9, type: 2}
     ID: 0
     <DebugObject>k__BackingField: {fileID: 4893606819489542983}
+--- !u!114 &7564108945998390512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4893606819489542983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eb76126beaf4e06a993944bc20b0e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7118893540109110089
 MonoBehaviour:
   m_ObjectHideFlags: 0

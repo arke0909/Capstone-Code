@@ -51,7 +51,6 @@ MonoBehaviour:
   particle: {fileID: 0}
   buffCaster: {fileID: 4774746700108422821}
   targetBuff: {fileID: 11400000, guid: c0c243d5b0c356e4482b73a0acd5e47a, type: 2}
-  buffDuration: 5
 --- !u!1 &6221611574231629193
 GameObject:
   m_ObjectHideFlags: 0

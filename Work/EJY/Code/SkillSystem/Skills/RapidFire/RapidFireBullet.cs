@@ -189,17 +189,6 @@ namespace Code.SkillSystem.Skills.RapidFire
             if (other == null)
                 return;
 
-            if (!TryResolveDamageable(
-                    other,
-                    out Transform hitTransform,
-                    out IDamageable damageable))
-            {
-                if (other.isTrigger)
-                    return;
-            }
-
-            _isReturningToPool = true;
-
             ResolveHitInfo(
                 other,
                 out Vector3 point,
@@ -208,11 +197,24 @@ namespace Code.SkillSystem.Skills.RapidFire
             Vector3 hitPosition =
                 point + normal * hitOffset;
 
-            ProcessDamage(
-                damageable,
-                hitTransform,
-                hitPosition,
-                normal);
+            bool hasDamageable = TryResolveDamageable(
+                other,
+                out Transform hitTransform,
+                out IDamageable damageable);
+
+            if (!hasDamageable && other.isTrigger)
+                return;
+
+            _isReturningToPool = true;
+
+            if (hasDamageable)
+            {
+                ProcessDamage(
+                    damageable,
+                    hitTransform,
+                    hitPosition,
+                    normal);
+            }
 
             HideProjectile();
 
@@ -231,12 +233,23 @@ namespace Code.SkillSystem.Skills.RapidFire
             if (damageable == null)
                 return;
 
-            if (_projectileShooter == null)
-                return;
+            DamageContext context = BuildDamageContext(
+                hitTransform,
+                hitPosition,
+                normal);
 
-            if (_damageCalcCompo == null)
-                return;
+            damageable.ApplyDamage(context);
 
+            _owner.OnAttack?.Invoke(
+                _owner,
+                damageable);
+        }
+
+        private DamageContext BuildDamageContext(
+            Transform hitTransform,
+            Vector3 hitPosition,
+            Vector3 normal)
+        {
             float finalDamageMultiplier =
                 _projectileShooter.DamageMultiplier;
 
@@ -266,7 +279,7 @@ namespace Code.SkillSystem.Skills.RapidFire
                     _projectileShooter.DefPierceLevel,
                     DamageType.RANGE);
 
-            DamageContext context = new DamageContext
+            return new DamageContext
             {
                 DamageData = damageData,
                 HitPoint = hitPosition,
@@ -274,12 +287,6 @@ namespace Code.SkillSystem.Skills.RapidFire
                 Source = gameObject,
                 Attacker = _owner
             };
-
-            damageable.ApplyDamage(context);
-
-            _owner.OnAttack?.Invoke(
-                _owner,
-                damageable);
         }
 
         private void HideProjectile()
@@ -348,15 +355,20 @@ namespace Code.SkillSystem.Skills.RapidFire
             if (other.TryGetComponent(out damageable))
                 return true;
 
-            if (hitEntity != null
-                && hitEntity.TryGetComponent(out damageable))
+            damageable = other.GetComponentInParent<IDamageable>();
+            if (damageable == null)
+                return false;
+
+            if (hitEntity != null)
             {
                 hitTransform = hitEntity.transform;
-
                 return true;
             }
 
-            return false;
+            if (damageable is Component damageableComponent)
+                hitTransform = damageableComponent.transform;
+
+            return true;
         }
 
         private void ResolveHitInfo(

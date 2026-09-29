@@ -16,7 +16,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 1746963186323456657, guid: 8be602fa263a7254db80385ab9a33b4d, type: 3}
   enemyPoolItem: {fileID: 11400000, guid: c461c9afe2154bcab8d749b0b4ced338, type: 2}
   spawnRarityWeight: 50
-  growthTable: {fileID: 0}
+  growthTable: {fileID: 11400000, guid: b8c00b89339fab34d8fd6b2a79fa5412, type: 2}
   equipments:
   - partType: 0
     itemData: {fileID: 11400000, guid: fb2880fc734e0ee4aa5c9631ac43fd1c, type: 2}

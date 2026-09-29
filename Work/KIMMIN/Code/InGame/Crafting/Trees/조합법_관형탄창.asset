@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 조합법_관형탄창
   m_EditorClassIdentifier: 
   treeName: 조합법_관형탄창
-  isBinary: 0
+  isBinary: 1
   nodeList:
   - <Item>k__BackingField: {fileID: 11400000, guid: 466335b0a19d14c4a85efb373d4260b0, type: 2}
     <Tree>k__BackingField: {fileID: 0}
@@ -22,15 +22,10 @@ MonoBehaviour:
     <InheritSkillToCraftResult>k__BackingField: 0
   - <Item>k__BackingField: {fileID: 11400000, guid: 2b7e4b3455524b047ac7a490b3e99621, type: 2}
     <Tree>k__BackingField: {fileID: 0}
-    <Count>k__BackingField: 1
+    <Count>k__BackingField: 2
     <IsChild>k__BackingField: 0
     <InheritSkillToCraftResult>k__BackingField: 0
   - <Item>k__BackingField: {fileID: 11400000, guid: 6fa0690b45755a5418c9490da10a5c57, type: 2}
-    <Tree>k__BackingField: {fileID: 0}
-    <Count>k__BackingField: 1
-    <IsChild>k__BackingField: 0
-    <InheritSkillToCraftResult>k__BackingField: 0
-  - <Item>k__BackingField: {fileID: 11400000, guid: 39c557bab8e94684eb0fca7f0f576c3f, type: 2}
     <Tree>k__BackingField: {fileID: 0}
     <Count>k__BackingField: 1
     <IsChild>k__BackingField: 0

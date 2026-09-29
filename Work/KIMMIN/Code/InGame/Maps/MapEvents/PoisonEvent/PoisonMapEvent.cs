@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Code.StatusEffectSystem;
 using DewmoLib.Dependencies;
 using DewmoLib.ObjectPool.RunTime;
 using Scripts.Combat.Areas;
@@ -10,7 +9,6 @@ namespace Work.Code.MapEvents
 {
     public class PoisonMapEvent : MapEvent
     {
-        [SerializeField] private BuffSO poisonEffect;
         [Inject] private PoolManagerMono _poolManager;
         
         private List<GameObject> _maps = new();
@@ -54,7 +52,7 @@ namespace Work.Code.MapEvents
         private void PlayPoison()
         {
             var buffArea = _buffs[_index];
-            buffArea.SetBuffDuration(MapEventSO.duration);
+            buffArea.SetFloorDuration(MapEventSO.duration);
             buffArea.Init(null, buffArea.transform.position);
             _isActive = true;
             _time = Time.time;

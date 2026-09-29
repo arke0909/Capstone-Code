@@ -1,7 +1,6 @@
 ﻿using Chipmunk.ComponentContainers;
 using Scripts.Combat.Datas;
 using Scripts.Enemies.States;
-using UnityEngine;
 
 namespace Code.SHS.Entities.Enemies.FSM.BehaviourState
 {
@@ -75,7 +74,6 @@ namespace Code.SHS.Entities.Enemies.FSM.BehaviourState
             bool wantsAttack = _attackContext.attackCount > 0 && _attackable.CanAttack();
             if (wantsAttack)
                 _attackContext.attackCount--;
-
             _attackable.UpdateAttack(new AttackContext(wantsAttack, _isTriggerCall, true));
         }
 
@@ -86,7 +84,7 @@ namespace Code.SHS.Entities.Enemies.FSM.BehaviourState
             _attackable?.AttackTrigger();
         }
 
-        public override void Exit()
+        public override async void Exit()
         {
             base.Exit();
             _animatorTrigger.OnDamageCastTrigger -= HandleDamageCast;

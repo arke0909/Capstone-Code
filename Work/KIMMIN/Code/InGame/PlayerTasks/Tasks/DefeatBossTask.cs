@@ -38,7 +38,7 @@ namespace Work.Code.PlayerTasks
 
         protected override string GetTaskText()
         {
-            return $"보스 처치({_defeatedCount}/{bossCount}) (상세 위치는 맵에 표시됩니다.)";
+            return $"보스를 처치하고 열쇠 재료를 모으세요 ({_defeatedCount}/{bossCount})\n(상세 위치는 맵에 표시됩니다.)";
         }
     }
 }

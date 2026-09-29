@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 433029360310102795}
   - component: {fileID: 6979606434893500508}
   - component: {fileID: 2249469103510160552}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BombingMissile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197,7 +197,7 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8192
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0

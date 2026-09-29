@@ -6,19 +6,25 @@ using DewmoLib.ObjectPool.RunTime;
 using Scripts.Combat.Datas;
 using Scripts.Combat.Projectiles;
 using Scripts.Entities;
+using Scripts.Entities.Vitals;
 using Scripts.FSM;
 using Scripts.Players;
 using SHS.Scripts.Summon.Turrets.FSM;
+using System.Collections;
 using UnityEngine;
 
 namespace SHS.Scripts.Summon.Turrets
 {
-    public class Turret : Entity, ISummonable, IProjectileShooter
+    public class Turret : Entity, ISummonable, IProjectileShooter, IPoolable
     {
         [SerializeField] private SoundID turretFireSound;
         [SerializeField] private SoundID turretReloadSound;
         [SerializeField] private PoolItemSO onDeadParticle;
-        
+
+        [Header("Pool Settings")]
+        [SerializeField] private PoolItemSO poolItem;
+        [SerializeField, Min(0f)] private float lifetime = 30f;
+
         [Header("Detection")] [SerializeField] private LayerMask targetLayer;
         [SerializeField] private LayerMask wallLayer;
 
@@ -50,6 +56,8 @@ namespace SHS.Scripts.Summon.Turrets
         public Collider[] DetectedColliders => _detectedColliders;
         public Player TargetPlayer => _targetPlayer;
         public bool CanFire => _currentAmmo > 0;
+        public PoolItemSO PoolItem => poolItem;
+        public GameObject GameObject => gameObject;
 
         public float DamageMultiplier => bulletData.damageMultiplier;
 
@@ -59,19 +67,24 @@ namespace SHS.Scripts.Summon.Turrets
         private Player _targetPlayer;
         private int _currentAmmo;
         private Collider myCollider;
+        private IVitalResettable _vital;
+        private EngineerTurretTracker _turretTracker;
+        private Pool _myPool;
+        private Coroutine _lifetimeRoutine;
+        private int _defaultLayer;
+        private bool _isReleased;
         [SerializeField] private StateMachine<TurretStateEnum> _stateMachine;
 
         public override void OnInitialize(ComponentContainer componentContainer)
         {
             base.OnInitialize(componentContainer);
             myCollider = GetComponentInChildren<Collider>();
+            _vital = componentContainer.GetSubclassComponent<IVitalResettable>();
             _stateMachine = new StateMachine<TurretStateEnum>(componentContainer, stateDatas);
             _currentAmmo = maxAmmo;
+            _defaultLayer = gameObject.layer;
             SetAnimatorSpeeds();
             OnDeadEvent.AddListener(HandleTurretDead);
-
-            // 디스폰 날먹 코드
-            Destroy(gameObject, 30f);
         }
 
         private void SetAnimatorSpeeds()
@@ -85,6 +98,32 @@ namespace SHS.Scripts.Summon.Turrets
         {
             ChangeState(TurretStateEnum.Idle);
         }
+
+        public void SetUpPool(Pool pool)
+            => _myPool = pool;
+
+        public void ResetItem()
+        {
+            _isReleased = false;
+            IsDead = false;
+            gameObject.layer = _defaultLayer;
+            _targetPlayer = null;
+            _currentAmmo = maxAmmo;
+            _vital?.ResetVital();
+
+            if (myCollider != null)
+                myCollider.enabled = true;
+
+            ChangeState(TurretStateEnum.Idle, true);
+
+            if (_lifetimeRoutine != null)
+                StopCoroutine(_lifetimeRoutine);
+
+            _lifetimeRoutine = StartCoroutine(ReturnAfterLifetime());
+        }
+
+        public void SetTracker(EngineerTurretTracker turretTracker)
+            => _turretTracker = turretTracker;
 
         protected virtual void Update()
         {
@@ -140,8 +179,40 @@ namespace SHS.Scripts.Summon.Turrets
             if (myCollider != null)
                 myCollider.enabled = false;
 
-            DestroyThis();
             Bus.Raise(new PlayEffectEvent(onDeadParticle, transform.position, Quaternion.identity));
+            ReleaseToPool();
+        }
+
+        private IEnumerator ReturnAfterLifetime()
+        {
+            yield return new WaitForSeconds(lifetime);
+            _lifetimeRoutine = null;
+            ReleaseToPool();
+        }
+
+        private void ReleaseToPool()
+        {
+            if (_isReleased)
+                return;
+
+            _isReleased = true;
+
+            if (_lifetimeRoutine != null)
+            {
+                StopCoroutine(_lifetimeRoutine);
+                _lifetimeRoutine = null;
+            }
+
+            _turretTracker?.Unregister(gameObject);
+            _turretTracker = null;
+
+            if (_myPool != null)
+            {
+                _myPool.Push(this);
+                return;
+            }
+
+            Destroy(gameObject);
         }
 
         public bool WallExistsBetweenTarget(Vector3 targetPosition)

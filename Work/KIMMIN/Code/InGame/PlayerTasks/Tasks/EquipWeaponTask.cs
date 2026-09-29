@@ -1,4 +1,5 @@
 using Chipmunk.ComponentContainers;
+using Code.InventorySystems.Equipments;
 using Code.Items.ItemInfo;
 using Code.Players;
 using Code.UI.Inventory;
@@ -21,6 +22,11 @@ namespace Work.Code.PlayerTasks
 
         public override void StartTask()
         {
+            if (_playerEquipment.IsEquipped(EquipPartType.Hand))
+            {
+                CompleteTask();
+                return;
+            }
             _playerEquipment.OnEquipItem += HandleEquipItem;
             playerInventory.HighlightSlot(ItemType.Gun, Color.white);
         }

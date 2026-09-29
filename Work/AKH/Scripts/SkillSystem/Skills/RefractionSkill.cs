@@ -1,4 +1,4 @@
-﻿﻿using Chipmunk.ComponentContainers;
+using Chipmunk.ComponentContainers;
 using Code.StatusEffectSystem;
 using Entities;
 using Scripts.Combat;
@@ -21,7 +21,7 @@ namespace Scripts.SkillSystem.Skills
         private EntityStatusEffect _statusEffect;
         private int _speedIncreaseLevel;
         private int _damageStoringLevel;
-        
+
         public override void Init(ComponentContainer container)
         {
             base.Init(container);
@@ -39,13 +39,13 @@ namespace Scripts.SkillSystem.Skills
                 _skillTimer = skillDuration;
                 _isUsing = true;
 
-                _statusEffect.AddStatusEffect(speedIncreaseData.GetStatusEffectInfo(_speedIncreaseLevel));
-                
+                _statusEffect.AddStatusEffect(speedIncreaseData, this, _speedIncreaseLevel);
+
                 //if (dashEnable)
                     //_skillComponent.ChangeSkill(typeof(DashSkill),(int)ActiveSlotType.Space);
                 if (_canDamageStoring)
                 {
-                    _statusEffect.AddStatusEffect(damageStoringData.GetStatusEffectInfo(_damageStoringLevel));
+                    _statusEffect.AddStatusEffect(damageStoringData, this, _damageStoringLevel);
                 }
             }
             else
@@ -53,14 +53,22 @@ namespace Scripts.SkillSystem.Skills
                 _vfxCompo.StopVFX("RefractionEffect");
                 _movement.SetPosition(_returnPos);
                 _isUsing = false;
-                
-                _statusEffect.RemoveStatusEffect(speedIncreaseData);
-                
+
+                _statusEffect.RemoveStatusEffect(speedIncreaseData, this);
+
                 //if (dashEnable)
                     //_skillComponent.ChangeSkill(typeof(RollingSkill),(int)ActiveSlotType.Space);
-                if(_canDamageStoring)
-                    _statusEffect.RemoveStatusEffect(damageStoringData);
+                _statusEffect.RemoveStatusEffect(damageStoringData, this);
             }
+        }
+
+        private void OnDestroy()
+        {
+            if (_statusEffect == null)
+                return;
+
+            _statusEffect.RemoveStatusEffect(speedIncreaseData, this);
+            _statusEffect.RemoveStatusEffect(damageStoringData, this);
         }
         protected void Update()
         {
@@ -73,4 +81,3 @@ namespace Scripts.SkillSystem.Skills
         }
     }
 }
-

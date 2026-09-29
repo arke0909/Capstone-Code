@@ -16,6 +16,7 @@ namespace Code.SkillSystem.Skills.StoneEdges
 
         [Inject] private PoolManagerMono _poolManger;
         private IAimProvider _aimProvider;
+        private bool _explodeOnPlayerHit;
         private float _skillSize = 1f;
         private Vector3 _skillPos;
 
@@ -45,6 +46,16 @@ namespace Code.SkillSystem.Skills.StoneEdges
             _skillSize -= additionalSize;
         }
 
+        private void UpgradeExplodeOnPlayerHit()
+        {
+            _explodeOnPlayerHit = true;
+        }
+
+        private void RollbackExplodeOnPlayerHit()
+        {
+            _explodeOnPlayerHit = false;
+        }
+
         public override void OnSkillTrigger()
         {
             base.StartSkill();
@@ -52,7 +63,7 @@ namespace Code.SkillSystem.Skills.StoneEdges
             Vector3 dir = _skillPos - _owner.transform.position;
 
             StoneEdge stoneEdge = _poolManger.Pop<StoneEdge>(stoneEdgeItem);
-            stoneEdge.Init(_owner, _skillPos, dir, _skillSize, damage);
+            stoneEdge.Init(_owner, _skillPos, dir, _skillSize, damage, _explodeOnPlayerHit);
         }
     }
 }

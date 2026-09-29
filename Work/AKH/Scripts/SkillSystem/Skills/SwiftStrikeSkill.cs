@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Ami.BroAudio;
 using Chipmunk.ComponentContainers;
 using Code.ETC;
@@ -175,26 +175,37 @@ namespace Scripts.SkillSystem.Skills
         private void TryDamageTarget(Collider hitCollider, Vector3 hitOrigin)
         {
             Entity targetEntity = hitCollider.GetComponentInParent<Entity>();
-
-            if (targetEntity == null || targetEntity == _owner || targetEntity.IsDead)
+            if (targetEntity == _owner)
                 return;
 
-            IDamageable damageable = targetEntity.GetSubclassCompo<IDamageable>();
+            if (targetEntity != null && targetEntity.IsDead)
+                return;
+
+            IDamageable damageable = targetEntity != null ? targetEntity.GetSubclassCompo<IDamageable>() : null;
             if (damageable == null && !hitCollider.TryGetComponent(out damageable))
+                damageable = hitCollider.GetComponentInParent<IDamageable>();
+
+            if (damageable == null)
                 return;
 
-            if (!_hitEntities.Add(targetEntity))
+            if (targetEntity != null && !_hitEntities.Add(targetEntity))
                 return;
+
+            Transform hitTransform = targetEntity != null
+                ? targetEntity.HitTransform
+                : damageable is Component damageableComponent
+                    ? damageableComponent.transform
+                    : hitCollider.transform;
 
             Vector3 hitPoint = hitCollider.ClosestPoint(hitOrigin);
-            Vector3 hitNormal = hitOrigin - targetEntity.HitTransform.position;
+            Vector3 hitNormal = hitOrigin - hitTransform.position;
             if (hitNormal.sqrMagnitude <= 0.0001f)
                 hitNormal = -_dashDirection;
             hitNormal.Normalize();
 
             DamageContext context = new DamageContext
             {
-                DamageData = BuildDamageData(targetEntity.HitTransform),
+                DamageData = BuildDamageData(hitTransform),
                 HitPoint = hitPoint,
                 HitNormal = hitNormal,
                 Source = gameObject,

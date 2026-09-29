@@ -1,11 +1,9 @@
-﻿using System.Linq;
 using Ami.BroAudio;
 using Chipmunk.ComponentContainers;
 using Code.StatusEffectSystem;
-using Code.StatusEffectSystem.StatusEffects;
-using Entities;
 using Scripts.SkillSystem;
 using UnityEngine;
+
 namespace Code.SkillSystem.Skills.BulletProof
 {
     public class BulletProofSkill : ActiveSkill
@@ -17,63 +15,38 @@ namespace Code.SkillSystem.Skills.BulletProof
         [SerializeField] private bool isDmgIncreaseByShield;
         [SerializeField] private bool isDmgIncreaseAtHaveShield;
         private EntityStatusEffect _entityStatusEffect;
-        private VFXComponent _vfxComponent;
-        private AbstractStatusEffect _bulletProofShieldEffect;
-        private bool _isBulletProofVfxPlaying;
+
         public override void Init(ComponentContainer container)
         {
             base.Init(container);
             _entityStatusEffect = container.Get<EntityStatusEffect>();
-            _vfxComponent = container.Get<VFXComponent>();
-            _entityStatusEffect.OnStatusEffectReleased += HandleStatusEffectReleased;
         }
-        
+
         private void UpgradeDmgInCreaseAtHaveShield() => isDmgIncreaseAtHaveShield = true;
         private void RollbackDmgInCreaseAtHaveShield() => isDmgIncreaseAtHaveShield = false;
         private void UpgradeDmgIncreaseByShield() => isDmgIncreaseByShield = true;
         private void RollbackDmgIncreaseByShield() => isDmgIncreaseByShield = false;
 
-        
         public override void StartSkill()
         {
+            Debug.Assert(shieldBuff != null, $"{nameof(BulletProofSkill)} requires {nameof(shieldBuff)}.", this);
+            if (shieldBuff == null)
+                return;
+
             BroAudio.Play(soundID, _owner.transform.position);
 
-            if (_isBulletProofVfxPlaying == false)
-            {
-                _vfxComponent.PlayVFX("BulletProof", transform.position, Quaternion.identity);
-                _isBulletProofVfxPlaying = true;
-            }
             // temp
             if (isDmgIncreaseAtHaveShield)
             {
-                _entityStatusEffect.AddStatusEffect(damageMultiIncreaseData.GetStatusEffectInfo());
+                _entityStatusEffect.AddStatusEffect(damageMultiIncreaseData, this);
             }
             // temp
             if (isDmgIncreaseByShield)
             {
-                _entityStatusEffect.AddStatusEffect(dmgIncreaseByShieldBuff.GetStatusEffectInfo());
+                _entityStatusEffect.AddStatusEffect(dmgIncreaseByShieldBuff, this);
             }
-            
-            var appliedEffect = _entityStatusEffect.AddStatusEffect(shieldBuff.GetStatusEffectInfo());
-            _bulletProofShieldEffect = appliedEffect.FirstOrDefault(statusEffect => statusEffect.StatusEffectEnum == StatusEffectEnum.SHIELD);
-        }
-        
-        private void HandleStatusEffectReleased(AbstractStatusEffect effect)
-        {
-            if (effect != _bulletProofShieldEffect)
-                return;
-            if (_isBulletProofVfxPlaying == false)
-                return;
-            _vfxComponent.StopVFX("BulletProof");
-            _bulletProofShieldEffect = null;
-            _isBulletProofVfxPlaying = false;
-        }
-        
-        private void OnDestroy()
-        {
-            if (_entityStatusEffect == null)
-                return;
-            _entityStatusEffect.OnStatusEffectReleased -= HandleStatusEffectReleased;
+
+            _entityStatusEffect.AddStatusEffect(shieldBuff, this);
         }
     }
 }

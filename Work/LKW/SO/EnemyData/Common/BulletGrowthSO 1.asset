@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6541d7879b6c4a3ea15a180b438630a5, type: 3}
+  m_Name: BulletGrowthSO 1
+  m_EditorClassIdentifier: 
+  _bulletDataByGunType:
+  - {fileID: 11400000, guid: 43251d73587b456fa5f1d8632f59e500, type: 2}
+  - {fileID: 11400000, guid: efe59774032a4399bf662b4afe37da49, type: 2}
+  - {fileID: 11400000, guid: 581fc4d68da942fbae9be08bf8473f53, type: 2}
+  - {fileID: 11400000, guid: d61632324d474b678a03e8215b136b96, type: 2}
+  - {fileID: 11400000, guid: 1c7acf88f12f4e11b72812897eb53050, type: 2}
+  _fallbackBulletData: {fileID: 0}
+  _replaceCurrentMagazineImmediately: 1

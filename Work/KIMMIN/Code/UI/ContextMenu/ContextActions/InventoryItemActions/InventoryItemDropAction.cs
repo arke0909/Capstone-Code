@@ -2,6 +2,7 @@ using Chipmunk.ComponentContainers;
 using Code.InventorySystems.Items;
 using Code.Items;
 using Code.Players;
+using InGame.InventorySystem;
 using UnityEngine;
 
 namespace Work.Code.UI.ContextMenu.InventoryItemActions
@@ -31,7 +32,7 @@ namespace Work.Code.UI.ContextMenu.InventoryItemActions
 
         public override void OnAction(ItemSlot data)
         {
-            if (data.Item is EquipableItem equipable && equipable.IsEquipped)
+            if (data is EquipSlot && data.Item is EquipableItem equipable)
             {
                 if (_playerEquipment == null || !_playerEquipment.DropEquippedItem(equipable))
                 {

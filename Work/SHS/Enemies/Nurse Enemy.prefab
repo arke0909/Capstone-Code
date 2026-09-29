@@ -361,6 +361,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 70995338148480610, guid: 359930cd3329fdf49a0c1ea4034b9557, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1744973718998528310}
+    - targetCorrespondingSourceObject: {fileID: 70995338148480610, guid: 359930cd3329fdf49a0c1ea4034b9557, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2744973718998528310}
     - targetCorrespondingSourceObject: {fileID: 2647571057076180912, guid: 359930cd3329fdf49a0c1ea4034b9557, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1124649225928516331}
@@ -541,6 +544,18 @@ MonoBehaviour:
     _entity: {fileID: 11400000, guid: 294d84c460a9aef4b8de302b8a3658a9, type: 2}
     ID: 0
     <DebugObject>k__BackingField: {fileID: 664816240718880826}
+--- !u!114 &2744973718998528310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 664816240718880826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eb76126beaf4e06a993944bc20b0e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!137 &761641146337080117 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 239882295149270381, guid: 359930cd3329fdf49a0c1ea4034b9557, type: 3}

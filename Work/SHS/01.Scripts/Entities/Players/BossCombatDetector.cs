@@ -46,10 +46,10 @@ namespace SHS.Scripts.Entities.Players
             {
                 Collider targetCollider = detectedTargets[i];
                 Boss target = targetCollider.GetComponent<Boss>();
-                if (target == null)
+                if (target == null || target.IsDead)
                     continue;
                 float distance = Vector3.Distance(transform.position, target.transform.position);
-                if (distance < closestDistance && target != null)
+                if (distance < closestDistance)
                 {
                     closestDistance = distance;
                     closestTarget = target;

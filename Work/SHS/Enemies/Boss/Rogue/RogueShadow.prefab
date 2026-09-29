@@ -183,6 +183,10 @@ MonoBehaviour:
   <AnimType>k__BackingField: 0
   <MoveType>k__BackingField: 1
   <TargetState>k__BackingField: {fileID: 0}
+  stealthSound:
+    _entity: {fileID: 0}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 0}
   stealthDuration: 4
   stealthMaterial: {fileID: 2100000, guid: 37a9e5ce1365de248acbbbfd3627f207, type: 2}
 --- !u!1001 &2079369618932477506
@@ -272,6 +276,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 33d96bc0fbb547a40b435e4c6da868c3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4072525817826720555}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 33d96bc0fbb547a40b435e4c6da868c3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4756222608846263047}
     - targetCorrespondingSourceObject: {fileID: -8343894014087287100, guid: 33d96bc0fbb547a40b435e4c6da868c3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1699163669034891100}
@@ -436,6 +443,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hideOnAwake: 1
   _targetRenderers: []
+--- !u!114 &4756222608846263047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1160255758822576915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eb76126beaf4e06a993944bc20b0e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1220457068706922630 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8343894014087287100, guid: 33d96bc0fbb547a40b435e4c6da868c3, type: 3}
@@ -1711,7 +1730,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51c5743e41dc4db4973db18876d93953, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 0}
+  enemy: {fileID: 4945856608160781802}
   enemyData: {fileID: 11400000, guid: 4b35d59fc8f2c9143a46bb9f291d45ee, type: 2}
 --- !u!114 &4945856608160781802
 MonoBehaviour:

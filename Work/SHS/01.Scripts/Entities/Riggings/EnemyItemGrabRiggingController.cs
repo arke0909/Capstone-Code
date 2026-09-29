@@ -18,7 +18,10 @@ namespace SHS.Scripts.Entities.Rigings
         private static bool ShouldUseGrabIK(EnemyStateEnum state)
         {
             return state == EnemyStateEnum.Aim ||
-                   state == EnemyStateEnum.Attack;
+                   state == EnemyStateEnum.Attack ||
+                   state == EnemyStateEnum.Idle ||
+                   state == EnemyStateEnum.Patrol ||
+                   state == EnemyStateEnum.Chase;
         }
     }
 }

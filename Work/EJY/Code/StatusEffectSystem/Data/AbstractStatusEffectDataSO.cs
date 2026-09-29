@@ -6,10 +6,20 @@ namespace Code.StatusEffectSystem
 {
     public abstract class AbstractStatusEffectDataSO : ScriptableObject
     {
-        public int idx;
-        public string StatusEffectName;
         public bool canOverlap;
         public bool isOverWrite;
+
+        public virtual bool CanApplyTo(Entity target, out string reason)
+        {
+            if (target == null)
+            {
+                reason = "Target is null.";
+                return false;
+            }
+
+            reason = null;
+            return true;
+        }
 
         public StatusEffectInfo ApplyFlag(StatusEffectInfo info)
         {
@@ -38,6 +48,19 @@ namespace Code.StatusEffectSystem
 
             return info;
         }
-        public abstract AbstractStatusEffect CreateStatusEffect(Entity target, StatusEffectInfo info);
+        public AbstractStatusEffect CreateStatusEffect(Entity target, StatusEffectInfo info)
+        {
+            AbstractStatusEffect statusEffect = CreateStatusEffectInstance(target, info);
+            if (statusEffect == null)
+            {
+                Debug.LogError($"{name} failed to create a status effect.", this);
+                return null;
+            }
+
+            statusEffect.SetStatusEffectData(this);
+            return statusEffect;
+        }
+
+        protected abstract AbstractStatusEffect CreateStatusEffectInstance(Entity target, StatusEffectInfo info);
     }
 }

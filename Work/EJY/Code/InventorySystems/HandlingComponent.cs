@@ -146,6 +146,12 @@ namespace Code.InventorySystems
             if (handItem == null)
                 return;
 
+            if (handItem == _handItem)
+            {
+                UnHandleItem();
+                return;
+            }
+
             // 이 무기가 equip slot에 실제로 꽂혀 있는 장비면 그 슬롯 index를 추적
             EquipSlot equipSlot = _playerEquipment.EquipSlots.FirstOrDefault(slot => slot.Equipable == handItem);
 
@@ -165,17 +171,30 @@ namespace Code.InventorySystems
         private void SetHandItem(EquipableItem item)
         {
             HandItem handItem = item as HandItem;
-            
+
             if (handItem == _handItem)
-            {
-                UnHandleItem();
                 return;
+
+            if (_handItem != null)
+            {
+                _handItem.UnHandle(_player);
+                _playerEquipment.UnequipItemFromPart(EquipPartType.Hand, out _);
             }
 
-            _handItem?.UnHandle(_player);
             _handItem = handItem;
-            _handItem?.Handle(_player, _playerEquipment.GetEquipTransform(EquipPartType.Hand));
-            _playerEquipment.SetEquippedItem(EquipPartType.Hand, item);
+
+            if (_handItem != null)
+            {
+                if (!_playerEquipment.EquipItemToPart(EquipPartType.Hand, item))
+                {
+                    _handItem = null;
+                    _player.LocalEventBus.Raise(new ChangeHandlingEvent(null));
+                    return;
+                }
+
+                _handItem.Handle(_player, _playerEquipment.GetEquipTransform(EquipPartType.Hand));
+            }
+
             _player.LocalEventBus.Raise(new ChangeHandlingEvent(item));
         }
 
@@ -191,7 +210,7 @@ namespace Code.InventorySystems
             UpdateHandleIndex(GetLocalIndex(equipSlot.Index));
         }
 
-        private void UnHandleItem()
+          private void UnHandleItem()
         {
             SetHandItem(null);
             UpdateHandleIndex(-1);
@@ -234,7 +253,8 @@ namespace Code.InventorySystems
             if (eventData.EquipSlot != null && eventData.EquipSlot.EquipPartType == EquipPartType.Hand
                                             && eventData.EquippedItem == _handItem)
             {
-                if (_playerEquipment.TryChangeSpareWeapon(out EquipSlot spareSlot))
+                EquipSlot spareSlot = _playerEquipment.EquipSlots.FirstOrDefault(slot => slot.CanHandle && !slot.IsBlank);
+                if (spareSlot != null)
                 {
                     HandleSlotItem(spareSlot);
                     return;

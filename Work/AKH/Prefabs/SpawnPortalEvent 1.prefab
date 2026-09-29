@@ -339,8 +339,7 @@ MonoBehaviour:
   - {fileID: 7743139659392251630}
   - {fileID: 5571999183853567459}
   - {fileID: 5851184212915578835}
-  targetSpawners:
-  - {fileID: 0}
+  targetSpawner: {fileID: 0}
   structureItem: {fileID: 11400000, guid: efe476ad4f80893418fbfacc493bbf1a, type: 2}
   portalIcon: {fileID: 0}
 --- !u!1 &6151064436319177891

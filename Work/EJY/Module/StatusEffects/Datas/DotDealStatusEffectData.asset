@@ -12,6 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ca33e40669246e4a9adbcb29e7c08a6, type: 3}
   m_Name: DotDealStatusEffectData
   m_EditorClassIdentifier: 
-  idx: 9
-  StatusEffectName: Dot
   canOverlap: 0

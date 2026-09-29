@@ -200,6 +200,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitBodyTrm: {fileID: 5877104711208442725}
+  killSound:
+    _entity: {fileID: 0}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 0}
   OnHitEvent:
     m_PersistentCalls:
       m_Calls:
@@ -236,15 +240,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b53e07f62ef14b2c97c97f1052a6ffc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bossSO: {fileID: 11400000, guid: 5e91c25d0e57a714c9cbc08abdba53d1, type: 2}
+  <bossSO>k__BackingField: {fileID: 0}
+  <bossName>k__BackingField: 
   targetTransform: {fileID: 7761585967204712924}
-  playerTransform: {fileID: 0}
   rewardContainer: {fileID: 0}
   rewardItems:
   - {fileID: 11400000, guid: 61c9dcc2bc70cc043a1a671e5e36295b, type: 2}
   - {fileID: 11400000, guid: ed9fb4609c16d664489b4f49f344be75, type: 2}
   itemDB: {fileID: 11400000, guid: 029992c9eccfd7443835fbb6db48696e, type: 2}
-  returnStructure: {fileID: 0}
+  respawnDelayHours: 12
+  outDoor: {fileID: 0}
 --- !u!4 &7761585967204712924 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7612038083271959362, guid: c860746277aafea409ac52b43a9c6259, type: 3}
@@ -415,6 +420,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6836de3d369291043832cd011ae12520, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1768429683225189666}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6836de3d369291043832cd011ae12520, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2768429683225189666}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6836de3d369291043832cd011ae12520, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2146361038995381688}
@@ -1229,6 +1237,18 @@ MonoBehaviour:
     _entity: {fileID: 11400000, guid: 294d84c460a9aef4b8de302b8a3658a9, type: 2}
     ID: 0
     <DebugObject>k__BackingField: {fileID: 4676514733684940120}
+--- !u!114 &2768429683225189666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4676514733684940120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eb76126beaf4e06a993944bc20b0e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2146361038995381688
 MonoBehaviour:
   m_ObjectHideFlags: 0

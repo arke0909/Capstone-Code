@@ -59,6 +59,7 @@ namespace Scripts.Enemies.EnemyBehaviours
                 case ConditionType.AllAreTrue:
                     foreach (EnemyBehaviourCondition condition in conditions)
                         success &= condition.Condition();
+             
                     break;
             }
             return success;

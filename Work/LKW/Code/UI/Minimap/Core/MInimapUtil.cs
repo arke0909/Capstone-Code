@@ -6,13 +6,20 @@ namespace Code.UI.Minimap.Core
 {
     public static class MinimapUtil
     {
-        public static string AddToMinimap(object owner, ElementType type,Sprite icon, bool syncChildScale = true, Vector3 worldInitPos = default )
+        public static string AddToMinimap(
+            object owner,
+            ElementType type,
+            Sprite icon,
+            bool syncChildScale = true,
+            Vector3 worldInitPos = default,
+            bool isHighlighted = false)
         {
             var data = new MinimapElementData(
                 owner,
                 type,
                 icon, 
-                syncChildScale
+                syncChildScale,
+                isHighlighted
             );
             
             var evt = new AddMinimapElementEvent(

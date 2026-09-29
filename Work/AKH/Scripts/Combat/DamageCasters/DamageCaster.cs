@@ -1,4 +1,4 @@
-﻿using Scripts.Combat.Datas;
+using Scripts.Combat.Datas;
 using Scripts.Entities;
 using UnityEngine;
 
@@ -27,7 +27,7 @@ namespace Scripts.Combat
                     HitNormal = normal,
                     Attacker = _owner
                 };
-                    
+
                 damageable.ApplyDamage(context);
             }
             if (knockbackData != null && target.TryGetComponent(out IKnockbackable knockbackable))

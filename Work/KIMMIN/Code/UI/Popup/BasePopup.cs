@@ -20,6 +20,7 @@ namespace Code.UI.Popup
 
         public sealed override void ShowPopup(object data, ICallbackData callback = null)
         {
+            EnableUI();
             _callback = (TCallback)callback;
             ShowPopup((TData)data, (TCallback)callback);
         }

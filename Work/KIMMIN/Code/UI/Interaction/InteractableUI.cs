@@ -1,6 +1,5 @@
 ﻿using System;
 using Code.UI.Core;
-using Code.UI.Popup;
 using UnityEngine;
 using Work.Code.UI.ContextMenu;
 
@@ -41,17 +40,6 @@ namespace Work.Code.UI.Core.Interaction
         {
             OverlayUIManager.Instance?.UnbindContextMenu(this);
         }
-        
-        protected void BindPopup(IPopupProvider iPopupProvider)
-        {
-            OverlayUIManager.Instance?.BindPopup(iPopupProvider);
-        }
-        
-        protected void UnBindPopup(IPopupProvider iPopupProvider)
-        {
-            OverlayUIManager.Instance?.UnbindPopup(iPopupProvider);
-        }
-
         protected virtual void ClearInteractEvents() { }
     }
 }

@@ -2,6 +2,7 @@
 using Code.GameEvents;
 using Code.InventorySystems.Items;
 using Code.UI.Core;
+using Code.UI.Tooltip;
 using DG.Tweening;
 using System;
 using Code.UI.Core.Interaction;
@@ -126,8 +127,8 @@ namespace InGame.InventorySystem
 
         public void SetOutlineColor(Color32 color, bool isDefault = false)
         {
-            Debug.Log(color);
-            if (outline == null) return;
+            if (outline == null)
+                return;
             
             outline.color = isDefault ? Color.white : color;
         }
@@ -145,7 +146,7 @@ namespace InGame.InventorySystem
             
             skillBackground.gameObject.SetActive(true);
             skillIcon.sprite = equipItem.Skill.skillIcon;
-            BindTooltip(() => equipItem.Skill);
+            BindTooltip(() => new SkillTooltipData(equipItem.Skill, equipItem.SkillLevel));
         }
         
         private void HandleClick()

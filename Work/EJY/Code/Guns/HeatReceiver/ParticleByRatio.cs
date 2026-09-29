@@ -1,0 +1,26 @@
+using Code.ETC;
+using UnityEngine;
+
+namespace Code.Guns.HeatReceiver
+{
+    public class ParticleByRatio : MonoBehaviour, IRatioReceiver
+    {
+        [SerializeField] private float rateOverTime = 10f;
+        [Range(0f,1f),SerializeField] private float baseHeatRatio = 0;
+        [SerializeField] private ParticleSystem particle;
+        
+        public ParticleSystem Particle => particle;
+        
+        public void SetRatio(float ratio)
+        {
+            ratio = baseHeatRatio + (1 - baseHeatRatio) * ratio;
+            var emission = particle.emission;
+            emission.rateOverTime = rateOverTime * ratio;
+        }
+
+        public void ResetRatio()
+        {
+            SetRatio(0);
+        }
+    }
+}

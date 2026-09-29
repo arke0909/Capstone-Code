@@ -1,4 +1,4 @@
-using Chipmunk.ComponentContainers;
+﻿using Chipmunk.ComponentContainers;
 using Cysharp.Threading.Tasks;
 using DewmoLib.ObjectPool.RunTime;
 using Scripts.Combat.Datas;
@@ -110,6 +110,25 @@ namespace Scripts.Combat.Projectiles
             HandleHit(collision.collider, contact.point, contact.normal);
         }
 
+        private void OnTriggerEnter(Collider other)
+        {
+            if (_isReturningToPool || other == null)
+                return;
+
+            if (!TryResolveDamageable(other, out _, out IDamageable damageable) || damageable == null)
+                return;
+
+            Vector3 hitPoint = other.ClosestPoint(transform.position);
+            Vector3 hitNormal = transform.position - hitPoint;
+            if (hitNormal.sqrMagnitude <= 0.0001f)
+                hitNormal = -transform.forward;
+            else
+                hitNormal.Normalize();
+
+            transform.position = hitPoint;
+            HandleHit(other, hitPoint, hitNormal);
+        }
+
         public void HitImmediately(Collider other, Vector3 hitPoint, Vector3 hitNormal)
         {
             Debug.Assert(other != null, "Bullet: Immediate hit target is null.");
@@ -138,52 +157,64 @@ namespace Scripts.Combat.Projectiles
                 return;
 
             TryResolveDamageable(other, out Transform hitTransform, out IDamageable damageable);
+            Vector3 pos = hitPoint + hitNormal * hitOffset;
+
+            if (damageable == null)
+            {
+                if (other.isTrigger)
+                    return;
+
+                _isReturningToPool = true;
+                PrepareForDespawn();
+
+                BulletHole hole = poolManager.Pop(bulletHole) as BulletHole;
+                Debug.Assert(hole != null, "Bullet: BulletHole pool item could not be popped.");
+                hole.InitHole(pos, hitNormal);
+
+                _bulletImpactEffect.PlayEffect(pos, hitNormal);
+                ReturnToPoolAfterDelay().Forget();
+                return;
+            }
 
             _isReturningToPool = true;
             PrepareForDespawn();
 
-            Vector3 pos = hitPoint + hitNormal * hitOffset;
-
-            if (damageable != null)
-            {
-                DamageCalcCompo calcCompo = _owner.Get<DamageCalcCompo>();
-
-                float finalDamageMultiply = _projectileShooterSnapshot.DamageMultiplier;
-
-                if (_owner.OnDamageCalc != null)
-                {
-                    foreach (var del in _owner.OnDamageCalc.GetInvocationList())
-                    {
-                        finalDamageMultiply += (float)del.DynamicInvoke(_owner, hitTransform);
-                    }
-                }
-
-                DamageData damageData = calcCompo.CalculateDamage(_projectileShooterSnapshot.DefaultDamage,
-                    finalDamageMultiply, _projectileShooterSnapshot.DefPierceLevel, DamageType.RANGE);
-
-                DamageContext context = new DamageContext
-                {
-                    DamageData = damageData,
-                    HitPoint = pos,
-                    HitNormal = hitNormal,
-                    Source = Dealer,
-                    Attacker = Owner
-                };
-
-                damageable.ApplyDamage(context);
-                _owner.LocalEventBus.Raise(new AttackHitEvent(damageable, context));
-                _owner.OnAttack?.Invoke(_owner, damageable);
-            }
-            else
-            {
-                BulletHole hole = poolManager.Pop(bulletHole) as BulletHole;
-                Debug.Assert(hole != null, "Bullet: BulletHole pool item could not be popped.");
-                hole.InitHole(pos, hitNormal);
-            }
+            DamageContext context = BuildDamageContext(hitTransform, pos, hitNormal);
+            damageable.ApplyDamage(context);
+            _owner.LocalEventBus.Raise(new AttackHitEvent(damageable, context));
+            _owner.OnAttack?.Invoke(_owner, damageable);
 
             _bulletImpactEffect.PlayEffect(pos, hitNormal);
 
             ReturnToPoolAfterDelay().Forget();
+        }
+
+        private DamageContext BuildDamageContext(Transform hitTransform, Vector3 hitPoint, Vector3 hitNormal)
+        {
+            DamageCalcCompo calcCompo = _owner.Get<DamageCalcCompo>();
+
+            float finalDamageMultiply = _projectileShooterSnapshot.DamageMultiplier;
+
+            if (_owner.OnDamageCalc != null)
+            {
+                foreach (var del in _owner.OnDamageCalc.GetInvocationList())
+                    finalDamageMultiply += (float)del.DynamicInvoke(_owner, hitTransform);
+            }
+
+            DamageData damageData = calcCompo.CalculateDamage(
+                _projectileShooterSnapshot.DefaultDamage,
+                finalDamageMultiply,
+                _projectileShooterSnapshot.DefPierceLevel,
+                DamageType.RANGE);
+
+            return new DamageContext
+            {
+                DamageData = damageData,
+                HitPoint = hitPoint,
+                HitNormal = hitNormal,
+                Source = Dealer,
+                Attacker = Owner
+            };
         }
 
         private void PrepareForDespawn()
@@ -199,7 +230,8 @@ namespace Scripts.Combat.Projectiles
             float delay = Mathf.Max(0f, despawnTime);
             if (delay > 0f)
                 await UniTask.WaitForSeconds(delay);
-
+            if (destroyCancellationToken.IsCancellationRequested)
+                return;
             _myPool.Push(this);
         }
 
@@ -213,13 +245,20 @@ namespace Scripts.Combat.Projectiles
             if (other.TryGetComponent(out damageable))
                 return true;
 
-            if (hitEntity != null && hitEntity.TryGetComponent(out damageable))
+            damageable = other.GetComponentInParent<IDamageable>();
+            if (damageable == null)
+                return false;
+
+            if (hitEntity != null)
             {
                 hitTransform = hitEntity.transform;
                 return true;
             }
 
-            return false;
+            if (damageable is Component damageableComponent)
+                hitTransform = damageableComponent.transform;
+
+            return true;
         }
 
         public void SetVelocity(float percent)

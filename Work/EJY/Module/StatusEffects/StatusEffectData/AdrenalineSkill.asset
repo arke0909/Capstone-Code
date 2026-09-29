@@ -12,19 +12,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5aafaebd814478d84755322022c151a, type: 3}
   m_Name: AdrenalineSkill
   m_EditorClassIdentifier: 
-  buffName: Adrenaline
+  buffName: AdrenalineSkill
   buffIcon: {fileID: 0}
   statusEffectCreateData:
-  - statusEffect: 16
+  - statusEffectData: {fileID: 11400000, guid: 1a42b4834b511c240a1f4ebd033c03f9, type: 2}
     isPercent: 1
-    level: 1
+    priority: 0
     effectValue:
     - 0.4
     - 0.8
-  - statusEffect: 32
+    isOverrideApplyTime: 0
+    overrideTime: 0
+    useCustomBehaviorSettings: 0
+    canOverlap: 0
+    isOverWrite: 0
+    useSharedStack: 0
+    maxStack: 0
+    stackValueMode: 0
+    stackDecayMode: 0
+    stackDecayInterval: 0
+    refreshTimerOnReapply: 0
+  - statusEffectData: {fileID: 11400000, guid: 8e568b25c85f3a6409ce6381eb742b73, type: 2}
     isPercent: 1
-    level: 1
+    priority: 0
     effectValue:
     - 0.1
     - 0.25
+    isOverrideApplyTime: 0
+    overrideTime: 0
+    useCustomBehaviorSettings: 0
+    canOverlap: 0
+    isOverWrite: 0
+    useSharedStack: 0
+    maxStack: 0
+    stackValueMode: 0
+    stackDecayMode: 0
+    stackDecayInterval: 0
+    refreshTimerOnReapply: 0
   applyTime: 20
+  vfxName: AdrenalineEffect

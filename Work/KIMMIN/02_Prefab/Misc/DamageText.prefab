@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8568239379504067680}
   - component: {fileID: 19808181741146547}
   - component: {fileID: 435482884830406837}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: DamageText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -190,6 +190,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageText: {fileID: 19808181741146547}
-  animDuration: 1
+  animDuration: 0.4
   animScale: 1.5
   <PoolItem>k__BackingField: {fileID: 11400000, guid: d825961a924b99d47aa525c16ded9041, type: 2}

@@ -11,13 +11,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5aafaebd814478d84755322022c151a, type: 3}
   m_Name: Refraction Damage Storing
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   buffName: Refraction Damage Storing
   buffIcon: {fileID: 0}
   statusEffectCreateData:
-  - statusEffect: 256
+  - statusEffectData: {fileID: 11400000, guid: cc346905096ae76418740f0ae8918d2d, type: 2}
     isPercent: 1
-    level: 1
     effectValue:
     - 0.4
     - 0.6

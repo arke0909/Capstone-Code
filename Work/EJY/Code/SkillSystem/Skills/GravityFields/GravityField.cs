@@ -27,6 +27,7 @@ namespace Code.SkillSystem.Skills.GravityFields
         [Range(0.01f, 0.99f), SerializeField] private float decreasePercent = 0.8f;
 
         private Dictionary<Entity, float> _stunEntities;
+        private readonly List<Entity> _removeBuffer = new();
 
         private float _currentTime;
         private float _endTime;
@@ -64,39 +65,49 @@ namespace Code.SkillSystem.Skills.GravityFields
             _stunEntities.Clear();
         }
 
-        private void Update()
-        {
-            _currentTime += Time.deltaTime;
-
-            ChangeSize();
-
-            if (_isStunEntity)
-            {
-                var keys = new List<Entity>(_stunEntities.Keys);
-
-                foreach (var entity in keys)
-                {
-                    if (entity == null)
-                    {
-                        _stunEntities.Remove(entity);
-                        continue;
-                    }
-
-                    _stunEntities[entity] += Time.deltaTime;
-
-                    if (_stunEntities[entity] >= delayToStun)
-                    {
-                        entity.Stun(stunTime);
-                        _stunEntities.Remove(entity);
-                    }
-                }
-            }
-            
-            if (_currentTime >= _endTime)
-            {
-                _myPool.Push(this);
-            }
-        }
+       private void Update()
+       {
+           _currentTime += Time.deltaTime;
+           ChangeSize();
+       
+           if (_isStunEntity)
+           {
+               _removeBuffer.Clear();
+       
+               foreach (var pair in _stunEntities)
+               {
+                   Entity entity = pair.Key;
+                   float elapsed = pair.Value;
+       
+                   if (entity == null)
+                   {
+                       _removeBuffer.Add(entity);
+                       continue;
+                   }
+       
+                   elapsed += Time.deltaTime;
+       
+                   if (elapsed >= delayToStun)
+                   {
+                       entity.Stun(stunTime);
+                       _removeBuffer.Add(entity);
+                       continue;
+                   }
+       
+                   _stunEntities[entity] = elapsed;
+               }
+       
+               foreach (var entity in _removeBuffer)
+               {
+                   _stunEntities.Remove(entity);
+               }
+           }
+       
+           if (_currentTime >= _endTime)
+           {
+               _myPool.Push(this);
+           }
+       }
         
         private void SetLerpSize(float a, float b, float ratio)
         {

@@ -36,6 +36,7 @@ RectTransform:
   - {fileID: 5712811990614993939}
   - {fileID: 6463100099728254391}
   - {fileID: 1918529675343009273}
+  - {fileID: 9055501093882786304}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2658,3 +2659,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &9055501093882754209
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1368377591362009400}
+    m_Modifications:
+    - target: {fileID: 100000, guid: 5a8f3b8a911b4cf9a71032a8b5e7d421, type: 3}
+      propertyPath: m_Name
+      value: CraftableItemsPanel
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5a8f3b8a911b4cf9a71032a8b5e7d421, type: 3}
+--- !u!224 &9055501093882786304 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 100001, guid: 5a8f3b8a911b4cf9a71032a8b5e7d421, type: 3}
+  m_PrefabInstance: {fileID: 9055501093882754209}
+  m_PrefabAsset: {fileID: 0}

@@ -1,28 +1,29 @@
 ﻿using Chipmunk.ComponentContainers;
 using Chipmunk.Library.Utility.GameEvents.Local;
+using Chipmunk.GameEvents;
 using Code.Combat;
 using Code.EnemySpawn;
-using Code.SHS.Entities.Enemies.Combat;
+using Code.ETC.MapObjects;
+using Code.SHS.Entities.Enemies.Events;
 using Code.SHS.Entities.Enemies.Events.Local;
 using Code.SHS.Entities.Enemies.FSM;
 using Code.SHS.Entities.Enemies.Groups;
-using Code.SHS.Entities.Enemies.Skills;
+using Code.SHS.Entities.Enemies.Targetings.Events;
 using Code.SHS.Targetings.Enemies;
 using DewmoLib.ObjectPool.RunTime;
 using Scripts.Combat;
 using Scripts.Combat.Datas;
-using Scripts.Combat.Fovs;
 using Scripts.Entities;
 using Scripts.FSM;
 using Scripts.Players;
 using SHS.Scripts.Combats.Events;
 using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Code.SHS.Entities.Enemies
 {
-    public class Enemy : Entity, IKnockbackable, IStateEntity, IPullable, IPoolable
+    public class Enemy : Entity, IKnockbackable, IStateEntity, IPullable, IPoolable,
+        ILocalEventSubscriber<TargetDetectedEvent>, ILocalEventSubscriber<TargetLostEvent>
     {
         [SerializeField] public LayerMask playerLayerMask;
         [SerializeField] public EnemySO test;
@@ -33,6 +34,7 @@ namespace Code.SHS.Entities.Enemies
         public TargetProvider TargetProvider { get; private set; }
         public EnemyStateMachineBehavior StateMachineBehavior { get; private set; }
         public EnemySO EnemyData { get; private set; }
+        public BulletDataSO CurrentBulletData => _runtimeBulletData;
         public NavMovement NavMovement { get; private set; }
         public GroupProvider GroupProvider { get; private set; }
         [field: SerializeField] public Vector3 SpawnPos { get; private set; }
@@ -40,6 +42,7 @@ namespace Code.SHS.Entities.Enemies
         private LocalEventBus _localEventBus;
         private Pool _pool;
         private PoolItemSO _runtimePoolItem;
+        private BulletDataSO _runtimeBulletData;
         private int _defaultLayer;
 
         public override void OnInitialize(ComponentContainer componentContainer)
@@ -65,14 +68,18 @@ namespace Code.SHS.Entities.Enemies
 
         private void HandleEnemyDead()
         {
+            RaiseCombatStateChanged(false);
             IsDead = true;
             gameObject.layer = LayerMask.NameToLayer("AvoidEntity");
+            _localEventBus.Raise(new ItemDropEvent(transform.position+ Vector3.up, transform.position));
             ChangeState(EnemyStateEnum.Dead);
         }
 
         public void SpawnEnemy(Vector3 position, EnemySO enemyData)
         {
+            RaiseCombatStateChanged(false);
             EnemyData = enemyData;
+            _runtimeBulletData = enemyData != null ? enemyData.bulletData : null;
             SpawnPos = position;
             _runtimePoolItem = enemyData != null ? enemyData.enemyPoolItem : null;
             transform.position = position;
@@ -80,6 +87,11 @@ namespace Code.SHS.Entities.Enemies
             ResetItem();
             Quaternion spawnRotation = transform.rotation;
             _localEventBus.Raise(new EnemySpawnEvent(enemyData, position, spawnRotation));
+        }
+
+        public void SetRuntimeBulletData(BulletDataSO bulletData)
+        {
+            _runtimeBulletData = bulletData;
         }
 
         public void ChangeState(EnemyStateEnum newState, bool forced = false)
@@ -144,6 +156,8 @@ namespace Code.SHS.Entities.Enemies
 
         public void ReleaseToPool()
         {
+            RaiseCombatStateChanged(false);
+
             if (_pool != null && _runtimePoolItem != null)
             {
                 _pool.Push(this);
@@ -151,6 +165,21 @@ namespace Code.SHS.Entities.Enemies
             }
 
             Destroy(gameObject);
+        }
+
+        public void OnLocalEvent(TargetDetectedEvent eventData)
+        {
+            RaiseCombatStateChanged(true);
+        }
+
+        public void OnLocalEvent(TargetLostEvent eventData)
+        {
+            RaiseCombatStateChanged(false);
+        }
+
+        private void RaiseCombatStateChanged(bool isInCombat)
+        {
+            EventBus.Raise(new EnemyCombatStateChangedEvent(this, isInCombat));
         }
     }
 }

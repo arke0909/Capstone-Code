@@ -567,6 +567,7 @@ MonoBehaviour:
   - {fileID: 5082352897142380194}
   airdropPool: {fileID: 11400000, guid: c0b20ab22fae4d044b89a39ea60affaf, type: 2}
   enemies: []
+  supplySpawnTable: {fileID: 11400000, guid: b9f4a5dccefb9474cb7bb2475cb99c6b, type: 2}
   dropCount: 1
   enemyCount: 5
 --- !u!1 &7979727213030374575

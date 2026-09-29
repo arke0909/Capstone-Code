@@ -23,10 +23,10 @@ namespace Code.SkillSystem.Skills.Drones
     public class SpeedNode : MonoBehaviour, IPoolable
     {
         [SerializeField] private PoolItemSO speedNodeItem;
-        [SerializeField] private BuffSO speedBuffData; 
-        
+        [SerializeField] private BuffSO speedBuffData;
+
         [Header("Settings")]
-        [Range(0, 1f)] 
+        [Range(0, 1f)]
         [SerializeField] private float lookThreshold = 0.5f;
 
         private Pool _myPool;
@@ -44,24 +44,28 @@ namespace Code.SkillSystem.Skills.Drones
             for (int i = _receiversInRange.Count - 1; i >= 0; i--)
             {
                 var receiver = _receiversInRange[i];
-        
-                if (receiver.StatusEffect == null || receiver.Movement == null || !receiver.StatusEffect.gameObject.activeInHierarchy)
+
+                if (receiver.StatusEffect == null || receiver.Movement == null ||
+                    !receiver.StatusEffect.gameObject.activeInHierarchy)
                 {
+                    if (receiver.StatusEffect != null)
+                        receiver.StatusEffect.RemoveStatusEffect(speedBuffData, this);
+
                     _receiversInRange.RemoveAt(i);
                     continue;
                 }
 
-                Vector3 moveDirection = receiver.Movement.Direction; 
+                Vector3 moveDirection = receiver.Movement.Direction;
                 float dot = Vector3.Dot(nodeForward, moveDirection.normalized);
 
                 if (dot >= lookThreshold)
                 {
-                    receiver.StatusEffect.AddStatusEffect(speedBuffData.GetStatusEffectInfo());
+                    receiver.StatusEffect.AddStatusEffect(speedBuffData, this);
                 }
             }
         }
 
-        
+
 
         private void OnTriggerEnter(Collider other)
         {
@@ -95,12 +99,12 @@ namespace Code.SkillSystem.Skills.Drones
                 var receiver = _receiversInRange[i];
                 if (receiver.StatusEffect != null)
                 {
-                    receiver.StatusEffect.RemoveStatusEffect(speedBuffData);
+                    receiver.StatusEffect.RemoveStatusEffect(speedBuffData, this);
                 }
             }
             _receiversInRange.Clear();
         }
-        
+
         private void OnDisable()
         {
             ForceReleaseAll();
@@ -110,7 +114,7 @@ namespace Code.SkillSystem.Skills.Drones
 
         public void ResetItem()
         {
-            _receiversInRange.Clear();
+            ForceReleaseAll();
             transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
         }
 

@@ -1,7 +1,7 @@
-﻿﻿using Chipmunk.ComponentContainers;
-using Chipmunk.Modules.StatSystem;
+using Chipmunk.ComponentContainers;
+
 using Code.StatusEffectSystem;
-using Cysharp.Threading.Tasks;
+
 using Entities;
 using Scripts.Combat;
 using Scripts.Entities;
@@ -19,75 +19,80 @@ namespace Scripts.SkillSystem.Skills
         [SerializeField] private BuffSO reloadSpeedData;
 
         private EntityStatusEffect _buffCompo;
-        private VFXComponent _vfxCompo;
-        private StatOverrideBehavior _statCompo;
-        private float _remainingBuffTime;
-        private bool _isBuffActive = false;
+        private StatusEffectLayer _adrenalineLayer;
+        private bool _isBuffActive;
         private int _buffLevel;
         private int _reloadLevel;
-        
+
         public override void Init(ComponentContainer container)
         {
             base.Init(container);
             _buffCompo = container.Get<EntityStatusEffect>();
-            _vfxCompo = container.Get<VFXComponent>();
-            _statCompo = container.Get<StatOverrideBehavior>();
         }
-        
 
-        private async UniTaskVoid RunBuffLoop()
+
+        private void StartBuff()
         {
-            _isBuffActive = true;
-            _remainingBuffTime = adrenalineData.applyTime;
+            _buffCompo.AddStatusEffect(adrenalineData, this, _buffLevel);
 
-            _buffCompo.AddStatusEffect(adrenalineData.GetStatusEffectInfo(_buffLevel));
-            
-            _vfxCompo.PlayVFX("AdrenalineEffect", transform.position, Quaternion.identity);
-
-            while (_remainingBuffTime > 0)
+            if (!_buffCompo.TryGetLayer(adrenalineData, out _adrenalineLayer))
             {
-                _remainingBuffTime -= Time.deltaTime;
-                await UniTask.Yield(PlayerLoopTiming.Update);
+                Debug.LogWarning($"{nameof(AdrenalineSkill)} failed to apply adrenaline buff.", this);
+                return;
             }
 
-            _remainingBuffTime = 0;
-            _isBuffActive = false;
-            _vfxCompo.StopVFX("AdrenalineEffect");
+            _isBuffActive = true;
+            _buffCompo.OnStatusEffectLayerReleased += HandleAdrenalineReleased;
+
+            if (getAdditionalTime)
+                _owner.OnAttack += OnHitTarget;
         }
 
         private void AddReloadSpeed()
         {
-            _buffCompo.AddStatusEffect(reloadSpeedData.GetStatusEffectInfo(_reloadLevel));
+            _buffCompo.AddStatusEffect(reloadSpeedData, this, _reloadLevel);
         }
-        
-         private async UniTaskVoid OnHitGetAdditionalTime()
-         {
-             _owner.OnAttack += OnHitTarget;
-             
-             await UniTask.WaitUntil(()=> !_isBuffActive);
-             
-             _owner.OnAttack -= OnHitTarget;
-         }
+
+        private void HandleAdrenalineReleased(StatusEffectLayer layer)
+        {
+            if (_adrenalineLayer != layer)
+                return;
+
+            _adrenalineLayer = null;
+            _isBuffActive = false;
+            _owner.OnAttack -= OnHitTarget;
+            _buffCompo.OnStatusEffectLayerReleased -= HandleAdrenalineReleased;
+        }
 
          private void OnHitTarget(Entity dealer, IDamageable target)
          {
              if (!_isBuffActive) return;
-        
-             _remainingBuffTime += additionalTime;
+
+             _adrenalineLayer?.ExtendDuration(additionalTime);
          }
+
+        private void OnDestroy()
+        {
+            if (_buffCompo != null)
+            {
+                _buffCompo.OnStatusEffectLayerReleased -= HandleAdrenalineReleased;
+                _buffCompo.RemoveStatusEffect(adrenalineData, this);
+                _buffCompo.RemoveStatusEffect(reloadSpeedData, this);
+            }
+
+            if (_owner != null)
+                _owner.OnAttack -= OnHitTarget;
+        }
 
         public override void OnSkillTrigger()
         {
-            if (!_isBuffActive)
-            {
-                RunBuffLoop().Forget();
-                if (addReloadSpeed)
-                    AddReloadSpeed();
-                if (getAdditionalTime)
-                    OnHitGetAdditionalTime().Forget();
-            }
+            if (_isBuffActive)
+                return;
+
+            StartBuff();
+
+            if (_isBuffActive && addReloadSpeed)
+                AddReloadSpeed();
         }
     }
 }
-
-

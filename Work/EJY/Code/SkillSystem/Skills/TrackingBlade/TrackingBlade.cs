@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using Ami.BroAudio;
 using Chipmunk.ComponentContainers;
 using Chipmunk.GameEvents;
@@ -18,7 +19,7 @@ namespace Code.SkillSystem.Skills.TrackingBlade
         [SerializeField] private PoolItemSO trackingBladeHitItemSO;
         [SerializeField] private BuffSO bleedingBuff;
         [SerializeField] private TrailRenderer trailRenderer;
-        [SerializeField] private StatusEffectCreateData slowStatusEffectCreateData;
+        [SerializeField] private BuffSO slowBuff;
         [SerializeField] private float moveSpeed = 8f;
         [SerializeField] private float rotationSpeed = 120f;
         [SerializeField] private float delayToRotate = 0.5f;
@@ -45,13 +46,13 @@ namespace Code.SkillSystem.Skills.TrackingBlade
         {
             _myPool = pool;
         }
-        
+
         public void SetApplySlow(bool applySlow) => _applySlow = applySlow;
 
         public void Initialize(Entity owner, Entity target ,Vector3 position, Vector3 direction, float damage)
         {
             trailRenderer?.Clear();
-            
+
             _owner = owner;
             _target = target;
             transform.position = position;
@@ -62,12 +63,12 @@ namespace Code.SkillSystem.Skills.TrackingBlade
         private void FixedUpdate()
         {
             _currentTime += Time.fixedDeltaTime;
-            
+
             _additionalRotateSpeed = _currentTime / lifeTime;
-            
+
             CalcMovement();
-            
-            if(_currentTime >= delayToRotate && _target != null && !_target.IsDead)
+
+            if (_currentTime >= delayToRotate && _target != null && !_target.IsDead)
                 RotateToTarget();
         }
 
@@ -83,37 +84,62 @@ namespace Code.SkillSystem.Skills.TrackingBlade
             Quaternion rotation = transform.rotation;
 
             Quaternion goalRotation = Quaternion.Lerp(rotation, rotationToTarget,Time.fixedDeltaTime * (rotationSpeed + _additionalRotateSpeed * _additionalRotateSpeed));
-            
+
             transform.rotation = goalRotation;
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out Entity entity))
+            IDamageable damageable = null;
+            if (!other.TryGetComponent(out damageable))
+                damageable = other.GetComponentInParent<IDamageable>();
+
+            if (damageable == null)
+                return;
+
+            Vector3 hitPoint = other.ClosestPoint(transform.position);
+            Vector3 hitNormal = transform.position - hitPoint;
+            if (hitNormal.sqrMagnitude <= 0.0001f)
+                hitNormal = -transform.forward;
+            else
+                hitNormal.Normalize();
+
+            DamageContext context = new DamageContext
             {
-                if(entity.TryGetComponent(out IDamageable damageable))
-                    damageable.ApplyDamage(new DamageData
-                    {
-                        damage = _damage,
-                        defPierceLevel = 1,
-                        damageType = DamageType.DOT
-                    },
-                    _owner);
+                DamageData = new DamageData
+                {
+                    damage = _damage,
+                    defPierceLevel = 1,
+                    damageType = DamageType.DOT
+                },
+                HitPoint = hitPoint,
+                HitNormal = hitNormal,
+                Source = gameObject,
+                Attacker = _owner
+            };
 
-                var bleedingBuffInfos = bleedingBuff.GetStatusEffectInfo();
-                
-                if(_applySlow)
-                    bleedingBuffInfos.Add(new StatusEffectInfo(bleedingBuff, slowStatusEffectCreateData));
+            damageable.ApplyDamage(context);
 
+            Entity entity = other.GetComponentInParent<Entity>();
+            if (entity != null)
+            {
                 if (entity.TryGet(out EntityStatusEffect statusEffect))
                 {
-                    statusEffect.AddStatusEffect(bleedingBuffInfos);
+                    statusEffect.AddStatusEffect(bleedingBuff, this);
+
+                    if (_applySlow)
+                    {
+                        Debug.Assert(slowBuff != null,
+                            $"{nameof(TrackingBlade)} requires {nameof(slowBuff)} when {nameof(_applySlow)} is enabled.", this);
+
+                        if (slowBuff != null)
+                            statusEffect.AddStatusEffect(slowBuff, this);
+                    }
                 }
-                    
-                
-                Bus.Raise(new PlayEffectEvent(trackingBladeHitItemSO ,transform.position, Quaternion.LookRotation(transform.forward)));
-                _myPool.Push(this);
             }
+
+            Bus.Raise(new PlayEffectEvent(trackingBladeHitItemSO ,transform.position, Quaternion.LookRotation(transform.forward)));
+            _myPool.Push(this);
         }
 
         public void ResetItem()

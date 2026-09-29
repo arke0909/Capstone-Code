@@ -12,6 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 862195dd10274f9a9c2a4ca25513c6ce, type: 3}
   m_Name: Shield Data
   m_EditorClassIdentifier: 
-  idx: 10
-  StatusEffectName: Shield
   canOverlap: 1

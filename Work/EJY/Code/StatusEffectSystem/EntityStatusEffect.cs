@@ -1,11 +1,10 @@
-using System;
+using Chipmunk.ComponentContainers;
 using Code.StatusEffectSystem.StatusEffects;
+using Entities;
+using Scripts.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Chipmunk.ComponentContainers;
-using Chipmunk.GameEvents;
-using Code.GameEvents;
-using Scripts.Entities;
 using UnityEngine;
 
 namespace Code.StatusEffectSystem
@@ -14,7 +13,8 @@ namespace Code.StatusEffectSystem
     {
         public int CreateDataIndex;
         public BuffSO KeySO;
-        public StatusEffectEnum StatusEffect;
+        public AbstractStatusEffectDataSO StatusEffectData;
+
         public int Priority;
         public float ApplyTime;
         public float Value;
@@ -33,10 +33,10 @@ namespace Code.StatusEffectSystem
         {
             CreateDataIndex = -1;
             KeySO = keySO;
-            StatusEffect = data.statusEffect;
+            StatusEffectData = data.statusEffectData;
             Priority = data.priority;
             ApplyTime = keySO.applyTime;
-            if (valueLevel >= data.effectValue.Length) valueLevel = data.effectValue.Length - 1;
+            valueLevel = Mathf.Clamp(valueLevel, 0, data.effectValue.Length - 1);
             Value = data.effectValue[valueLevel];
             IsPercent = data.isPercent;
             UseCustomBehaviorSettings = data.useCustomBehaviorSettings;
@@ -53,20 +53,25 @@ namespace Code.StatusEffectSystem
 
     public class EntityStatusEffect : MonoBehaviour, IContainerComponent
     {
-        [SerializeField] private StatusEffectListSO statusEffectList;
         public event Action<AbstractStatusEffect> OnStatusEffectReleased;
+        public event Action<StatusEffectLayer> OnStatusEffectLayerReleased;
         public ComponentContainer ComponentContainer { get; set; }
 
-        private Dictionary<StatusEffectEnum, AbstractStatusEffect> _noneOverlapStatusEffects =
-            new Dictionary<StatusEffectEnum, AbstractStatusEffect>();
+        private Dictionary<AbstractStatusEffectDataSO, StatusEffectLayer> _noneOverlapStatusEffectLayers =
+            new Dictionary<AbstractStatusEffectDataSO, StatusEffectLayer>();
 
-        private Dictionary<BuffSO, List<AbstractStatusEffect>> _statusEffects = new();
+        private Dictionary<BuffSO, StatusEffectLayer> _statusEffectLayers =
+            new Dictionary<BuffSO, StatusEffectLayer>();
+
+        private List<AbstractStatusEffect> _expiredStatusEffects = new List<AbstractStatusEffect>();
+        private List<StatusEffectLayer> _layerUpdateBuffer = new List<StatusEffectLayer>();
         private Entity _target;
-        private List<AbstractStatusEffect> _appliedStatusEffects = new List<AbstractStatusEffect>();
+        private VFXComponent _vfxComponent;
 
         public void OnInitialize(ComponentContainer componentContainer)
         {
             _target = componentContainer.Get<Entity>(true);
+            _vfxComponent = componentContainer.Get<VFXComponent>();
         }
 
         private void OnDestroy()
@@ -76,207 +81,350 @@ namespace Code.StatusEffectSystem
 
         private void Update()
         {
-            for (int i = _appliedStatusEffects.Count - 1; i >= 0; i--)
-            {
-                var effect = _appliedStatusEffects[i];
-                if (!effect.UpdateStatusEffect(_target))
-                {
-                    RemoveFromDictionaryAndFlag(effect);
-                }
-            }
-        }
+            _expiredStatusEffects.Clear();
+            _layerUpdateBuffer.Clear();
+            _layerUpdateBuffer.AddRange(_statusEffectLayers.Values);
 
-        public AbstractStatusEffectDataSO GetStatusEffect(StatusEffectEnum statusEffect)
-            => statusEffectList.GetStatusEffect(statusEffect);
+            for (int i = 0; i < _layerUpdateBuffer.Count; i++)
+            {
+                StatusEffectLayer layer = _layerUpdateBuffer[i];
+                if (_statusEffectLayers.TryGetValue(layer.Buff, out StatusEffectLayer activeLayer) &&
+                    activeLayer == layer)
+                    layer.CollectExpiredStatusEffects(_expiredStatusEffects);
+            }
+
+            for (int i = 0; i < _expiredStatusEffects.Count; i++)
+                RemoveStatusEffectInstance(_expiredStatusEffects[i]);
+        }
 
         private AbstractStatusEffect CreateStatusEffect(StatusEffectInfo info)
         {
-            var data = GetStatusEffect(info.StatusEffect);
+            var data = info.StatusEffectData;
             if (data == null)
             {
-                Debug.Log($"Find data is null, StatusEffect Type is {info.StatusEffect}");
+                Debug.LogWarning($"Status effect data is null. Buff={info.KeySO?.name}, Index={info.CreateDataIndex}", this);
                 return null;
             }
-            AbstractStatusEffect newStatusEffect = data.CreateStatusEffect(_target, info);
-            return newStatusEffect;
+
+            return data.CreateStatusEffect(_target, info);
+        }
+
+        private StatusEffectLayer GetOrCreateLayer(BuffSO buff)
+        {
+            if (_statusEffectLayers.TryGetValue(buff, out StatusEffectLayer layer))
+                return layer;
+
+            layer = new StatusEffectLayer(buff, _target, _vfxComponent);
+            _statusEffectLayers.Add(buff, layer);
+            return layer;
+        }
+
+        private void RemoveLayerIfEmpty(StatusEffectLayer layer)
+        {
+            if (layer == null || layer.StatusEffectCount > 0)
+                return;
+
+            layer.StopVFX();
+
+            if (_statusEffectLayers.TryGetValue(layer.Buff, out StatusEffectLayer activeLayer) &&
+                activeLayer == layer)
+                _statusEffectLayers.Remove(layer.Buff);
         }
 
         #region About StatusEffect Apply and Release
 
-        private List<AbstractStatusEffect> GetOrCreateStatusEffectsList(StatusEffectInfo info)
-        {
-            var list = _statusEffects.GetValueOrDefault(info.KeySO);
-            if (list == null)
-            {
-                list = new List<AbstractStatusEffect>();
-                _statusEffects.Add(info.KeySO, list);
-            }
-
-            return list;
-        }
-        
         private StatusEffectInfo ApplyStatusEffectFlags(StatusEffectInfo info)
         {
-            var data = GetStatusEffect(info.StatusEffect);
-            if (data == null)
+            if (info.StatusEffectData == null)
                 return info;
-            
-            return data.ApplyFlag(info);
+
+            return info.StatusEffectData.ApplyFlag(info);
         }
 
-        private bool TryAddSharedStack(List<AbstractStatusEffect> list, StatusEffectInfo info, out AbstractStatusEffect stackedEffect)
-        {
-            stackedEffect = null;
-
-            if (!info.CanOverlap || !info.UseSharedStack)
-                return false;
-
-            stackedEffect = list.FirstOrDefault(statusEffect =>
-                info.StatusEffect == statusEffect.StatusEffectEnum &&
-                info.CreateDataIndex == statusEffect.CreateDataIndex);
-            if (stackedEffect == null)
-                return false;
-
-            stackedEffect.AddSharedStack(info);
-            return true;
-        }
-
-        private bool ResetIfAlreadyApplied(IEnumerable<AbstractStatusEffect> list, StatusEffectInfo info, out AbstractStatusEffect activeStatusEffect)
-        {
-            activeStatusEffect = list.FirstOrDefault(statusEffect =>
-                info.StatusEffect == statusEffect.StatusEffectEnum &&
-                info.CreateDataIndex == statusEffect.CreateDataIndex);
-            if (activeStatusEffect == null)
-                return false;
-
-            if (info.IsOverWrite || info.Priority >= activeStatusEffect.Priority)
-            {
-                activeStatusEffect.SetStrongerValue(info);
-                return true;
-            }
-            
-            float nextDuration = Mathf.Max(info.ApplyTime, activeStatusEffect.RemainingTime);
-            activeStatusEffect.SetRemainingTime(nextDuration);
-            return true;
-        }
-
-        private bool TryRegisterNoneOverlapStatusEffect(StatusEffectInfo info, AbstractStatusEffect newStatusEffect, out AbstractStatusEffect keptEffect)
+        private bool TryRegisterNoneOverlapStatusEffect(
+            StatusEffectInfo info,
+            AbstractStatusEffect newStatusEffect,
+            StatusEffectLayer newLayer,
+            out AbstractStatusEffect keptEffect)
         {
             keptEffect = null;
 
             if (info.CanOverlap)
                 return true;
 
-            if (_noneOverlapStatusEffects.TryGetValue(info.StatusEffect, out var oldEffect))
+            if (_noneOverlapStatusEffectLayers.TryGetValue(
+                    info.StatusEffectData,
+                    out StatusEffectLayer oldLayer))
             {
-                bool shouldReplace = info.IsOverWrite || oldEffect.Priority <= newStatusEffect.Priority;
-                if (!shouldReplace)
+                if (!oldLayer.TryGetStatusEffect(info.StatusEffectData, out AbstractStatusEffect oldEffect))
                 {
-                    keptEffect = oldEffect;
-                    return false;
+                    _noneOverlapStatusEffectLayers.Remove(info.StatusEffectData);
                 }
+                else
+                {
+                    bool shouldReplace = info.IsOverWrite || oldEffect.Priority <= newStatusEffect.Priority;
+                    if (!shouldReplace)
+                    {
+                        keptEffect = oldEffect;
+                        return false;
+                    }
 
-                RemoveFromDictionaryAndFlag(oldEffect);
+                    RemoveStatusEffectInstance(oldEffect);
+                }
             }
 
-            _noneOverlapStatusEffects[info.StatusEffect] = newStatusEffect;
+            _noneOverlapStatusEffectLayers[info.StatusEffectData] = newLayer;
             return true;
         }
 
-        private void ApplyStatusEffect(AbstractStatusEffect newStatusEffect)
+        public IEnumerable<AbstractStatusEffect> AddStatusEffect(BuffSO buffSO, object source = null, int level = 0, float additionalTime = 0)
         {
-            newStatusEffect.ApplyStatusEffect(_target);
-            _appliedStatusEffects.Add(newStatusEffect);
+            if (buffSO == null)
+            {
+                Debug.LogWarning("Tried to add a null BuffSO.", this);
+                return Enumerable.Empty<AbstractStatusEffect>();
+            }
+
+            return AddStatusEffect(buffSO.GetStatusEffectInfo(level, additionalTime), source);
         }
 
-        public IEnumerable<AbstractStatusEffect> AddStatusEffect(IEnumerable<StatusEffectInfo> infos)
-        {
-            List<AbstractStatusEffect> statusEffects = new List<AbstractStatusEffect>();
-            
-            foreach (var info in infos)
-            {
-                var applyflagInfo = ApplyStatusEffectFlags(info);
-                var list = GetOrCreateStatusEffectsList(applyflagInfo);
 
-                if (TryAddSharedStack(list, applyflagInfo, out AbstractStatusEffect stackedEffect))
+        public IEnumerable<AbstractStatusEffect> AddStatusEffect(
+            IEnumerable<StatusEffectInfo> infos,
+            object source = null)
+        {
+            if (infos == null)
+            {
+                Debug.LogWarning("Tried to add null status effect infos.", this);
+                return Enumerable.Empty<AbstractStatusEffect>();
+            }
+
+            List<StatusEffectInfo> preparedInfos = new List<StatusEffectInfo>();
+            HashSet<AbstractStatusEffectDataSO> noneOverlapData =
+                new HashSet<AbstractStatusEffectDataSO>();
+            BuffSO buff = null;
+
+            foreach (StatusEffectInfo rawInfo in infos)
+            {
+                if (rawInfo.KeySO == null)
                 {
+                    Debug.LogError("Status effect info has no BuffSO key.", this);
+                    return Enumerable.Empty<AbstractStatusEffect>();
+                }
+
+                if (buff == null)
+                    buff = rawInfo.KeySO;
+                else if (buff != rawInfo.KeySO)
+                {
+                    Debug.LogError(
+                        "A status effect request can only contain one BuffSO layer.",
+                        this);
+                    return Enumerable.Empty<AbstractStatusEffect>();
+                }
+
+                StatusEffectInfo info = ApplyStatusEffectFlags(rawInfo);
+                if (info.StatusEffectData == null)
+                {
+                    Debug.LogError(
+                        $"{buff.name} contains a null StatusEffectDataSO at index {info.CreateDataIndex}.",
+                        this);
+                    return Enumerable.Empty<AbstractStatusEffect>();
+                }
+
+                if (!info.StatusEffectData.CanApplyTo(_target, out string reason))
+                {
+                    Debug.LogError(
+                        $"{buff.name} cannot apply {info.StatusEffectData.name} to " +
+                        $"{(_target == null ? "null" : _target.name)}: {reason}",
+                        this);
+                    return Enumerable.Empty<AbstractStatusEffect>();
+                }
+
+                if (!info.CanOverlap && !noneOverlapData.Add(info.StatusEffectData))
+                {
+                    Debug.LogError(
+                        $"{buff.name} contains duplicate non-overlapping data: " +
+                        $"{info.StatusEffectData.name}.",
+                        this);
+                    return Enumerable.Empty<AbstractStatusEffect>();
+                }
+
+                preparedInfos.Add(info);
+            }
+
+            if (preparedInfos.Count == 0)
+            {
+                Debug.LogWarning("Tried to add an empty status effect request.", this);
+                return Enumerable.Empty<AbstractStatusEffect>();
+            }
+
+            _statusEffectLayers.TryGetValue(buff, out StatusEffectLayer existingLayer);
+
+            for (int i = 0; i < preparedInfos.Count; i++)
+            {
+                StatusEffectInfo info = preparedInfos[i];
+                bool reusesLayerEffect = existingLayer != null &&
+                    existingLayer.TryGetStatusEffect(
+                        info.StatusEffectData,
+                        info.CreateDataIndex,
+                        out _);
+
+                if (reusesLayerEffect)
+                    continue;
+
+                if (info.CanOverlap ||
+                    !_noneOverlapStatusEffectLayers.TryGetValue(
+                        info.StatusEffectData,
+                        out StatusEffectLayer oldLayer) ||
+                    !oldLayer.TryGetStatusEffect(
+                        info.StatusEffectData,
+                        out AbstractStatusEffect oldEffect))
+                    continue;
+
+                if (!info.IsOverWrite && oldEffect.Priority > info.Priority)
+                {
+                    Debug.LogWarning(
+                        $"{buff.name} was rejected because {info.StatusEffectData.name} " +
+                        $"has lower priority than the active effect.",
+                        this);
+                    return Enumerable.Empty<AbstractStatusEffect>();
+                }
+            }
+
+            List<AbstractStatusEffect> preparedStatusEffects =
+                new List<AbstractStatusEffect>(preparedInfos.Count);
+
+            for (int i = 0; i < preparedInfos.Count; i++)
+            {
+                AbstractStatusEffect statusEffect = CreateStatusEffect(preparedInfos[i]);
+                if (statusEffect == null)
+                {
+                    Debug.LogError(
+                        $"{buff.name} failed to prepare all status effects. Nothing was applied.",
+                        this);
+                    return Enumerable.Empty<AbstractStatusEffect>();
+                }
+
+                preparedStatusEffects.Add(statusEffect);
+            }
+
+            StatusEffectLayer layer = GetOrCreateLayer(buff);
+            List<AbstractStatusEffect> statusEffects =
+                new List<AbstractStatusEffect>(preparedInfos.Count);
+
+            for (int i = 0; i < preparedInfos.Count; i++)
+            {
+                StatusEffectInfo info = preparedInfos[i];
+
+                if (layer.TryAddSharedStack(info, out AbstractStatusEffect stackedEffect))
+                {
+                    layer.UpdateRuntimeInfo(source);
                     statusEffects.Add(stackedEffect);
                     continue;
                 }
 
-                if (!applyflagInfo.CanOverlap && ResetIfAlreadyApplied(list, applyflagInfo, out AbstractStatusEffect appliedStatusEffect))
+                if (!info.CanOverlap &&
+                    layer.ResetIfAlreadyApplied(info, out AbstractStatusEffect appliedStatusEffect))
                 {
+                    layer.UpdateRuntimeInfo(source);
                     statusEffects.Add(appliedStatusEffect);
                     continue;
                 }
 
-                var newStatusEffect = CreateStatusEffect(applyflagInfo);
-
-                if (!TryRegisterNoneOverlapStatusEffect(applyflagInfo, newStatusEffect, out AbstractStatusEffect keptEffect))
+                AbstractStatusEffect newStatusEffect = preparedStatusEffects[i];
+                if (!TryRegisterNoneOverlapStatusEffect(
+                        info,
+                        newStatusEffect,
+                        layer,
+                        out AbstractStatusEffect keptEffect))
                 {
-                    if (list.Count == 0)
-                        _statusEffects.Remove(applyflagInfo.KeySO);
-
-                    statusEffects.Add(keptEffect);
-                    continue;
+                    Debug.LogError(
+                        $"{buff.name} changed while it was being applied. " +
+                        $"{keptEffect.StatusEffectData.name} remained active.",
+                        this);
+                    RemoveLayerIfEmpty(layer);
+                    return statusEffects;
                 }
 
+                _statusEffectLayers[buff] = layer;
+                layer.UpdateRuntimeInfo(source);
+                layer.AddStatusEffect(newStatusEffect);
                 statusEffects.Add(newStatusEffect);
-                list.Add(newStatusEffect);
-                ApplyStatusEffect(newStatusEffect);
             }
-            
+
+            if (layer.StatusEffectCount > 0 &&
+                _statusEffectLayers.TryGetValue(buff, out StatusEffectLayer activeLayer) &&
+                activeLayer == layer)
+                layer.PlayVFX();
+
             return statusEffects;
         }
 
-        private void RemoveFromDictionaryAndFlag(AbstractStatusEffect effect)
+        private void RemoveStatusEffectInstance(AbstractStatusEffect statusEffect)
         {
-            if (_noneOverlapStatusEffects.TryGetValue(effect.StatusEffectEnum, out var noneOverlapEffect))
-            {
-                if (noneOverlapEffect == effect)
-                {
-                    _noneOverlapStatusEffects.Remove(effect.StatusEffectEnum);
-                }
-            }
+            StatusEffectLayer layer = statusEffect.OwnerLayer;
+            if (layer == null || !layer.RemoveStatusEffect(statusEffect))
+                return;
 
-            if (effect.KeySO != null && _statusEffects.TryGetValue(effect.KeySO, out var list))
-            {
-                list.Remove(effect);
-                if (list.Count == 0)
-                    _statusEffects.Remove(effect.KeySO);
-            }
+            if (_noneOverlapStatusEffectLayers.TryGetValue(
+                    statusEffect.StatusEffectData,
+                    out StatusEffectLayer registeredLayer) &&
+                registeredLayer == layer &&
+                !layer.TryGetStatusEffect(statusEffect.StatusEffectData, out _))
+                _noneOverlapStatusEffectLayers.Remove(statusEffect.StatusEffectData);
 
-            effect.ReleaseStatusEffect(_target);
-            _appliedStatusEffects.Remove(effect);
-            OnStatusEffectReleased?.Invoke(effect);
+            bool isLayerReleased = layer.StatusEffectCount == 0;
+            RemoveLayerIfEmpty(layer);
+            OnStatusEffectReleased?.Invoke(statusEffect);
+
+            if (isLayerReleased)
+                OnStatusEffectLayerReleased?.Invoke(layer);
         }
 
         public void RemoveStatusEffect(BuffSO buff)
         {
-            if (_statusEffects.TryGetValue(buff, out List<AbstractStatusEffect> effectList))
-            {
-                for (int i = effectList.Count - 1; i >= 0; i--)
-                {
-                    var effect = effectList[i];
-                    RemoveFromDictionaryAndFlag(effect);
-                }
-            }
+            RemoveStatusEffect(buff, null);
+        }
+
+        public void RemoveStatusEffect(BuffSO buff, object source)
+        {
+            if (!TryGetLayer(buff, out StatusEffectLayer layer))
+                return;
+
+            if (source != null && layer.Source != source)
+                return;
+
+            while (layer.TryGetLastStatusEffect(out AbstractStatusEffect statusEffect))
+                RemoveStatusEffectInstance(statusEffect);
+        }
+
+        public bool TryGetLayer(BuffSO buff, out StatusEffectLayer layer)
+        {
+            if (buff != null)
+                return _statusEffectLayers.TryGetValue(buff, out layer);
+
+            layer = null;
+            return false;
         }
 
         public void ClearStatusEffect()
         {
-            for (int i = _appliedStatusEffects.Count - 1; i >= 0; i--)
+            while (_statusEffectLayers.Count > 0)
             {
-                var effect = _appliedStatusEffects[i];
-                effect.ReleaseStatusEffect(_target);
-                OnStatusEffectReleased?.Invoke(effect);
+                StatusEffectLayer layer = _statusEffectLayers.Values.First();
+                if (layer.TryGetLastStatusEffect(out AbstractStatusEffect statusEffect))
+                {
+                    RemoveStatusEffectInstance(statusEffect);
+                    continue;
+                }
+
+                RemoveLayerIfEmpty(layer);
             }
 
-            _appliedStatusEffects.Clear();
-            _noneOverlapStatusEffects.Clear();
-            _statusEffects.Clear();
+            _expiredStatusEffects.Clear();
+            _layerUpdateBuffer.Clear();
+            _noneOverlapStatusEffectLayers.Clear();
         }
-
         #endregion
     }
 }

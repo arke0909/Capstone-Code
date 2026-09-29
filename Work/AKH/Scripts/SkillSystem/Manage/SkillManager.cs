@@ -5,6 +5,7 @@ using Code.SkillSystem;
 using Scripts.SkillSystem;
 using System.Collections.Generic;
 using System.Linq;
+using Code.Items;
 using UnityEngine;
 using Work.Code.SkillInventory.GameEvents;
 
@@ -17,11 +18,13 @@ namespace Scripts.SkillSystem.Manage
         Active
     }
 
-    public class SkillManager : MonoBehaviour, IContainerComponent
+    public class SkillManager : MonoBehaviour, IContainerComponent, IAfterInitialze
     {
         public ComponentContainer ComponentContainer { get; set; }
 
         public Dictionary<SkillType, ISkillCompo> skillCompos;
+        
+        private Dictionary<SkillDataSO, HashSet<EquipableItem>> _skillOwners = new();
         private Dictionary<SkillDataSO, Skill> _skills = new();
         private LocalEventBus _localEventBus;
 
@@ -30,10 +33,14 @@ namespace Scripts.SkillSystem.Manage
         public void OnInitialize(ComponentContainer componentContainer)
         {
             skillCompos = GetComponentsInChildren<ISkillCompo>().ToDictionary(compo => compo.SkillType, compo => compo);
-            SetSkills(GetComponentsInChildren<Skill>(true));
             _localEventBus = componentContainer.Get<LocalEventBus>();
             _localEventBus.Subscribe<EquipSkillEvent>(HandleEquipSkill);
             _localEventBus.Subscribe<UnEquipSkillEvnt>(HandleUnequipSkill);
+        }
+
+        public void AfterInitialize()
+        {
+            SetSkills(GetComponentsInChildren<Skill>(true));
         }
 
         private void HandleUnequipSkill(UnEquipSkillEvnt evt)
@@ -62,6 +69,51 @@ namespace Scripts.SkillSystem.Manage
                     OnSkillEquip?.Invoke();
                 }
             }
+        }
+        
+        public void RegisterEquippedSkill(EquipableItem item)
+        {
+            if (item == null || item.Skill == null)
+                return;
+
+            if (_skillOwners.TryGetValue(item.Skill, out var owners) == false)
+            {
+                owners = new HashSet<EquipableItem>();
+                _skillOwners.Add(item.Skill, owners);
+                AddSkill(item.Skill);
+            }
+
+            owners.Add(item);
+            RefreshSkillLevel(item.Skill, owners);
+        }
+
+        public void DeregisterEquippedSkill(EquipableItem item)
+        {
+            if (item == null || item.Skill == null)
+                return;
+
+            if (_skillOwners.TryGetValue(item.Skill, out var owners) == false)
+                return;
+
+            owners.Remove(item);
+
+            if (owners.Count == 0)
+            {
+                _skillOwners.Remove(item.Skill);
+                RemoveSkill(item.Skill);
+                return;
+            }
+
+            RefreshSkillLevel(item.Skill, owners);
+        }
+
+        private void RefreshSkillLevel(SkillDataSO skillData, HashSet<EquipableItem> owners)
+        {
+            if (TryGetSkill(skillData, out Skill skill) == false)
+                return;
+
+            int level = owners.Max(item => item.SkillLevel);
+            skill.SetLevel(level);
         }
 
         public void AddSkill(SkillDataSO skillData)

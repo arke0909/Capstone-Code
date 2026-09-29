@@ -11,8 +11,16 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5aafaebd814478d84755322022c151a, type: 3}
   m_Name: StatusItemEffect
-  m_EditorClassIdentifier: 
-  statusEffect: 8
-  level: 1
+  m_EditorClassIdentifier:
+  buffName: StatusItemEffect
+  buffIcon: {fileID: 0}
+  statusEffectCreateData:
+  - statusEffectData: {fileID: 11400000, guid: bb9f41d6c711b864bbf76d820fc09466, type: 2}
+    isPercent: 0
+    priority: 0
+    effectValue:
+    - 10
+    isOverrideApplyTime: 0
+    overrideTime: 0
   applyTime: 5
-  effectValue: 10
+  vfxName:

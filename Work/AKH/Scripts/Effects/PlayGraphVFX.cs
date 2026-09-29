@@ -18,7 +18,9 @@ namespace Scripts.Effects
             if(isOnPosition == false)
                 transform.SetPositionAndRotation(position, rotation);
             foreach(VisualEffect effect in effects)
+            {
                 effect.Play();
+            }
                 
         }
 

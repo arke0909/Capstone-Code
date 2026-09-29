@@ -50,6 +50,10 @@ MonoBehaviour:
   <AnimType>k__BackingField: 2
   <MoveType>k__BackingField: 1
   <TargetState>k__BackingField: {fileID: 11400000, guid: 92665a5a1cf0aec4e87819ed62d2d2e1, type: 2}
+  grabWarningSound:
+    _entity: {fileID: 11400000, guid: a42bb0347385eff4e819f3a0e3627f15, type: 2}
+    ID: 0
+    <DebugObject>k__BackingField: {fileID: 6041617847086094922}
   grabFireSound:
     _entity: {fileID: 11400000, guid: 24ade1f5ee4582248be6d96c34af51f4, type: 2}
     ID: 0

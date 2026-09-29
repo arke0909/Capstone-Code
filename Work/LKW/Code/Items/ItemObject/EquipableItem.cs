@@ -73,16 +73,13 @@ namespace Code.Items
         public void RegisterSkill()
         {
             _skillManager = _owner.Get<SkillManager>();
-            
-            if (_skillManager != null)
-            {
-                _skillManager.AddSkill(Skill);
-            
-                if (_skillManager.TryGetSkill(Skill, out Scripts.SkillSystem.Skill skill))
-                {
-                    skill.SetLevel(SkillLevel);
-                }
-            }
+            _skillManager?.RegisterEquippedSkill(this);
+        }
+
+        public void DeregisterSkill()
+        {
+            _skillManager?.DeregisterEquippedSkill(this);
+            _skillManager = null;
         }
 
         // 장비 업그레이드 시 스킬 종류를 계승할 때 사용.
@@ -108,12 +105,6 @@ namespace Code.Items
                 return;
 
             SetSkill(source.Skill);
-        }
-
-        public void DeregisterSkill()
-        {
-            _skillManager?.RemoveSkill(Skill);
-            _skillManager = null;
         }
     }
 }

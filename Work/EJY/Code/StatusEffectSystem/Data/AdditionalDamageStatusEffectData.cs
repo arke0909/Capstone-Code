@@ -7,7 +7,7 @@ namespace Code.StatusEffectSystem
     [CreateAssetMenu(fileName = "Additional Damage Status Effect", menuName = "SO/StatusEffect/AdditionalDamage", order = 0)]
     public class AdditionalDamageStatusEffectData : AbstractStatusEffectDataSO
     {
-        public override AbstractStatusEffect CreateStatusEffect(Entity target, StatusEffectInfo info)
+        protected override AbstractStatusEffect CreateStatusEffectInstance(Entity target, StatusEffectInfo info)
         {
             return new AdditionalDamageStatusEffect(target, info);
         }

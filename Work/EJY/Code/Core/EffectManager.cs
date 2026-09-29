@@ -6,7 +6,7 @@ using DewmoLib.ObjectPool.RunTime;
 using Scripts.Effects;
 using UnityEngine;
 
-namespace Work.EJY.Code.Core
+namespace Code.Core
 {
     public class EffectManager : MonoBehaviour
     {

@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5aafaebd814478d84755322022c151a, type: 3}
+  m_Name: EnemyBuff
+  m_EditorClassIdentifier: 
+  buffName: EnemyBuff
+  buffIcon: {fileID: 0}
+  statusEffectCreateData:
+  - statusEffectData: {fileID: 11400000, guid: 486c8cb2c3ad43f43ac2cf5ca2bf0828, type: 2}
+    isPercent: 1
+    priority: 0
+    effectValue:
+    - 0.8
+    isOverrideApplyTime: 0
+    overrideTime: 0
+    useCustomBehaviorSettings: 0
+    canOverlap: 0
+    isOverWrite: 0
+    useSharedStack: 0
+    maxStack: 0
+    stackValueMode: 0
+    stackDecayMode: 0
+    stackDecayInterval: 0
+    refreshTimerOnReapply: 0
+  - statusEffectData: {fileID: 11400000, guid: 3e91d718e0be463458c099ba57897bb3, type: 2}
+    isPercent: 0
+    priority: 0
+    effectValue:
+    - 30
+    isOverrideApplyTime: 0
+    overrideTime: 0
+    useCustomBehaviorSettings: 0
+    canOverlap: 0
+    isOverWrite: 0
+    useSharedStack: 0
+    maxStack: 0
+    stackValueMode: 0
+    stackDecayMode: 0
+    stackDecayInterval: 0
+    refreshTimerOnReapply: 0
+  - statusEffectData: {fileID: 11400000, guid: bb9f41d6c711b864bbf76d820fc09466, type: 2}
+    isPercent: 0
+    priority: 0
+    effectValue:
+    - 5
+    isOverrideApplyTime: 0
+    overrideTime: 0
+    useCustomBehaviorSettings: 0
+    canOverlap: 0
+    isOverWrite: 0
+    useSharedStack: 0
+    maxStack: 0
+    stackValueMode: 0
+    stackDecayMode: 0
+    stackDecayInterval: 0
+    refreshTimerOnReapply: 0
+  - statusEffectData: {fileID: 11400000, guid: 1a42b4834b511c240a1f4ebd033c03f9, type: 2}
+    isPercent: 0
+    priority: 0
+    effectValue:
+    - 0.1
+    isOverrideApplyTime: 0
+    overrideTime: 0
+    useCustomBehaviorSettings: 0
+    canOverlap: 0
+    isOverWrite: 0
+    useSharedStack: 0
+    maxStack: 0
+    stackValueMode: 0
+    stackDecayMode: 0
+    stackDecayInterval: 0
+    refreshTimerOnReapply: 0
+  applyTime: 99999
+  vfxName: AdrenalineEffect

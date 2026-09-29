@@ -33,7 +33,7 @@ MonoBehaviour:
   attackSpeed: 0.75
   fireRate: 1
   attackSoundID:
-    _entity: {fileID: 0}
+    _entity: {fileID: 11400000, guid: 3003b41a669285a43ac3512389545ead, type: 2}
     ID: 0
     <DebugObject>k__BackingField: {fileID: 0}
   gunType: 4

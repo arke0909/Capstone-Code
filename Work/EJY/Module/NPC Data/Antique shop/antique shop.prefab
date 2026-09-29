@@ -138,6 +138,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4248743274528174727}
   - component: {fileID: 6838101204602105381}
+  - component: {fileID: 2172813353039443221}
   - component: {fileID: 6795846048690471974}
   m_Layer: 0
   m_Name: antique shop
@@ -156,8 +157,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.9659258, z: 0, w: 0.2588191}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6587015142324650385}
   - {fileID: 6111384161631962281}
@@ -188,6 +189,25 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2172813353039443221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577353912133171787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d75e3da10eb94c0bb9ec06472cbff6c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 6838101204602105381}
+  randomClips:
+  - {fileID: 7400000, guid: 27a8a1528ca6ff24fb4309177b5b433e, type: 2}
+  - {fileID: 7400000, guid: c4db8f8bc553d1048b1abad0c84a8a71, type: 2}
+  - {fileID: 7400000, guid: 68e23f1aac1c4c9479e9bf0f8204fcdd, type: 2}
+  - {fileID: 7400000, guid: 342cad9a38128484e850d07d724e699c, type: 2}
+  - {fileID: 7400000, guid: f955ad6f3ba71e84a9d7a7a1f3f499ca, type: 2}
 --- !u!114 &6795846048690471974
 MonoBehaviour:
   m_ObjectHideFlags: 0

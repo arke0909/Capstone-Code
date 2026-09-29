@@ -1,7 +1,6 @@
 ﻿using Scripts.SkillSystem.Manage;
 using Chipmunk.ComponentContainers;
 using Code.InventorySystems.Equipments;
-using Code.Players;
 using Scripts.Combat.Datas;
 using Code.Items;
 using SHS.Scripts.Combats;
@@ -14,13 +13,13 @@ namespace Scripts.Players.States
         protected Weapon _weapon;
         protected IAttackable _attackable;
         protected ActiveSkillComponent _skillCompo;
-        protected PlayerEquipment _equipment;
+        protected EntityEquipment _equipment;
         protected DefaultAttack _defaultAttack;
 
         protected PlayerCombatState(ComponentContainer container, int animationHash) : base(container, animationHash)
         {
             _skillCompo = container.Get<ActiveSkillComponent>(true);
-            _equipment = container.Get<PlayerEquipment>();
+            _equipment = container.GetSubclassComponent<EntityEquipment>();
             _defaultAttack = container.Get<DefaultAttack>();
             Debug.Assert(_defaultAttack != null, "Player requires DefaultAttack for unarmed attacks.");
         }

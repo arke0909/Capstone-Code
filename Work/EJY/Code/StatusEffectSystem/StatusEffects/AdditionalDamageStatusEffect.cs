@@ -1,4 +1,4 @@
-﻿using Scripts.Combat;
+using Scripts.Combat;
 using Scripts.Combat.Datas;
 using Scripts.Entities;
 
@@ -7,12 +7,12 @@ namespace Code.StatusEffectSystem.StatusEffects
     public class AdditionalDamageStatusEffect : AbstractStatusEffect
     {
         private DamageData _damageData;
-        
+
         public AdditionalDamageStatusEffect(Entity target, StatusEffectInfo statusEffectInfo) : base(target, statusEffectInfo)
         {
             _damageData = new DamageData { damage = statusEffectInfo.Value, damageType = DamageType.DOT, defPierceLevel = 1 };
         }
-        
+
         public override void ApplyStatusEffect(Entity entity)
         {
             base.ApplyStatusEffect(entity);
@@ -21,6 +21,7 @@ namespace Code.StatusEffectSystem.StatusEffects
 
         public override void ReleaseStatusEffect(Entity entity)
         {
+            _isApplying = false;
             entity.OnAttack -= HandleOnHit;
         }
 

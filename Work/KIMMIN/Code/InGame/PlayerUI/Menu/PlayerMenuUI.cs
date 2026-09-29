@@ -27,6 +27,9 @@ namespace InGame.PlayerUI
             }
             
             EventBus.Subscribe<PlayerUIEvent>(HandlePlayerUI);
+
+            if (UIManager.HasInstance)
+                UIManager.Instance.OnUIStackChanged += HandleUIStackChanged;
         }
 
         protected override void OnDestroy()
@@ -37,6 +40,9 @@ namespace InGame.PlayerUI
             }
             
             EventBus.Unsubscribe<PlayerUIEvent>(HandlePlayerUI);
+
+            if (UIManager.HasInstance)
+                UIManager.Instance.OnUIStackChanged -= HandleUIStackChanged;
         }
         
         private void HandlePlayerUI(PlayerUIEvent evt)
@@ -50,15 +56,25 @@ namespace InGame.PlayerUI
         public override void EnableUI(bool isFade = false)
         {
             base.EnableUI(isFade);
+            HandleUIStackChanged();
+        }
 
+        private void HandleUIStackChanged()
+        {
             if (!UIManager.Instance.TryGetCurrentPanel(out var panel))
+            {
+                _currentPanel = null;
+                DisableHighlight();
                 return;
+            }
 
             foreach (var menu in _menus)
             {
                 if (menu.Panel == panel)
                 {
+                    _currentPanel = panel;
                     SetMenuUI(menu, true);
+                    return;
                 }
             }
         }

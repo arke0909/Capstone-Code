@@ -42,6 +42,13 @@ namespace Code.SHS.Entities.Enemies.FSM
             base.Update();
             UpdateMovementAnimation();
 
+            if (_movingSkill is IStateExitControlledSkill exitControlledSkill)
+            {
+                if (exitControlledSkill.IsSkillComplete)
+                    _enemy.ChangeState(EnemyStateEnum.Aim);
+                return;
+            }
+
             if (Time.time >= _endTime)
                 _enemy.ChangeState(EnemyStateEnum.Aim);
         }

@@ -33,20 +33,32 @@ namespace Code.UI.Core
         
         public OverlayUIManager OverlayManager => OverlayUIManager.Instance;
         public event Action OnUIStackChanged;
+        protected override bool PersistAcrossScenes => false;
 
         protected override void Awake()
         {
+            base.Awake();
+
+            if (!IsPrimaryInstance)
+                return;
+
             playerInput.OnToggleUIPressed += HandlePressEsc;
         }
 
         protected override void OnDestroy()
         {
-            foreach (var ui in _registeredUI)
+            if (IsPrimaryInstance)
             {
-                ui.OnToggleUI -= HandleChangeUIState;
+                foreach (var ui in _registeredUI)
+                {
+                    if (ui != null)
+                        ui.OnToggleUI -= HandleChangeUIState;
+                }
+
+                playerInput.OnToggleUIPressed -= HandlePressEsc;
             }
-            
-            playerInput.OnToggleUIPressed -= HandlePressEsc;
+
+            base.OnDestroy();
         }
         
         public void RegisterUI(UIBase ui)

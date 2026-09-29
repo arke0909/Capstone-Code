@@ -1,6 +1,5 @@
 ﻿using Chipmunk.ComponentContainers;
 using Code.InventorySystems.Equipments;
-using Code.SHS.Entities.Enemies;
 using Scripts.Combat.Datas;
 using UnityEngine;
 using Code.Items;
@@ -51,11 +50,11 @@ namespace Scripts.Combat
             return null;
         }
         
-        private EnemyEquipment _enemyEquipment;
+        private EntityEquipment _enemyEquipment;
         private DefaultAttack _defaultAttack;
         public virtual void OnInitialize(ComponentContainer componentContainer)
         {
-            _enemyEquipment = componentContainer.Get<EnemyEquipment>();
+            _enemyEquipment = componentContainer.GetSubclassComponent<EntityEquipment>();
             componentContainer.TryGetComponent(out _defaultAttack);
         }
 

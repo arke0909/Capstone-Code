@@ -1100,6 +1100,7 @@ GameObject:
   - component: {fileID: 286900126084832764}
   - component: {fileID: 6985144097798137475}
   - component: {fileID: 6889959049264977506}
+  - component: {fileID: 910100000000000006}
   m_Layer: 5
   m_Name: PressFKey
   m_TagString: Untagged
@@ -1640,3 +1641,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!114 &910100000000000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5198604075275293661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86ecb9db73554f29a12fb9f4d9ff064f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerInput: {fileID: 11400000, guid: 4e3c85c501a7f4e46b46ca7017e2cbd8, type: 2}
+  keyText: {fileID: 6985144097798137475}
+  targetKey: 20
+  prefix: 
+  suffix: "\uD0A4\uB97C \uB20C\uB7EC \uC7A5\uCC29"

@@ -1,5 +1,4 @@
 ﻿using System;
-using AYellowpaper.SerializedCollections;
 using Chipmunk.ComponentContainers;
 using Chipmunk.GameEvents;
 using Code.GameEvents;
@@ -13,23 +12,19 @@ using Code.InventorySystems.Equipments;
 using Scripts.Players;
 using UnityEngine;
 using Code.Items;
+using Code.Items.ItemInfo;
 using static Code.InventorySystems.InventoryUtility;
 
 namespace Code.Players
 {
-    public class PlayerEquipment : MonoBehaviour, IContainerComponent, IAfterInitialze
+    public class PlayerEquipment : EntityEquipment, IAfterInitialze
     {
-        [SerializeField] private SerializedDictionary<EquipPartType, Transform> equipTrms;
         [SerializeField] private EquipSlotDefineListSO equipSlotDefineList;
         [SerializeField] private SoundID equipSound;
         [SerializeField] private SoundID unequipSound;
-        public ComponentContainer ComponentContainer { get; set; }
 
         private Player _player;
         private PlayerInventory _playerInventory;
-
-        // 현재 어떤 부위에 어떤 장비를 장착하고 있는지
-        private Dictionary<EquipPartType, EquipableItem> _equips = new Dictionary<EquipPartType, EquipableItem>();
 
         // 플레리어의 슬롯
         private List<EquipSlot> _equipSlots = new List<EquipSlot>();
@@ -38,8 +33,9 @@ namespace Code.Players
         public event Action OnEquipItem;
         public event Action OnUnEquipItem;
 
-        public void OnInitialize(ComponentContainer componentContainer)
+        public override void OnInitialize(ComponentContainer componentContainer)
         {
+            base.OnInitialize(componentContainer);
             _player = componentContainer.Get<Player>(true);
             _playerInventory = componentContainer.Get<PlayerInventory>();
 
@@ -49,11 +45,6 @@ namespace Code.Players
 
         public void AfterInitialize()
         {
-            for (int i = 0; i < (int)EquipPartType.Count; ++i)
-            {
-                _equips.Add((EquipPartType)i, null);
-            }
-
             for (int i = 0; i < equipSlotDefineList.equipSlotDefines.Count; ++i)
             {
                 var equipSlot = new EquipSlot(null, equipSlotDefineList.equipSlotDefines[i]);
@@ -99,7 +90,7 @@ namespace Code.Players
             // 그래도 없으면 잘못된 타입
             if (equipSlot == null) return false;
 
-            if (!Equip(equipSlot, equipableItem, sourceSlot))
+            if (!EquipToSlot(equipSlot, equipableItem, sourceSlot))
                 return false;
 
             // 교체가 아니면 원본 슬롯에 아직 새 장비가 남아 있으니 비운다.
@@ -116,7 +107,7 @@ namespace Code.Players
 
             if (slot == null || equipableItem == null) return false;
 
-            if (!Equip(equipSlot, equipableItem, slot))
+            if (!EquipToSlot(equipSlot, equipableItem, slot))
                 return false;
 
             if (slot.Item == equipableItem)
@@ -125,14 +116,14 @@ namespace Code.Players
             return true;
         }
 
-        private bool Equip(EquipSlot equipSlot, EquipableItem equipableItem, ItemSlot sourceSlot)
+        private bool EquipToSlot(EquipSlot equipSlot, EquipableItem equipableItem, ItemSlot sourceSlot)
         {
             if (equipSlot == null || equipableItem == null) return false;
 
             // 이미 장착된게 있는지 확인, 없으면 추가 있으면 교체
             if (equipSlot.Item != null)
             {
-                if (!UnEquip(equipSlot, out EquipableItem equipped))
+                if (!UnequipFromSlot(equipSlot, out EquipableItem equipped))
                     return false;
 
                 if (!TryStoreUnequippedItem(equipped, sourceSlot, true))
@@ -149,11 +140,11 @@ namespace Code.Players
             if (equipSlot.CanHandle)
                 EventBus.Raise(new EquipHotbarEvent(equipSlotLocalIndex, equipableItem));
 
-            equipableItem.Equip(_player, equipTrms[equipPartType]);
-            
-            if (_equips.TryGetValue(equipPartType, out EquipableItem equippingItem) && equippingItem == null)
+            if (!equipSlot.CanHandle && !EquipItemToPart(equipPartType, equipableItem))
             {
-                _equips[equipPartType] = equipableItem;
+                equipSlot.SetData(null);
+                DeregisterSkill(equipSlot, equipableItem);
+                return false;
             }
 
             _player.LocalEventBus.Raise(new EquipItemEvent(equipSlot));
@@ -166,7 +157,7 @@ namespace Code.Players
 
         public bool UnEquipToInventory(EquipSlot equipSlot)
         {
-            if (!UnEquip(equipSlot, out EquipableItem equipped))
+            if (!UnequipFromSlot(equipSlot, out EquipableItem equipped))
                 return false;
 
             if (TryStoreUnequippedItem(equipped))
@@ -181,7 +172,7 @@ namespace Code.Players
             if (targetSlot == null || !targetSlot.IsBlank)
                 return false;
 
-            if (!UnEquip(equipSlot, out EquipableItem equipped))
+            if (!UnequipFromSlot(equipSlot, out EquipableItem equipped))
                 return false;
 
             if (TryStoreUnequippedItem(equipped, targetSlot))
@@ -193,7 +184,7 @@ namespace Code.Players
 
         public bool DropEquippedItem(EquipableItem item)
         {
-            if (item == null || !item.IsEquipped)
+            if (item == null)
                 return false;
 
             EquipSlot equipSlot = _equipSlots.FirstOrDefault(slot => slot.Equipable == item);
@@ -202,11 +193,99 @@ namespace Code.Players
 
             int stack = equipSlot.Stack;
 
-            if (!UnEquip(equipSlot, out EquipableItem equipped))
+            if (!UnequipFromSlot(equipSlot, out EquipableItem equipped))
                 return false;
 
             _playerInventory.DropItem(equipped, stack);
             return true;
+        }
+
+        public int GetEquippedItemCount(ItemDataSO itemData)
+        {
+            if (itemData == null)
+                return 0;
+
+            int count = 0;
+
+            foreach (EquipSlot equipSlot in _equipSlots)
+            {
+                if (equipSlot.Item?.ItemData == itemData)
+                    count += equipSlot.Stack;
+            }
+
+            return count;
+        }
+
+        public bool TryConsumeEquippedItems(ItemDataSO itemData, int count)
+        {
+            if (itemData == null || count <= 0)
+                return false;
+
+            if (GetEquippedItemCount(itemData) < count)
+                return false;
+
+            int remaining = count;
+            bool consumed = false;
+
+            foreach (EquipSlot equipSlot in _equipSlots.ToList())
+            {
+                if (remaining <= 0)
+                    break;
+
+                if (equipSlot.Item?.ItemData != itemData)
+                    continue;
+
+                int equippedStack = equipSlot.Stack;
+                if (!UnequipFromSlot(equipSlot, out EquipableItem equipped))
+                    return false;
+
+                equipped.SetOwner(null);
+                remaining -= equippedStack;
+                consumed = true;
+            }
+
+            if (remaining > 0)
+                return false;
+
+            if (consumed)
+                _playerInventory.UpdateInventory();
+
+            return true;
+        }
+
+        public EquipableItem FindEquippedItem(ItemDataSO itemData, Predicate<EquipableItem> match = null)
+        {
+            foreach (EquipSlot equipSlot in _equipSlots)
+            {
+                if (equipSlot.Item is not EquipableItem equipableItem)
+                    continue;
+
+                if (itemData != null && equipableItem.ItemData != itemData)
+                    continue;
+
+                if (match != null && !match(equipableItem))
+                    continue;
+
+                return equipableItem;
+            }
+
+            return null;
+        }
+
+        public EquipSlot FindEquippedSlot(ItemDataSO itemData)
+        {
+            if (itemData == null)
+                return null;
+
+            return _equipSlots.FirstOrDefault(slot => slot.Item?.ItemData == itemData);
+        }
+
+        public bool EquipCraftedItemToSlot(EquipSlot equipSlot, EquipableItem equipableItem)
+        {
+            if (equipSlot == null || equipableItem == null || !equipSlot.IsBlank || !equipSlot.CanEquip(equipableItem))
+                return false;
+
+            return EquipToSlot(equipSlot, equipableItem, null);
         }
 
         private bool TryStoreUnequippedItem(EquipableItem equipped, ItemSlot preferredSlot = null,
@@ -228,16 +307,13 @@ namespace Code.Players
             return _playerInventory.TryAddItem(equipped);
         }
 
-        private bool UnEquip(EquipSlot equipSlot, out EquipableItem equipped)
+        private bool UnequipFromSlot(EquipSlot equipSlot, out EquipableItem equipped)
         {
             equipped = equipSlot?.Equipable;
             if (equipSlot == null || equipped == null)
                 return false;
 
             EquipPartType equipPartType = equipSlot.EquipPartType;
-
-            if (!_equips.ContainsKey(equipPartType))
-                return false;
 
             equipSlot.SetData(null);
 
@@ -247,40 +323,17 @@ namespace Code.Players
                 EventBus.Raise(new UnEquipHotbarEvent(GetLocalIndex(equipSlot.Index)));
 
 
-            if (_equips.TryGetValue(equipPartType, out EquipableItem currentItem) && currentItem == equipped)
-            {
-                _equips[equipPartType] = null;
-            }
-
             _player.LocalEventBus.Raise(new UnequipItemEvent(equipSlot, equipped));
-            equipped.Unequip(_player);
+
+            if (!equipSlot.CanHandle && GetEquippedItem(equipPartType) == equipped)
+                UnequipItemFromPart(equipPartType, out _);
+
             EventBus.Raise(new UpdateEquipUIEvent(_equipSlots.ToList()));
             OnUnEquipItem?.Invoke();
             BroAudio.Play(unequipSound);
-            
-            return true;
-        }
-
-        public bool TryGetEquippedItem(EquipPartType partType, out EquipableItem item)
-        {
-            item = GetEquippedItem(partType);
-            if (item == null)
-                return false;
-            return true;
-        }
-        
-        public bool TryChangeSpareWeapon(out EquipSlot spareSlot)
-        {
-            spareSlot = _equipSlots.FirstOrDefault(slot => slot.CanHandle && !slot.IsBlank);
-
-            if (spareSlot == null)
-                return false;
 
             return true;
         }
-
-        public EquipableItem GetEquippedItem(EquipPartType partType) => _equips.GetValueOrDefault(partType);
-        public Transform GetEquipTransform(EquipPartType partType) => equipTrms.GetValueOrDefault(partType);
 
         public void RegisterSkill(EquipSlot equipSlot, EquipableItem equipableItem)
         {
@@ -294,26 +347,12 @@ namespace Code.Players
                 equipableItem.DeregisterSkill();
         }
 
-        public void SetEquippedItem(EquipPartType partType, EquipableItem item)
+        public bool IsEquipped(EquipPartType partType)
         {
-            if (_equips.TryGetValue(partType, out EquipableItem currentItem) == false)
-                return;
-
-            if (currentItem == item)
-            {
-                if (item != null && !item.IsEquipped)
-                    item.Equip(_player, equipTrms[partType]);
-                return;
-            }
-
-            if (currentItem != null)
-                currentItem.Unequip(_player);
-
-            _equips[partType] = item;
-
-            if (item != null)
-                item.Equip(_player, equipTrms[partType]);
+            return GetEquippedItem(partType)?.IsEquipped ?? false;
         }
 
+        public void SetEquippedItem(EquipPartType partType, EquipableItem item)
+            => EquipItemToPart(partType, item);
     }
 }

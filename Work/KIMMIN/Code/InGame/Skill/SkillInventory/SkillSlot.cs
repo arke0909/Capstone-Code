@@ -2,10 +2,12 @@
 using Code.UI.Core.Interaction;
 using Scripts.SkillSystem.Manage;
 using Code.UI.Core;
+using Code.UI.Tooltip;
 using DG.Tweening;
 using Scripts.SkillSystem;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Work.Code.UI.Interaction;
 
@@ -40,12 +42,16 @@ namespace Work.Code.SkillInventory
         
         public event Action<SkillSlot, SkillSlot> OnDropSkill;
         public event Action<Skill, int> OnEquipped;
-        public event Action<Skill> OnUnequipped;
         public event Action<SkillSlot> OnHoverEntered;
         public event Action<SkillSlot> OnHoverExited;
 
         private SkillType _skillType;
+        private PlayerInputSO _playerInput;
         
+        public void SetPlayerInput(PlayerInputSO playerInput)
+        {
+            _playerInput = playerInput;
+        }
 
         public void EnableFor(Skill skill)
         {
@@ -66,7 +72,16 @@ namespace Work.Code.SkillInventory
             }
             
             UnbindTooltip();
-            BindTooltip(() => skill.SkillData);
+            BindTooltip(() => new SkillTooltipData(skill.SkillData, skill.Level));
+            BindTooltip(() => GetEquipTooltip(skill));
+        }
+
+        private string GetEquipTooltip(Skill skill)
+        {
+            if (skill.SkillType == SkillType.Active)
+                return $"{_playerInput.GetKeyText(Key.F)}, {_playerInput.GetKeyText(Key.Q)}/{_playerInput.GetKeyText(Key.E)}/{_playerInput.GetKeyText(Key.C)}키를 눌러 빠르게 장착";
+
+            return $"{_playerInput.GetKeyText(Key.F)}키를 눌러 빠르게 장착";
         }
         
         public void HighlightUI(bool isHighlight)
@@ -86,7 +101,6 @@ namespace Work.Code.SkillInventory
         public void ClearUI()
         {
             UnbindTooltip();
-            OnUnequipped?.Invoke(CurrentSkill);
             background.SetActive(false);
             CurrentSkill = null;
         }

@@ -29,5 +29,13 @@ namespace Chipmunk.Modules.StatSystem
                 blackboard?.Set<StatSO>(stat.statName, stat);
             }
         }
+        [ContextMenu("Test")]
+        public void Test()
+        {
+            foreach(var stat in stats.Values)
+            {
+                Debug.Log($"{stat.statName}: {stat.Value}");
+            }
+        }
     }
 }

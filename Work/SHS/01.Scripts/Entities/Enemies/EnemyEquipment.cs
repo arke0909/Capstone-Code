@@ -1,91 +1,42 @@
-﻿using AYellowpaper.SerializedCollections;
+using AYellowpaper.SerializedCollections;
 using Chipmunk.ComponentContainers;
 using Chipmunk.Library.Utility.GameEvents.Local;
-using Code.InventorySystems;
-using Code.InventorySystems.Items;
-using Code.Players;
-using Scripts.Combat.Datas;
-using Scripts.Entities;
-using System;
-using System.Collections.Generic;
-using Chipmunk.Modules.StatSystem;
-using Code.GameEvents;
 using Code.EnemySpawn;
+using Code.GameEvents;
+using Code.InventorySystems;
 using Code.InventorySystems.Equipments;
-using Code.SHS.Entities.Enemies.Events.Local;
-using UnityEngine;
 using Code.Items;
-using Code.Items.ItemInfo;
+using Code.SHS.Entities.Enemies.Events.Local;
+using Scripts.Combat.Datas;
+using UnityEngine;
 
 namespace Code.SHS.Entities.Enemies
 {
-    /// <summary>
-    /// Enemy�� ��� ���� Ŭ����
-    /// </summary>
-    public class EnemyEquipSlot
+    public class EnemyEquipment : EntityEquipment, ILocalEventSubscriber<EnemySpawnEvent>
     {
-        public EquipableItem Item { get; private set; }
-        public EquipPartType PartType { get; private set; }
-
-        public EnemyEquipSlot(EquipPartType partType)
-        {
-            PartType = partType;
-            Item = null;
-        }
-
-        public void SetItem(EquipableItem item)
-        {
-            Item = item;
-        }
-
-        public void Clear()
-        {
-            Item = null;
-        }
-    }
-
-    public class EnemyEquipment : MonoBehaviour, IContainerComponent, ILocalEventSubscriber<EnemySpawnEvent>
-    {
-        [SerializeField] private SerializedDictionary<EquipPartType, Transform> equipTrms;
-
-        public ComponentContainer ComponentContainer { get; set; }
         public bool IsInitialized => ComponentContainer != null;
 
-        private Entity _entity;
-        private StatOverrideBehavior _stat;
         private Inventory _enemyInventory;
-        private Dictionary<EquipPartType, EnemyEquipSlot> _equips = new Dictionary<EquipPartType, EnemyEquipSlot>();
 
-        public void OnInitialize(ComponentContainer componentContainer)
+        public override void OnInitialize(ComponentContainer componentContainer)
         {
-            // store the container so IsInitialized becomes true and GetCompo calls use the correct container
-            ComponentContainer = componentContainer;
+            base.OnInitialize(componentContainer);
             _enemyInventory = componentContainer.GetSubclassComponent<Inventory>();
-            int equipSlotCnt = Enum.GetValues(typeof(EquipPartType)).Length;
-            for (int i = 0; i < equipSlotCnt; i++)
-            {
-                EquipPartType partType = (EquipPartType)i;
-                var equipSlot = new EnemyEquipSlot(partType);
-                _equips.Add(partType, equipSlot);
-            }
 
-            _entity = ComponentContainer.GetCompo<Entity>(true);
-            _stat = ComponentContainer.GetCompo<StatOverrideBehavior>();
-
-            // Ensure equipTrms exists and has a valid transform for each slot type.
             if (equipTrms == null)
                 equipTrms = new SerializedDictionary<EquipPartType, Transform>();
 
-            foreach (EquipPartType slotType in Enum.GetValues(typeof(EquipPartType)))
+            Transform parent = Owner != null ? Owner.transform : transform;
+            for (int i = 0; i < (int)EquipPartType.Count; ++i)
             {
-                // If inspector didn't provide a transform for this slot, create a child GameObject and use it.
-                if (!equipTrms.ContainsKey(slotType) || equipTrms[slotType] == null)
-                {
-                    Transform parent = _entity != null ? _entity.transform : this.transform;
-                    var go = new GameObject($"Equip_TRM_{slotType}");
-                    go.transform.SetParent(parent, false);
-                    equipTrms[slotType] = go.transform;
-                }
+                EquipPartType partType = (EquipPartType)i;
+
+                if (equipTrms.ContainsKey(partType) && equipTrms[partType] != null)
+                    continue;
+
+                var go = new GameObject($"Equip_TRM_{partType}");
+                go.transform.SetParent(parent, false);
+                equipTrms[partType] = go.transform;
             }
         }
 
@@ -95,32 +46,20 @@ namespace Code.SHS.Entities.Enemies
             if (spawnEvent.EnemyData == null)
                 return;
 
-            SetSpawnEquipments(spawnEvent.EnemyData.equipments);
+            EquipSpawnItems(spawnEvent.EnemyData.equipments);
         }
 
         public void ResetRuntimeEquipment()
         {
-            foreach (EnemyEquipSlot slot in _equips.Values)
+            for (int i = 0; i < (int)EquipPartType.Count; ++i)
             {
-                if (slot.Item == null)
-                    continue;
-
-                EquipableItem equippedItem = slot.Item;
-                if (equippedItem.ItemData is EquipItemDataSO equipItemData)
-                {
-                    UnEquip(equippedItem, equipItemData);
-                }
-                else
-                {
-                    equippedItem.Unequip(_entity);
-                    slot.Clear();
-                }
+                UnequipItemFromPart((EquipPartType)i, out _);
             }
 
             _enemyInventory?.ClearInventory();
         }
 
-        public void SetSpawnEquipments(EnemyEquipData[] equipments)
+        private void EquipSpawnItems(EnemyEquipData[] equipments)
         {
             if (!IsInitialized)
             {
@@ -143,125 +82,31 @@ namespace Code.SHS.Entities.Enemies
 
                 if (item != null)
                 {
-                    Equip(item, equipData.itemData, equipData.partType);
+                    EquipItemToPart(equipData.partType, item);
                 }
             }
         }
 
-        public bool Equip(EquipableItem equipable, EquipItemDataSO itemData, EquipPartType partType)
+        protected override void OnItemEquipped(EquipPartType partType, EquipableItem item, Transform parent)
         {
-            EquipPartType targetPartType = partType;
-            EquipPartType itemPartType = itemData.itemType.GetEquipSlotType().GetEquipType();
-
-            if (itemPartType != targetPartType || targetPartType == EquipPartType.None)
-                return false;
-
-            var itemSlot = _equips[targetPartType];
-
-            // �̹� �����Ȱ� �ִ��� Ȯ��, ������ ����
-            if (itemSlot.Item != null && itemSlot.Item.ItemData is EquipItemDataSO equipItemData)
-            {
-                UnEquip(itemSlot.Item, equipItemData);
-            }
-
-            AddStatModify(itemData);
-            itemSlot.SetItem(equipable);
-
-            // use mapped transform for this slot if available, otherwise fallback to entity transform
-            Transform parentTrm = _entity != null ? _entity.transform : this.transform;
-            if (equipTrms != null)
-            {
-                if (equipTrms.TryGetValue(targetPartType, out Transform mapped))
-                    parentTrm = mapped;
-            }
-
-            equipable.Equip(_entity, parentTrm);
-            HandleEquippedItem(equipable, parentTrm);
-
-            return true;
-        }
-
-        public bool UnEquip(EquipableItem equipped, EquipItemDataSO itemData)
-        {
-            EquipPartType itemPartType = GetEquippedSlotType(equipped);
-
-            if (itemPartType == EquipPartType.None) return false;
-
-            if (_equips.TryGetValue(itemPartType, out EnemyEquipSlot slot))
-            {
-                UnHandleEquippedItem(equipped);
-                equipped.Unequip(_entity);
-                StatRemoveModify(itemData);
-                slot.Clear();
-                return true;
-            }
-
-            return false;
-        }
-
-        private void HandleEquippedItem(EquipableItem equipped, Transform parentTrm)
-        {
-            if (equipped is not HandItem handItem)
+            if (item is not HandItem handItem)
                 return;
 
             if (handItem.ItemObject == null)
-                handItem.Handle(_entity, parentTrm);
+                handItem.Handle(Owner, parent);
 
-            _entity?.LocalEventBus.Raise(new ChangeHandlingEvent(equipped));
+            Owner?.LocalEventBus.Raise(new ChangeHandlingEvent(item));
         }
 
-        private void UnHandleEquippedItem(EquipableItem equipped)
+        protected override void OnItemUnequipped(EquipPartType partType, EquipableItem item)
         {
-            if (equipped is not HandItem handItem)
+            if (item is not HandItem handItem)
                 return;
 
-            _entity?.LocalEventBus.Raise(new ChangeHandlingEvent(null));
+            Owner?.LocalEventBus.Raise(new ChangeHandlingEvent(null));
 
             if (handItem.ItemObject != null)
-                handItem.UnHandle(_entity);
+                handItem.UnHandle(Owner);
         }
-
-        private void AddStatModify(EquipItemDataSO itemData)
-        {
-            if (_stat == null) return;
-
-            foreach (var addStat in itemData.addStats)
-            {
-                _stat.AddModifier(addStat.targetStat, addStat, addStat.value);
-            }
-        }
-
-        private void StatRemoveModify(EquipItemDataSO itemData)
-        {
-            if (_stat == null) return;
-
-            foreach (var addStat in itemData.addStats)
-            {
-                _stat.RemoveModifier(addStat.targetStat, addStat);
-            }
-        }
-
-        private EquipPartType GetEquippedSlotType(EquipableItem equipable)
-        {
-            foreach (var kvp in _equips)
-            {
-                if (kvp.Value.Item == equipable)
-                    return kvp.Key;
-            }
-
-            return EquipPartType.None;
-        }
-
-        public bool TryGetEquippedItem(EquipPartType partType, out EquipableItem item)
-        {
-            EnemyEquipSlot slot = _equips[partType];
-            item = null;
-            if (slot.Item == null)
-                return false;
-            item = slot.Item;
-            return true;
-        }
-
-        public EnemyEquipSlot GetEquipSlot(EquipPartType partType) => _equips.GetValueOrDefault(partType);
     }
 }

@@ -1,0 +1,185 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3591957210271352113
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4406937454842220282}
+  - component: {fileID: 6849158415625655959}
+  m_Layer: 0
+  m_Name: BerserkerSkill
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4406937454842220282
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3591957210271352113}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4740399349837225540}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6849158415625655959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3591957210271352113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14a6cba37592431099f1326cae6d308e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <SkillData>k__BackingField: {fileID: 11400000, guid: c0166d93535a32340b384f16c55c0eb2, type: 2}
+  particle: {fileID: 2701607295416823135}
+  immortalityParticle: {fileID: 678683069022559609}
+  damageModify: {fileID: 11400000, guid: 7a0d6ceb21222d849ad9defa279caa41, type: 2}
+  damageDemodefy: {fileID: 11400000, guid: fa80372e43ce02f49a1a938d0bc7d871, type: 2}
+  defStat: {fileID: 11400000, guid: 458b46c63a1c40d4ab9a6d39717dde19, type: 2}
+  calcHealthRatio: 0.7
+  damageDecrease: 0.4
+  damageIncrease: 0.8
+  immortalDuration: 2
+  immortalCooldown: 180
+--- !u!1 &7525316911463643883
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4740399349837225540}
+  - component: {fileID: 2701607295416823135}
+  m_Layer: 0
+  m_Name: BerserkerEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4740399349837225540
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7525316911463643883}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1290452509151885650}
+  m_Father: {fileID: 4406937454842220282}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2701607295416823135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7525316911463643883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8eb8e57504754d169fa900b3f3dbc223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rateOverTime: 10
+  baseHeatRatio: 0
+  particle: {fileID: 0}
+--- !u!1001 &3153156621542949821
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4740399349837225540}
+    m_Modifications:
+    - target: {fileID: 4191400471649447641, guid: f8eaa939f0a552e49a89aa652651b37f, type: 3}
+      propertyPath: moveWithTransform
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4191400473053330145, guid: f8eaa939f0a552e49a89aa652651b37f, type: 3}
+      propertyPath: moveWithTransform
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4191400473053330145, guid: f8eaa939f0a552e49a89aa652651b37f, type: 3}
+      propertyPath: EmissionModule.rateOverDistance.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4191400473053330158, guid: f8eaa939f0a552e49a89aa652651b37f, type: 3}
+      propertyPath: m_Name
+      value: CarnageAura
+      objectReference: {fileID: 0}
+    - target: {fileID: 4191400473053330159, guid: f8eaa939f0a552e49a89aa652651b37f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4191400473053330159, guid: f8eaa939f0a552e49a89aa652651b37f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4191400473053330159, guid: f8eaa939f0a552e49a89aa652651b37f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4191400473053330159, guid: f8eaa939f0a552e49a89aa652651b37f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4191400473053330159, guid: f8eaa939f0a552e49a89aa652651b37f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4191400473053330159, guid: f8eaa939f0a552e49a89aa652651b37f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4191400473053330159, guid: f8eaa939f0a552e49a89aa652651b37f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4191400473053330159, guid: f8eaa939f0a552e49a89aa652651b37f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4191400473053330159, guid: f8eaa939f0a552e49a89aa652651b37f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4191400473053330159, guid: f8eaa939f0a552e49a89aa652651b37f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f8eaa939f0a552e49a89aa652651b37f, type: 3}
+--- !u!198 &678683069022559609 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 2497643580379913924, guid: f8eaa939f0a552e49a89aa652651b37f, type: 3}
+  m_PrefabInstance: {fileID: 3153156621542949821}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1290452509151885650 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4191400473053330159, guid: f8eaa939f0a552e49a89aa652651b37f, type: 3}
+  m_PrefabInstance: {fileID: 3153156621542949821}
+  m_PrefabAsset: {fileID: 0}

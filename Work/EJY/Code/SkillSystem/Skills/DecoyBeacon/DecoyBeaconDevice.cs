@@ -224,7 +224,7 @@ namespace Code.SkillSystem.Skills.DecoyBeacon
                 if (statusEffect == null || handledEffects.Add(statusEffect) == false)
                     continue;
 
-                statusEffect.AddStatusEffect(_phantomProtocolBuff.GetStatusEffectInfo());
+                statusEffect.AddStatusEffect(_phantomProtocolBuff, this);
             }
         }
 

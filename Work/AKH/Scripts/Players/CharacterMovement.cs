@@ -61,6 +61,7 @@ namespace Scripts.Players
         private Vector3 _autoMovement;
         private float _autoMoveStartTime;
         private MovementDataSO _movementData;
+        private int _knockbackVersion;
         private Entity _entity;
         private StatOverrideBehavior _statOverrideBehavior;
         private Vector3 _velocity;
@@ -190,11 +191,44 @@ namespace Scripts.Players
             _movementData = movementData;
         }
 
+        public void CancelMovementData()
+        {
+            _knockbackVersion++;
+            _autoMovement = Vector3.zero;
+            _velocity = Vector3.zero;
+        }
+
         private void HandleMoveSpeedChange(StatSO stat, float currentValue, float prevValue)
             => _moveSpeed = currentValue;
 
-        public void KnockBack(Vector3 direction, MovementDataSO movementData)
-            => ApplyMovementData(direction, movementData);
+        public async void KnockBack(Vector3 direction, MovementDataSO movementData)
+        {
+            if (!isActiveAndEnabled || movementData == null)
+                return;
+
+            int knockbackVersion = ++_knockbackVersion;
+            bool restoreManualMovement = CanManualMovement;
+
+            CanManualMovement = false;
+            ApplyMovementData(direction, movementData);
+
+            float endTime = Time.time + Mathf.Max(0f, movementData.duration);
+            while (Time.time < endTime)
+            {
+                await Awaitable.FixedUpdateAsync();
+                if (!isActiveAndEnabled || knockbackVersion != _knockbackVersion)
+                    return;
+            }
+
+            if (knockbackVersion != _knockbackVersion)
+                return;
+
+            _autoMovement = Vector3.zero;
+            _velocity = Vector3.zero;
+
+            if (restoreManualMovement)
+                CanManualMovement = true;
+        }
 
         public void SetPosition(Vector3 position)
         {

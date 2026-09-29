@@ -40,6 +40,7 @@ namespace Code.SHS.Entities.Enemies.FSM
         protected EnemyInventory _enemyInventory;
         protected TargetProvider _targetProvider;
         protected LocalEventBus _localEventBus;
+        protected EnemySprintStamina _sprintStamina;
         protected Blackboard Blackboard => _enemy.Blackboard;
         protected Entity RemainTarget => _targetProvider.CurrentTarget;
         protected Entity Target => _targetProvider.Target;
@@ -57,6 +58,7 @@ namespace Code.SHS.Entities.Enemies.FSM
             _attackCompo = container.Get<AttackCompo>();
             _targetProvider = container.Get<TargetProvider>();
             _localEventBus = container.Get<LocalEventBus>();
+            container.TryGetComponent(out _sprintStamina);
         }
         public override void Enter()
         {

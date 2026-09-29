@@ -1,4 +1,3 @@
-﻿using System.Linq;
 using Ami.BroAudio;
 using Chipmunk.ComponentContainers;
 using Chipmunk.Modules.StatSystem;
@@ -15,40 +14,52 @@ namespace Code.SkillSystem.Skills.FireRate
     public class FireRateSkill : ActiveSkill
     {
         [SerializeField] private BuffSO fireRateBuffSO;
-        [SerializeField] private StatusEffectCreateData bulletReduceRate;
+        [SerializeField] private AbstractStatusEffectDataSO fireRateStatusEffectData;
+        [SerializeField] private BuffSO bulletReduceRateBuff;
         [SerializeField] private StatSO fireRateStatSO;
         [SerializeField] private FireRateSkillVFX fireRateSkillVFX;
-        [SerializeField] private Transform vfxPos;
         [SerializeField] private SoundID soundID;
         [SerializeField] private bool isOnHitAddFireRate;
         [SerializeField] private bool isBulletReduceRateDecrease;
         [SerializeField] private float onHitFireRateAmount = 0.025f, maxFireRate = 0.5f;
-        
+
         private EntityStatusEffect _entityStatusEffect;
         private StatOverrideBehavior _stat;
-        private VFXComponent _vfxComponent;
-        private AbstractStatusEffect _statusEffect;
+        private StatusEffectLayer _statusEffectLayer;
         private float _totalFireRate;
-        
+        private bool _applied;
+
         public override void Init(ComponentContainer container)
         {
             base.Init(container);
             _entityStatusEffect = container.Get<EntityStatusEffect>();
             _stat = container.Get<StatOverrideBehavior>();
-            _vfxComponent = container.Get<VFXComponent>();
-            
+
             fireRateSkillVFX.InitVFXCompo(_owner);
         }
 
         private void OnDestroy()
         {
             if (_entityStatusEffect != null)
-                _entityStatusEffect.OnStatusEffectReleased -= HandleFireRateReleased;
+            {
+                _entityStatusEffect.OnStatusEffectLayerReleased -= HandleFireRateReleased;
+                _entityStatusEffect.RemoveStatusEffect(fireRateBuffSO, this);
+                _entityStatusEffect.RemoveStatusEffect(bulletReduceRateBuff, this);
+            }
 
             if (_owner != null)
                 _owner.OnAttack -= OnHitAddFireRate;
 
             _stat?.GetStat(fireRateStatSO)?.RemoveModifier(this);
+            _applied = false;
+            _statusEffectLayer = null;
+            _totalFireRate = 0f;
+
+            if (fireRateSkillVFX != null)
+            {
+                fireRateSkillVFX.ResetHeatRatio();
+                fireRateSkillVFX.StopMuzzleSmog();
+            }
         }
 
         private void UpgradeOnHitAddFireRate() => isOnHitAddFireRate = true;
@@ -56,49 +67,74 @@ namespace Code.SkillSystem.Skills.FireRate
         private void UpgradeBulletReduceRateDecrease() => isBulletReduceRateDecrease = true;
         private void RollbackBulletReduceRateDecrease() => isBulletReduceRateDecrease = false;
 
-
         public override void OnSkillTrigger()
         {
-            BroAudio.Play(soundID, _owner.transform.position);
-            _vfxComponent.PlayVFX("FireRate", vfxPos.position, Quaternion.identity);
-            fireRateSkillVFX.PlayMuzzleSmog();
-            
-            var statusEffectInfos = fireRateBuffSO.GetStatusEffectInfo();
+            if (_applied) return;
 
-            if(isBulletReduceRateDecrease)
-                statusEffectInfos.Add(new StatusEffectInfo(fireRateBuffSO,bulletReduceRate));
-            
-            _statusEffect = _entityStatusEffect.AddStatusEffect(statusEffectInfos)
-                .FirstOrDefault(statusEffect => statusEffect.StatusEffectEnum == StatusEffectEnum.FIRERATE_STATUS);
-            
-            if (isOnHitAddFireRate)
+            Debug.Assert(fireRateBuffSO != null,
+                $"{nameof(FireRateSkill)} requires {nameof(fireRateBuffSO)}.", this);
+            Debug.Assert(fireRateStatusEffectData != null,
+                $"{nameof(FireRateSkill)} requires {nameof(fireRateStatusEffectData)}.", this);
+            if (fireRateBuffSO == null || fireRateStatusEffectData == null)
+                return;
+
+            _entityStatusEffect.AddStatusEffect(fireRateBuffSO, this);
+
+            if (!_entityStatusEffect.TryGetLayer(fireRateBuffSO, out StatusEffectLayer layer) ||
+                !layer.TryGetStatusEffect(fireRateStatusEffectData, out _))
             {
-                _owner.OnAttack += OnHitAddFireRate;
+                Debug.LogWarning($"{nameof(FireRateSkill)} failed to apply fire rate buff.", this);
+                _entityStatusEffect.RemoveStatusEffect(fireRateBuffSO, this);
+                return;
             }
-            
-            _entityStatusEffect.OnStatusEffectReleased += HandleFireRateReleased;
+
+            _statusEffectLayer = layer;
+
+            if (isBulletReduceRateDecrease)
+            {
+                Debug.Assert(bulletReduceRateBuff != null,
+                    $"{nameof(FireRateSkill)} requires {nameof(bulletReduceRateBuff)} when {nameof(isBulletReduceRateDecrease)} is enabled.", this);
+
+                if (bulletReduceRateBuff != null)
+                    _entityStatusEffect.AddStatusEffect(bulletReduceRateBuff, this);
+            }
+
+            BroAudio.Play(soundID, _owner.transform.position);
+
+            _applied = true;
+            fireRateSkillVFX.PlayMuzzleSmog();
+
+            if (isOnHitAddFireRate)
+                _owner.OnAttack += OnHitAddFireRate;
+
+            _entityStatusEffect.OnStatusEffectLayerReleased += HandleFireRateReleased;
         }
 
-        private void HandleFireRateReleased(AbstractStatusEffect statusEffect)
+        private void HandleFireRateReleased(StatusEffectLayer layer)
         {
-            if(_statusEffect != statusEffect) return;
-            
-            if (isOnHitAddFireRate)
-            {
-                _owner.OnAttack -= OnHitAddFireRate;
-                _totalFireRate = 0;
-                
-                var targetStat = _stat.GetStat(fireRateStatSO);
-                targetStat.RemoveModifier(this);
-            }
-            _vfxComponent.StopVFX("FireRate");
+            if (_statusEffectLayer != layer)
+                return;
+
+            _applied = false;
+            _statusEffectLayer = null;
+
+            if (bulletReduceRateBuff != null)
+                _entityStatusEffect.RemoveStatusEffect(bulletReduceRateBuff, this);
+
+            _owner.OnAttack -= OnHitAddFireRate;
+            _totalFireRate = 0f;
+            _stat.GetStat(fireRateStatSO).RemoveModifier(this);
+
             fireRateSkillVFX.ResetHeatRatio();
             fireRateSkillVFX.StopMuzzleSmog();
-            _entityStatusEffect.OnStatusEffectReleased -= HandleFireRateReleased;
+            _entityStatusEffect.OnStatusEffectLayerReleased -= HandleFireRateReleased;
         }
 
         private void OnHitAddFireRate(Entity dealer, IDamageable target)
         {
+            if (!_applied)
+                return;
+
             if (Mathf.Approximately(_totalFireRate, maxFireRate))
                 return;
 

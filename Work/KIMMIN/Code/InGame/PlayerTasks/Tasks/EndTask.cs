@@ -8,7 +8,7 @@ namespace Work.Code.PlayerTasks
     {
         protected override string GetTaskText()
         {
-            return $"완성된 부분은 여기까지 입니다.\n플레이해주셔서 갑사합니다.";
+            return $"열쇠를 제작하고 섬을 탈출하세요.";
         }
 
         protected override void StopTask()

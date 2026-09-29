@@ -11,15 +11,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5aafaebd814478d84755322022c151a, type: 3}
   m_Name: FireRate Buff
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   buffName: FireRate Buff
   buffIcon: {fileID: 0}
   statusEffectCreateData:
-  - statusEffect: 4096
+  - statusEffectData: {fileID: 11400000, guid: 486c8cb2c3ad43f43ac2cf5ca2bf0828, type: 2}
     isPercent: 0
-    level: 1
     effectValue:
     - -0.25
     isOverrideApplyTime: 0
     overrideTime: 0
   applyTime: 10
+  vfxName: FireRate

@@ -30,7 +30,6 @@ namespace Code.InventorySystems.Equipments
         public string slotName;
         public EquipPartType equipPart;
         public EquipSlotType allowedEquipSlot;
-        public bool canHandle;
         public bool hasSkill;
         public int index;
     }

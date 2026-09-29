@@ -19,11 +19,13 @@ namespace Code.Players
         [SerializeField] private PoolItemSO previewItem;
         [Inject] private PoolManagerMono _poolManagerMono;
         private StatOverrideBehavior _StatOverrideBehavior;
+        private PlayerEquipment _playerEquipment;
 
         public override void OnInitialize(ComponentContainer componentContainer)
         {
             base.OnInitialize(componentContainer);
             _StatOverrideBehavior = ComponentContainer.Get<StatOverrideBehavior>();
+            _playerEquipment = componentContainer.Get<PlayerEquipment>();
 
             InventoryChanged += UpdateUI;
         }
@@ -91,8 +93,8 @@ namespace Code.Players
         
                         simulatedSlots[i] = slot;
                     }
-        
-                    if (remainingToConsume > 0)
+
+                    if (remainingToConsume > GetEquippedItemCount(pair.Key))
                         return false;
                 }
             }
@@ -116,8 +118,70 @@ namespace Code.Players
                 if (addableCount >= resultCount)
                     return true;
             }
-        
+
             return false;
+        }
+
+        public int GetCraftAvailableItemCount(ItemDataSO itemData)
+        {
+            return GetItemCount(itemData) + GetEquippedItemCount(itemData);
+        }
+
+        public bool CanConsumeCraftMaterials(Dictionary<ItemDataSO, int> consumeItems)
+        {
+            if (consumeItems == null)
+                return false;
+
+            foreach (var pair in consumeItems)
+            {
+                if (GetCraftAvailableItemCount(pair.Key) < pair.Value)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public bool TryConsumeCraftMaterials(Dictionary<ItemDataSO, int> consumeItems)
+        {
+            if (!CanConsumeCraftMaterials(consumeItems))
+                return false;
+
+            foreach (var pair in consumeItems)
+            {
+                int remaining = pair.Value;
+                int inventoryCount = GetItemCount(pair.Key);
+
+                if (inventoryCount > 0)
+                {
+                    int inventoryConsumeCount = Mathf.Min(inventoryCount, remaining);
+
+                    if (!RemoveItemByData(pair.Key, inventoryConsumeCount))
+                        return false;
+
+                    remaining -= inventoryConsumeCount;
+                }
+
+                if (remaining > 0 && (_playerEquipment == null || !_playerEquipment.TryConsumeEquippedItems(pair.Key, remaining)))
+                    return false;
+            }
+
+            return true;
+        }
+
+        public EquipableItem FindCraftSkillSourceItem(ItemDataSO itemData)
+        {
+            foreach (ItemSlot itemSlot in GetItemSlots(itemData))
+            {
+                if (itemSlot.Item is EquipableItem equipableItem && equipableItem.Skill != null)
+                    return equipableItem;
+            }
+
+            return _playerEquipment?.FindEquippedItem(itemData, equipableItem => equipableItem.Skill != null);
+        }
+
+        private int GetEquippedItemCount(ItemDataSO itemData)
+        {
+            return _playerEquipment?.GetEquippedItemCount(itemData) ?? 0;
         }
 
         private void HandleInvenSlotCount(StatSO stat, float currentValue, float prevValue)

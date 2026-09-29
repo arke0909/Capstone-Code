@@ -1,15 +1,27 @@
 ﻿using Code.SHS.Entities.Enemies;
+using Code.StatusEffectSystem;
 using Code.TimeSystem;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Code.EnemySpawn
 {
+    [Serializable]
+    public class FixedEnemySpawnEntry
+    {
+        public bool isEnabled = true;
+        public EnemySO enemy;
+        public Transform spawnPoint;
+    }
+
     public class SpawnZone : MonoBehaviour
     {
         [SerializeField] private List<Transform> spawnPoints;
         [SerializeField] private SpawnListSO spawnList;
+        [SerializeField] private List<FixedEnemySpawnEntry> fixedSpawns = new();
+        [SerializeField] private BuffSO initBuff;
 
         private readonly List<Enemy> spawnedEnemies = new();
         private readonly Dictionary<Enemy, UnityAction> enemyDeadCallbacks = new();
@@ -29,7 +41,8 @@ namespace Code.EnemySpawn
 
         private void SetUpSpawnZone()
         {
-            if (spawnPoints == null || spawnPoints.Count <= 0)
+            if ((spawnPoints == null || spawnPoints.Count <= 0) &&
+                (fixedSpawns == null || fixedSpawns.Count <= 0))
                 return;
 
             SpawnAllEnemies();
@@ -39,19 +52,47 @@ namespace Code.EnemySpawn
         {
             ClearSpawnedEnemies();
 
+            HashSet<Transform> reservedSpawnPoints = SpawnFixedEnemies();
+            SpawnRandomEnemies(reservedSpawnPoints);
+        }
+
+        private HashSet<Transform> SpawnFixedEnemies()
+        {
+            HashSet<Transform> reservedSpawnPoints = new();
+            if (fixedSpawns == null)
+                return reservedSpawnPoints;
+
+            foreach (FixedEnemySpawnEntry fixedSpawn in fixedSpawns)
+            {
+                if (fixedSpawn == null || !fixedSpawn.isEnabled)
+                    continue;
+                if (fixedSpawn.enemy == null || fixedSpawn.spawnPoint == null)
+                    continue;
+
+                reservedSpawnPoints.Add(fixedSpawn.spawnPoint);
+                SpawnEnemy(fixedSpawn.enemy, fixedSpawn.spawnPoint.position, fixedSpawn.spawnPoint.rotation);
+            }
+
+            return reservedSpawnPoints;
+        }
+
+        private void SpawnRandomEnemies(HashSet<Transform> reservedSpawnPoints)
+        {
             if (spawnPoints == null || spawnList == null) return;
 
+            List<Transform> availableSpawnPoints = GetAvailableRandomSpawnPoints(reservedSpawnPoints);
+            if (availableSpawnPoints.Count <= 0) return;
+
             int currentDay = TimeController.Instance.CurrentDay;
-            List<EnemySO> spawnEnemies = spawnList.GetSpawnEnemies(spawnPoints.Count, currentDay);
+            List<EnemySO> spawnEnemies = spawnList.GetSpawnEnemies(availableSpawnPoints.Count, currentDay);
 
             if (spawnEnemies == null || spawnEnemies.Count <= 0) return;
 
-            List<Transform> availableSpawnPoints = new List<Transform>(spawnPoints);
             int spawnCount = Mathf.Min(spawnEnemies.Count, availableSpawnPoints.Count);
 
             for (int i = 0; i < spawnCount; i++)
             {
-                int spawnPointIndex = Random.Range(0, availableSpawnPoints.Count);
+                int spawnPointIndex = UnityEngine.Random.Range(0, availableSpawnPoints.Count);
                 Transform spawnPoint = availableSpawnPoints[spawnPointIndex];
                 availableSpawnPoints.RemoveAt(spawnPointIndex);
 
@@ -59,11 +100,31 @@ namespace Code.EnemySpawn
             }
         }
 
+        private List<Transform> GetAvailableRandomSpawnPoints(HashSet<Transform> reservedSpawnPoints)
+        {
+            List<Transform> availableSpawnPoints = new();
+            HashSet<Transform> addedSpawnPoints = new();
+
+            foreach (Transform spawnPoint in spawnPoints)
+            {
+                if (spawnPoint == null)
+                    continue;
+                if (reservedSpawnPoints != null && reservedSpawnPoints.Contains(spawnPoint))
+                    continue;
+                if (!addedSpawnPoints.Add(spawnPoint))
+                    continue;
+
+                availableSpawnPoints.Add(spawnPoint);
+            }
+
+            return availableSpawnPoints;
+        }
+
         public void SpawnEnemy(EnemySO enemyData, Vector3 position, Quaternion rotation)
         {
             if (enemyData == null || enemyData.enemyPrefab == null) return;
 
-            Enemy spawnedEnemy = EnemySpawnUtility.SpawnEnemy(enemyData, position, rotation);
+            Enemy spawnedEnemy = EnemySpawnUtility.SpawnEnemy(enemyData, position, rotation,null,initBuff);
             RegisterSpawnedEnemy(spawnedEnemy);
         }
 

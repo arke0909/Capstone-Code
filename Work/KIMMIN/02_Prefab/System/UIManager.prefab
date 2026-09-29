@@ -171,7 +171,7 @@ RectTransform:
   m_GameObject: {fileID: 3354411211671510120}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7001661503601217916}
@@ -268,6 +268,7 @@ MonoBehaviour:
   popups:
   - {fileID: 4412470329938472972, guid: ac3ed21fb8f32584a9a46da352c112de, type: 3}
   - {fileID: 1556516413861633961, guid: 69a4c487df0ebb3459e1128b9c466b87, type: 3}
+  - {fileID: 6486206816728744728, guid: a1d0302a42202f7419b6b0413a9670f6, type: 3}
   root: {fileID: 2579597304362724387}
 --- !u!1 &4473243573197314182
 GameObject:

@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +23,7 @@ namespace Code
         [SerializeField] private LayerMask whatIsEnemy;
         [SerializeField] private LayerMask whatIsObstacle;
         [SerializeField] private float enemyFindDelay = 0.2f;
+        [SerializeField] private float meshRefreshInterval = 0.05f;
         [SerializeField] private float meshResolution = 1f;
         [SerializeField] private int iterationCount = 3;
         [SerializeField] private float distanceThreshold = 0.2f;
@@ -36,15 +36,18 @@ namespace Code
         private Collider[] _enemiesInView;
         private MeshFilter _meshFilter;
         private Mesh _viewMesh;
+        private readonly List<Vector3> _viewPoints = new List<Vector3>(128);
+        private readonly List<Vector3> _vertices = new List<Vector3>(129);
+        private readonly List<int> _triangles = new List<int>(384);
+        private float _meshRefreshTimer;
 
         private void Awake()
         {
             _meshFilter = transform.Find("ViewVisual").GetComponent<MeshFilter>();
             _viewMesh = new Mesh();
-            
+            _viewMesh.MarkDynamic();
             _meshFilter.mesh = _viewMesh;
-            
-            
+            _meshRefreshTimer = meshRefreshInterval;
         }
 
         private IEnumerator Start()
@@ -63,20 +66,28 @@ namespace Code
         private void FindVisibleTargets()
         {
             visibleTargets.Clear();
-            int cnt = Physics.OverlapSphereNonAlloc(transform.position, viewRadius, _enemiesInView, whatIsEnemy);
+
+            Vector3 origin = transform.position;
+            Vector3 forward = transform.forward;
+            float sqrViewRadius = viewRadius * viewRadius;
+            float cosHalfViewAngle = Mathf.Cos(viewAngle * 0.5f * Mathf.Deg2Rad);
+            int cnt = Physics.OverlapSphereNonAlloc(origin, viewRadius, _enemiesInView, whatIsEnemy);
 
             for (int i = 0; i < cnt; ++i)
             {
                 Transform enemy = _enemiesInView[i].transform;
-                Vector3 direction = enemy.position - transform.position;
+                Vector3 direction = enemy.position - origin;
+                float sqrDistance = direction.sqrMagnitude;
+                if (sqrDistance <= Mathf.Epsilon || sqrDistance > sqrViewRadius)
+                    continue;
 
-                if (Vector3.Angle(transform.forward, direction.normalized) < viewAngle * 0.5f)
-                {
-                    if (!Physics.Raycast(transform.position, direction.normalized, direction.magnitude, whatIsObstacle))
-                    {
-                        visibleTargets.Add(enemy);
-                    }
-                }
+                float distance = Mathf.Sqrt(sqrDistance);
+                Vector3 normalizedDirection = direction / distance;
+                if (Vector3.Dot(forward, normalizedDirection) < cosHalfViewAngle)
+                    continue;
+
+                if (!Physics.Raycast(origin, normalizedDirection, distance, whatIsObstacle))
+                    visibleTargets.Add(enemy);
             }
         }
 
@@ -92,6 +103,15 @@ namespace Code
 
         private void LateUpdate()
         {
+            if (meshRefreshInterval > 0f)
+            {
+                _meshRefreshTimer += Time.deltaTime;
+                if (_meshRefreshTimer < meshRefreshInterval)
+                    return;
+
+                _meshRefreshTimer = 0f;
+            }
+
             DrawFieldOfView();
         }
 
@@ -113,7 +133,7 @@ namespace Code
                 if (castInfo.isHit == minCast.isHit && !edgeDistanceThreshold)
                 {
                     minAngle = angle;
-                    minPoint =  castInfo.point;
+                    minPoint = castInfo.point;
                 }
                 else
                 {
@@ -127,11 +147,9 @@ namespace Code
 
         private void DrawFieldOfView()
         {
-            int stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
+            int stepCount = Mathf.Max(1, Mathf.RoundToInt(viewAngle * meshResolution));
             float stepAngleSize = viewAngle / stepCount;
-
-            Vector3 center = transform.position;
-            List<Vector3> viewPoints = new List<Vector3>();
+            _viewPoints.Clear();
 
             ViewCastInfo oldCastInfo = new ViewCastInfo();
             
@@ -145,41 +163,37 @@ namespace Code
                 {
                     bool edgeExceeded = Mathf.Abs(oldCastInfo.distance - castInfo.distance) > distanceThreshold;
 
-                    if (oldCastInfo.isHit != castInfo.isHit || (oldCastInfo.isHit && edgeExceeded))
+                    if (oldCastInfo.isHit != castInfo.isHit || oldCastInfo.isHit && edgeExceeded)
                     {
                         EdgeInfo edge = FindEdge(oldCastInfo, castInfo);
-                        if(edge.pointA != Vector3.zero) viewPoints.Add(edge.pointA);
-                        if(edge.pointB != Vector3.zero) viewPoints.Add(edge.pointB);
+                        if (edge.pointA != Vector3.zero) _viewPoints.Add(edge.pointA);
+                        if (edge.pointB != Vector3.zero) _viewPoints.Add(edge.pointB);
                     }
                 }
                 
-                viewPoints.Add(castInfo.point);
+                _viewPoints.Add(castInfo.point);
                 oldCastInfo = castInfo;
-                //Debug.DrawRay(center, center + DirFromAngle(angle, true) * viewRadius, Color.red);
             }
-            
-            int vertexCount = viewPoints.Count + 1;
-            Vector3[] vertices = new Vector3[vertexCount];
-            int[] triangles = new int[(vertexCount - 2) * 3];
-                
-            
-            vertices[0] = Vector3.zero;
-            for(int i = 0; i < vertexCount - 1; ++i)
+
+            _vertices.Clear();
+            _triangles.Clear();
+            _vertices.Add(Vector3.zero);
+
+            for (int i = 0; i < _viewPoints.Count; ++i)
             {
-                vertices[i + 1] = transform.InverseTransformPoint(viewPoints[i]);
-                if (i < vertexCount - 2)
+                _vertices.Add(transform.InverseTransformPoint(_viewPoints[i]));
+                if (i < _viewPoints.Count - 1)
                 {
-                    int tIndex = i * 3;
-                    triangles[tIndex] = 0;
-                    triangles[tIndex + 1] = i + 1;
-                    triangles[tIndex + 2] = i + 2;
+                    _triangles.Add(0);
+                    _triangles.Add(i + 1);
+                    _triangles.Add(i + 2);
                 }
             }
             
             _viewMesh.Clear();
-            _viewMesh.SetVertices(vertices);
-            _viewMesh.SetTriangles(triangles, 0);
-            _viewMesh.RecalculateNormals();
+            _viewMesh.SetVertices(_vertices);
+            _viewMesh.SetTriangles(_triangles, 0);
+            _viewMesh.RecalculateBounds();
         }
 
         private ViewCastInfo ViewCast(float angle)

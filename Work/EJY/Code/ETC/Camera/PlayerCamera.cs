@@ -4,7 +4,7 @@ using Code.GameEvents;
 using Unity.Cinemachine;
 using UnityEngine;
 
-namespace Work.EJY.Code.ETC
+namespace Code.ETC
 {
     public class PlayerCamera : MonoBehaviour
     {

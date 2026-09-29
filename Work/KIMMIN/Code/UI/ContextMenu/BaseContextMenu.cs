@@ -66,7 +66,13 @@ namespace Work.Code.UI.ContextMenu
 
         private BaseContextAction<T> GetOrCreateAction(ContextActionSO action)
         {
-            if (_cache.TryGetValue(action, out var result)) return result;
+            if (_cache.TryGetValue(action, out var result))
+            {
+                if (result != null)
+                    return result;
+
+                _cache.Remove(action);
+            }
             
             var prefab = action.contextAction as BaseContextAction<T>;
             var instance = Instantiate(prefab, root);
@@ -83,6 +89,9 @@ namespace Work.Code.UI.ContextMenu
 
             foreach (var action in _cache.Values)
             {
+                if (action == null)
+                    continue;
+
                 action.OnCallbackInvoked -= HandleActionCalled;
                 action.DisableUI();
             }
@@ -91,7 +100,7 @@ namespace Work.Code.UI.ContextMenu
         private void SortActions()
         {
 
-            var sorted = _cache.Values.ToList();
+            var sorted = _cache.Values.Where(action => action != null).ToList();
             sorted.Sort((a, b) => b.ContextActionSO.sortOrder.CompareTo(a.ContextActionSO.sortOrder));
             
             for (int i = 0; i < sorted.Count; i++)

@@ -54,6 +54,11 @@ namespace Code.TimeSystem
             DayTime += TimeUtil.Hour(startTime);
         }
 
+        private void Start()
+        {
+            EventBus.Raise(new SystemMessageEvent($"{CurrentDay}일차"));
+        }
+
         private void Update()
         {
             if (IsPaused) return;
@@ -72,6 +77,7 @@ namespace Code.TimeSystem
                 DayTime = 0;
                 Debug.Log($"Day {DayTime} 시작");
                 timeUI.SetDay($"{CurrentDay}일차");
+                EventBus.Raise(new SystemMessageEvent($"{CurrentDay}일차"));
                 var evt = new DayChangeEvent();
                 EventBus.Raise(evt);
             }

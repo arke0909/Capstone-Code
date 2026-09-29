@@ -12,8 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bd87f4bc388436a978b6add4c25bd5c, type: 3}
   m_Name: DmgIncreaseByShieldData
   m_EditorClassIdentifier: 
-  idx: 11
-  StatusEffectName: DmgIncrease
   canOverlap: 1
   targetStat: {fileID: 11400000, guid: 7a0d6ceb21222d849ad9defa279caa41, type: 2}
-  isMultiplicationOperation: 0

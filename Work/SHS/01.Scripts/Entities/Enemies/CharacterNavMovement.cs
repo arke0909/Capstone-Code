@@ -70,6 +70,11 @@ namespace Code.SHS.Entities.Enemies
             KnockBack(direction, movementData);
         }
 
+        void ISkillMovement.CancelMovementData()
+        {
+            CancelKnockBack();
+        }
+
         public override void OnInitialize(ComponentContainer componentContainer)
         {
             base.OnInitialize(componentContainer);
@@ -80,6 +85,7 @@ namespace Code.SHS.Entities.Enemies
         {
             // 기본 스탯 초기화
             moveSpeedStat = _StatOverrideBehavior.GetStat(moveSpeedStat);
+            moveSpeedStat.OnValueChanged += HandleMoveSpeedChange;
 
             // 각 MoveType별 속도 배율 스탯 초기화
             foreach (NavMoveType type in Enum.GetValues(typeof(NavMoveType)))

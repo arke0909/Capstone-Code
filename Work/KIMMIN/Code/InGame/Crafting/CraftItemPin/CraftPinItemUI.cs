@@ -49,34 +49,41 @@ namespace Work.Code.Craft
 
         private void RefreshUI()
         {
+            ClearItemUIs();
+
             if(_craftTree.ConsumeItems.Count == 0)
                 return;
             
             int cnt = 0;
             foreach (var item in _craftTree.ConsumeItems)
             {
+                int ownedCount = _inventory.GetCraftAvailableItemCount(item.Key);
                 _itemUIs[cnt].EnableDataUI(item.Key);
                 _itemUIs[cnt].SetNameColor(SetItemColor(item.Key, item.Value));
-                _itemUIs[cnt].SetCountText($"[{_inventory.GetItemCount(item.Key)}/{item.Value}]");
+                _itemUIs[cnt].SetCountText($"[{ownedCount}/{item.Value}]");
                 cnt++;
             }
         }
         
         private Color32 SetItemColor(ItemDataSO item, int count)
         {
-            return _inventory.GetItemCount(item) >= count ?
+            return _inventory.GetCraftAvailableItemCount(item) >= count ?
                 UIDefine.GreenColor : UIDefine.RedColor;
         }
 
         public void ClearUI()
         {
+            ClearItemUIs();
+            targetItem.DisableUI();
+            DisableUI();
+        }
+
+        private void ClearItemUIs()
+        {
             foreach (ItemDataUI ui in _itemUIs)
             {
                 ui.DisableUI();
             }
-            
-            targetItem.DisableUI();
-            DisableUI();
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Work.Code.Craft.Presenter
 
         private int HandleGetItemCount(ItemDataSO item)
         {
-            return _model.Inventory.GetItemCount(item);
+            return _model.Inventory.GetCraftAvailableItemCount(item);
         }
 
         private bool HandleCanCraftTree(CraftTreeSO tree)

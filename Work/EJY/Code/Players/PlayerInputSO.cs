@@ -22,13 +22,16 @@ public class PlayerInputSO : ScriptableObject, Control.IPlayerActions, Control.I
     public event Action OnMinimapPressed;
     public event Action<bool> OnCameraLockPressed;
     public event Action<int> OnItemUsePressed;
+    public event Action<Key, Key> OnKeyMapped;
     public bool AimKey { get; private set; } = false;
     public bool SprintKey { get; private set; } = false;
     public bool AttackKey { get; private set; } = false;
     public bool CameraLock { get; private set; } = false;
     public Vector2 MovementKey { get; private set; }
     public Vector2 MouseScreenPosition => _screenPosition;
+    public bool IsPlayerInputActive => _controls.Player.enabled;
     private Control _controls;
+    private readonly System.Collections.Generic.Dictionary<Key, Key> _keyMap = new();
 
     private Vector3 _worldPosition;
     private Vector2 _screenPosition;
@@ -154,10 +157,97 @@ public class PlayerInputSO : ScriptableObject, Control.IPlayerActions, Control.I
 
     public void SetActive(bool isActive)
     {
+        _controls.Disable();
+
         if (isActive)
             _controls.Player.Enable();
+    }
+
+    public void ApplyKeyMapping(Key targetKey, Key newKey)
+    {
+        string targetPath = GetKeyPath(targetKey);
+        string newPath = GetKeyPath(newKey);
+        _keyMap[targetKey] = newKey;
+
+        foreach (InputActionMap actionMap in _controls.asset.actionMaps)
+        {
+            foreach (InputAction action in actionMap.actions)
+            {
+                for (int i = 0; i < action.bindings.Count; i++)
+                {
+                    if (action.bindings[i].path != targetPath)
+                        continue;
+
+                    if (targetPath == newPath)
+                        action.RemoveBindingOverride(i);
+                    else
+                        action.ApplyBindingOverride(i, newPath);
+                }
+            }
+        }
+
+        OnKeyMapped?.Invoke(targetKey, newKey);
+    }
+
+    public Key GetMappedKey(Key targetKey)
+    {
+        if (_keyMap.TryGetValue(targetKey, out Key mappedKey))
+            return mappedKey;
+
+        return targetKey;
+    }
+
+    public bool IsKeyUsed(Key targetKey, Key newKey)
+    {
+        string targetPath = GetKeyPath(targetKey);
+        string newPath = GetKeyPath(newKey);
+
+        foreach (InputActionMap actionMap in _controls.asset.actionMaps)
+        {
+            foreach (InputAction action in actionMap.actions)
+            {
+                foreach (InputBinding binding in action.bindings)
+                {
+                    if (binding.effectivePath == newPath && binding.path != targetPath)
+                        return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public string GetKeyText(Key targetKey)
+    {
+        return GetKeyTextFromKey(GetMappedKey(targetKey));
+    }
+
+    private string GetKeyPath(Key key)
+    {
+        return $"<Keyboard>/{GetKeyName(key)}";
+    }
+
+    private string GetKeyTextFromKey(Key key)
+    {
+        if (key == Key.Escape)
+            return "Esc";
+
+        string keyName = key.ToString();
+
+        if (keyName.StartsWith("Digit"))
+            return keyName.Replace("Digit", string.Empty);
+
+        return keyName;
+    }
+
+    private string GetKeyName(Key key)
+    {
+        string keyName = key.ToString();
+
+        if (keyName.StartsWith("Digit"))
+            return keyName.Replace("Digit", string.Empty);
         else
-            _controls.Player.Disable();
+            return char.ToLower(keyName[0]) + keyName.Substring(1);
     }
 
     public void OnAim(InputAction.CallbackContext context)

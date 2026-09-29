@@ -25,23 +25,6 @@ namespace Code.UI.Controller
             }
         }
         
-        public void BindPopup(IPopupProvider popup)
-        {
-            popup.OnShowPopup += HandleClickPopup;
-        }
-
-        public void UnbindPopup(IPopupProvider popup)
-        {
-            popup.OnShowPopup -= HandleClickPopup;
-        }
-        
-        private void HandleClickPopup<T>(Func<T> data, ICallbackData callback)
-        {
-            T type = data.Invoke();
-            if (type == null) return;
-            ShowPopup(type, callback);
-        }
-        
         public void ShowPopup<T>(T data, ICallbackData callback = null)
         {
             Type type = data.GetType();

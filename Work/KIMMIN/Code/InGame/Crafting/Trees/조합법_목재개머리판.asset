@@ -13,21 +13,16 @@ MonoBehaviour:
   m_Name: 조합법_목재개머리판
   m_EditorClassIdentifier: 
   treeName: 조합법_목재개머리판
-  isBinary: 0
+  isBinary: 1
   nodeList:
   - <Item>k__BackingField: {fileID: 11400000, guid: bf03df49aa8789843928a45d2bcff90a, type: 2}
     <Tree>k__BackingField: {fileID: 0}
     <Count>k__BackingField: 1
     <IsChild>k__BackingField: 0
     <InheritSkillToCraftResult>k__BackingField: 0
-  - <Item>k__BackingField: {fileID: 11400000, guid: 0ea64a81322978f47b522f8843ff791a, type: 2}
-    <Tree>k__BackingField: {fileID: 0}
-    <Count>k__BackingField: 1
-    <IsChild>k__BackingField: 0
-    <InheritSkillToCraftResult>k__BackingField: 0
   - <Item>k__BackingField: {fileID: 11400000, guid: ee5f1844b2a18744baf594ad668e11e8, type: 2}
     <Tree>k__BackingField: {fileID: 0}
-    <Count>k__BackingField: 1
+    <Count>k__BackingField: 2
     <IsChild>k__BackingField: 0
     <InheritSkillToCraftResult>k__BackingField: 0
   - <Item>k__BackingField: {fileID: 11400000, guid: 2c4850db480dca347acb00aa5480ea6e, type: 2}

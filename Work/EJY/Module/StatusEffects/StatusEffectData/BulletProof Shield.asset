@@ -11,15 +11,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5aafaebd814478d84755322022c151a, type: 3}
   m_Name: BulletProof Shield
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   buffName: BulletProof Shield
   buffIcon: {fileID: 0}
   statusEffectCreateData:
-  - statusEffect: 1024
+  - statusEffectData: {fileID: 11400000, guid: cb6cf1a31ebedff48a3593934d1e4046, type: 2}
     isPercent: 1
-    level: 1
     effectValue:
     - 50
     isOverrideApplyTime: 0
     overrideTime: 0
   applyTime: 10
+  vfxName: BulletProof

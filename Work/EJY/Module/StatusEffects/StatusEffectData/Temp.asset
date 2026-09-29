@@ -11,11 +11,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5aafaebd814478d84755322022c151a, type: 3}
   m_Name: Temp
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   buffName: Temp
   buffIcon: {fileID: 0}
   statusEffectCreateData:
-  - statusEffect: 1
+  - statusEffectData: {fileID: 11400000, guid: 86b60d517f6f64548b3153688e7e0343, type: 2}
     isPercent: 0
     priority: 1
     effectValue:
@@ -23,7 +23,7 @@ MonoBehaviour:
     - 8
     isOverrideApplyTime: 0
     overrideTime: 0
-  - statusEffect: 2
+  - statusEffectData: {fileID: 11400000, guid: 3e91d718e0be463458c099ba57897bb3, type: 2}
     isPercent: 1
     priority: 1
     effectValue:

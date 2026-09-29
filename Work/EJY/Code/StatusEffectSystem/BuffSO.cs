@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Code.StatusEffectSystem
 {
@@ -11,8 +10,8 @@ namespace Code.StatusEffectSystem
     [HideLabel]
     public struct StatusEffectCreateData
     {
-        [LabelText("Type")]
-        public StatusEffectEnum statusEffect;
+        [LabelText("Effect")]
+        public AbstractStatusEffectDataSO statusEffectData;
 
         [LabelText("Percent")]
         public bool isPercent;
@@ -74,31 +73,44 @@ namespace Code.StatusEffectSystem
         private bool ShowSharedStackSettings => ShowStackToggle && useSharedStack;
         private bool ShowDecayInterval => ShowSharedStackSettings && stackDecayMode == StatusEffectStackDecayMode.DecreaseOneByOne;
     }
-    
+
     [CreateAssetMenu(fileName = "BuffData", menuName = "SO/StatusEffect/BuffSO", order = 0)]
     public class BuffSO : ScriptableObject
     {
         public string buffName;
         public Sprite buffIcon;
         [ListDrawerSettings(ShowFoldout = true, DefaultExpandedState = true)]
-        public List<StatusEffectCreateData> statusEffectCreateData;
+        public List<StatusEffectCreateData> statusEffectCreateData = new List<StatusEffectCreateData>();
         public float applyTime;
-        
-        public List<StatusEffectInfo> GetStatusEffectInfo(int level = 0, float additionalTime = 0) 
+        public string vfxName;
+
+        public List<StatusEffectInfo> GetStatusEffectInfo(int level = 0, float additionalTime = 0)
         {
             List<StatusEffectInfo> list = new List<StatusEffectInfo>();
 
             for (int i = 0; i < statusEffectCreateData.Count; i++)
             {
                 var createData = statusEffectCreateData[i];
-                float finalApplyTime = createData.isOverrideApplyTime ? createData.overrideTime : applyTime ;
-                int maxLv = Mathf.Min(level, createData.effectValue.Length - 1);
-                
-                list.Add(new StatusEffectInfo 
+                if (createData.statusEffectData == null)
+                {
+                    Debug.LogError($"{name} has no status effect data at index {i}.", this);
+                    return new List<StatusEffectInfo>();
+                }
+
+                if (createData.effectValue == null || createData.effectValue.Length == 0)
+                {
+                    Debug.LogError($"{name} has no effect values at index {i}.", this);
+                    return new List<StatusEffectInfo>();
+                }
+
+                float finalApplyTime = createData.isOverrideApplyTime ? createData.overrideTime : applyTime;
+                int maxLv = Mathf.Clamp(level, 0, createData.effectValue.Length - 1);
+
+                list.Add(new StatusEffectInfo
                 {
                     CreateDataIndex = i,
                     KeySO = this,
-                    StatusEffect = createData.statusEffect,
+                    StatusEffectData = createData.statusEffectData,
                     Priority = createData.priority,
                     ApplyTime = finalApplyTime + additionalTime,
                     Value = createData.effectValue[maxLv],
@@ -121,6 +133,25 @@ namespace Code.StatusEffectSystem
         private void OnValidate()
         {
             buffName = name;
+
+            if (statusEffectCreateData == null)
+                return;
+
+            HashSet<AbstractStatusEffectDataSO> statusEffectDataSet =
+                new HashSet<AbstractStatusEffectDataSO>();
+
+            for (int i = 0; i < statusEffectCreateData.Count; i++)
+            {
+                AbstractStatusEffectDataSO statusEffectData =
+                    statusEffectCreateData[i].statusEffectData;
+
+                if (statusEffectData != null && !statusEffectDataSet.Add(statusEffectData))
+                {
+                    Debug.LogWarning(
+                        $"{name} contains duplicate StatusEffectDataSO: {statusEffectData.name}.",
+                        this);
+                }
+            }
         }
     }
 }

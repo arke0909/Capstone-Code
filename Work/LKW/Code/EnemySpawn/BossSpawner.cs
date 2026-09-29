@@ -1,99 +1,114 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AYellowpaper.SerializedCollections;
-using Chipmunk.ComponentContainers;
-using Chipmunk.GameEvents;
+﻿using Chipmunk.ComponentContainers;
+using Code.ItemContainers;
 using Code.Items;
+using Code.Items.ItemInfo;
 using Code.SHS.Entities.Enemies;
 using Code.TimeSystem;
 using DewmoLib.Dependencies;
 using DewmoLib.ObjectPool.RunTime;
-using Scripts.Combat.Areas;
 using Scripts.Entities;
-using Scripts.Players;
-using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using UnityEngine;
-using Work.Code.GameEvents;
-using Code.Items.ItemInfo;
-using Code.ItemContainers;
-using Scripts.GameSystem.Structures;
 
 namespace Code.EnemySpawn
 {
     public class BossSpawner : MonoBehaviour
     {
-        [SerializeField] private EnemySO bossSO;
-        [SerializeField] private Transform targetTransform,playerTransform;
+        [field: SerializeField] public EnemySO bossSO { get; private set; }
+        [field: SerializeField] public string bossName { get; private set; }
+        [SerializeField] private Transform targetTransform;
         [SerializeField] private ItemContainer rewardContainer;
         [SerializeField] private List<ItemDataSO> rewardItems = new();
         [SerializeField] private ItemDataBaseSO itemDB;
-        [SerializeField] private InvokeCallbackStructure returnStructure;
+        [SerializeField] private float respawnDelayHours = 12f;
+        [SerializeField] private GameObject outDoor;
         [Inject] private PoolManagerMono _poolManager;
         private Enemy _currentEnemy;
-        private Vector3 _initPos;
-        private Vector3 _returnStructurePos;
-        private Vector3 _rewardContainerPos;
         private float _beforeTimeScale;
+        private bool _isPlayerInside;
+
+        public float RemainingRespawnHours { get; private set; }
+
         private void Start()
         {
-            returnStructure.Init(Exit, null);
-            _returnStructurePos = returnStructure.transform.position;
-            _rewardContainerPos = rewardContainer.transform.position;
             rewardContainer.gameObject.SetActive(false);
+        }
+
+        private void OnDestroy()
+        {
+            _currentEnemy?.OnDeadEvent.RemoveListener(HandleBossDead);
         }
 
         [ContextMenu("Spawn")]
         private void Spawn()
         {
-            _currentEnemy = EnemySpawnUtility.SpawnEnemy(bossSO, targetTransform.position, Quaternion.identity, _poolManager);
-            _currentEnemy.OnDeadEvent.AddListener(HandleBossDead);
+            EnsureBossSpawned();
         }
+
+        public bool TryEnter(Entity entity)
+        {
+            return EnterInternal(entity);
+        }
+
         public void Enter(Entity entity)
         {
-            if(_currentEnemy != null)
-            {
-                _currentEnemy.OnDeadEvent.RemoveListener(HandleBossDead);
-                _currentEnemy.ReleaseToPool();
-                _currentEnemy = null;
-            }
-            if (!entity.TryGet<CharacterMovement>(out var movement))
-                return;
+            EnterInternal(entity);
+        }
+
+        private bool EnterInternal(Entity entity)
+        {
+            if (_isPlayerInside)
+                return false;
+
+            if (!EnsureBossSpawned())
+                return false;
             _beforeTimeScale = TimeController.Instance.TimeScale;
             TimeController.Instance.TimeScale = 0;
-            _currentEnemy = EnemySpawnUtility.SpawnEnemy(bossSO, targetTransform.position, Quaternion.identity, _poolManager);
-            _currentEnemy.OnDeadEvent.AddListener(HandleBossDead);
-            _initPos = movement.transform.position;
-            movement.SetPositionImmediately(playerTransform.position);
-            returnStructure.Despawn();
+            rewardContainer?.gameObject.SetActive(false);
+            outDoor.SetActive(false);
+            _isPlayerInside = true;
+            return true;
         }
 
         private void HandleBossDead()
         {
+            Debug.Log("qoiwdhj9uiwqodvhuifwjhvuiydwv");
             _currentEnemy?.OnDeadEvent.RemoveListener(HandleBossDead);
+            _currentEnemy = null;
+            outDoor.SetActive(true);
             SpawnRewardContainer();
-            returnStructure.Spawn(_returnStructurePos);
+        }
+
+        private bool EnsureBossSpawned()
+        {
+            if (_currentEnemy != null && !_currentEnemy.IsDead)
+            {
+                _currentEnemy.transform.SetPositionAndRotation(targetTransform.position, Quaternion.identity);
+                _currentEnemy.OnDeadEvent.RemoveListener(HandleBossDead);
+                _currentEnemy.OnDeadEvent.AddListener(HandleBossDead);
+                return true;
+            }
+
+            _currentEnemy = EnemySpawnUtility.SpawnEnemy(bossSO, targetTransform.position, Quaternion.identity, _poolManager);
+            if (_currentEnemy == null)
+                return false;
+
+            _currentEnemy.OnDeadEvent.AddListener(HandleBossDead);
+            return true;
         }
 
         private void SpawnRewardContainer()
         {
-            if (rewardContainer == null)
-                return;
-
-            rewardContainer.transform.position = _rewardContainerPos;
             rewardContainer.gameObject.SetActive(true);
+            Debug.Log("Reawasdasd");
             SetUpRewardContainer();
         }
 
         private void SetUpRewardContainer()
         {
-            if (rewardContainer.Inventory == null)
-                return;
-
             if (rewardItems != null && rewardItems.Count > 0)
             {
-                int index = UnityEngine.Random.Range(0, rewardItems.Count);
-                rewardContainer.Inventory.SetUpItem(rewardItems[index]);
+                rewardContainer.Inventory.SetUpItem(rewardItems);
                 return;
             }
 
@@ -143,17 +158,19 @@ namespace Code.EnemySpawn
             return resultItems;
         }
 
-        public void Exit(Entity entity)
+        public void Exit()
         {
-            if (_currentEnemy == null)
+            if (!_isPlayerInside)
                 return;
             TimeController.Instance.TimeScale = _beforeTimeScale;
-            if(!_currentEnemy.IsDead)
+            if (_currentEnemy != null && !_currentEnemy.IsDead)
+            {
+                _currentEnemy.OnDeadEvent.RemoveListener(HandleBossDead);
                 _currentEnemy.ReleaseToPool();
+            }
+
             _currentEnemy = null;
-            returnStructure.Despawn();
-            rewardContainer?.gameObject.SetActive(false);
-            entity.Get<CharacterMovement>().SetPositionImmediately(_initPos);
+            _isPlayerInside = false;
             //스테이지 끝남
         }
     }

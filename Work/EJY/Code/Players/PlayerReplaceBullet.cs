@@ -23,12 +23,12 @@ namespace Code.Players
         
         private Player _player;
         private PlayerInventory _playerInventory;
-        private PlayerEquipment _equipment;
+        private EntityEquipment _equipment;
         public void OnInitialize(ComponentContainer componentContainer)
         {
             _player = componentContainer.Get<Player>();
             _playerInventory = componentContainer.Get<PlayerInventory>();
-            _equipment = componentContainer.Get<PlayerEquipment>();
+            _equipment = componentContainer.GetSubclassComponent<EntityEquipment>();
             
             _player.PlayerInput.OnBulletShowPressed += HandleShowBullet;
             EventBus.Subscribe<ReplaceBulletEvent>(HandleReplaceBullet);

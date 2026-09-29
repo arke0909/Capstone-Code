@@ -89,7 +89,7 @@ namespace Work.Code.Craft
         private void RenderNode(CraftTreeSO tree, int index, bool isRoot, bool hasAnim)
         {
             NodeData nodeData = tree.nodeList[index];
-            int ownedCount = _inventory.GetItemCount(nodeData.Item);
+            int ownedCount = _inventory.GetCraftAvailableItemCount(nodeData.Item);
             bool isResult = isRoot ? index == 0 : index != 0;
             CraftTreeSO selectTree = !isRoot && index == 0 ? tree : nodeData.Tree;
             bool isCraftableBySubItems = !isResult && selectTree != null

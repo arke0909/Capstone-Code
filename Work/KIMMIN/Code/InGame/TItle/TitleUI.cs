@@ -21,6 +21,12 @@ namespace Work.Code.Setting
             exitButton.onClick.AddListener(() => Application.Quit());
         }
 
+        private void Start()
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
         private void OnDestroy()
         {
             playbutton.onClick.RemoveAllListeners();

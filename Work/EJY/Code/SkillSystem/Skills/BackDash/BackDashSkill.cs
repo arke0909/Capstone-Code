@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Chipmunk.ComponentContainers;
@@ -34,7 +34,7 @@ namespace Code.SkillSystem.Skills.BackDash
         private float _additionalSlowTime;
         private float _additionalDamageMultiply = 0.5f;
         private bool isIncreased;
-        
+
         public override void Init(ComponentContainer container)
         {
             base.Init(container);
@@ -49,28 +49,28 @@ namespace Code.SkillSystem.Skills.BackDash
         {
             base.StartSkill();
 
-            Vector3 targetPos = _aimProvider.GetAimPosition(); 
+            Vector3 targetPos = _aimProvider.GetAimPosition();
             Vector3 ownerPos = _owner.transform.position;
             ownerPos.y = targetPos.y;
-            
+
             attackAreaDecal.SetPos(_owner.transform.position);
-            
+
             Vector3 dir = (targetPos - ownerPos).normalized;
-            
+
             _skillMovement.CanMove = false;
             _skillMovement.ApplyMovementData(-dir, backDashMovementDataSO);
             attackAreaDecal.SetActive(true);
             attackAreaDecal.SetParent(null);
-            
+
             PoolingEffect effect = _poolManager.Pop(effectPoolItem) as PoolingEffect;
             effect.PlayVFX(attackAreaDecal.transform.position, Quaternion.LookRotation(_owner.transform.forward));
-            
+
             DamageData damageData = _damageCalcCompo.CalculateDamage(damage, 1, 1, DamageType.RANGE);
             damageCaster.CastDamage(damageData ,transform.position, dir,null);
 
             if (applySlow)
             {
-                buffCaster.CastBuff(transform.position, slowBuff.GetStatusEffectInfo());
+                buffCaster.CastBuff(transform.position, slowBuff, additionalTime: _additionalSlowTime);
             }
 
             if (addDamageMultiply && !isIncreased)
@@ -79,9 +79,9 @@ namespace Code.SkillSystem.Skills.BackDash
                 _owner.OnAttack += UnsubscribeDamageCalc;
                 isIncreased = true;
             }
-            
+
             await UniTask.WaitForSeconds(backDashMovementDataSO.duration);
-            
+
             _skillMovement.CanMove = true;
             attackAreaDecal.SetActive(false);
             attackAreaDecal.SetParent(transform);
@@ -91,7 +91,7 @@ namespace Code.SkillSystem.Skills.BackDash
          {
              return _additionalDamageMultiply;
         }
-        
+
         private void UnsubscribeDamageCalc(Entity dealer, IDamageable target)
         {
             _owner.OnDamageCalc -= DamageMultiply;
@@ -99,9 +99,9 @@ namespace Code.SkillSystem.Skills.BackDash
             isIncreased = false;
         }
 
-       
 
-        
-        
+
+
+
     }
 }

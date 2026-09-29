@@ -61,12 +61,24 @@ namespace Work.Code.UI.ContextMenu
 
         private void OnDestroy()
         {
-            panel.PanelButton.onClick.RemoveListener(HandleClickPanel);
+            if (panel != null && panel.PanelButton != null)
+                panel.PanelButton.onClick.RemoveListener(HandleClickPanel);
+
+            foreach (var owner in _contextMenus.Keys)
+            {
+                if (owner != null)
+                    owner.OnToggleUI -= HandleToggleUI;
+            }
+
+            _currentMenu = null;
+            _contextMenus.Clear();
+            _instances.Clear();
         }
 
         public void BindContextMenu<T>(InteractableUI owner, ContextMenuSO menu, Func<T> data)
         {
             _contextMenus[owner] = new ContextMenuData { MenuSO = menu, Data = () => data() };
+            owner.OnToggleUI -= HandleToggleUI;
             owner.OnToggleUI += HandleToggleUI;
             
             owner.EventHandler.BindUIEvent(owner, _ =>
@@ -102,7 +114,7 @@ namespace Work.Code.UI.ContextMenu
 
             HideCurrentMenu();
             
-            if (_instances.TryGetValue(menuData.MenuSO, out BaseContextMenu menu))
+            if (_instances.TryGetValue(menuData.MenuSO, out BaseContextMenu menu) && menu != null)
             {
                 _currentMenu = menu;
                 _currentMenu.ShowMenu(data);
@@ -115,9 +127,8 @@ namespace Work.Code.UI.ContextMenu
 
                 _currentMenu.OnAction += HideCurrentMenu;
                 SetPosition(owner.Rect);
+                panel.EnableUI();
             }
-            
-            panel.EnableUI();
         }
 
         public void HideCurrentMenu()

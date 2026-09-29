@@ -12,6 +12,7 @@ namespace Scripts.SkillSystem.Skills
         PickaxeSlam = 5,
         CaveIn = 6,
         Smash = 7,
+        ChargeDash = 8,
     }
 
     public enum SkillMoveType
@@ -26,5 +27,10 @@ namespace Scripts.SkillSystem.Skills
         SkillAnimType AnimType { get; }
         StateDataSO TargetState { get; }
         void OnSkillTrigger();
+    }
+
+    public interface IStateExitControlledSkill : IUseStateSkill
+    {
+        bool IsSkillComplete { get; }
     }
 }

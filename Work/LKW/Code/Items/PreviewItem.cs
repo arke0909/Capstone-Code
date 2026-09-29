@@ -1,14 +1,18 @@
 using System;
 using Ami.BroAudio;
 using Chipmunk.ComponentContainers;
+using Chipmunk.GameEvents;
 using Code.InventorySystems;
 using DewmoLib.ObjectPool.RunTime;
 using EPOOutline;
 using Scripts.Entities;
 using UnityEngine;
 using Code.ItemContainers;
+using Code.Items.ItemInfo;
 using EPOOutline.Demo;
 using Scripts.GameSystem;
+using TMPro;
+using Work.Code.GameEvents;
 
 namespace Code.Items
 {
@@ -16,6 +20,7 @@ namespace Code.Items
     {
         [SerializeField] private PoolItemSO viewItemPool;
         [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private TMP_Text itemNameText;
         [SerializeField] private SoundID pickupSound;
 
         private int _stack;
@@ -32,6 +37,7 @@ namespace Code.Items
             base.Awake();
             _mainCamera = Camera.main;
             Debug.Assert(spriteRenderer != null, "spriteRenderer 미할당", this);
+            Debug.Assert(itemNameText != null, "itemNameText 미할당", this);
             Debug.Assert(Outlinable != null, "Outlinable 미할당", this);
         }
 
@@ -42,6 +48,10 @@ namespace Code.Items
 
             spriteRenderer.sprite = Item.ItemData.itemImage;
             spriteRenderer.enabled = spriteRenderer.sprite != null;
+
+            itemNameText.text = Item.ItemData.itemName;
+            itemNameText.enabled = !string.IsNullOrWhiteSpace(itemNameText.text);
+
             gameObject.name = $"dropItem_{Item.ItemData.itemName}";
 
             Outlinable.enabled = false;
@@ -62,9 +72,11 @@ namespace Code.Items
             if (interactor.TryGetSubclassComponent<Inventory>(out var inventory)
                 && inventory.TryAddItem(Item, _stack))
             {
+                ItemDataSO pickedUpItemData = Item.ItemData;
                 Item = null;
                 _myPool.Push(this);
                 BroAudio.Play(pickupSound);
+                EventBus.Raise(new ItemPickedUpEvent(pickedUpItemData));
             }
         }
 
@@ -81,6 +93,9 @@ namespace Code.Items
             Outlinable.enabled = false;
             spriteRenderer.enabled = false;
             spriteRenderer.sprite = null;
+
+            itemNameText.enabled = false;
+            itemNameText.text = string.Empty;
         }
 
         #endregion

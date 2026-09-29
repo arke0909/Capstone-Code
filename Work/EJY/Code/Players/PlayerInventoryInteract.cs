@@ -59,7 +59,7 @@ namespace Code.Players
 
         private void HandleItemInteractPressed()
         {
-            if (_hoveringSlot == null) return;
+            if (_hoveringSlot == null || GetSlotType(_hoveringSlot.Index) == SlotType.Hotbar) return;
 
             var item = _hoveringSlot.Item;
             if (item == null) return;

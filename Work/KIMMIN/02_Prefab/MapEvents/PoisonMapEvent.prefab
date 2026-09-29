@@ -49,7 +49,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <MapEventSO>k__BackingField: {fileID: 11400000, guid: fe57d64f5d5cdcf449d87be861736606, type: 2}
-  poisonEffect: {fileID: 11400000, guid: c0c243d5b0c356e4482b73a0acd5e47a, type: 2}
 --- !u!1 &566198908747176764
 GameObject:
   m_ObjectHideFlags: 0

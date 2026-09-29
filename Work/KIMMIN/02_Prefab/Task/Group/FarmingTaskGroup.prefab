@@ -394,7 +394,7 @@ PrefabInstance:
     - target: {fileID: 4676852817766624078, guid: 97f8a9be10b05b94f8bd0be7173ef892, type: 3}
       propertyPath: infoList.Array.data[3].itemData
       value: 
-      objectReference: {fileID: 11400000, guid: b8a75ec972d0cb347b821ef93aa0dae7, type: 2}
+      objectReference: {fileID: 11400000, guid: c86e5ebdf6b03eb45b29b6039ba82573, type: 2}
     - target: {fileID: 4676852817766624078, guid: 97f8a9be10b05b94f8bd0be7173ef892, type: 3}
       propertyPath: infoList.Array.data[0].spawnCount
       value: 1

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5aafaebd814478d84755322022c151a, type: 3}
+  m_Name: Hit Slow
+  m_EditorClassIdentifier:
+  buffName: Hit Slow
+  buffIcon: {fileID: 0}
+  statusEffectCreateData:
+  - statusEffectData: {fileID: 11400000, guid: 93d291985762c194485d622ee90191dd, type: 2}
+    isPercent: 1
+    priority: 10
+    effectValue:
+    - -0.65
+    isOverrideApplyTime: 0
+    overrideTime: 0
+    useCustomBehaviorSettings: 1
+    canOverlap: 0
+    isOverWrite: 1
+    useSharedStack: 0
+    maxStack: 1
+    stackValueMode: 0
+    stackDecayMode: 0
+    stackDecayInterval: 0
+    refreshTimerOnReapply: 1
+  applyTime: 0.4
